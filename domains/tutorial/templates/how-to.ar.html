@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-center {
+      content: "{{ title }}  ·  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-center { content: none; }
+  }
+
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    left: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 44pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0 auto;
+    line-height: 1.25;
+    max-width: 150mm;
+    width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 14pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin: 18pt auto 0 auto;
+    line-height: 1.6;
+    max-width: 140mm;
+    width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 28pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+  }
+
+  /* Cover — image-based (friendly-illustration, neural-cartography) */
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm;
+    right: 22mm;
+    width: 130mm;
+    font-size: 32pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 62mm;
+    right: 22mm;
+    width: 130mm;
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    line-height: 1.6;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref {
+    position: absolute;
+    bottom: 10mm;
+    right: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    z-index: 2;
+  }
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    left: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    z-index: 2;
+  }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <!-- Cover page (image-based) -->
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "دليل" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "دليل" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <p class="lead">{{ subtitle or "دليل موجز لإنجاز مهمة محددة، خطوة بخطوة." }}</p>
+
+  <div class="prereqs">
+    <h3>قبل أن تبدأ</h3>
+    <ul class="checklist">
+      <li>صلاحية الوصول إلى النظام أو الأداة المعنية</li>
+      <li>معرفة أساسية بالتنقّل في الواجهة</li>
+      <li>نحو خمس دقائق من وقت غير منقطع</li>
+    </ul>
+  </div>
+
+  <h2>الخطوات</h2>
+  <ol class="steps">
+    <li class="step">
+      <div class="step-body">
+        <h3>افتح الشاشة المطلوبة</h3>
+        <p>انتقل إلى الصفحة التي ستُنفِّذ فيها الإجراء. في <strong>Soul Hub</strong>، يكون ذلك عادةً من علامة التبويب <strong>Vault</strong>.</p>
+        {% if screenshots and screenshots.step_1 %}
+        <figure class="screenshot">
+          <img src="{{ screenshots.step_1.src }}" alt="{{ screenshots.step_1.alt }}">
+          {% if screenshots.step_1.caption %}<figcaption>{{ screenshots.step_1.caption }}</figcaption>{% endif %}
+        </figure>
+        {% endif %}
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>حدّد نقطة الدخول</h3>
+        <p>ابحث عن زر الإجراء الأساسي — يقع عادةً في الجزء العلوي من الشاشة، ويحمل اسم الفعل الذي ترغب بتنفيذه.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>أدخل التفاصيل</h3>
+        <p>أكمل الحقول المطلوبة. يُشار إلى الحقول الاختيارية بنبرة محايدة، في حين تحمل الحقول الإلزامية لونًا مميزًا بوضوح.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>أكّد وتحقّق</h3>
+        <p>بعد التأكيد، يظهر العنصر الجديد في القائمة خلال ثانية واحدة. إن لم يظهر، حدِّث الصفحة وتحقّق من وجود أي رسائل خطأ.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">نصيحة</span>
+    <p>اختصار لوحة المفاتيح <code dir="ltr">⌘K</code> يفتح نافذة إنشاء سريعة في أي صفحة، وهو أسرع من التنقّل عبر الواجهة.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">انتبه</span>
+    <p>إن ظهر شريط أحمر، فالإجراء لم يُحفظ. راجع نص الرسالة جيدًا؛ فهي عادةً تشير إلى حقل بعينه.</p>
+  </div>
+
+  <h2>افعل ولا تفعل</h2>
+  <div class="do-dont">
+    <div class="do">
+      <span class="label">افعل</span>
+      استخدم أسماء وصفية. قوة البحث تكمن في المعاني، فاسم مثل «client-onboarding-v2» أفضل بكثير من «doc-final-final».
+    </div>
+    <div class="dont">
+      <span class="label">لا تفعل</span>
+      لا تُكرّر الأسماء عبر التصنيفات. وجود ملفين باسم «notes» في مجلدين مختلفين يُشوّش نتائج البحث.
+    </div>
+  </div>
+
+  <h2>إذا لم يعمل الإجراء</h2>
+  <ul>
+    <li><strong>الصفحة لا تُحمَّل:</strong> تأكّد من عمل الخدمة على العنوان المتوقّع.</li>
+    <li><strong>الزر معطّل:</strong> عادةً يعني أن شرطًا ما غير مستوفٍ — حرّك المؤشر فوقه لقراءة التلميح.</li>
+    <li><strong>التغييرات لا تُحفظ:</strong> تحقّق من صلاحيات الكتابة على المجلد المستهدف.</li>
+  </ul>
+
+  <h2>ما التالي</h2>
+  <p>بعد أن أتممت هذه المهمة، يمكنك استكشاف أدلة ذات صلة أو إضافة الإجراء إلى المفضّلة للوصول السريع.</p>
+
+</body>
+</html>

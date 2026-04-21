@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-left {
+      content: "{{ reference_code or 'تسليم' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  .handoff-header {
+    margin: 0 0 18pt 0;
+  }
+
+  .handoff-header .eyebrow {
+    color: var(--accent-2);
+    margin-bottom: 6pt;
+  }
+
+  .handoff-header h1 {
+    margin: 0 0 4pt 0;
+    font-size: 24pt;
+    line-height: 1.3;
+  }
+
+  .handoff-header .subtitle {
+    font-size: 11pt;
+    color: var(--text-secondary);
+    margin: 6pt 0 0 0;
+    line-height: 1.6;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="handoff-header">
+    <div class="eyebrow">تسليم</div>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
+  </div>
+
+  <div class="handoff-meta">
+    <div class="field">
+      <span class="label">الحالة</span>
+      <span class="value"><span class="status-done">مُنجَز</span></span>
+    </div>
+    <div class="field">
+      <span class="label">المرجع</span>
+      <span class="value" dir="ltr">{{ reference_code or "HT-0001" }}</span>
+    </div>
+    <div class="field">
+      <span class="label">تاريخ التسليم</span>
+      <span class="value">{{ today }}</span>
+    </div>
+    <div class="field">
+      <span class="label">المالك الجديد</span>
+      <span class="value">قائد الفريق</span>
+    </div>
+  </div>
+
+  <h2>ملخّص</h2>
+  <p>يُسلّم هذا المستند ملكية العمل الموصوف هنا. يغطّي ما أُطلق، وكيفية تشغيله، وما هو معروفٌ أنه مكسور أو هشّ، ومع من يتواصل من يحتاج الإجابة.</p>
+
+  <h2>ما أُطلق</h2>
+  <ul class="shipped-list">
+    <li>الميزة الأساسية أُطلقت لجميع المستخدمين في <strong>{{ today }}</strong></li>
+    <li>الوثائق نُشرت على موقع المستندات المشترك</li>
+    <li>لوحات المراقبة مُهيّأة وحدود التنبيه مضبوطة</li>
+    <li>دليل التشغيل مُراجَع ومرتبط بمداورة المناوبة</li>
+    <li>طلبات متابعة ما بعد الإطلاق مسجّلة للتنظيفات غير العاجلة</li>
+  </ul>
+
+  <h2>المعمارية في نصف دقيقة</h2>
+  <p>خدمةٌ مركزية تستقبل الطلبات وتكتب في قاعدة البيانات الأساسية، ثم ترسل الإشعارات عبر عامل في طابور. فشل العامل لا يُعرقل مسار الكتابة الأساسي — فالإشعارات متّسقة في النهاية بالتصميم.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">قرار مفصلي</span>
+    <p>اخترنا عن عمدٍ الاتّساق النهائي للإشعارات حتى يبقى مسار الكتابة سريعًا حتى أثناء تعطّل الأنظمة التابعة. لا تعكس هذا القرار دون الرجوع إلى سجلّ القرار الأصلي.</p>
+  </div>
+
+  <h2>دليل التشغيل</h2>
+
+  <h3>النشر</h3>
+  <pre dir="ltr"><code dir="ltr">git push origin main
+# CI runs, then auto-promotes to staging
+# Promote to production via the deploy tool</code></pre>
+
+  <h3>التراجع</h3>
+  <pre dir="ltr"><code dir="ltr">deploy rollback --service &lt;name&gt; --to-version &lt;previous-sha&gt;</code></pre>
+  <p>التراجع يكتمل في أقلّ من دقيقتين. الأخطاء التي يراها العملاء تختفي عادةً خلال دقيقة من اكتمال التراجع.</p>
+
+  <h3>فحوصات السلامة</h3>
+  <ul>
+    <li><strong>الخدمة الرئيسية:</strong> <code dir="ltr">/healthz</code> على النقطة العامة</li>
+    <li><strong>العامل:</strong> عمق طابور الإشعارات (يبقى دون مئة في الحالة المستقرّة)</li>
+    <li><strong>قاعدة البيانات:</strong> لوحة زمن الاستجابة في لوحة المراقبة المشتركة</li>
+  </ul>
+
+  <h2>قضايا معروفة</h2>
+  <div class="issues">
+    <div class="issue severity-med">
+      <div class="severity">متوسّطة</div>
+      <div class="body">
+        <div class="title">محاولات إعادة الإشعار قد تُكرَّر في حالات سباق نادرة</div>
+        <div class="detail">يؤثّر على نحو إشعارٍ واحد من كلّ عشرة آلاف. إزالة التكرار مُخطّطة للربع القادم. مقبول حاليًا لأن المستقبلين يتعاملون مع التكرار دون أثر.</div>
+      </div>
+    </div>
+    <div class="issue severity-low">
+      <div class="severity">منخفضة</div>
+      <div class="body">
+        <div class="title">لوحة الإدارة بطيئة مع المستأجرين الذين يتجاوزون ٥٠ ألف سجل</div>
+        <div class="detail">يُعالَج الأمر بالترقيم حاليًا. فهرسة مناسبة منتظرة في دورة تحسين الأداء القادمة.</div>
+      </div>
+    </div>
+    <div class="issue severity-low">
+      <div class="severity">منخفضة</div>
+      <div class="body">
+        <div class="title">صيغ التواريخ المحلّية غير متناسقة في ملف التصدير</div>
+        <div class="detail">مسألة شكلية. مُتابعة في الطلب رقم ١٢٤٧؛ الإصلاح سطرٌ واحد متى التقطها أحد.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>جهات التواصل</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">المُسلِّم</span>
+      <span class="name">المالك السابق</span>
+      <span class="contact-line">مالك الميزة الأصلي · متاح للأسئلة مدة ثلاثين يومًا</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">المُتسلِّم</span>
+      <span class="name">المالك الجديد</span>
+      <span class="contact-line">نقطة التواصل الأساسية من الآن</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">التصعيد</span>
+      <span class="name">قائد الفريق</span>
+      <span class="contact-line">للحوادث المُعطِّلة أو التنسيق بين الفرق</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">المناوبة</span>
+      <span class="name">المهندس المناوب</span>
+      <span class="contact-line">راجع جدول المناوبة في التقويم المشترك</span>
+    </div>
+  </div>
+
+  <h2>الخطوات التالية</h2>
+  <ol>
+    <li>يؤكّد المالك الجديد قراءة هذا المستند وسجلّات القرار المرتبطة به.</li>
+    <li>تنفيذ نشرٍ واحد بصورة مشتركة للتأكّد من وضوح دليل التشغيل.</li>
+    <li>تحديد موعد مراجعة بعد ثلاثين يومًا لإغلاق ما تبقّى من القضايا المعروفة.</li>
+  </ol>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">ملاحظة أخيرة</span>
+    <p>أفضل تسليم هو الذي لا يحتاج المالك السابق مرة أخرى. إن غَمُض عليك شيء في هذا المستند، فصحّحه مكانه — من يقرأ بعدك سيشكرك.</p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "domain": "business-proposal",
+  "covers_allowed": [
+    "neural-cartography",
+    "minimalist-typographic"
+  ],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": "neural-cartography",
+    "layout": "classic"
+  },
+  "doc_types": {
+    "proposal": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 20,
+      "target_pages": [8, 15],
+      "sections_required": ["cover", "signature", "body"]
+    },
+    "one-pager": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 1,
+      "target_pages": [1, 1],
+      "sections_required": ["body"]
+    },
+    "letter": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 1,
+      "target_pages": [1, 1],
+      "sections_required": ["body"]
+    }
+  }
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+  </style>
+</head>
+<body>
+
+  <header class="cs-header">
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </header>
+
+  <div class="cs-grid">
+
+    <section class="cs-section">
+      <h2>إجراءات سريعة</h2>
+      <dl class="kv">
+        <dt>⌘K</dt><dd>إنشاء سريع من أي مكان</dd>
+        <dt>⌘/</dt><dd>البحث الشامل</dd>
+        <dt>⌘.</dt><dd>لوحة الأوامر</dd>
+        <dt>⌘↩</dt><dd>تأكيد وإغلاق</dd>
+        <dt>Esc</dt><dd>إلغاء / رجوع</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>التنقّل</h2>
+      <dl class="kv">
+        <dt>g h</dt><dd>الرئيسية</dd>
+        <dt>g v</dt><dd>الخزانة (Vault)</dd>
+        <dt>g i</dt><dd>صندوق الوارد</dd>
+        <dt>g s</dt><dd>الإعدادات</dd>
+        <dt>⌘[ / ⌘]</dt><dd>تراجع / تقدّم</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>الخزانة</h2>
+      <ul>
+        <li><kbd>⌘N</kbd> — ملاحظة جديدة</li>
+        <li><kbd>⌘⇧N</kbd> — مجلّد جديد</li>
+        <li><kbd>⌘⇧F</kbd> — بحث في المحتوى</li>
+        <li><kbd>⌘R</kbd> — إعادة تسمية</li>
+        <li><kbd>⌘⌫</kbd> — النقل إلى المهملات</li>
+      </ul>
+    </section>
+
+    <section class="cs-section">
+      <h2>الطرفية (Terminal)</h2>
+      <ul>
+        <li><kbd>⌘T</kbd> — علامة تبويب جديدة</li>
+        <li><kbd>⌃C</kbd> — إيقاف العملية الجارية</li>
+        <li><kbd>⌃D</kbd> — إنهاء الجلسة</li>
+        <li><kbd>⌘K</kbd> — مسح الشاشة</li>
+        <li><kbd>⌘⇧F</kbd> — بحث في الطرفية</li>
+      </ul>
+    </section>
+
+    <section class="cs-section">
+      <h2>الخيارات الشائعة</h2>
+      <dl class="kv">
+        <dt>--dry-run</dt><dd>معاينة دون حفظ</dd>
+        <dt>--force</dt><dd>الكتابة فوق الملفات القائمة</dd>
+        <dt>--verbose</dt><dd>تفاصيل كاملة للتنفيذ</dd>
+        <dt>--help</dt><dd>عرض الخيارات والاستخدام</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>معالجة المشاكل</h2>
+      <h3>فشل في البناء</h3>
+      <p>شغّل مع <code dir="ltr">--verbose</code> وافحص أول خطأ، لا آخرها.</p>
+      <h3>الخادم لا يعمل</h3>
+      <p>تأكّد أن المنفذ غير مشغول: <code dir="ltr">lsof -i :2400</code></p>
+      <h3>تبعيّات ناقصة</h3>
+      <p>امسح الذاكرة المؤقتة وأعد التثبيت: <code dir="ltr">npm ci</code> أو <code dir="ltr">uv sync</code></p>
+    </section>
+
+  </div>
+
+  <footer class="cs-footer">
+    <span>{{ reference_code or "ورقة مرجعية" }}</span>
+    <span>{{ today }}</span>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-center {
+      content: "{{ title }}  ·  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-center { content: none; }
+  }
+
+  /* Cover — CSS-only (minimalist-typographic) */
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    right: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 44pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    max-width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 14pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 18pt;
+    line-height: 1.3;
+    max-width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 28pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  /* Cover — image-based (friendly-illustration, neural-cartography) */
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm;
+    left: 22mm;
+    width: 130mm;
+    font-size: 32pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 55mm;
+    left: 22mm;
+    width: 130mm;
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    line-height: 1.4;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref {
+    position: absolute;
+    bottom: 10mm;
+    left: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    right: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <!-- Cover page (image-based) -->
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "HOW-TO" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <!-- Cover page (CSS-only, minimalist-typographic) -->
+  <section class="cover-page">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "HOW-TO" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Intro -->
+  <p class="lead">{{ subtitle or "A short guide to accomplishing a specific task, step by step." }}</p>
+
+  <!-- Prerequisites -->
+  <div class="prereqs">
+    <h3>Before you start</h3>
+    <ul class="checklist">
+      <li>Have access to the system or tool being documented</li>
+      <li>Know your way around basic navigation</li>
+      <li>About 5 minutes of uninterrupted time</li>
+    </ul>
+  </div>
+
+  <!-- Steps -->
+  <h2>Steps</h2>
+  <ol class="steps">
+    <li class="step">
+      <div class="step-body">
+        <h3>Open the target screen</h3>
+        <p>Navigate to the page where you'll perform the action. If you're using Soul Hub, this is usually the <strong>Vault</strong> tab.</p>
+        {% if screenshots and screenshots.step_1 %}
+        <figure class="screenshot">
+          <img src="{{ screenshots.step_1.src }}" alt="{{ screenshots.step_1.alt }}">
+          {% if screenshots.step_1.caption %}<figcaption>{{ screenshots.step_1.caption }}</figcaption>{% endif %}
+        </figure>
+        {% endif %}
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>Locate the entry point</h3>
+        <p>Look for the primary action button — typically top-right, labeled with the verb you want to perform.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>Fill in the details</h3>
+        <p>Provide the required fields. Optional fields are marked with a neutral label; required ones have a subtle accent color.</p>
+      </div>
+    </li>
+
+    <li class="step">
+      <div class="step-body">
+        <h3>Confirm and verify</h3>
+        <p>After submitting, you should see the new item appear in the list within a second. If it doesn't, refresh and check for error states.</p>
+      </div>
+    </li>
+  </ol>
+
+  <!-- Callouts -->
+  <div class="callout callout-tip">
+    <span class="callout-label">Tip</span>
+    <p>Keyboard shortcut <code>⌘K</code> opens a quick-create dialog on every page — often faster than clicking through the UI.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">Watch out</span>
+    <p>If you see a red banner, the action wasn't saved. Re-read the error message — it usually points to a specific field.</p>
+  </div>
+
+  <!-- Do / Don't -->
+  <h2>Do &amp; Don't</h2>
+  <div class="do-dont">
+    <div class="do">
+      <span class="label">Do</span>
+      Use descriptive names. Search becomes powerful when names carry meaning — "client-onboarding-v2" beats "doc-final-final".
+    </div>
+    <div class="dont">
+      <span class="label">Don't</span>
+      Reuse names across categories. Two items called "notes" in different folders will collide in search results.
+    </div>
+  </div>
+
+  <!-- Troubleshooting -->
+  <h2>If it doesn't work</h2>
+  <ul>
+    <li><strong>Page doesn't load:</strong> check that the service is running at the expected address.</li>
+    <li><strong>Button greyed out:</strong> usually means a prerequisite isn't met — hover for tooltip.</li>
+    <li><strong>Changes don't persist:</strong> verify you have write permission to the target folder.</li>
+  </ul>
+
+  <!-- Next -->
+  <h2>What's next</h2>
+  <p>Now that you've completed this task, you might want to explore related guides or bookmark the action for faster access.</p>
+
+</body>
+</html>

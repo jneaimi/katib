@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .letterhead {
+    border-bottom: 1pt solid var(--accent);
+    padding-bottom: 8pt;
+    margin-bottom: 20pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .letterhead .company {
+    font-size: 14pt;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+
+  .letterhead .meta {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    text-align: right;
+  }
+
+  .recipient {
+    margin: 20pt 0 28pt;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .recipient .name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .salutation {
+    font-size: 11pt;
+    margin-bottom: 16pt;
+  }
+
+  .letter-body p {
+    font-size: 10.5pt;
+    line-height: 1.6;
+    margin: 0 0 14pt 0;
+    text-align: justify;
+  }
+
+  .closing {
+    margin-top: 28pt;
+    font-size: 11pt;
+  }
+
+  .signature-block {
+    margin-top: 20pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .signature-block .name {
+    font-weight: 600;
+    font-size: 11pt;
+    color: var(--text);
+  }
+
+  .signature-block .title-role {
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+    margin-top: 2pt;
+  }
+  .brand-letterhead {
+    display: block;
+    max-width: 55mm;
+    margin-bottom: 16pt;
+  }
+  </style>
+</head>
+<body>
+  {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+  <header class="letterhead">
+    <div class="company">{{ company }}</div>
+    <div class="meta">
+      <div>{{ reference_code }}</div>
+      <div>{{ today }}</div>
+    </div>
+  </header>
+
+  <div class="recipient">
+    <div class="name">Ms. Sara Al-Hashimi</div>
+    <div>VP of Learning &amp; Development</div>
+    <div>ACME Corp</div>
+    <div>Dubai, United Arab Emirates</div>
+  </div>
+
+  <div class="salutation">Dear Ms. Al-Hashimi,</div>
+
+  <div class="letter-body">
+    <p>
+      Thank you for the opportunity to present our proposal for the Applied AI Training Program.
+      After reviewing your requirements and the specific needs of the 18 nominated participants, we have prepared
+      a Hybrid Split delivery model that reduces cost by 40% while preserving the hands-on intensity your team
+      identified as critical.
+    </p>
+    <p>
+      The accompanying commercial proposal ({{ reference_code }}) outlines a 6-week program split into two groups of 9,
+      blending in-person sessions at your headquarters with remote afternoon labs. Every participant ships a
+      production-ready AI agent and a live deployment pipeline — no slide-deck theory, no mock projects.
+    </p>
+    <p>
+      We would welcome a 30-minute alignment call next week to walk through the curriculum, the selection criteria
+      for participants, and the joint certification framework. A signed acceptance of this page and the commercial
+      proposal is sufficient to trigger kickoff within 14 days.
+    </p>
+  </div>
+
+  <div class="closing">
+    Kind regards,
+  </div>
+
+  <div class="signature-block">
+    <div class="name">{{ author_name }}</div>
+    <div class="title-role">Managing Director · {{ company }}</div>
+  </div>
+</body>
+</html>

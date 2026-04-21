@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 12mm 14mm 12mm 14mm;
+  }
+  </style>
+</head>
+<body>
+
+  <header class="cs-header">
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </header>
+
+  <div class="cs-grid">
+
+    <section class="cs-section">
+      <h2>Quick actions</h2>
+      <dl class="kv">
+        <dt>⌘K</dt><dd>Quick-create anywhere</dd>
+        <dt>⌘/</dt><dd>Global search</dd>
+        <dt>⌘.</dt><dd>Command palette</dd>
+        <dt>⌘↩</dt><dd>Confirm & close dialog</dd>
+        <dt>Esc</dt><dd>Dismiss / back</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>Navigation</h2>
+      <dl class="kv">
+        <dt>g h</dt><dd>Go home</dd>
+        <dt>g v</dt><dd>Go to vault</dd>
+        <dt>g i</dt><dd>Go to inbox</dd>
+        <dt>g s</dt><dd>Go to settings</dd>
+        <dt>⌘[ / ⌘]</dt><dd>Back / forward</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>Vault</h2>
+      <ul>
+        <li><kbd>⌘N</kbd> — new note</li>
+        <li><kbd>⌘⇧N</kbd> — new folder</li>
+        <li><kbd>⌘⇧F</kbd> — full-text search</li>
+        <li><kbd>⌘R</kbd> — rename</li>
+        <li><kbd>⌘⌫</kbd> — move to trash</li>
+      </ul>
+    </section>
+
+    <section class="cs-section">
+      <h2>Terminal</h2>
+      <ul>
+        <li><kbd>⌘T</kbd> — new terminal tab</li>
+        <li><kbd>⌃C</kbd> — interrupt running process</li>
+        <li><kbd>⌃D</kbd> — end session</li>
+        <li><kbd>⌘K</kbd> — clear scrollback</li>
+        <li><kbd>⌘⇧F</kbd> — search in terminal</li>
+      </ul>
+    </section>
+
+    <section class="cs-section">
+      <h2>Common flags</h2>
+      <dl class="kv">
+        <dt>--dry-run</dt><dd>Preview action without writing</dd>
+        <dt>--force</dt><dd>Overwrite existing outputs</dd>
+        <dt>--verbose</dt><dd>Detailed trace output</dd>
+        <dt>--help</dt><dd>Show flags and usage</dd>
+      </dl>
+    </section>
+
+    <section class="cs-section">
+      <h2>Troubleshooting</h2>
+      <h3>Build fails</h3>
+      <p>Run with <code>--verbose</code> and check the first error, not the last.</p>
+      <h3>Server won't start</h3>
+      <p>Check the port isn't taken: <code>lsof -i :2400</code></p>
+      <h3>Missing deps</h3>
+      <p>Clear cache and reinstall: <code>npm ci</code> or <code>uv sync</code></p>
+    </section>
+
+  </div>
+
+  <footer class="cs-footer">
+    <span>{{ reference_code or "Cheatsheet" }}</span>
+    <span>{{ today }}</span>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+# Katib configuration
+# Location: ~/.config/katib/config.yaml (user global) — create this from config.example.yaml
+# Per-project override: <project-root>/.katib/config.yaml (only keys that differ)
+# Precedence: CLI flag → project config → user config → skill default
+#
+# The installer writes ~/.config/katib/config.yaml for you on first install with
+# sensible defaults. Edit that file, not this one.
+
+output:
+  # destination: where generated folders land
+  #   vault  — ~/vault/content/katib/ (Obsidian users)
+  #   custom — use output.custom_path below
+  # Override at runtime with $KATIB_OUTPUT_ROOT.
+  destination: custom
+  vault_path: ~/vault/content/katib
+  custom_path: ~/Documents/katib
+  always_create_manifest: true    # false only if destination=custom AND you don't use Obsidian
+
+memory:
+  # Feedback + run logs. Stays on the user's machine, never leaves.
+  location: ~/.local/share/katib/memory
+  per_domain_rollup: true
+
+identity:
+  # Filled in on documents when `identity.*` is referenced. Leave blank to skip.
+  author_name: ""
+  author_email: ""
+  company: ""
+  signature_path: ~/.config/katib/signature.png   # optional — used when inserting signature block
+  # Reference-code prefixes are domain-specific. Override per-project via .katib/config.yaml.
+  # {YYYY} = 4-digit year, {YY} = 2-digit year, {NNN} = zero-padded sequence.
+  reference_code_prefixes:
+    technical: "PROP-{YYYY}"      # -> PROP-2026-001
+    commercial: "OFFER-{YY}"      # -> OFFER-26-001
+
+image_model:
+  # Cover-image generation. Optional — minimalist-typographic covers work without any API key.
+  # Get a key at https://aistudio.google.com/apikey, then set $GEMINI_API_KEY.
+  provider: gemini
+  model: nano-banana-2
+  fallback: gemini-2.5-flash-image
+  api_key_env: GEMINI_API_KEY
+
+fonts:
+  core_path: builtin              # or absolute path to override bundled fonts
+  optional_install_path: ~/.local/share/katib/fonts
+
+skill:
+  version: "0.1.0"

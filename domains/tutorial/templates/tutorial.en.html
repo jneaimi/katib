@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-left {
+      content: "{{ reference_code or 'TUTORIAL' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  /* Cover — CSS-only (minimalist-typographic) */
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    right: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 40pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 18pt;
+    line-height: 1.4;
+    max-width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  /* Cover — image-based */
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; left: 22mm;
+    width: 130mm;
+    font-size: 30pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 55mm; left: 22mm;
+    width: 130mm;
+    font-size: 12pt;
+    color: var(--accent);
+    line-height: 1.4;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { left: 10mm; }
+  .cover-page-image .cover-date { right: 10mm; }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "TUTORIAL" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">Tutorial</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "TUTORIAL" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Intro -->
+  <p class="lead">{{ subtitle or "A multi-module walkthrough that takes you from first setup to confident independent use." }}</p>
+
+  <div class="objectives">
+    <span class="label">What you'll learn</span>
+    <ul>
+      <li>Set up your environment and understand the core concepts</li>
+      <li>Complete your first end-to-end task without assistance</li>
+      <li>Recognize and recover from common failure modes</li>
+    </ul>
+  </div>
+
+  <h2>Before you begin</h2>
+  <ul class="checklist">
+    <li>An account with the necessary access role</li>
+    <li>A supported browser on a recent OS</li>
+    <li>About 30 minutes for the full walkthrough</li>
+  </ul>
+
+  <!-- Module 1 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 1 &middot; Foundations</div>
+      <h2>Get set up</h2>
+      <p class="module-intro">Start by installing the tools and confirming that your environment can reach every service you'll need in later modules.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Install and verify the core tool</li>
+        <li>Authenticate against the shared service</li>
+        <li>Run a smoke command that confirms everything is reachable</li>
+      </ul>
+    </div>
+
+    <h3>Steps</h3>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>Install the tool</h3>
+          <p>Run the installer appropriate for your OS. On macOS this is typically <code>brew install &lt;tool&gt;</code>; on Linux use your package manager of choice.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Authenticate</h3>
+          <p>Open the tool and sign in with your workspace credentials. A success confirmation should appear within a few seconds.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Verify connectivity</h3>
+          <p>Run <code>tool status</code> to confirm the tool can reach every backend it depends on. All checks should report green.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">Tip</span>
+      <p>If <code>status</code> reports a warning, re-run with <code>--verbose</code> to see which specific dependency is degraded.</p>
+    </div>
+  </section>
+
+  <!-- Module 2 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 2 &middot; First task</div>
+      <h2>Complete a real workflow</h2>
+      <p class="module-intro">Now that your environment is ready, walk through a realistic scenario end-to-end so the core mental model sticks.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Create a new item using the primary workflow</li>
+        <li>Edit and save changes with confidence</li>
+        <li>Share the result with a teammate</li>
+      </ul>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>Create your first item</h3>
+          <p>From the main screen, choose <strong>New</strong> and fill in the required fields. Optional metadata can be added later.</p>
+          {% if screenshots and screenshots.step_1 %}
+          <figure class="screenshot">
+            <img src="{{ screenshots.step_1.src }}" alt="{{ screenshots.step_1.alt }}">
+            {% if screenshots.step_1.caption %}<figcaption>{{ screenshots.step_1.caption }}</figcaption>{% endif %}
+          </figure>
+          {% endif %}
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Make an edit</h3>
+          <p>Change one field, save, and confirm that the change shows up in the list view within a second.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Share it</h3>
+          <p>Use the share action to send a link to a teammate. They should be able to open the item without extra permissions.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="do-dont">
+      <div class="do">
+        <span class="label">Do</span>
+        Use descriptive names — search gets powerful when names carry meaning.
+      </div>
+      <div class="dont">
+        <span class="label">Don't</span>
+        Reuse names across folders. Duplicates collide in search results.
+      </div>
+    </div>
+  </section>
+
+  <!-- Module 3 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 3 &middot; Going further</div>
+      <h2>Handle edge cases and recover</h2>
+      <p class="module-intro">Real work runs into friction. This module covers the three most common failure modes and a clean recovery path for each.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Identify the three failure patterns you're most likely to hit</li>
+        <li>Apply the standard recovery path without losing work</li>
+        <li>Know when to escalate vs. keep troubleshooting</li>
+      </ul>
+    </div>
+
+    <h3>Common failure modes</h3>
+    <ul>
+      <li><strong>Permission denied:</strong> your role changed or a share expired — re-authenticate and retry.</li>
+      <li><strong>Timeout:</strong> the backend is degraded — check the status page before further debugging.</li>
+      <li><strong>Silent failure:</strong> the action appears to succeed but the UI doesn't refresh — a hard refresh almost always fixes it.</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <span class="callout-label">Watch out</span>
+      <p>If you see a red banner with no message body, the action wasn't saved — the error is upstream. Capture the request ID from the dev console before retrying.</p>
+    </div>
+
+    <h3>When to escalate</h3>
+    <p>Escalate to your team lead if the same failure persists across two full retries and a hard refresh. Include the request ID and the exact sequence of steps.</p>
+  </section>
+
+  <!-- Summary -->
+  <h2>Summary</h2>
+  <p>You've completed the three-module walkthrough. You can now set up the tool, run the core workflow end-to-end, and recover from the three most common failure modes.</p>
+
+  <h2>What's next</h2>
+  <ul>
+    <li>Review the cheatsheet for keyboard-first shortcuts.</li>
+    <li>Skim the reference docs for features we didn't cover.</li>
+    <li>Pair with a teammate on a real task to solidify your mental model.</li>
+  </ul>
+
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .letterhead {
+    border-bottom: 1pt solid var(--accent);
+    padding-bottom: 8pt;
+    margin-bottom: 20pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .letterhead .company {
+    font-size: 15pt;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .letterhead .meta {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+    text-align: left;
+    direction: ltr;
+  }
+
+  .recipient {
+    margin: 20pt 0 28pt;
+    font-size: 11pt;
+    line-height: 1.7;
+  }
+
+  .recipient .name {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .salutation {
+    font-size: 12pt;
+    margin-bottom: 16pt;
+  }
+
+  .letter-body p {
+    font-size: 11pt;
+    line-height: 1.75;
+    margin: 0 0 14pt 0;
+    text-align: justify;
+  }
+
+  .closing {
+    margin-top: 28pt;
+    font-size: 12pt;
+  }
+
+  .signature-block {
+    margin-top: 20pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .signature-block .name {
+    font-weight: 600;
+    font-size: 12pt;
+    color: var(--text);
+  }
+
+  .signature-block .title-role {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    margin-top: 2pt;
+  }
+  .brand-letterhead {
+    display: block;
+    max-width: 55mm;
+    margin-bottom: 16pt;
+  }
+  </style>
+</head>
+<body>
+  {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+  <header class="letterhead">
+    <div class="company">{{ company }}</div>
+    <div class="meta">
+      <div>{{ reference_code }}</div>
+      <div>{{ today }}</div>
+    </div>
+  </header>
+
+  <div class="recipient">
+    <div class="name">السيدة سارة الهاشمي المحترمة</div>
+    <div>نائب الرئيس للتدريب والتطوير</div>
+    <div>شركة أكمي</div>
+    <div>دبي، الإمارات العربية المتحدة</div>
+  </div>
+
+  <div class="salutation">السلام عليكم ورحمة الله وبركاته، وبعد،</div>
+
+  <div class="letter-body">
+    <p>
+      يسرّنا تقديم عرضنا لبرنامج الذكاء الاصطناعي التطبيقي. بعد مراجعة متطلباتكم واحتياجات المرشحين
+      الـ ١٨، أعددنا نموذج تسليم هجين يخفّض التكلفة بنسبة ٤٠٪ مع الحفاظ على كثافة التطبيق العملي التي
+      حدّدها فريقكم كعامل حاسم.
+    </p>
+    <p>
+      يوضح العرض التجاري المرفق (<span dir="ltr">{{ reference_code }}</span>) برنامجاً مدّته ستة أسابيع،
+      مقسّماً على مجموعتين من تسعة مشاركين، يجمع بين جلسات حضورية في المقر الرئيسي وجلسات تطبيقية عن بُعد
+      بعد الظهر. يُنجز كل مشارك وكيلاً ذكياً جاهزاً للإنتاج وخط نشر حياً — دون عروض نظرية أو مشاريع وهمية.
+    </p>
+    <p>
+      نرحّب بعقد جلسة مواءمة مدتها ثلاثون دقيقة خلال الأسبوع القادم لاستعراض المنهج، ومعايير اختيار
+      المشاركين، وإطار الاعتماد المشترك. يكفي توقيع هذه الرسالة والعرض التجاري لبدء البرنامج خلال
+      ١٤ يوماً من التوقيع.
+    </p>
+  </div>
+
+  <div class="closing">
+    تفضلوا بقبول فائق الاحترام والتقدير،
+  </div>
+
+  <div class="signature-block">
+    <div class="name">{{ author_name }}</div>
+    <div class="title-role">المدير التنفيذي · {{ company }}</div>
+  </div>
+</body>
+</html>

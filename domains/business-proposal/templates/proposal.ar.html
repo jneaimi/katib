@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 9pt;
+      color: #6A6A6A;
+    }
+    @top-left {
+      content: "{{ reference_code }}  |  سرّي";
+      font-size: 9pt;
+      color: #6A6A6A;
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead {
+    display: block;
+    max-width: 60mm;
+    margin-bottom: 14pt;
+  }
+
+  /* Title page (mirrored) */
+  .title-page {
+    height: 257mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-right: 10pt;
+    border-right: 4pt solid var(--accent);
+    border-left: none;
+    padding-left: 0;
+    margin-top: 30mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1.doc-title {
+    font-size: 36pt;
+    line-height: 1.3;
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0;
+    padding: 0;
+    border: none;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 15pt;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-top: 16pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18pt 40pt;
+    margin-bottom: 20mm;
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .meta-item .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 12pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* TOC */
+  .toc { page-break-after: always; }
+
+  .toc h2 {
+    font-size: 18pt;
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 24pt;
+    padding-right: 10pt;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 12pt;
+  }
+
+  .toc-list .number {
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: 10pt;
+    min-width: 20pt;
+  }
+
+  /* Sections */
+  section.body-section {
+    margin-bottom: 20pt;
+  }
+
+  section.body-section h2 {
+    padding-right: 10pt;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .lead-paragraph {
+    font-size: 12pt;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  .deliverables-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16pt 0;
+    font-size: 10pt;
+    direction: rtl;
+  }
+
+  .deliverables-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .deliverables-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+    text-align: right;
+  }
+
+  .deliverables-table .num {
+    color: var(--accent);
+    font-weight: 600;
+    width: 20pt;
+  }
+
+  .acceptance {
+    margin-top: 28pt;
+    padding: 16pt 20pt;
+    background: #F6EDDB;
+    border-right: 3pt solid var(--accent-2);
+    border-left: none;
+    border-radius: 4pt;
+  }
+
+  .acceptance p {
+    margin: 0 0 8pt 0;
+    font-size: 11pt;
+    line-height: 1.65;
+  }
+
+  .sign-row {
+    display: flex;
+    gap: 24pt;
+    margin-top: 18pt;
+    direction: rtl;
+  }
+
+  .sign-box {
+    flex: 1;
+    padding-top: 30pt;
+    border-top: 0.5pt solid var(--text);
+    font-size: 10pt;
+    color: var(--text-tertiary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== صفحة العنوان ===== -->
+  <section class="title-page">
+    <div class="brand-bar">
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="eyebrow">عرض تجاري</div>
+      <h1 class="doc-title">{{ title }}</h1>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item">
+        <div class="label">المرجع</div>
+        <div class="value" dir="ltr">{{ reference_code }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">تاريخ الإصدار</div>
+        <div class="value" dir="ltr">{{ today }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">أعدّه</div>
+        <div class="value">{{ author_name }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">الجهة</div>
+        <div class="value">{{ company }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== المحتويات ===== -->
+  <section class="toc">
+    <h2>المحتويات</h2>
+    <ol class="toc-list">
+      <li><span class="number">١</span><span>الملخص التنفيذي</span><span>٣</span></li>
+      <li><span class="number">٢</span><span>نطاق البرنامج</span><span>٤</span></li>
+      <li><span class="number">٣</span><span>الجدول الزمني للتسليم</span><span>٦</span></li>
+      <li><span class="number">٤</span><span>الاستثمار والشروط</span><span>٨</span></li>
+      <li><span class="number">٥</span><span>القبول</span><span>١٠</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== ١. الملخص التنفيذي ===== -->
+  <section class="body-section">
+    <h2>١ · الملخص التنفيذي</h2>
+    <p class="lead-paragraph">
+      يُزوّد برنامج الذكاء الاصطناعي التطبيقي ١٨ مشاركاً بمهارات إنتاجية في هندسة
+      الوكلاء الأذكياء، وتصميم الأوامر، واستدعاء الأدوات، والنشر على منصّات السحابة الحديثة.
+    </p>
+    <p>
+      يخفّض نموذج التسليم الهجين — مجموعتان من تسعة، تجمع بين الحضوري وعن بُعد — التكلفة الإجمالية بنسبة
+      ٤٠٪ مقارنةً بالبرنامج الحضوري الكامل، مع الحفاظ على كثافة التطبيق العملي التي حدّدها فريقكم الأكاديمي
+      كعامل حاسم. خلال ٢٤ يوم تدريب موزّعة على ستة أسابيع، يُنجز كل مشارك وكيلاً ذكياً جاهزاً للإنتاج،
+      مع سجل عام على <span dir="ltr">GitHub</span> ومخرجات قابلة للقياس.
+    </p>
+    <p>
+      يعرض هذا المستند النطاق والجدول الزمني والاستثمار وشروط القبول. القيمة الإجمالية للعقد
+      <strong>٦١٥،٠٠٠ درهم إماراتي</strong>، شاملةً المنهج والتسليم والاعتماد المشترك.
+    </p>
+  </section>
+
+  <!-- ===== ٢. نطاق البرنامج ===== -->
+  <section class="body-section">
+    <h2>٢ · نطاق البرنامج</h2>
+    <p>
+      يتكوّن البرنامج من أربعة محاور متدرّجة، يبني كلٌّ منها على سابقه. ينتقل المشاركون من الأساسيات إلى
+      النشر الإنتاجي خلال الأسابيع الستة.
+    </p>
+
+    <table class="deliverables-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>المحور</th>
+          <th>التركيز</th>
+          <th>المخرج</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">١</td>
+          <td>الأساسيات</td>
+          <td>هندسة الأوامر، أساسيات النماذج اللغوية، استدعاء الأدوات</td>
+          <td>مكتبة أوامر جاهزة مع التقييمات</td>
+        </tr>
+        <tr>
+          <td class="num">٢</td>
+          <td>تصميم الوكلاء الأذكياء</td>
+          <td>الوكلاء متعددو الخطوات، إدارة الحالة، أنماط الذاكرة</td>
+          <td>نموذج أوّلي لوكيل ذكي مع ٣+ أدوات</td>
+        </tr>
+        <tr>
+          <td class="num">٣</td>
+          <td>الإنتاج</td>
+          <td>النشر على <span dir="ltr">Vercel</span>، <span dir="ltr">Cloudflare Workers</span>؛ المراقبة</td>
+          <td>وكيل ذكي منشور على عنوان إنتاجي حي</td>
+        </tr>
+        <tr>
+          <td class="num">٤</td>
+          <td>التكامل</td>
+          <td>تصميم واجهات برمجة التطبيقات، الأمان، ضبط التكاليف، التسليم للفريق</td>
+          <td>كود موثّق قابل للصيانة</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== ٣. الجدول الزمني للتسليم ===== -->
+  <section class="body-section">
+    <h2>٣ · الجدول الزمني للتسليم</h2>
+    <p>
+      تعمل المجموعتان بالتوازي على أسابيع متبادلة. تُعقد الجلسات الحضورية في المقر الرئيسي للعميل؛
+      تُدار الجلسات التطبيقية عن بُعد عبر الفيديو المباشر ومحرّر برمجي مشترك. ينقسم الجدول كالتالي:
+    </p>
+    <table class="deliverables-table">
+      <thead>
+        <tr>
+          <th>الأسبوع</th>
+          <th>المحور</th>
+          <th>المجموعة أ</th>
+          <th>المجموعة ب</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>١</td><td>الأساسيات</td><td>حضوري (المقر)</td><td>عن بُعد</td></tr>
+        <tr><td>٢</td><td>الأوامر والتقييمات</td><td>عن بُعد</td><td>حضوري (المقر)</td></tr>
+        <tr><td>٣</td><td>تصميم الوكلاء الأذكياء</td><td>حضوري (المقر)</td><td>عن بُعد</td></tr>
+        <tr><td>٤</td><td>النشر الإنتاجي</td><td>عن بُعد</td><td>حضوري (المقر)</td></tr>
+        <tr><td>٥</td><td>التكامل والأمان</td><td>حضوري (المقر)</td><td>عن بُعد</td></tr>
+        <tr><td>٦</td><td>المشروع الختامي ويوم العرض</td><td>حضوري (المقر) — مشترك</td><td>حضوري (المقر) — مشترك</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== ٤. الاستثمار والشروط ===== -->
+  <section class="body-section">
+    <h2>٤ · الاستثمار والشروط</h2>
+    <p class="lead-paragraph">
+      إجمالي استثمار البرنامج: <strong dir="ltr">AED 615,000</strong>. تتماشى مراحل الدفع مع مراحل التسليم.
+    </p>
+    <table class="deliverables-table">
+      <thead>
+        <tr><th>المرحلة</th><th>الشرط</th><th>المبلغ (درهم)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>الانطلاق</td><td>توقيع القبول</td><td dir="ltr">184,500</td></tr>
+        <tr><td>منتصف البرنامج</td><td>نهاية الأسبوع الثالث</td><td dir="ltr">246,000</td></tr>
+        <tr><td>الإنجاز</td><td>يوم عرض المشروع الختامي</td><td dir="ltr">184,500</td></tr>
+        <tr><td colspan="2"><strong>الإجمالي</strong></td><td dir="ltr"><strong>615,000</strong></td></tr>
+      </tbody>
+    </table>
+    <p>
+      جميع المبالغ لا تشمل ضريبة القيمة المضافة حيثما تنطبق. المواد وسفر المدرّبين والاعتماد المشترك
+      مشمولة. سياسة الاسترداد وشروط الإلغاء وملكية الحقوق الفكرية موضّحة في اتفاقية الخدمات الرئيسية
+      (<span dir="ltr">OFFER-26-MSA-001</span>).
+    </p>
+  </section>
+
+  <!-- ===== ٥. القبول ===== -->
+  <section class="body-section">
+    <h2>٥ · القبول</h2>
+    <p>
+      يرجى التوقيع أدناه لقبول هذا العرض وبدء البرنامج خلال ١٤ يوماً.
+    </p>
+
+    <div class="acceptance">
+      <p>
+        <strong>نيابةً عن العميل</strong>، أقبل برنامج الذكاء الاصطناعي التطبيقي وفق ما ورد في
+        الأقسام ١ حتى ٤ من هذا المستند، المرجع <span dir="ltr">{{ reference_code }}</span>.
+      </p>
+
+      <div class="sign-row">
+        <div class="sign-box">الاسم والمنصب</div>
+        <div class="sign-box">التوقيع</div>
+        <div class="sign-box">التاريخ</div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

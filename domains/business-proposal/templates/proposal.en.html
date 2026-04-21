@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: #6A6A6A;
+    }
+    @top-right {
+      content: "{{ reference_code }}  |  CONFIDENTIAL";
+      font-size: 8pt;
+      color: #6A6A6A;
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead {
+    display: block;
+    max-width: 60mm;
+    margin-bottom: 14pt;
+  }
+
+  /* Title page */
+  .title-page {
+    height: 257mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-left: 10pt;
+    border-left: 4pt solid var(--accent);
+    margin-top: 30mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1.doc-title {
+    font-size: 36pt;
+    line-height: 1.15;
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0;
+    padding: 0;
+    border: none;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 14pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-top: 16pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18pt 40pt;
+    margin-bottom: 20mm;
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .meta-item .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 11pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* TOC */
+  .toc { page-break-after: always; }
+
+  .toc h2 {
+    font-size: 18pt;
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 24pt;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 11pt;
+  }
+
+  .toc-list .number {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 10pt;
+    min-width: 20pt;
+  }
+
+  /* Sections */
+  section.body-section {
+    page-break-inside: auto;
+    margin-bottom: 20pt;
+  }
+
+  section.body-section h2 {
+    padding-left: 10pt;
+    border-left: 2.5pt solid var(--accent);
+  }
+
+  .lead-paragraph {
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  .deliverables-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16pt 0;
+    font-size: 9.5pt;
+  }
+
+  .deliverables-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .deliverables-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .deliverables-table .num {
+    color: var(--accent);
+    font-weight: 600;
+    width: 20pt;
+  }
+
+  .acceptance {
+    margin-top: 28pt;
+    padding: 16pt 20pt;
+    background: #F6EDDB;
+    border-left: 3pt solid var(--accent-2);
+    border-radius: 4pt;
+  }
+
+  .acceptance p {
+    margin: 0 0 8pt 0;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+
+  .sign-row {
+    display: flex;
+    gap: 24pt;
+    margin-top: 18pt;
+  }
+
+  .sign-box {
+    flex: 1;
+    padding-top: 30pt;
+    border-top: 0.5pt solid var(--text);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Title page ===== -->
+  <section class="title-page">
+    <div class="brand-bar">
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="eyebrow">Commercial Proposal</div>
+      <h1 class="doc-title">{{ title }}</h1>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item">
+        <div class="label">Reference</div>
+        <div class="value">{{ reference_code }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Issued</div>
+        <div class="value">{{ today }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">Prepared by</div>
+        <div class="value">{{ author_name }}</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">For</div>
+        <div class="value">{{ company }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Table of contents ===== -->
+  <section class="toc">
+    <h2>Contents</h2>
+    <ol class="toc-list">
+      <li><span class="number">1</span><span>Executive Summary</span><span>3</span></li>
+      <li><span class="number">2</span><span>Program Scope</span><span>4</span></li>
+      <li><span class="number">3</span><span>Delivery Timeline</span><span>6</span></li>
+      <li><span class="number">4</span><span>Investment &amp; Terms</span><span>8</span></li>
+      <li><span class="number">5</span><span>Acceptance</span><span>10</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== 1. Executive Summary ===== -->
+  <section class="body-section">
+    <h2>1 · Executive Summary</h2>
+    <p class="lead-paragraph">
+      The Applied AI Training Program equips 18 participants with production-grade skills in
+      AI agent engineering, prompt design, tool calling, and deployment to modern cloud platforms.
+    </p>
+    <p>
+      Our Hybrid Split delivery model — two groups of 9, blending face-to-face and remote sessions — reduces total
+      cost by 40% versus a pure on-campus program while preserving the hands-on rigor your faculty identified as
+      critical. Over 24 training days across 6 weeks, each participant ships a working AI agent to production,
+      with a public GitHub portfolio and measurable skill outcomes.
+    </p>
+    <p>
+      This proposal outlines scope, timeline, investment, and acceptance terms. Total engagement value is
+      <strong>AED 615,000</strong>, inclusive of curriculum, delivery, and joint certification.
+    </p>
+  </section>
+
+  <!-- ===== 2. Program Scope ===== -->
+  <section class="body-section">
+    <h2>2 · Program Scope</h2>
+    <p>
+      The program is structured in four progressive modules, each building on the last. Participants move from
+      fundamentals to production deployment over the 6-week span.
+    </p>
+
+    <table class="deliverables-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Module</th>
+          <th>Focus</th>
+          <th>Outcome</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">1</td>
+          <td>Foundations</td>
+          <td>Prompt engineering, LLM fundamentals, tool calling</td>
+          <td>Working prompt library with evals</td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td>Agent Design</td>
+          <td>Multi-step agents, state management, memory patterns</td>
+          <td>Prototype agent with 3+ tools</td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td>Production</td>
+          <td>Deployment to Vercel, Cloudflare Workers; observability</td>
+          <td>Live agent deployed to production URL</td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td>Integration</td>
+          <td>API design, security, cost controls, team handoff</td>
+          <td>Documented, maintainable codebase</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 3. Delivery Timeline ===== -->
+  <section class="body-section">
+    <h2>3 · Delivery Timeline</h2>
+    <p>
+      Two groups run in parallel on offset weeks. Face-to-face sessions take place at the client's headquarters;
+      remote labs run via live video and shared IDE. The 24-day schedule breaks down as follows:
+    </p>
+    <table class="deliverables-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Theme</th>
+          <th>Group A</th>
+          <th>Group B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>Foundations</td><td>F2F (HQ)</td><td>Remote labs</td>
+        </tr>
+        <tr>
+          <td>2</td><td>Prompting + evals</td><td>Remote labs</td><td>F2F (HQ)</td>
+        </tr>
+        <tr>
+          <td>3</td><td>Agent design</td><td>F2F (HQ)</td><td>Remote labs</td>
+        </tr>
+        <tr>
+          <td>4</td><td>Production deployment</td><td>Remote labs</td><td>F2F (HQ)</td>
+        </tr>
+        <tr>
+          <td>5</td><td>Integration &amp; security</td><td>F2F (HQ)</td><td>Remote labs</td>
+        </tr>
+        <tr>
+          <td>6</td><td>Capstone + demo day</td><td>F2F (HQ) — joint</td><td>F2F (HQ) — joint</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 4. Investment & Terms ===== -->
+  <section class="body-section">
+    <h2>4 · Investment &amp; Terms</h2>
+    <p class="lead-paragraph">
+      Total program investment: <strong>AED 615,000</strong>. Payment milestones align to delivery phases.
+    </p>
+    <table class="deliverables-table">
+      <thead>
+        <tr><th>Milestone</th><th>Trigger</th><th>Amount (AED)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Kickoff</td><td>Signed acceptance</td><td>184,500</td></tr>
+        <tr><td>Mid-program</td><td>End of week 3</td><td>246,000</td></tr>
+        <tr><td>Completion</td><td>Capstone demo day</td><td>184,500</td></tr>
+        <tr><td colspan="2"><strong>Total</strong></td><td><strong>615,000</strong></td></tr>
+      </tbody>
+    </table>
+    <p>
+      All figures exclude VAT where applicable. Materials, facilitator travel, and joint certification are
+      included. Refund policy, cancellation terms, and IP ownership are detailed in the Master Services
+      Agreement (OFFER-26-MSA-001).
+    </p>
+  </section>
+
+  <!-- ===== 5. Acceptance ===== -->
+  <section class="body-section">
+    <h2>5 · Acceptance</h2>
+    <p>
+      Countersign below to accept this proposal and trigger kickoff within 14 days.
+    </p>
+
+    <div class="acceptance">
+      <p><strong>On behalf of the client</strong>, I accept the Applied AI Training Program as
+      scoped in sections 1 through 4 of this document, reference {{ reference_code }}.</p>
+
+      <div class="sign-row">
+        <div class="sign-box">Name &amp; Title</div>
+        <div class="sign-box">Signature</div>
+        <div class="sign-box">Date</div>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

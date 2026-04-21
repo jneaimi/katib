@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 15mm 18mm 15mm 18mm;
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .eyebrow-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.5pt solid var(--border);
+    padding-bottom: 8pt;
+    margin-bottom: 18pt;
+  }
+
+  .hero { margin-bottom: 24pt; }
+
+  .hero-title {
+    font-size: 28pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 0 0 10pt 0;
+    color: var(--accent);
+  }
+
+  .hero-lead {
+    font-size: 12pt;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 150mm;
+  }
+
+  .sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt 24pt;
+    margin-top: 20pt;
+    direction: rtl;
+  }
+
+  .section h3 {
+    margin-top: 0;
+    margin-bottom: 4pt;
+    color: var(--accent);
+    font-size: 12pt;
+  }
+
+  .section p {
+    margin: 0;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    margin: 22pt 0;
+    padding: 14pt 0;
+    border-top: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .metric { text-align: center; }
+
+  .metric-value {
+    font-size: 22pt;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1.1;
+    direction: ltr;
+  }
+
+  .metric-label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-top: 2pt;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8mm;
+    left: 18mm;
+    right: 18mm;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .cta {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 10pt 16pt;
+    border-radius: 6pt;
+    display: inline-block;
+    font-size: 11pt;
+    font-weight: 500;
+    margin-top: 10pt;
+  }
+  .brand-letterhead {
+    display: block;
+    max-width: 55mm;
+    margin-bottom: 10pt;
+  }
+  </style>
+</head>
+<body>
+  {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+  <div class="eyebrow-row">
+    <div class="small muted" dir="ltr">{{ reference_code }} · {{ today }}</div>
+    <div class="eyebrow">{{ company }}</div>
+  </div>
+
+  <section class="hero">
+    <h1 class="hero-title">{{ title }}</h1>
+    {% if subtitle %}<p class="hero-lead">{{ subtitle }}</p>{% endif %}
+  </section>
+
+  <section class="metrics">
+    <div class="metric">
+      <div class="metric-value">18</div>
+      <div class="metric-label">مشارك</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">6 أسابيع</div>
+      <div class="metric-label">المدة</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">24</div>
+      <div class="metric-label">يوم تدريب</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">615K AED</div>
+      <div class="metric-label">الاستثمار</div>
+    </div>
+  </section>
+
+  <section class="sections">
+    <div class="section">
+      <h3>نطاق البرنامج</h3>
+      <p>منهج هندسي شامل للذكاء الاصطناعي يغطي هندسة الأوامر، وتصميم الوكلاء الأذكياء، واستدعاء الأدوات، والتقييم، والنشر الإنتاجي على <span dir="ltr">Vercel</span> و<span dir="ltr">Cloudflare</span>.</p>
+    </div>
+    <div class="section">
+      <h3>نموذج التسليم</h3>
+      <p>تسليم هجين — مجموعتان من ٩، جلسات حضورية وعن بُعد. نظري صباحاً، تطبيق عملي بعد الظهر. مشاريع حقيقية تُنشر في بيئة الإنتاج.</p>
+    </div>
+    <div class="section">
+      <h3>المخرجات</h3>
+      <p>ينجز كل مشارك وكيلاً ذكياً جاهزاً للإنتاج مع خط نشر كامل. مشاريع جاهزة للعرض. سجل حقيقي على <span dir="ltr">GitHub</span>. توفير التكلفة بنسبة ٤٠٪ عبر الهجين مقارنةً بالحضوري.</p>
+    </div>
+    <div class="section">
+      <h3>الخطوة التالية</h3>
+      <p>توقيع هذه الصفحة والعرض التجاري الكامل. انطلاق التدريب خلال ١٤ يوماً من التوقيع.</p>
+      <div class="cta">قبول العرض</div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div dir="ltr">{{ reference_code }}</div>
+    <div>{{ company }} · {{ author_name }}</div>
+  </div>
+</body>
+</html>

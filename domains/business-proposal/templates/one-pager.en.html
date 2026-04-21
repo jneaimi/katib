@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  /* ===== Domain tokens ===== */
+  {{ tokens_css | safe }}
+
+  /* ===== Classic layout ===== */
+  {{ layout_css | safe }}
+
+  /* ===== One-pager overrides ===== */
+  @page {
+    size: A4;
+    margin: 15mm 18mm 15mm 18mm;
+  }
+
+  .eyebrow-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.5pt solid var(--border);
+    padding-bottom: 8pt;
+    margin-bottom: 18pt;
+  }
+
+  .hero {
+    margin-bottom: 24pt;
+  }
+
+  .hero-title {
+    font-size: 26pt;
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0 0 10pt 0;
+    color: var(--accent);
+  }
+
+  .hero-lead {
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin: 0;
+    max-width: 150mm;
+  }
+
+  .sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt 24pt;
+    margin-top: 20pt;
+  }
+
+  .section h3 {
+    margin-top: 0;
+    margin-bottom: 4pt;
+    color: var(--accent);
+    font-size: 11pt;
+  }
+
+  .section p {
+    margin: 0;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    margin: 22pt 0;
+    padding: 14pt 0;
+    border-top: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .metric {
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 20pt;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+
+  .metric-label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    margin-top: 2pt;
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 8mm;
+    left: 18mm;
+    right: 18mm;
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .cta {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 10pt 16pt;
+    border-radius: 6pt;
+    display: inline-block;
+    font-size: 10pt;
+    font-weight: 500;
+    margin-top: 10pt;
+  }
+  .brand-letterhead {
+    display: block;
+    max-width: 55mm;
+    margin-bottom: 10pt;
+  }
+  </style>
+</head>
+<body>
+  {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+  <div class="eyebrow-row">
+    <div class="eyebrow">{{ company }}</div>
+    <div class="small muted">{{ reference_code }} · {{ today }}</div>
+  </div>
+
+  <section class="hero">
+    <h1 class="hero-title">{{ title }}</h1>
+    {% if subtitle %}<p class="hero-lead">{{ subtitle }}</p>{% endif %}
+  </section>
+
+  <section class="metrics">
+    <div class="metric">
+      <div class="metric-value">18</div>
+      <div class="metric-label">Participants</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">6 wk</div>
+      <div class="metric-label">Duration</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">24</div>
+      <div class="metric-label">Training days</div>
+    </div>
+    <div class="metric">
+      <div class="metric-value">AED 615K</div>
+      <div class="metric-label">Investment</div>
+    </div>
+  </section>
+
+  <section class="sections">
+    <div class="section">
+      <h3>Program scope</h3>
+      <p>Full-stack AI engineering curriculum covering prompt engineering, agent design, tool calling, evaluation, and production deployment on Vercel and Cloudflare.</p>
+    </div>
+    <div class="section">
+      <h3>Delivery model</h3>
+      <p>Hybrid split — 2 groups of 9, face-to-face and remote sessions. Morning theory, afternoon hands-on build. Projects shipped to real production.</p>
+    </div>
+    <div class="section">
+      <h3>Outcomes</h3>
+      <p>Every participant ships a working agent + deploy pipeline to production. Portfolio-ready projects. Real GitHub history. Cost: reduced by 40% via hybrid vs pure face-to-face.</p>
+    </div>
+    <div class="section">
+      <h3>Next step</h3>
+      <p>Countersign this page and the full commercial proposal. Kickoff within 14 days of signature.</p>
+      <div class="cta">Accept proposal</div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div>{{ company }} · {{ author_name }}</div>
+    <div>{{ reference_code }}</div>
+  </div>
+</body>
+</html>

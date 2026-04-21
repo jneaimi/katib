@@ -1,0 +1,54 @@
+# Katib brand profile — complete example with every field documented.
+# Copy this file to ~/.katib/brands/<your-brand>.yaml (per-user) or
+# to skills/katib/brands/<your-brand>.yaml (shipped with the skill).
+#
+# Invoke with --brand <name> or --brand-file <path>. All fields are
+# optional except `name`. Missing fields fall back to domain defaults.
+
+name: Example Corp                       # displayed brand name (EN)
+name_ar: مثال                            # optional AR name (picked when rendering AR)
+legal_name: Example Corporation FZE      # full legal name, good for footers
+
+identity:
+  author_name: Jane Architect
+  email: hello@example.com
+  phone: "+971 50 000 0000"
+
+# Colors — either human-friendly keys (recommended) or raw CSS variable
+# names (`--accent`, etc.). Unknown friendly keys are ignored silently.
+# Mapping:
+#   accent            → --accent          (primary brand color)
+#   accent_secondary  → --accent-2        (supporting accent)
+#   accent_on         → --accent-on       (text on accent-filled areas)
+#   text              → --text            (body text)
+#   text_secondary    → --text-secondary
+#   text_tertiary     → --text-tertiary
+#   page_bg           → --page-bg         (page background)
+#   border            → --border
+#   border_strong     → --border-strong
+#   tag_bg / tag_fg   → --tag-bg / --tag-fg
+#   code_bg / code_fg → --code-bg / --code-fg
+colors:
+  accent: "#1F3A68"
+  accent_secondary: "#D4A437"
+  page_bg: "#FAFAF8"
+
+# Fonts — per-language, same shape as domain tokens.json. Missing lang
+# keeps the domain default. Fonts must be installed on the render host
+# or referenced via @font-face in the domain's styles.
+fonts:
+  en:
+    primary: "Inter"
+    display: "Inter"
+    fallback: "Helvetica Neue, system-ui, sans-serif"
+  ar:
+    primary: "IBM Plex Arabic"
+    display: "IBM Plex Arabic"
+    fallback: "Cairo, Tahoma, sans-serif"
+
+# Logo — shown on tutorial covers above the title. Paths are resolved
+# relative to this file's directory; absolute paths and ~ also work.
+# Shorthand: `logo: path.svg` expands to {primary: path.svg}.
+logo:
+  primary: fixtures/placeholder-logo.svg  # path to the brand mark
+  max_height_mm: 18                       # optional, default 18mm

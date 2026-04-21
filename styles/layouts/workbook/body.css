@@ -1,0 +1,842 @@
+/* Katib — Workbook layout · body styles
+ *
+ * Use for: how-to, tutorial, onboarding, handoff.
+ * Adds numbered steps, callout boxes, do-vs-don't, screenshot frames.
+ * Inherits semantic tokens via :root (domain injects values).
+ */
+
+:root {
+  --page-bg: #FBF8F3;
+  --accent: #C85A3E;
+  --accent-2: #3A7D8B;
+  --accent-on: #FFFFFF;
+  --text: #2A2A2A;
+  --text-secondary: #4A4A4A;
+  --text-tertiary: #7A7268;
+  --border: #E5DED1;
+  --border-strong: #CFC4AF;
+  --tag-bg: #EFE5D6;
+  --tag-fg: #2A2A2A;
+  --code-bg: #F3EEE3;
+  --code-fg: #2A2A2A;
+  --callout-info-bg: #EAF1F4;
+  --callout-info-accent: #3A7D8B;
+  --callout-warn-bg: #F5EDDA;
+  --callout-warn-accent: #B8842A;
+  --callout-danger-bg: #F5E1E1;
+  --callout-danger-accent: #B53E3E;
+  --callout-tip-bg: #E8F0E2;
+  --callout-tip-accent: #5A8549;
+  --step-circle-bg: #C85A3E;
+  --step-circle-fg: #FFFFFF;
+  --screenshot-frame: #CFC4AF;
+  --font-primary: Inter, system-ui, sans-serif;
+  --font-display: Inter, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* ===== Base ===== */
+html { background: var(--page-bg); }
+
+body {
+  margin: 0; padding: 0;
+  font-family: var(--font-primary);
+  color: var(--text);
+  background: var(--page-bg);
+  line-height: 1.55;
+  font-size: 10.5pt;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[lang="ar"] body {
+  font-size: 11pt;
+  line-height: 1.7;
+}
+
+/* ===== Headings ===== */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  page-break-after: avoid;
+}
+
+h1 {
+  font-size: 24pt;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 8pt 0;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+html[lang="ar"] h1 { letter-spacing: normal; }
+
+h1 .subtitle {
+  display: block;
+  font-size: 12pt;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  margin-top: 6pt;
+  letter-spacing: normal;
+}
+
+h2 {
+  font-size: 14pt;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 22pt 0 10pt 0;
+  color: var(--accent);
+}
+
+h3 {
+  font-size: 11.5pt;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 16pt 0 6pt 0;
+  color: var(--text-secondary);
+}
+
+h4 {
+  font-size: 10.5pt;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 12pt 0 4pt 0;
+  color: var(--text-secondary);
+}
+
+/* ===== Paragraphs ===== */
+p { margin: 6pt 0; orphans: 2; widows: 2; }
+
+p.lead {
+  font-size: 11.5pt;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: 14pt;
+}
+
+strong { font-weight: 600; }
+em { font-style: italic; }
+
+/* ===== Lists ===== */
+ul, ol { margin: 6pt 0 6pt 18pt; padding: 0; }
+html[dir="rtl"] ul, html[dir="rtl"] ol { margin-left: 0; margin-right: 18pt; }
+li { margin: 3pt 0; }
+
+/* ===== Numbered steps ===== */
+.steps {
+  counter-reset: step;
+  margin: 16pt 0;
+  list-style: none;
+  padding: 0;
+}
+
+html[dir="rtl"] .steps { padding: 0; }
+
+.step {
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: 12pt;
+  margin: 14pt 0;
+  page-break-inside: avoid;
+}
+
+html[dir="rtl"] .step { flex-direction: row-reverse; }
+
+.step::before {
+  content: counter(step);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22pt;
+  height: 22pt;
+  background: var(--step-circle-bg);
+  color: var(--step-circle-fg);
+  border-radius: 11pt;
+  font-weight: 600;
+  font-size: 10pt;
+  line-height: 1;
+  margin-top: 1pt;
+  font-family: var(--font-display);
+}
+
+html[lang="ar"] .step::before {
+  font-family: var(--font-display);
+}
+
+.step-body { flex: 1; min-width: 0; }
+
+.step-body h3 {
+  margin: 0 0 4pt 0;
+  font-size: 11.5pt;
+  color: var(--text);
+}
+
+.step-body p:first-of-type { margin-top: 2pt; }
+
+/* ===== Callouts ===== */
+.callout {
+  margin: 12pt 0;
+  padding: 10pt 14pt;
+  border-radius: 6pt;
+  border-left: 3pt solid var(--callout-info-accent);
+  background: var(--callout-info-bg);
+  page-break-inside: avoid;
+}
+
+html[dir="rtl"] .callout {
+  border-left: none;
+  border-right: 3pt solid var(--callout-info-accent);
+}
+
+.callout-label {
+  display: block;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--callout-info-accent);
+  margin-bottom: 4pt;
+}
+
+html[lang="ar"] .callout-label {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.callout p { margin: 2pt 0; font-size: 10pt; }
+
+.callout-info { background: var(--callout-info-bg); border-color: var(--callout-info-accent); }
+.callout-info .callout-label { color: var(--callout-info-accent); }
+
+.callout-warn { background: var(--callout-warn-bg); border-color: var(--callout-warn-accent); }
+.callout-warn .callout-label { color: var(--callout-warn-accent); }
+
+.callout-danger { background: var(--callout-danger-bg); border-color: var(--callout-danger-accent); }
+.callout-danger .callout-label { color: var(--callout-danger-accent); }
+
+.callout-tip { background: var(--callout-tip-bg); border-color: var(--callout-tip-accent); }
+.callout-tip .callout-label { color: var(--callout-tip-accent); }
+
+/* ===== Do / Don't ===== */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10pt;
+  margin: 14pt 0;
+  page-break-inside: avoid;
+}
+
+.do-dont .do,
+.do-dont .dont {
+  padding: 10pt 12pt;
+  border-radius: 6pt;
+  font-size: 10pt;
+  line-height: 1.45;
+}
+
+.do-dont .do {
+  background: var(--callout-tip-bg);
+  border-left: 3pt solid var(--callout-tip-accent);
+}
+
+.do-dont .dont {
+  background: var(--callout-danger-bg);
+  border-left: 3pt solid var(--callout-danger-accent);
+}
+
+html[dir="rtl"] .do-dont .do,
+html[dir="rtl"] .do-dont .dont {
+  border-left: none;
+  border-right: 3pt solid;
+}
+
+html[dir="rtl"] .do-dont .do { border-right-color: var(--callout-tip-accent); }
+html[dir="rtl"] .do-dont .dont { border-right-color: var(--callout-danger-accent); }
+
+.do-dont .label {
+  display: block;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4pt;
+}
+
+html[lang="ar"] .do-dont .label {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.do-dont .do .label { color: var(--callout-tip-accent); }
+.do-dont .dont .label { color: var(--callout-danger-accent); }
+
+/* ===== Screenshots ===== */
+figure.screenshot {
+  margin: 14pt 0;
+  page-break-inside: avoid;
+}
+
+figure.screenshot img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 1pt solid var(--screenshot-frame);
+  border-radius: 4pt;
+}
+
+figure.screenshot figcaption {
+  font-size: 8.5pt;
+  color: var(--text-tertiary);
+  margin-top: 6pt;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+html[lang="ar"] figure.screenshot figcaption {
+  font-style: normal;
+}
+
+/* ===== Checklist ===== */
+ul.checklist {
+  list-style: none;
+  margin: 10pt 0;
+  padding: 0;
+}
+
+ul.checklist li {
+  position: relative;
+  padding-left: 18pt;
+  margin: 4pt 0;
+}
+
+html[dir="rtl"] ul.checklist li {
+  padding-left: 0;
+  padding-right: 18pt;
+}
+
+ul.checklist li::before {
+  content: "☐";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text-tertiary);
+  font-size: 11pt;
+  line-height: 1.4;
+}
+
+html[dir="rtl"] ul.checklist li::before { left: auto; right: 0; }
+
+/* ===== Code (LTR always) ===== */
+pre, code {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 1pt 4pt;
+  border-radius: 3pt;
+  font-size: 9pt;
+}
+
+pre {
+  background: #1A1A1A;
+  color: #E8E8E8;
+  padding: 10pt 14pt;
+  border-radius: 6pt;
+  font-size: 8.5pt;
+  line-height: 1.5;
+  margin: 10pt 0;
+  page-break-inside: avoid;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ===== Tables ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12pt 0;
+  font-size: 9.5pt;
+  page-break-inside: auto;
+}
+
+thead { display: table-header-group; }
+tr { page-break-inside: avoid; }
+
+th {
+  background: var(--accent);
+  color: var(--accent-on);
+  padding: 6pt 10pt;
+  text-align: left;
+  font-weight: 600;
+  font-size: 9.5pt;
+}
+
+html[dir="rtl"] th { text-align: right; }
+
+td {
+  border: 0.5pt solid var(--border);
+  padding: 5pt 10pt;
+  vertical-align: top;
+}
+
+/* ===== Tags ===== */
+.tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  padding: 2pt 6pt;
+  border-radius: 4pt;
+  font-size: 8.5pt;
+  font-weight: 500;
+}
+
+/* ===== Links ===== */
+a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-decoration-thickness: 0.5pt;
+  text-underline-offset: 2pt;
+}
+
+/* ===== Dividers ===== */
+hr {
+  border: none;
+  border-top: 0.5pt solid var(--border);
+  margin: 20pt 0;
+}
+
+/* ===== Utility ===== */
+.muted { color: var(--text-tertiary); }
+.small { font-size: 8.5pt; }
+
+.eyebrow {
+  font-size: 8pt;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4pt;
+}
+
+html[lang="ar"] .eyebrow {
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 600;
+}
+
+.page-break { page-break-before: always; }
+.no-break { page-break-inside: avoid; }
+
+/* ===== Prerequisites box ===== */
+.prereqs {
+  margin: 14pt 0 20pt 0;
+  padding: 12pt 16pt;
+  background: #FFFFFF;
+  border: 0.5pt solid var(--border);
+  border-radius: 6pt;
+  page-break-inside: avoid;
+}
+
+.prereqs h3 {
+  margin: 0 0 6pt 0;
+  font-size: 10pt;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+html[lang="ar"] .prereqs h3 {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* ===== Module (tutorial) ===== */
+.module {
+  margin: 0 0 24pt 0;
+  page-break-before: always;
+  page-break-inside: auto;
+}
+
+.module:first-of-type { page-break-before: auto; }
+
+.module-head {
+  margin: 0 0 12pt 0;
+  padding-bottom: 10pt;
+  border-bottom: 0.5pt solid var(--border);
+}
+
+.module-head .eyebrow {
+  margin-bottom: 6pt;
+  color: var(--accent-2);
+}
+
+.module-head h2 {
+  margin: 0 0 4pt 0;
+  color: var(--text);
+  font-size: 20pt;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+html[lang="ar"] .module-head h2 { letter-spacing: normal; }
+
+.module-head .module-intro {
+  font-size: 10.5pt;
+  color: var(--text-secondary);
+  margin: 6pt 0 0 0;
+  line-height: 1.55;
+}
+
+/* ===== Objectives box ===== */
+.objectives {
+  margin: 14pt 0;
+  padding: 12pt 16pt;
+  background: var(--callout-info-bg);
+  border-left: 3pt solid var(--callout-info-accent);
+  border-radius: 6pt;
+  page-break-inside: avoid;
+}
+
+html[dir="rtl"] .objectives {
+  border-left: none;
+  border-right: 3pt solid var(--callout-info-accent);
+}
+
+.objectives .label {
+  display: block;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--callout-info-accent);
+  margin-bottom: 6pt;
+}
+
+html[lang="ar"] .objectives .label {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.objectives ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.objectives li {
+  position: relative;
+  padding-left: 16pt;
+  margin: 3pt 0;
+  font-size: 10pt;
+}
+
+html[dir="rtl"] .objectives li {
+  padding-left: 0;
+  padding-right: 16pt;
+}
+
+.objectives li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--callout-info-accent);
+  font-size: 7pt;
+  line-height: 1.7;
+}
+
+html[dir="rtl"] .objectives li::before { left: auto; right: 0; }
+
+/* ===== Table of contents (onboarding) ===== */
+.toc {
+  margin: 20pt 0 0 0;
+  page-break-after: always;
+  page-break-inside: auto;
+}
+
+.toc h2 {
+  margin: 0 0 14pt 0;
+  font-size: 18pt;
+  color: var(--text);
+}
+
+.toc-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6pt;
+  margin: 6pt 0;
+  font-size: 10.5pt;
+  page-break-inside: avoid;
+}
+
+html[dir="rtl"] .toc-row { flex-direction: row-reverse; }
+
+.toc-row .toc-title { color: var(--text); }
+.toc-row .toc-part {
+  color: var(--text-tertiary);
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  min-width: 56pt;
+}
+
+html[lang="ar"] .toc-row .toc-part {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.toc-row .toc-leader {
+  flex: 1;
+  border-bottom: 0.5pt dotted var(--border-strong);
+  position: relative;
+  top: -3pt;
+}
+
+.toc-row .toc-page {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: 9.5pt;
+  direction: ltr;
+}
+
+/* ===== Section divider (onboarding) ===== */
+.section-divider {
+  page-break-before: always;
+  page-break-after: always;
+  page-break-inside: avoid;
+  min-height: 220mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40pt 0;
+}
+
+.section-divider .section-part {
+  font-size: 10pt;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-2);
+  margin-bottom: 10pt;
+}
+
+html[lang="ar"] .section-divider .section-part {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.section-divider h1 {
+  font-size: 32pt;
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0 0 12pt 0;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+html[lang="ar"] .section-divider h1 { letter-spacing: normal; }
+
+.section-divider .section-summary {
+  font-size: 11.5pt;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 130mm;
+  margin: 0;
+}
+
+/* ===== Handoff meta (status banner) ===== */
+.handoff-meta {
+  margin: 0 0 18pt 0;
+  padding: 14pt 16pt;
+  background: #FFFFFF;
+  border: 0.5pt solid var(--border);
+  border-radius: 6pt;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10pt 18pt;
+  page-break-inside: avoid;
+}
+
+.handoff-meta .field { font-size: 9pt; }
+.handoff-meta .field .label {
+  display: block;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 3pt;
+}
+
+html[lang="ar"] .handoff-meta .field .label {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.handoff-meta .field .value {
+  font-size: 10pt;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Status chips */
+.status-done,
+.status-wip,
+.status-blocked {
+  display: inline-block;
+  padding: 2pt 8pt;
+  border-radius: 10pt;
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.status-done {
+  background: var(--callout-tip-bg);
+  color: var(--callout-tip-accent);
+}
+
+.status-wip {
+  background: var(--callout-warn-bg);
+  color: var(--callout-warn-accent);
+}
+
+.status-blocked {
+  background: var(--callout-danger-bg);
+  color: var(--callout-danger-accent);
+}
+
+/* ===== Contacts (onboarding / handoff) ===== */
+.contacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10pt;
+  margin: 12pt 0;
+  page-break-inside: avoid;
+}
+
+.contact-card {
+  padding: 10pt 12pt;
+  background: #FFFFFF;
+  border: 0.5pt solid var(--border);
+  border-radius: 6pt;
+  font-size: 9.5pt;
+  line-height: 1.5;
+}
+
+.contact-card .role {
+  display: block;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 3pt;
+}
+
+html[lang="ar"] .contact-card .role {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.contact-card .name {
+  display: block;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2pt;
+}
+
+.contact-card .contact-line {
+  color: var(--text-secondary);
+  font-size: 9pt;
+}
+
+/* ===== Shipped list (handoff) ===== */
+.shipped-list {
+  margin: 10pt 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shipped-list li {
+  position: relative;
+  padding-left: 20pt;
+  margin: 5pt 0;
+  line-height: 1.55;
+}
+
+html[dir="rtl"] .shipped-list li {
+  padding-left: 0;
+  padding-right: 20pt;
+}
+
+.shipped-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--callout-tip-accent);
+  font-weight: 700;
+  font-size: 11pt;
+  line-height: 1.5;
+}
+
+html[dir="rtl"] .shipped-list li::before { left: auto; right: 0; }
+
+/* ===== Issues list (handoff) ===== */
+.issues {
+  margin: 10pt 0;
+}
+
+.issue {
+  display: grid;
+  grid-template-columns: 72pt 1fr;
+  gap: 10pt;
+  padding: 8pt 0;
+  border-top: 0.5pt solid var(--border);
+  font-size: 10pt;
+  page-break-inside: avoid;
+}
+
+.issue:last-child { border-bottom: 0.5pt solid var(--border); }
+
+.issue .severity {
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+html[lang="ar"] .issue .severity {
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.issue.severity-high .severity { color: var(--callout-danger-accent); }
+.issue.severity-med .severity { color: var(--callout-warn-accent); }
+.issue.severity-low .severity { color: var(--text-tertiary); }
+
+.issue .body .title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 2pt;
+}
+
+.issue .body .detail {
+  color: var(--text-secondary);
+  font-size: 9.5pt;
+  line-height: 1.5;
+}

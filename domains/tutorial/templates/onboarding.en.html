@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-left {
+      content: "{{ reference_code or 'ONBOARDING' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    right: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 38pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 18pt;
+    line-height: 1.4;
+    max-width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; left: 22mm;
+    width: 130mm;
+    font-size: 30pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.15;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 55mm; left: 22mm;
+    width: 130mm;
+    font-size: 12pt;
+    color: var(--accent);
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { left: 10mm; }
+  .cover-page-image .cover-date { right: 10mm; }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "ONBOARDING" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">Onboarding</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "ONBOARDING" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Table of contents -->
+  <section class="toc">
+    <h2>Contents</h2>
+    <div class="toc-row">
+      <span class="toc-part">Part I</span>
+      <span class="toc-title">Welcome and company context</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">03</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">Part II</span>
+      <span class="toc-title">Your role and stakeholders</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">06</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">Part III</span>
+      <span class="toc-title">Tools and environment setup</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">09</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">Part IV</span>
+      <span class="toc-title">First week — day by day</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">13</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">Closing</span>
+      <span class="toc-title">Contacts and who to ask</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">17</span>
+    </div>
+  </section>
+
+  <!-- Part I -->
+  <section class="section-divider">
+    <div class="section-part">Part I</div>
+    <h1>Welcome aboard</h1>
+    <p class="section-summary">A brief tour of the company, how we work, and why your role matters to the mission we're building toward.</p>
+  </section>
+
+  <h2>Who we are</h2>
+  <p>We build tools that help people think more clearly. Our team is small, distributed, and deliberate — we ship less but we ship what matters.</p>
+
+  <h2>How we work</h2>
+  <ul>
+    <li><strong>Async-first:</strong> most coordination happens in writing; meetings are reserved for decisions that need a real-time conversation.</li>
+    <li><strong>Documented decisions:</strong> every non-trivial choice gets an ADR, so the reasoning survives turnover.</li>
+    <li><strong>Ship-learn-adjust:</strong> we prefer small bets we can observe over grand plans we can't verify.</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">Why this matters</span>
+    <p>The async-first rhythm means your first reflex should be a written update, not a meeting request. That single habit will unblock you and your teammates faster than anything else.</p>
+  </div>
+
+  <h2>Our mission</h2>
+  <p>Build the calmest, clearest thinking tools we can — ones that reward patient use and age gracefully alongside the people using them.</p>
+
+  <!-- Part II -->
+  <section class="section-divider">
+    <div class="section-part">Part II</div>
+    <h1>Your role</h1>
+    <p class="section-summary">What we expect from you in the first 90 days, who you'll work with, and how success will be measured.</p>
+  </section>
+
+  <h2>Responsibilities</h2>
+  <ul>
+    <li>Own your area end-to-end: planning, shipping, and following up after release.</li>
+    <li>Write down what you learn so the next person moves faster.</li>
+    <li>Flag risks early; late surprises cost much more than early concerns.</li>
+  </ul>
+
+  <h2>First 30 / 60 / 90 days</h2>
+  <table>
+    <thead>
+      <tr><th>Window</th><th>Focus</th><th>Signal of success</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Days 1–30</td><td>Learn the codebase, meet the team, ship one small change</td><td>Your first PR is merged</td></tr>
+      <tr><td>Days 31–60</td><td>Lead a full feature from spec to release</td><td>Users are using what you shipped</td></tr>
+      <tr><td>Days 61–90</td><td>Propose and drive a meaningful improvement</td><td>Team adopts your proposal</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Stakeholders you'll work with</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">Direct manager</span>
+      <span class="name">Your manager</span>
+      <span class="contact-line">Weekly 1:1 · async updates in between</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Peer engineer</span>
+      <span class="name">Your onboarding buddy</span>
+      <span class="contact-line">First point of contact for quick questions</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Product partner</span>
+      <span class="name">Product lead</span>
+      <span class="contact-line">Aligns roadmap, priorities, and user feedback</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Design partner</span>
+      <span class="name">Design lead</span>
+      <span class="contact-line">Reviews design work before shipping</span>
+    </div>
+  </div>
+
+  <!-- Part III -->
+  <section class="section-divider">
+    <div class="section-part">Part III</div>
+    <h1>Tools and environment</h1>
+    <p class="section-summary">Everything you need installed, authenticated, and verified before you touch real code.</p>
+  </section>
+
+  <h2>Accounts to set up</h2>
+  <ul class="checklist">
+    <li>Company email and calendar</li>
+    <li>Source control (with 2FA enabled on day one)</li>
+    <li>Chat workspace and your team's channels</li>
+    <li>Password manager and any shared vaults you need</li>
+    <li>Time-tracking and expense tools, if applicable</li>
+  </ul>
+
+  <h2>Software to install</h2>
+  <ol class="steps">
+    <li class="step">
+      <div class="step-body">
+        <h3>Install the core toolchain</h3>
+        <p>Follow the repo's <code>INSTALL.md</code>. When in doubt, prefer the exact versions listed rather than the latest.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-body">
+        <h3>Clone the main repo and run it locally</h3>
+        <p>Success means you see the app running on your machine at the expected port, with no red errors in the console.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-body">
+        <h3>Run the test suite once</h3>
+        <p>A green run proves your environment matches CI. If tests fail locally but pass in CI, that's a sign to pair with a teammate before debugging solo.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">Security basics</span>
+    <p>Turn on 2FA everywhere on day one. Never paste credentials into chat, even in DMs. If you need to share a secret, use the team's secrets manager.</p>
+  </div>
+
+  <!-- Part IV -->
+  <section class="section-divider">
+    <div class="section-part">Part IV</div>
+    <h1>Your first week</h1>
+    <p class="section-summary">A day-by-day walkthrough so nothing important slips, and so you can relax into a steady rhythm.</p>
+  </section>
+
+  <h3>Day 1 — Meet and explore</h3>
+  <ul class="checklist">
+    <li>1:1 with your manager and onboarding buddy</li>
+    <li>Intro to the team in the shared channel</li>
+    <li>Read the architecture overview end-to-end (no code yet)</li>
+  </ul>
+
+  <h3>Day 2 — Environment</h3>
+  <ul class="checklist">
+    <li>Install the toolchain; run the app locally</li>
+    <li>Green test run on your machine</li>
+    <li>First small commit to a scratch branch</li>
+  </ul>
+
+  <h3>Day 3 — First change</h3>
+  <ul class="checklist">
+    <li>Pick a starter issue from the "good-first-issue" list</li>
+    <li>Open a draft PR early; invite review as you go</li>
+    <li>Document anything surprising you ran into</li>
+  </ul>
+
+  <h3>Day 4 — Ship</h3>
+  <ul class="checklist">
+    <li>Address review feedback and merge your first change</li>
+    <li>Watch it roll out in the live environment</li>
+    <li>Write a short retro of what slowed you down</li>
+  </ul>
+
+  <h3>Day 5 — Retro and plan</h3>
+  <ul class="checklist">
+    <li>1:1 with manager to reflect on the week</li>
+    <li>Agree on the focus for weeks 2 and 3</li>
+    <li>Share one "I wish I'd known" note to improve this onboarding</li>
+  </ul>
+
+  <!-- Closing -->
+  <section class="section-divider">
+    <div class="section-part">Closing</div>
+    <h1>Who to ask</h1>
+    <p class="section-summary">When something's unclear, ask early. Nobody expects you to know everything — but we do expect you to surface blockers.</p>
+  </section>
+
+  <h2>By topic</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">Codebase and architecture</span>
+      <span class="name">Engineering lead</span>
+      <span class="contact-line">For structural questions and deep-context decisions</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Product and roadmap</span>
+      <span class="name">Product lead</span>
+      <span class="contact-line">For "why are we building this" questions</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">People and time off</span>
+      <span class="name">Operations</span>
+      <span class="contact-line">Leave, benefits, office logistics</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Anything else</span>
+      <span class="name">Your manager</span>
+      <span class="contact-line">When you're not sure who to ask — ask here first</span>
+    </div>
+  </div>
+
+  <p>Welcome. We're glad you're here.</p>
+
+</body>
+</html>

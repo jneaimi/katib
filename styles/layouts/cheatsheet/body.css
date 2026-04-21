@@ -1,0 +1,245 @@
+/* Katib — Cheatsheet layout · body styles
+ *
+ * Dense single-page reference. Two-column grid with section cards.
+ * Designed for high information density; not for narrative content.
+ */
+
+:root {
+  --page-bg: #FBF8F3;
+  --accent: #C85A3E;
+  --accent-2: #3A7D8B;
+  --accent-on: #FFFFFF;
+  --text: #2A2A2A;
+  --text-secondary: #4A4A4A;
+  --text-tertiary: #7A7268;
+  --border: #E5DED1;
+  --border-strong: #CFC4AF;
+  --tag-bg: #EFE5D6;
+  --tag-fg: #2A2A2A;
+  --code-bg: #F3EEE3;
+  --code-fg: #2A2A2A;
+  --font-primary: Inter, system-ui, sans-serif;
+  --font-display: Inter, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+html { background: var(--page-bg); }
+
+body {
+  margin: 0; padding: 0;
+  font-family: var(--font-primary);
+  color: var(--text);
+  background: var(--page-bg);
+  line-height: 1.35;
+  font-size: 8.5pt;
+  -webkit-font-smoothing: antialiased;
+}
+
+html[lang="ar"] body {
+  font-size: 9pt;
+  line-height: 1.5;
+}
+
+/* ===== Header strip ===== */
+.cs-header {
+  border-bottom: 1pt solid var(--accent);
+  padding-bottom: 6pt;
+  margin-bottom: 10pt;
+}
+
+.cs-header h1 {
+  font-size: 16pt;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+html[lang="ar"] .cs-header h1 { letter-spacing: normal; }
+
+.cs-header .subtitle {
+  font-size: 9pt;
+  color: var(--text-tertiary);
+  margin-top: 2pt;
+}
+
+/* ===== Grid ===== */
+.cs-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10pt;
+}
+
+.cs-grid.three-col { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ===== Section card ===== */
+.cs-section {
+  background: #FFFFFF;
+  border: 0.5pt solid var(--border);
+  border-radius: 5pt;
+  padding: 8pt 10pt;
+  page-break-inside: avoid;
+}
+
+.cs-section h2 {
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 5pt 0;
+  padding-bottom: 3pt;
+  border-bottom: 0.5pt solid var(--border);
+  letter-spacing: 0.02em;
+}
+
+html[lang="ar"] .cs-section h2 { letter-spacing: normal; }
+
+.cs-section h3 {
+  font-size: 8.5pt;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 6pt 0 3pt 0;
+}
+
+.cs-section p { margin: 3pt 0; }
+
+.cs-section ul, .cs-section ol {
+  margin: 3pt 0 3pt 14pt;
+  padding: 0;
+}
+
+html[dir="rtl"] .cs-section ul,
+html[dir="rtl"] .cs-section ol {
+  margin-left: 0; margin-right: 14pt;
+}
+
+.cs-section li { margin: 2pt 0; }
+
+/* ===== Key-value rows (common cheatsheet pattern) ===== */
+dl.kv {
+  margin: 4pt 0;
+  font-size: 8pt;
+  line-height: 1.4;
+}
+
+dl.kv dt {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-2);
+  display: inline-block;
+  margin-right: 4pt;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] dl.kv dt { margin-right: 0; margin-left: 4pt; }
+
+dl.kv dd {
+  display: inline;
+  margin: 0;
+  color: var(--text);
+}
+
+dl.kv dd::after { content: "\A"; white-space: pre; }
+
+/* ===== Code ===== */
+pre, code {
+  font-family: var(--font-mono);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+code {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 0.5pt 3pt;
+  border-radius: 2pt;
+  font-size: 7.5pt;
+}
+
+pre {
+  background: #1A1A1A;
+  color: #E8E8E8;
+  padding: 6pt 8pt;
+  border-radius: 4pt;
+  font-size: 7.5pt;
+  line-height: 1.45;
+  margin: 4pt 0;
+  page-break-inside: avoid;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* ===== Keyboard keys ===== */
+kbd {
+  font-family: var(--font-mono);
+  background: #FFFFFF;
+  border: 0.5pt solid var(--border-strong);
+  border-bottom-width: 1pt;
+  border-radius: 2pt;
+  padding: 0 3pt;
+  font-size: 7.5pt;
+  box-shadow: 0 0 0 0 var(--border);
+  color: var(--text);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* ===== Tags ===== */
+.tag {
+  display: inline-block;
+  background: var(--tag-bg);
+  color: var(--tag-fg);
+  padding: 1pt 4pt;
+  border-radius: 3pt;
+  font-size: 7.5pt;
+  font-weight: 500;
+  margin-right: 2pt;
+}
+
+html[dir="rtl"] .tag { margin-right: 0; margin-left: 2pt; }
+
+/* ===== Footer ===== */
+.cs-footer {
+  margin-top: 12pt;
+  padding-top: 6pt;
+  border-top: 0.5pt solid var(--border);
+  font-size: 7.5pt;
+  color: var(--text-tertiary);
+  display: flex;
+  justify-content: space-between;
+}
+
+html[dir="rtl"] .cs-footer { flex-direction: row-reverse; }
+
+/* ===== Links ===== */
+a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-decoration-thickness: 0.4pt;
+  text-underline-offset: 1.5pt;
+}
+
+/* ===== Utility ===== */
+.muted { color: var(--text-tertiary); }
+strong { font-weight: 700; }
+em { font-style: italic; }
+
+.eyebrow {
+  font-size: 7pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+html[lang="ar"] .eyebrow {
+  letter-spacing: normal;
+  text-transform: none;
+}

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-left {
+      content: "{{ reference_code or 'دليل تعليمي' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    left: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 40pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0 auto;
+    line-height: 1.25;
+    max-width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin: 18pt auto 0 auto;
+    line-height: 1.6;
+    max-width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+  }
+
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; right: 22mm;
+    width: 130mm;
+    font-size: 30pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 62mm; right: 22mm;
+    width: 130mm;
+    font-size: 12pt;
+    color: var(--accent);
+    line-height: 1.6;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { right: 10mm; }
+  .cover-page-image .cover-date { left: 10mm; }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "دليل تعليمي" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">دليل تعليمي</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "دليل تعليمي" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <p class="lead">{{ subtitle or "دليلٌ متكامل عبر وحدات متدرجة، يصحبك من الإعداد الأوّل إلى الاستخدام المستقلّ الواثق." }}</p>
+
+  <div class="objectives">
+    <span class="label">ما ستتعلّمه</span>
+    <ul>
+      <li>تهيئة البيئة وفهم المفاهيم الأساسية</li>
+      <li>إنجاز مهمّتك الأولى من البداية إلى النهاية دون مساعدة</li>
+      <li>التعرّف على الأخطاء الشائعة والتعافي منها</li>
+    </ul>
+  </div>
+
+  <h2>قبل أن تبدأ</h2>
+  <ul class="checklist">
+    <li>حساب يملك صلاحية الوصول المطلوبة</li>
+    <li>متصفّح حديث على نظام تشغيل محدّث</li>
+    <li>نحو ثلاثين دقيقة لإتمام الجولة كاملة</li>
+  </ul>
+
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة الأولى &middot; الأساسيّات</div>
+      <h2>هيّئ البيئة</h2>
+      <p class="module-intro">ابدأ بتثبيت الأدوات، وتحقّق من أن بيئتك قادرة على الوصول إلى جميع الخدمات التي ستحتاجها في الوحدات القادمة.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>تثبيت الأداة الأساسية والتحقّق منها</li>
+        <li>تسجيل الدخول على الخدمة المشتركة</li>
+        <li>تشغيل أمر تجريبي يؤكّد اتصال جميع المكوّنات</li>
+      </ul>
+    </div>
+
+    <h3>الخطوات</h3>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>ثبّت الأداة</h3>
+          <p>استخدم المثبّت المناسب لنظامك. على macOS يكون عادةً <code dir="ltr">brew install &lt;tool&gt;</code>، وعلى Linux استعمل مدير الحزم لديك.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>سجّل الدخول</h3>
+          <p>افتح الأداة وسجّل الدخول باستخدام بيانات مساحة عملك. ستظهر رسالة تأكيد خلال ثوانٍ قليلة.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>تحقّق من الاتصال</h3>
+          <p>شغّل <code dir="ltr">tool status</code> للتأكّد من اتصال الأداة بكلّ الخدمات الخلفية. ينبغي أن تظهر جميع الفحوصات خضراء.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">نصيحة</span>
+      <p>إذا أظهرت <code dir="ltr">status</code> تحذيرًا، أعد التشغيل مع <code dir="ltr">--verbose</code> لمعرفة أي اعتمادية تحديدًا تعاني من ضعف.</p>
+    </div>
+  </section>
+
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة الثانية &middot; أوّل مهمّة</div>
+      <h2>أنجز سير عمل حقيقي</h2>
+      <p class="module-intro">بعد تهيئة البيئة، سِر خلال سيناريو واقعي من أوّله إلى آخره حتى يرسخ التصوّر الذهني للعمل.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>إنشاء عنصر جديد عبر سير العمل الأساسي</li>
+        <li>تعديل العنصر وحفظه بثقة</li>
+        <li>مشاركة النتيجة مع زميل</li>
+      </ul>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>أنشئ أوّل عنصر لك</h3>
+          <p>من الشاشة الرئيسية، اختر <strong>جديد</strong> وأكمل الحقول المطلوبة. يمكنك إضافة البيانات الاختيارية لاحقًا.</p>
+          {% if screenshots and screenshots.step_1 %}
+          <figure class="screenshot">
+            <img src="{{ screenshots.step_1.src }}" alt="{{ screenshots.step_1.alt }}">
+            {% if screenshots.step_1.caption %}<figcaption>{{ screenshots.step_1.caption }}</figcaption>{% endif %}
+          </figure>
+          {% endif %}
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>نفّذ تعديلًا</h3>
+          <p>غيّر قيمة أحد الحقول واحفظ، ثم تأكّد من أن التغيير يظهر في قائمة العرض خلال ثانية.</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>شارك الرابط</h3>
+          <p>استخدم خيار المشاركة لإرسال رابط إلى زميل. ينبغي أن يتمكّن من فتح العنصر دون حاجة إلى صلاحيات إضافية.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="do-dont">
+      <div class="do">
+        <span class="label">افعل</span>
+        استخدم أسماء وصفية. البحث يصبح فعّالًا حين تحمل الأسماء معنى.
+      </div>
+      <div class="dont">
+        <span class="label">لا تفعل</span>
+        لا تكرّر الأسماء بين المجلدات. التكرار يُشوّش نتائج البحث.
+      </div>
+    </div>
+  </section>
+
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة الثالثة &middot; تعميق المهارة</div>
+      <h2>التعامل مع الحالات الصعبة والتعافي</h2>
+      <p class="module-intro">العمل الحقيقي يواجه احتكاكات. تغطّي هذه الوحدة أكثر ثلاث حالات فشل شيوعًا، ومسار تعافٍ واضح لكلٍّ منها.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>التعرّف على الأنماط الثلاثة الأكثر احتمالًا للفشل</li>
+        <li>تطبيق مسار التعافي القياسي دون فقدان العمل</li>
+        <li>تمييز متى تُصعّد الأمر ومتى تواصل المعالجة</li>
+      </ul>
+    </div>
+
+    <h3>حالات الفشل الشائعة</h3>
+    <ul>
+      <li><strong>صلاحية مرفوضة:</strong> قد تكون صلاحياتك تغيّرت أو انتهت صلاحية المشاركة — أعد تسجيل الدخول وحاول من جديد.</li>
+      <li><strong>انتهت المهلة:</strong> الخدمة الخلفية قد تعاني من بطء — راجع صفحة الحالة قبل المضيّ في التصحيح.</li>
+      <li><strong>فشل صامت:</strong> يبدو أن الإجراء نجح لكن الواجهة لم تتحدّث — تحديث الصفحة يحلّ المشكلة في معظم الحالات.</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <span class="callout-label">انتبه</span>
+      <p>إن ظهر شريط أحمر بدون رسالة واضحة، فالإجراء لم يُحفظ — الخطأ في الخادم. سجّل معرّف الطلب من أدوات المطوّر قبل المحاولة مرة أخرى.</p>
+    </div>
+
+    <h3>متى تُصعّد</h3>
+    <p>صعّد الأمر إلى مسؤول الفريق إذا استمرّ الفشل نفسه عبر محاولتين كاملتين وتحديث صفحة. أرفق معرّف الطلب وتسلسل الخطوات بدقّة.</p>
+  </section>
+
+  <h2>الخلاصة</h2>
+  <p>لقد أنهيت الوحدات الثلاث. أصبحت الآن قادرًا على تهيئة الأداة، وتنفيذ سير العمل الأساسي من البداية للنهاية، والتعافي من أكثر حالات الفشل شيوعًا.</p>
+
+  <h2>ما التالي</h2>
+  <ul>
+    <li>راجع الورقة المرجعية للاختصارات التي تعتمد على لوحة المفاتيح.</li>
+    <li>اقرأ وثائق المرجع لاستكشاف ميزات لم نغطّها هنا.</li>
+    <li>اعمل على مهمّة حقيقية مع زميل لترسيخ فهمك العمليّ.</li>
+  </ul>
+
+</body>
+</html>

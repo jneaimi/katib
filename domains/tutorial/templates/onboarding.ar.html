@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-left {
+      content: "{{ reference_code or 'تأهيل' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    left: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+
+  .cover-page .cover-title {
+    font-size: 38pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0 auto;
+    line-height: 1.25;
+    max-width: 150mm;
+  }
+
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin: 18pt auto 0 auto;
+    line-height: 1.6;
+    max-width: 140mm;
+  }
+
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+  }
+
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; right: 22mm;
+    width: 130mm;
+    font-size: 30pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 62mm; right: 22mm;
+    width: 130mm;
+    font-size: 12pt;
+    color: var(--accent);
+    line-height: 1.6;
+    margin: 0;
+    text-align: right;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { right: 10mm; }
+  .cover-page-image .cover-date { left: 10mm; }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "تأهيل" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">دليل التأهيل</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "تأهيل" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="toc">
+    <h2>المحتويات</h2>
+    <div class="toc-row">
+      <span class="toc-part">الجزء الأول</span>
+      <span class="toc-title">الترحيب والتعريف بالشركة</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">03</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">الجزء الثاني</span>
+      <span class="toc-title">دورك والفريق المحيط بك</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">06</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">الجزء الثالث</span>
+      <span class="toc-title">الأدوات وتهيئة البيئة</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">09</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">الجزء الرابع</span>
+      <span class="toc-title">الأسبوع الأول — يومًا بيوم</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">13</span>
+    </div>
+    <div class="toc-row">
+      <span class="toc-part">الختام</span>
+      <span class="toc-title">جهات التواصل ومن تسأل</span>
+      <span class="toc-leader"></span>
+      <span class="toc-page">17</span>
+    </div>
+  </section>
+
+  <section class="section-divider">
+    <div class="section-part">الجزء الأول</div>
+    <h1>أهلًا بك</h1>
+    <p class="section-summary">جولة موجزة حول الشركة وأسلوب عملنا، ولماذا يُشكّل دورك فارقًا في المسار الذي نبنيه.</p>
+  </section>
+
+  <h2>من نحن</h2>
+  <p>نبني أدواتٍ تساعد الناس على التفكير بوضوح أكبر. فريقنا صغير وموزّع ومتأنٍّ — نُطلِق أقلّ لكن نُطلِق ما يستحقّ.</p>
+
+  <h2>كيف نعمل</h2>
+  <ul>
+    <li><strong>غير متزامن أولًا:</strong> أغلب التنسيق يتمّ كتابةً؛ ونحفظ الاجتماعات للقرارات التي تستلزم حوارًا مباشرًا.</li>
+    <li><strong>قرارات موثّقة:</strong> كلّ قرار غير بديهي يُسجَّل في سجلّ قرارات، لتبقى الحجّة حاضرة مع تغيّر الفريق.</li>
+    <li><strong>أطلق وتعلّم وعدّل:</strong> نُفضّل الرهانات الصغيرة التي نراقب أثرها على الخطط الكبرى التي لا يمكن التحقّق منها.</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">لماذا يُهمّ هذا</span>
+    <p>نهج «غير متزامن أولًا» يعني أن ردّ فعلك الأوّل ينبغي أن يكون تحديثًا مكتوبًا، لا طلبَ اجتماع. هذه العادة وحدها ستُسرّع إنجازك وإنجاز زملائك أكثر من أيّ شيء آخر.</p>
+  </div>
+
+  <h2>رسالتنا</h2>
+  <p>أن نبني أهدأ أدوات التفكير وأوضحها — أدواتٍ تكافئ الاستخدام المتأنّي وتشيخ بلطف مع مستخدميها.</p>
+
+  <section class="section-divider">
+    <div class="section-part">الجزء الثاني</div>
+    <h1>دورك</h1>
+    <p class="section-summary">ما نتوقّعه منك في أول تسعين يومًا، ومع من ستعمل، وكيف يُقاس النجاح.</p>
+  </section>
+
+  <h2>المسؤوليات</h2>
+  <ul>
+    <li>امتلك مجالك من البداية إلى النهاية: التخطيط والتنفيذ والمتابعة بعد الإطلاق.</li>
+    <li>دوّن ما تتعلّمه حتى يسير من يأتي بعدك بسرعة أكبر.</li>
+    <li>ارفع المخاطر مبكرًا؛ المفاجآت المتأخّرة تُكلّف أكثر بكثير من الملاحظات الباكرة.</li>
+  </ul>
+
+  <h2>أول ٣٠ / ٦٠ / ٩٠ يومًا</h2>
+  <table>
+    <thead>
+      <tr><th>الفترة</th><th>التركيز</th><th>علامة النجاح</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>اليوم ١–٣٠</td><td>تعلّم الكود، تعرّف على الفريق، نفّذ تغييرًا صغيرًا</td><td>دمج أوّل طلب تعديل لك</td></tr>
+      <tr><td>اليوم ٣١–٦٠</td><td>قُد ميزة كاملة من المواصفات إلى الإطلاق</td><td>المستخدمون يستعملون ما أطلقتَه</td></tr>
+      <tr><td>اليوم ٦١–٩٠</td><td>اقترح تحسينًا حقيقيًا وقُد تنفيذه</td><td>الفريق يتبنّى اقتراحك</td></tr>
+    </tbody>
+  </table>
+
+  <h2>الأشخاص الذين ستعمل معهم</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">المدير المباشر</span>
+      <span class="name">مديرك</span>
+      <span class="contact-line">لقاء أسبوعي فردي · تحديثات غير متزامنة بينهما</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">الزميل المرافق</span>
+      <span class="name">مرافقك في التأهيل</span>
+      <span class="contact-line">أول من تسأله عند الحاجة السريعة</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">شريك المنتج</span>
+      <span class="name">قائد المنتج</span>
+      <span class="contact-line">يوائم خارطة الطريق والأولويات وآراء المستخدمين</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">شريك التصميم</span>
+      <span class="name">قائد التصميم</span>
+      <span class="contact-line">يراجع أعمال التصميم قبل الإطلاق</span>
+    </div>
+  </div>
+
+  <section class="section-divider">
+    <div class="section-part">الجزء الثالث</div>
+    <h1>الأدوات والبيئة</h1>
+    <p class="section-summary">كلّ ما تحتاج تثبيته وتفعيله والتحقّق منه قبل أن تلمس الكود الحقيقي.</p>
+  </section>
+
+  <h2>الحسابات التي ستُنشئها</h2>
+  <ul class="checklist">
+    <li>بريد الشركة والتقويم</li>
+    <li>مستودع الكود — مع تفعيل التحقّق بخطوتين منذ اليوم الأوّل</li>
+    <li>مساحة الدردشة وقنوات فريقك</li>
+    <li>مدير كلمات المرور وأيّ خزائن مشتركة تحتاجها</li>
+    <li>أدوات تتبّع الوقت والمصاريف، إن وُجدت في فريقك</li>
+  </ul>
+
+  <h2>البرامج التي ستُثبّتها</h2>
+  <ol class="steps">
+    <li class="step">
+      <div class="step-body">
+        <h3>ثبّت سلسلة الأدوات الأساسية</h3>
+        <p>اتّبع ملف <code dir="ltr">INSTALL.md</code> في المستودع. حين تتردّد، فضّل الإصدارات المذكورة بالضبط على الأحدث.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-body">
+        <h3>استنسِخ المستودع وشغّله محليًا</h3>
+        <p>النجاح يعني أن ترى التطبيق يعمل على جهازك على المنفذ المتوقّع، بلا أخطاء حمراء في الطرفية.</p>
+      </div>
+    </li>
+    <li class="step">
+      <div class="step-body">
+        <h3>شغّل الاختبارات مرة واحدة</h3>
+        <p>مرور الاختبارات خضراء دليلٌ على تطابق بيئتك مع الخادم. لو فشلت محليًا ونجحت في CI، هذه إشارة للعمل مع زميل قبل التعمّق وحدك.</p>
+      </div>
+    </li>
+  </ol>
+
+  <div class="callout callout-warn">
+    <span class="callout-label">أساسيّات الأمان</span>
+    <p>فعّل التحقّق بخطوتين في كل مكان منذ اليوم الأوّل. لا تُلصِق بيانات الدخول في الدردشة أبدًا، حتى في الرسائل الخاصة. لمشاركة سرٍّ ما، استخدم مدير الأسرار الخاص بالفريق.</p>
+  </div>
+
+  <section class="section-divider">
+    <div class="section-part">الجزء الرابع</div>
+    <h1>أسبوعك الأوّل</h1>
+    <p class="section-summary">جولةٌ يومًا بيوم حتى لا يفوتك شيء، ولتستقرّ على إيقاعٍ هادئ منذ البداية.</p>
+  </section>
+
+  <h3>اليوم الأوّل — تعارُف واستكشاف</h3>
+  <ul class="checklist">
+    <li>لقاء فردي مع مديرك ومع مرافقك في التأهيل</li>
+    <li>تعريف بك في قناة الفريق المشتركة</li>
+    <li>قراءة نظرة عامة على المعمارية من بدايتها لنهايتها (دون كود بعد)</li>
+  </ul>
+
+  <h3>اليوم الثاني — البيئة</h3>
+  <ul class="checklist">
+    <li>تثبيت سلسلة الأدوات وتشغيل التطبيق محليًا</li>
+    <li>مرور اختبارات خضراء على جهازك</li>
+    <li>أوّل إيداع صغير على فرع تجريبي</li>
+  </ul>
+
+  <h3>اليوم الثالث — أوّل تعديل</h3>
+  <ul class="checklist">
+    <li>اختر مهمّة مبتدئة من قائمة «مناسب للبداية»</li>
+    <li>افتح طلب تعديل مبدئيًا مبكرًا، واطلب الملاحظات تدريجيًا</li>
+    <li>دوّن كلّ ما فاجأك أثناء العمل</li>
+  </ul>
+
+  <h3>اليوم الرابع — الإطلاق</h3>
+  <ul class="checklist">
+    <li>استجب لملاحظات المراجعة، ثم ادمج أوّل تعديل لك</li>
+    <li>راقب نزوله في البيئة الحيّة</li>
+    <li>اكتب مراجعة قصيرة لما أبطأك في الأسبوع</li>
+  </ul>
+
+  <h3>اليوم الخامس — مراجعة وتخطيط</h3>
+  <ul class="checklist">
+    <li>لقاء فردي مع مديرك للتأمّل في الأسبوع</li>
+    <li>اتّفاق على تركيز الأسبوعين الثاني والثالث</li>
+    <li>شارِك ملاحظة «ليتني عرفت» لتحسين هذا الدليل لمن يأتي بعدك</li>
+  </ul>
+
+  <section class="section-divider">
+    <div class="section-part">الختام</div>
+    <h1>من تسأل</h1>
+    <p class="section-summary">عند الغموض، اسأل مبكرًا. لا أحد يتوقّع أن تعرف كلّ شيء، لكننا نتوقّع أن ترفع العوائق.</p>
+  </section>
+
+  <h2>حسب الموضوع</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">الكود والمعمارية</span>
+      <span class="name">قائد الهندسة</span>
+      <span class="contact-line">للأسئلة البنيوية والقرارات ذات السياق العميق</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">المنتج وخارطة الطريق</span>
+      <span class="name">قائد المنتج</span>
+      <span class="contact-line">لأسئلة «لماذا نبني هذا»</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">الموارد البشرية والإجازات</span>
+      <span class="name">العمليات</span>
+      <span class="contact-line">الإجازات والمزايا ولوجستيات المكتب</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">أيّ شيء آخر</span>
+      <span class="name">مديرك</span>
+      <span class="contact-line">حين لا تعرف من تسأل — اسأل هنا أوّلًا</span>
+    </div>
+  </div>
+
+  <p>أهلًا بك. سعداء بوجودك معنا.</p>
+
+</body>
+</html>

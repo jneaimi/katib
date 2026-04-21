@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-left {
+      content: "{{ reference_code or 'HANDOFF' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  .handoff-header {
+    margin: 0 0 18pt 0;
+  }
+
+  .handoff-header .eyebrow {
+    color: var(--accent-2);
+    margin-bottom: 6pt;
+  }
+
+  .handoff-header h1 {
+    margin: 0 0 4pt 0;
+    font-size: 24pt;
+    line-height: 1.2;
+  }
+
+  .handoff-header .subtitle {
+    font-size: 11pt;
+    color: var(--text-secondary);
+    margin: 6pt 0 0 0;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="handoff-header">
+    <div class="eyebrow">Handoff</div>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<p class="subtitle">{{ subtitle }}</p>{% endif %}
+  </div>
+
+  <div class="handoff-meta">
+    <div class="field">
+      <span class="label">Status</span>
+      <span class="value"><span class="status-done">Done</span></span>
+    </div>
+    <div class="field">
+      <span class="label">Reference</span>
+      <span class="value">{{ reference_code or "HT-0001" }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Handoff date</span>
+      <span class="value">{{ today }}</span>
+    </div>
+    <div class="field">
+      <span class="label">Owner going forward</span>
+      <span class="value">Team lead</span>
+    </div>
+  </div>
+
+  <h2>Summary</h2>
+  <p>This document hands over ownership of the described work. It covers what shipped, how to operate it, what's known to be broken or fragile, and who to contact for questions.</p>
+
+  <h2>What shipped</h2>
+  <ul class="shipped-list">
+    <li>Core feature released to all users on <strong>{{ today }}</strong></li>
+    <li>Documentation published to the shared docs site</li>
+    <li>Monitoring dashboards configured and alert thresholds set</li>
+    <li>Runbook reviewed and linked from the on-call rotation</li>
+    <li>Post-release follow-up tickets filed for non-blocking cleanups</li>
+  </ul>
+
+  <h2>Architecture in 30 seconds</h2>
+  <p>A single entry-point service receives requests, writes to a primary database, and dispatches notifications via a queued worker. Failure of the worker never blocks the primary write path — notifications are eventually-consistent by design.</p>
+
+  <div class="callout callout-info">
+    <span class="callout-label">Key decision</span>
+    <p>We deliberately chose eventual consistency for notifications so the write path stays fast even during downstream outages. Don't reverse this without revisiting the original ADR.</p>
+  </div>
+
+  <h2>Runbook</h2>
+
+  <h3>Deploy</h3>
+  <pre><code>git push origin main
+# CI runs, then promotes automatically to staging
+# Promote to production via the deploy tool</code></pre>
+
+  <h3>Rollback</h3>
+  <pre><code>deploy rollback --service &lt;name&gt; --to-version &lt;previous-sha&gt;</code></pre>
+  <p>Rollback completes in under two minutes. Customer-facing errors usually clear within a minute of the rollback finishing.</p>
+
+  <h3>Health checks</h3>
+  <ul>
+    <li><strong>Primary service:</strong> <code>/healthz</code> on the public endpoint</li>
+    <li><strong>Worker:</strong> depth of the notification queue (stays under 100 in steady state)</li>
+    <li><strong>Database:</strong> latency panel on the shared dashboard</li>
+  </ul>
+
+  <h2>Known issues</h2>
+  <div class="issues">
+    <div class="issue severity-med">
+      <div class="severity">Medium</div>
+      <div class="body">
+        <div class="title">Notification retries can duplicate in rare race conditions</div>
+        <div class="detail">Affects about 1 in 10,000 notifications. De-duplication is planned for next quarter. Acceptable in the meantime because consumers are idempotent.</div>
+      </div>
+    </div>
+    <div class="issue severity-low">
+      <div class="severity">Low</div>
+      <div class="body">
+        <div class="title">Admin dashboard is slow for tenants with more than 50k records</div>
+        <div class="detail">Pagination works around it. A proper index is queued for the next perf sprint.</div>
+      </div>
+    </div>
+    <div class="issue severity-low">
+      <div class="severity">Low</div>
+      <div class="body">
+        <div class="title">Localized date formats are inconsistent in the export CSV</div>
+        <div class="detail">Cosmetic. Tracked in issue #1247; fix is a one-liner whenever someone picks it up.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Contacts</h2>
+  <div class="contacts">
+    <div class="contact-card">
+      <span class="role">Handing off</span>
+      <span class="name">Outgoing owner</span>
+      <span class="contact-line">Original feature owner · available for questions for 30 days</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Taking over</span>
+      <span class="name">Incoming owner</span>
+      <span class="contact-line">Primary point of contact going forward</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">Escalation</span>
+      <span class="name">Team lead</span>
+      <span class="contact-line">For blocking incidents or cross-team coordination</span>
+    </div>
+    <div class="contact-card">
+      <span class="role">On-call</span>
+      <span class="name">Rotating engineer</span>
+      <span class="contact-line">See the on-call schedule in the shared calendar</span>
+    </div>
+  </div>
+
+  <h2>Next steps</h2>
+  <ol>
+    <li>Incoming owner confirms they've read this doc and the linked ADRs.</li>
+    <li>Pair once on a live deploy to make sure the runbook is clear.</li>
+    <li>Schedule a 30-day check-in to close out the known-issue backlog.</li>
+  </ol>
+
+  <div class="callout callout-tip">
+    <span class="callout-label">One last note</span>
+    <p>The best handoff is one that doesn't need the outgoing owner again. If anything in this doc was ambiguous, fix it in place — future readers will thank you.</p>
+  </div>
+
+</body>
+</html>

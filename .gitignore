@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# uv / pip
+.uv-cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Runtime / user state (should never live in the repo)
+.katib-memory/
+.katib/
+tmp/
+scratch/
+*.log
+
+# Build artifacts
+dist/
+build/
+*.pdf
+!tests/**/*.pdf
+*.png
+!brands/fixtures/**/*.png
+!tests/**/*.png
+!styles/**/*.png
+!assets/**/*.png
+!domains/**/assets/**/*.png
+
+# Private brand profiles (ship brands/example.yaml only)
+brands/*.yaml
+brands/*.yml
+!brands/example.yaml
+!brands/fixtures/
