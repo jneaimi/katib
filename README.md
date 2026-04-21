@@ -1,6 +1,13 @@
-# Katib · كاتب
+<p align="center">
+  <img src="assets/logo-horizontal.png" alt="Katib — bilingual document generation" width="700">
+</p>
 
-**Bilingual (EN + AR) print-grade PDF document generation for Claude Code.**
+<p align="center">
+  <b>Bilingual (EN + AR) print-grade PDF document generation for Claude Code.</b><br>
+  <a href="https://www.npmjs.com/package/katib"><img alt="npm" src="https://img.shields.io/npm/v/katib?color=1B2A4A&label=npm&style=flat-square"></a>
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square"></a>
+  <img alt="platforms" src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux%20%7C%20WSL2-1B2A4A?style=flat-square">
+</p>
 
 One skill, two languages, multiple document domains, pluggable cover + layout
 styles, per-project brand profiles. HTML + CSS → WeasyPrint → PDF.
@@ -24,7 +31,7 @@ Invoked with `/katib` inside any Claude Code conversation.
 | **Brand profiles** | Per-client YAML — colors, fonts, logo, identity; bilingual fallback baked in |
 | **Diagrams** | Inline SVG with brand-color tokenization (no external diagram tools) |
 | **Screenshots** | Playwright capture + Pillow annotation + CSS frames — bilingual alt/caption bundles |
-| **Fonts bundled** | Newsreader, Inter, Amiri, Cairo (SIL OFL) |
+| **Fonts** | Katib declares 4 core families (Newsreader, Inter, Amiri, Cairo). Install them once — see [Fonts](#fonts) below. |
 
 ---
 
@@ -56,18 +63,22 @@ Code users on Windows already have.
 
 ## Install
 
-One-liner:
+**Recommended** — via npx (no cloning, always latest):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jneaimi/katib/main/install.sh | bash
+npx katib
 ```
 
-Or clone and run:
+That's it. The wrapper runs the installer under the hood — no global install, no lockfiles, re-run any time to update.
+
+**Other installers**:
 
 ```bash
-git clone https://github.com/jneaimi/katib.git
-cd katib
-bash install.sh
+# curl + bash (no Node required)
+curl -fsSL https://raw.githubusercontent.com/jneaimi/katib/main/install.sh | bash
+
+# or clone and run
+git clone https://github.com/jneaimi/katib.git && cd katib && bash install.sh
 ```
 
 The installer:
@@ -78,7 +89,18 @@ The installer:
 5. Seeds a vault-aware `~/.config/katib/config.yaml`
 6. Prompts for an optional Gemini API key and (with your OK) appends it to your shell rc
 
-Re-run any time to update — it's idempotent.
+Re-run any time to update.
+
+### npx commands
+
+```bash
+npx katib                    # install (or update if already installed)
+npx katib update             # git pull the installed skill
+npx katib uninstall          # remove the skill, keep user data
+npx katib uninstall --purge  # also wipe ~/.katib, config, memory
+npx katib version            # print the CLI version
+npx katib help               # full usage
+```
 
 ---
 
@@ -245,10 +267,30 @@ bash scripts/test-images.sh       # annotate + frame golden-image regression
 
 ---
 
+## Fonts
+
+Katib's templates call four core font families. They are **not bundled** in
+v0.1 — install them once on your machine and Katib will pick them up via the
+system font stack. All four are free under SIL OFL.
+
+| Family | Used for | Where to get |
+|---|---|---|
+| **Inter** | English UI / body | [rsms.me/inter](https://rsms.me/inter/) |
+| **Newsreader** | English display / covers | [Google Fonts](https://fonts.google.com/specimen/Newsreader) |
+| **Amiri** | Arabic body / letters | [Google Fonts](https://fonts.google.com/specimen/Amiri) |
+| **Cairo** | Arabic UI / tutorials | [Google Fonts](https://fonts.google.com/specimen/Cairo) |
+
+macOS: double-click each `.ttf` / `.otf` and Font Book handles it.
+Linux: drop into `~/.local/share/fonts/` then `fc-cache -fv`.
+Missing a font? Katib falls back to the next family in the stack
+(`Inter → system-ui`, `Amiri → Cairo → Tahoma`) so nothing crashes.
+
+A future release will optionally bundle the fonts (OFL permits redistribution).
+
 ## License
 
-MIT. See [LICENSE](LICENSE). Bundled fonts are SIL OFL — license texts live
-next to each font family in `assets/fonts/core/`.
+MIT. See [LICENSE](LICENSE). Font families referenced by Katib are SIL OFL —
+see the [Fonts](#fonts) section for attribution links.
 
 ## Acknowledgments
 

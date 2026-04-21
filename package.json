@@ -1,0 +1,46 @@
+{
+  "name": "katib",
+  "version": "0.1.0",
+  "description": "Bilingual (EN + AR) print-grade PDF document generation — a Claude Code skill. Proposals, tutorials, letters, brand profiles, inline SVG diagrams.",
+  "bin": {
+    "katib": "bin/katib.js"
+  },
+  "main": "bin/katib.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "install.sh",
+    "uninstall.sh",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "bash install.sh --help || true"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-skill",
+    "pdf",
+    "weasyprint",
+    "bilingual",
+    "arabic",
+    "document-generation",
+    "jinja2",
+    "proposal",
+    "tutorial"
+  ],
+  "author": "Jasem Al Neaimi <jneaimi@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/jneaimi/katib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jneaimi/katib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jneaimi/katib/issues"
+  }
+}

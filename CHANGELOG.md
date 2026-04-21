@@ -32,14 +32,20 @@ packaged with an installer.
 - **Fonts:** 4 OFL families bundled — Newsreader, Inter, Amiri, Cairo.
 - **Feedback loop:** Inline passive capture to
   `~/.local/share/katib/memory/*.jsonl`.
-- **Installer:** `install.sh` — prereq checks, auto git-clone to
-  `~/.claude/skills/katib/`, Playwright setup, vault-aware config
-  bootstrap, optional Gemini API key prompt.
+- **Installers:**
+  - `npx katib` — Node wrapper (primary, cross-shell, version-pinnable via npm)
+  - `install.sh` — bash installer (curl-friendly, no Node required)
+  - Both perform: prereq checks, auto git-clone to `~/.claude/skills/katib/`,
+    Playwright setup, vault-aware config bootstrap, optional Gemini API key prompt.
+- **Logo + brand marks** in `assets/` (`logo.png`, `logo-horizontal.png`,
+  `logo-square-bilingual.png`, `favicon.png`, `logo.svg`).
 
 ### Known limitations
 - Native Windows unsupported; use WSL2.
 - DOCX output not supported (drop by design — edit source and re-render).
 - Only two domains ship in v0 (`business-proposal`, `tutorial`).
   `formal`, `personal`, `marketing-pitch`, `editorial` are deferred.
+- **Fonts not bundled** — install Newsreader, Inter, Amiri, Cairo
+  separately (see README Fonts section). A later release may bundle them.
 
 [0.1.0]: https://github.com/jneaimi/katib/releases/tag/v0.1.0
