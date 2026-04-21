@@ -36,6 +36,11 @@
 }
 
 /* ===== Base ===== */
+/* Paint the entire page — including margins — with the page background.
+   Needed because html/body background only fills the content box in
+   WeasyPrint, leaving the @page margin area white. */
+@page { background: var(--page-bg); }
+
 html { background: var(--page-bg); }
 
 body {
@@ -117,10 +122,51 @@ p.lead {
 strong { font-weight: 600; }
 em { font-style: italic; }
 
-/* ===== Lists ===== */
-ul, ol { margin: 6pt 0 6pt 18pt; padding: 0; }
-html[dir="rtl"] ul, html[dir="rtl"] ol { margin-left: 0; margin-right: 18pt; }
+/* ===== Lists =====
+   Use padding (not margin) for the indent so list markers sit inside the
+   padded area and naturally flip to the correct side in RTL. The extra
+   ::before rule for RTL restores markers in WeasyPrint, which otherwise
+   leaves them on the left even when `direction: rtl` is inherited. */
+ul, ol {
+  margin: 6pt 0;
+  padding-left: 18pt;
+  padding-right: 0;
+}
+html[dir="rtl"] ul,
+html[dir="rtl"] ol {
+  padding-left: 0;
+  padding-right: 18pt;
+}
 li { margin: 3pt 0; }
+
+/* Explicit RTL markers — covers WeasyPrint's failure to auto-flip.
+   Exclude `.steps` (has its own counter + circle marker). */
+html[dir="rtl"] ul:not(.steps):not(.checklist) > li {
+  list-style: none;
+  position: relative;
+}
+html[dir="rtl"] ul:not(.steps):not(.checklist) > li::before {
+  content: "•";
+  position: absolute;
+  right: -12pt;
+  top: 0;
+  color: var(--text);
+}
+html[dir="rtl"] ol:not(.steps) {
+  list-style: none;
+  counter-reset: rtl-list-counter;
+}
+html[dir="rtl"] ol:not(.steps) > li {
+  counter-increment: rtl-list-counter;
+  position: relative;
+}
+html[dir="rtl"] ol:not(.steps) > li::before {
+  content: counter(rtl-list-counter) ".";
+  position: absolute;
+  right: -18pt;
+  top: 0;
+  color: var(--text);
+}
 
 /* ===== Numbered steps ===== */
 .steps {

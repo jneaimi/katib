@@ -3,6 +3,26 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] — 2026-04-22
+
+Three rendering bugs reported against the `workbook` and `classic` layouts.
+
+### Fixed
+- **Page background now covers the full page, including margins.** The
+  previous `html { background }` rule only filled the content box in
+  WeasyPrint — margins stayed white, making every page look like a framed
+  card. Added `@page { background: var(--page-bg) }` to both layouts.
+- **Cover no longer looks detached from the body.** Same root cause as
+  above — the cover content sat on the page background but the margins
+  were white, making page 1 read as a separate sheet. Fixed by the @page
+  background change.
+- **RTL bullets and ordered-list numbers now render on the right side.**
+  Lists previously used `margin-left`/`margin-right` for the indent,
+  which left markers on the left in Arabic documents (WeasyPrint doesn't
+  auto-flip marker position from `dir="rtl"` alone). Switched to
+  `padding` for the indent and added explicit `::before` pseudo-markers
+  for RTL, scoped to avoid interfering with `.steps` counters.
+
 ## [0.1.0] — 2026-04-22
 
 First public release. Extracted from a private working copy; scrubbed and
@@ -49,3 +69,4 @@ packaged with an installer.
   separately (see README Fonts section). A later release may bundle them.
 
 [0.1.0]: https://github.com/jneaimi/katib/releases/tag/v0.1.0
+[0.1.1]: https://github.com/jneaimi/katib/releases/tag/v0.1.1

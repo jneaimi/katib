@@ -1,6 +1,6 @@
 {
   "name": "katib",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Bilingual (EN + AR) print-grade PDF document generation — a Claude Code skill. Proposals, tutorials, letters, brand profiles, inline SVG diagrams.",
   "bin": {
     "katib": "bin/katib.js"
