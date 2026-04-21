@@ -187,7 +187,10 @@ html[dir="rtl"] .steps { padding: 0; }
   page-break-inside: avoid;
 }
 
-html[dir="rtl"] .step { flex-direction: row-reverse; }
+/* In RTL, `direction: rtl` is inherited from <html>, so a default
+   `flex-direction: row` already flows items right-to-left and places
+   the ::before circle on the right. Forcing row-reverse here would
+   double-flip it back to the left. */
 
 .step::before {
   content: counter(step);
