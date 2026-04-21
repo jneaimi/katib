@@ -3,6 +3,20 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.2] — 2026-04-22
+
+### Changed
+- npm package renamed from `katib` to **`@jasemal/katib`**. The npm registry
+  rejected the unscoped name as too similar to existing packages (`katex`,
+  `kasir`, `atob`). Scoped install:
+  ```bash
+  npx @jasemal/katib
+  ```
+  The CLI binary is still `katib` — no change to day-to-day usage after
+  install. GitHub repo stays at `github.com/jneaimi/katib`.
+- README install one-liner + `bin/katib.js` help text updated to the scoped
+  form. Pre-v0.1.2 docs that say `npx katib` are stale.
+
 ## [0.1.1] — 2026-04-22
 
 Three rendering bugs reported against the `workbook` and `classic` layouts.
@@ -70,3 +84,4 @@ packaged with an installer.
 
 [0.1.0]: https://github.com/jneaimi/katib/releases/tag/v0.1.0
 [0.1.1]: https://github.com/jneaimi/katib/releases/tag/v0.1.1
+[0.1.2]: https://github.com/jneaimi/katib/releases/tag/v0.1.2

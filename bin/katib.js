@@ -3,12 +3,12 @@
  * Katib npx entry point.
  *
  * Usage:
- *   npx katib                 # same as `install`
- *   npx katib install         # run the bash installer
- *   npx katib update          # git pull the installed skill
- *   npx katib uninstall       # run the bash uninstaller
- *   npx katib version         # print version
- *   npx katib help            # this message
+ *   npx @jasemal/katib                 # same as `install`
+ *   npx @jasemal/katib install         # run the bash installer
+ *   npx @jasemal/katib update          # git pull the installed skill
+ *   npx @jasemal/katib uninstall       # run the bash uninstaller
+ *   npx @jasemal/katib version         # print version
+ *   npx @jasemal/katib help            # this message
  *
  * The actual install logic lives in install.sh — this is a thin wrapper that
  * fetches and runs it with the right env. Works on macOS, Linux, and WSL2.
@@ -45,7 +45,7 @@ function assertSupportedOS() {
       "  https://learn.microsoft.com/en-us/windows/wsl/install",
       "",
       "From WSL, the command stays the same:",
-      "  npx katib",
+      "  npx @jasemal/katib",
     ].join("\n"));
   }
   if (p !== "darwin" && p !== "linux") {
@@ -110,7 +110,7 @@ async function cmdInstall() {
 function cmdUpdate() {
   assertSupportedOS();
   if (!existsSync(path.join(SKILL_DIR, ".git"))) {
-    die(`Not installed at ${SKILL_DIR}. Run \`npx katib install\` first.`);
+    die(`Not installed at ${SKILL_DIR}. Run \`npx @jasemal/katib install\` first.`);
   }
   const res = spawnSync("git", ["-C", SKILL_DIR, "pull", "--ff-only"], { stdio: "inherit" });
   process.exit(res.status ?? 1);
@@ -135,13 +135,13 @@ function cmdHelp() {
     "  \x1b[1mkatib\x1b[0m — bilingual PDF document skill for Claude Code",
     "",
     "  Usage:",
-    "    npx katib                 run the installer (same as `install`)",
-    "    npx katib install         install or update the skill",
-    "    npx katib update          git pull the installed skill",
-    "    npx katib uninstall       remove the skill, keep user data",
-    "    npx katib uninstall --purge   also wipe ~/.katib, config, memory",
-    "    npx katib version         print the katib CLI version",
-    "    npx katib help            this message",
+    "    npx @jasemal/katib                 run the installer (same as `install`)",
+    "    npx @jasemal/katib install         install or update the skill",
+    "    npx @jasemal/katib update          git pull the installed skill",
+    "    npx @jasemal/katib uninstall       remove the skill, keep user data",
+    "    npx @jasemal/katib uninstall --purge   also wipe ~/.katib, config, memory",
+    "    npx @jasemal/katib version         print the katib CLI version",
+    "    npx @jasemal/katib help            this message",
     "",
     "  Installs to ~/.claude/skills/katib/",
     "  Docs: https://github.com/jneaimi/katib",
@@ -164,6 +164,6 @@ function cmdHelp() {
     case "--help":
     case "help":                cmdHelp();                return;
     default:
-      die(`Unknown command: ${rawCmd}\nRun \`npx katib help\` for usage.`);
+      die(`Unknown command: ${rawCmd}\nRun \`npx @jasemal/katib help\` for usage.`);
   }
 })().catch((e) => die(e.stack || e.message || String(e)));

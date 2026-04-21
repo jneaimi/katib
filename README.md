@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Bilingual (EN + AR) print-grade PDF document generation for Claude Code.</b><br>
-  <a href="https://www.npmjs.com/package/katib"><img alt="npm" src="https://img.shields.io/npm/v/katib?color=1B2A4A&label=npm&style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/@jasemal/katib"><img alt="npm" src="https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square"></a>
   <a href="LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square"></a>
   <img alt="platforms" src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux%20%7C%20WSL2-1B2A4A?style=flat-square">
 </p>
@@ -66,7 +66,7 @@ Code users on Windows already have.
 **Recommended** — via npx (no cloning, always latest):
 
 ```bash
-npx katib
+npx @jasemal/katib
 ```
 
 That's it. The wrapper runs the installer under the hood — no global install, no lockfiles, re-run any time to update.
@@ -94,12 +94,12 @@ Re-run any time to update.
 ### npx commands
 
 ```bash
-npx katib                    # install (or update if already installed)
-npx katib update             # git pull the installed skill
-npx katib uninstall          # remove the skill, keep user data
-npx katib uninstall --purge  # also wipe ~/.katib, config, memory
-npx katib version            # print the CLI version
-npx katib help               # full usage
+npx @jasemal/katib                    # install (or update if already installed)
+npx @jasemal/katib update             # git pull the installed skill
+npx @jasemal/katib uninstall          # remove the skill, keep user data
+npx @jasemal/katib uninstall --purge  # also wipe ~/.katib, config, memory
+npx @jasemal/katib version            # print the CLI version
+npx @jasemal/katib help               # full usage
 ```
 
 ---
