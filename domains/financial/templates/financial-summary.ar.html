@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  ملخّص مالي  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.85;
+    color: var(--text);
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 10pt;
+    border-bottom: 1pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .brand-line {
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .masthead .period {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1 {
+    font-size: 26pt;
+    color: var(--accent);
+    margin: 0 0 14pt 0;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  h1 + .subtitle {
+    font-size: 12pt;
+    color: var(--text-secondary);
+    margin-bottom: 22pt;
+    padding-bottom: 10pt;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  h2 {
+    font-size: 14pt;
+    color: var(--accent);
+    margin: 22pt 0 8pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 11.5pt;
+    color: var(--text);
+    margin: 14pt 0 6pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul { margin: 6pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 3pt; }
+
+  /* KPI grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    margin-bottom: 18pt;
+  }
+
+  .kpi {
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+    padding: 12pt 14pt;
+  }
+
+  .kpi .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .kpi .value {
+    font-size: 20pt;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+    direction: ltr;
+    unicode-bidi: embed;
+    text-align: right;
+  }
+
+  .kpi .delta {
+    font-size: 9.5pt;
+    font-weight: 700;
+    margin-top: 4pt;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi .delta.up { color: var(--success-border); }
+  .kpi .delta.down { color: var(--danger-border); }
+  .kpi .delta.flat { color: var(--text-tertiary); }
+
+  /* P&L table */
+  .pnl-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .pnl-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    font-weight: 700;
+    text-align: right;
+    font-size: 9.5pt;
+  }
+
+  .pnl-table th.num,
+  .pnl-table td.num { text-align: left; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; }
+
+  .pnl-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .pnl-table tbody tr.group td {
+    background: var(--table-row-alt);
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .pnl-table tbody tr.total td {
+    border-top: 1pt solid var(--accent);
+    border-bottom: 2pt solid var(--accent);
+    background: var(--callout-bg);
+    font-weight: 700;
+  }
+
+  .pnl-table .pct { color: var(--text-tertiary); font-size: 9.5pt; width: 50pt; }
+
+  /* Revenue mix bars — in RTL, fills start from right */
+  .bar-row {
+    display: grid;
+    grid-template-columns: 90pt 1fr 90pt;
+    gap: 10pt;
+    align-items: center;
+    margin-bottom: 5pt;
+    font-size: 10pt;
+  }
+
+  .bar-row .bar-label { color: var(--text); font-weight: 700; }
+  .bar-row .bar-track {
+    background: var(--border);
+    height: 8pt;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bar-row .bar-fill {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--accent);
+  }
+
+  .bar-row .bar-value {
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    color: var(--text);
+    font-weight: 700;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .callout {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10.5pt;
+  }
+
+  .callout .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .footnote {
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    margin-top: 18pt;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand-line">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <div class="period">الفترة: [الربع الأول، السنة المالية] · الإصدار: {{ date_display }}</div>
+</header>
+
+<h1>الملخّص المالي</h1>
+<div class="subtitle">[مراجعة مالية تنفيذية — ربعية أو نصف سنوية أو سنوية.]</div>
+
+<section>
+  <h2>١ · نظرة سريعة</h2>
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="label">الإيرادات</div>
+      <div class="value">AED 2.4M</div>
+      <div class="delta up">+18% على أساس سنوي</div>
+    </div>
+    <div class="kpi">
+      <div class="label">إجمالي الربح</div>
+      <div class="value">AED 1.56M</div>
+      <div class="delta up">+22% على أساس سنوي</div>
+    </div>
+    <div class="kpi">
+      <div class="label">هامش التشغيل</div>
+      <div class="value">28%</div>
+      <div class="delta up">+3.2 نقطة</div>
+    </div>
+    <div class="kpi">
+      <div class="label">السيولة</div>
+      <div class="value">AED 890K</div>
+      <div class="delta flat">مستقرّ</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>٢ · الربح والخسارة — ملخّص</h2>
+  <table class="pnl-table">
+    <thead>
+      <tr>
+        <th>البند</th>
+        <th class="num">الفترة الحالية</th>
+        <th class="num">الفترة المقارنة</th>
+        <th class="num">الفرق</th>
+        <th class="num pct">% من الإيرادات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="group"><td colspan="5">الإيرادات</td></tr>
+      <tr><td>خدمات</td><td class="num">1,800,000</td><td class="num">1,500,000</td><td class="num">+300,000</td><td class="num pct">75%</td></tr>
+      <tr><td>منتجات</td><td class="num">450,000</td><td class="num">380,000</td><td class="num">+70,000</td><td class="num pct">19%</td></tr>
+      <tr><td>أخرى</td><td class="num">150,000</td><td class="num">150,000</td><td class="num">—</td><td class="num pct">6%</td></tr>
+      <tr class="total"><td>إجمالي الإيرادات</td><td class="num">2,400,000</td><td class="num">2,030,000</td><td class="num">+370,000</td><td class="num pct">100%</td></tr>
+
+      <tr class="group"><td colspan="5">تكلفة الإيرادات</td></tr>
+      <tr><td>العمالة المباشرة</td><td class="num">520,000</td><td class="num">460,000</td><td class="num">+60,000</td><td class="num pct">22%</td></tr>
+      <tr><td>مواد / منصّة</td><td class="num">320,000</td><td class="num">290,000</td><td class="num">+30,000</td><td class="num pct">13%</td></tr>
+      <tr class="total"><td>إجمالي الربح</td><td class="num">1,560,000</td><td class="num">1,280,000</td><td class="num">+280,000</td><td class="num pct">65%</td></tr>
+
+      <tr class="group"><td colspan="5">المصروفات التشغيلية</td></tr>
+      <tr><td>الرواتب والمزايا</td><td class="num">580,000</td><td class="num">540,000</td><td class="num">+40,000</td><td class="num pct">24%</td></tr>
+      <tr><td>التسويق</td><td class="num">180,000</td><td class="num">150,000</td><td class="num">+30,000</td><td class="num pct">8%</td></tr>
+      <tr><td>عامّة وإدارية</td><td class="num">130,000</td><td class="num">120,000</td><td class="num">+10,000</td><td class="num pct">5%</td></tr>
+      <tr class="total"><td>الربح التشغيلي</td><td class="num">670,000</td><td class="num">470,000</td><td class="num">+200,000</td><td class="num pct">28%</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>٣ · مزيج الإيرادات</h2>
+  <p style="font-size: 10pt; color: var(--text-secondary); margin-bottom: 10pt;">
+    حصّة كلّ قطاع من إجمالي الإيرادات. تبقى الخدمات البند الأساسي؛ نمت المنتجات 18٪ على أساس الفترة السابقة.
+  </p>
+
+  <div class="bar-row">
+    <div class="bar-label">الخدمات</div>
+    <div class="bar-track"><div class="bar-fill" style="width: 75%"></div></div>
+    <div class="bar-value">AED 1.80M</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">المنتجات</div>
+    <div class="bar-track"><div class="bar-fill" style="width: 19%; background: var(--accent-2);"></div></div>
+    <div class="bar-value">AED 450K</div>
+  </div>
+  <div class="bar-row">
+    <div class="bar-label">أخرى</div>
+    <div class="bar-track"><div class="bar-fill" style="width: 6%; background: var(--text-tertiary);"></div></div>
+    <div class="bar-value">AED 150K</div>
+  </div>
+</section>
+
+<section>
+  <h2>٤ · تعليق الإدارة</h2>
+
+  <h3>ما يعمل بشكل جيّد</h3>
+  <ul>
+    <li>[المحرّك الأهم للإيرادات هذه الفترة — جملة واحدة مع رقم.]</li>
+    <li>[تحسين في الكفاءة أو الهامش — جملة واحدة.]</li>
+  </ul>
+
+  <h3>ما هو عرضة للخطر</h3>
+  <ul>
+    <li>[تركّز أو فجوة في خطّ الأنابيب أو ضغط على التكاليف — جملة واحدة. لا تُخفِ المخاطر.]</li>
+    <li>[خطر ثانٍ إن كان جوهرياً.]</li>
+  </ul>
+
+  <div class="callout">
+    <div class="label">آفاق الفترة القادمة</div>
+    [جملتان أو ثلاث. نطاق الإيرادات المتوقّع، الرياح المعاكسة أو المؤاتية المعروفة،
+    والقرار الواحد الذي يتابعه فريق الإدارة للفترة القادمة.]
+  </div>
+</section>
+
+<div class="footnote">
+  <p>المبالغ بالدرهم الإماراتي. الأرقام المقارنة تُشير إلى الفترة المقابلة السابقة ما لم يُذكر خلاف ذلك. حسابات إدارية — غير مُدقّقة.
+  قد تختلف الأرقام عن القوائم المدقّقة لنهاية السنة بعد التسويات.</p>
+  <p>أعدّه {{ author_name }} بتاريخ {{ date_display }}. التوزيع: [مجلس الإدارة / فريق القيادة / سرّي].</p>
+</div>
+
+</body>
+</html>

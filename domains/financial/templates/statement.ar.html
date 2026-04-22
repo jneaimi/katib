@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm;
+    @bottom-center {
+      content: "{{ company }}  |  كشف حساب  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 12pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 14pt;
+  }
+
+  .masthead .brand .logo { max-height: 16mm; margin-bottom: 6pt; display: block; }
+  .masthead .brand .legal { font-size: 11.5pt; font-weight: 700; color: var(--accent); margin-bottom: 2pt; }
+  .masthead .brand .address { font-size: 9pt; color: var(--text-secondary); line-height: 1.6; }
+
+  .masthead .doc-title { text-align: left; }
+  .masthead .doc-title .eyebrow { font-size: 9.5pt; color: var(--accent-2); font-weight: 700; margin-bottom: 2pt; }
+  .masthead .doc-title h1 { font-size: 22pt; color: var(--accent); margin: 0 0 4pt 0; font-weight: 700; line-height: 1; }
+  .masthead .doc-title .ref { font-size: 10pt; color: var(--text-secondary); font-family: 'Courier New', monospace; direction: ltr; unicode-bidi: embed; }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 14pt;
+    border: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell { padding: 8pt 12pt; border-left: 0.5pt solid var(--border); }
+  .meta-strip .cell:last-child { border-left: 0; }
+  .meta-strip .label { font-size: 8pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt; }
+  .meta-strip .value { font-size: 10pt; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; text-align: right; }
+
+  .client-block {
+    padding: 10pt 12pt;
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    margin-bottom: 14pt;
+  }
+
+  .client-block .label { font-size: 8.5pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 3pt; }
+  .client-block .name { font-size: 11.5pt; font-weight: 700; }
+  .client-block .detail { font-size: 9.5pt; color: var(--text-secondary); }
+  .client-block .detail .trn { direction: ltr; unicode-bidi: embed; }
+
+  /* Balance summary hero */
+  .balance-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 14pt;
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  .balance-summary .cell {
+    padding: 10pt 14pt;
+    border-left: 0.5pt solid #4F887D;
+    text-align: center;
+  }
+
+  .balance-summary .cell:last-child { border-left: 0; }
+
+  .balance-summary .label {
+    font-size: 8pt;
+    opacity: 0.85;
+    margin-bottom: 3pt;
+  }
+
+  .balance-summary .value {
+    font-size: 14pt;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  /* Ledger */
+  .ledger {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14pt;
+    font-size: 10pt;
+  }
+
+  .ledger th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 8pt;
+    text-align: right;
+    font-weight: 700;
+    font-size: 9.5pt;
+  }
+
+  .ledger th.num,
+  .ledger td.num { text-align: left; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; }
+
+  .ledger td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+
+  .ledger tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  .ledger .date { white-space: nowrap; color: var(--text-tertiary); font-size: 9.5pt; direction: ltr; unicode-bidi: embed; }
+  .ledger .ref-cell { font-family: 'Courier New', monospace; font-size: 9pt; color: var(--text-secondary); direction: ltr; unicode-bidi: embed; }
+
+  .ledger .balance { font-weight: 700; color: var(--accent); }
+  .ledger .debit { color: var(--danger-border); }
+  .ledger .credit { color: var(--accent); }
+
+  .ledger tfoot td {
+    border-top: 1pt solid var(--accent);
+    background: var(--table-row-alt);
+    font-weight: 700;
+    padding: 8pt;
+  }
+
+  .ageing-title {
+    font-size: 11.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 18pt 0 6pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .ageing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin-bottom: 14pt;
+  }
+
+  .ageing-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 8pt;
+    font-weight: 700;
+    font-size: 9.5pt;
+  }
+
+  .ageing-table td {
+    border: 0.5pt solid var(--border);
+    padding: 8pt;
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .ageing-table tbody tr:first-child td:first-child {
+    text-align: right;
+    font-weight: 700;
+    direction: rtl;
+  }
+
+  .ageing-table .current { background: var(--success-bg); }
+  .ageing-table .warn { background: var(--warning-bg); }
+  .ageing-table .danger { background: var(--danger-bg); color: var(--danger-border); font-weight: 700; }
+
+  .footer-block {
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    {% if brand and brand.logo and brand.logo.primary %}
+    <img class="logo" src="{{ brand.logo.primary }}" alt="{{ company }}" />
+    {% endif %}
+    <div class="legal">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="address">
+      [العنوان]<br />
+      <span style="direction: ltr; unicode-bidi: embed">{% if brand.identity.email %}{{ brand.identity.email }}{% else %}[accounts@example.ae]{% endif %}</span>
+    </div>
+  </div>
+  <div class="doc-title">
+    <div class="eyebrow">كشف حساب</div>
+    <h1>كشف حساب</h1>
+    <div class="ref">{{ reference_code }}</div>
+  </div>
+</header>
+
+<section class="meta-strip">
+  <div class="cell"><div class="label">تاريخ الكشف</div><div class="value">{{ date_display }}</div></div>
+  <div class="cell"><div class="label">الفترة</div><div class="value">[01–30 MMM YYYY]</div></div>
+  <div class="cell"><div class="label">العملة</div><div class="value">AED</div></div>
+  <div class="cell"><div class="label">رقم الحساب</div><div class="value">CLT-0042</div></div>
+</section>
+
+<section class="client-block">
+  <div class="label">صاحب الحساب</div>
+  <div class="name">[اسم العميل القانوني ذ.م.م]</div>
+  <div class="detail">[عنوان العميل، المدينة — الإمارات] · الرقم الضريبي: <span class="trn">100000000000004</span></div>
+</section>
+
+<section class="balance-summary">
+  <div class="cell">
+    <div class="label">الرصيد الافتتاحي</div>
+    <div class="value">12,500.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">الفواتير</div>
+    <div class="value">36,700.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">المقبوضات</div>
+    <div class="value">25,000.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">الرصيد الختامي</div>
+    <div class="value">24,200.00</div>
+  </div>
+</section>
+
+<table class="ledger">
+  <thead>
+    <tr>
+      <th style="width: 72pt">التاريخ</th>
+      <th style="width: 90pt">المرجع</th>
+      <th>البيان</th>
+      <th class="num" style="width: 70pt">مدين</th>
+      <th class="num" style="width: 70pt">دائن</th>
+      <th class="num" style="width: 80pt">الرصيد</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="date">[01 MMM]</td>
+      <td class="ref-cell">—</td>
+      <td><strong>الرصيد الافتتاحي</strong></td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num balance">12,500.00</td>
+    </tr>
+    <tr>
+      <td class="date">[05 MMM]</td>
+      <td class="ref-cell">INV-2026-001</td>
+      <td>فاتورة — [بند النطاق]</td>
+      <td class="num debit">10,500.00</td>
+      <td class="num">—</td>
+      <td class="num balance">23,000.00</td>
+    </tr>
+    <tr>
+      <td class="date">[10 MMM]</td>
+      <td class="ref-cell">RCP-2026-001</td>
+      <td>مقبوضات — حوالة بنكية</td>
+      <td class="num">—</td>
+      <td class="num credit">(15,000.00)</td>
+      <td class="num balance">8,000.00</td>
+    </tr>
+    <tr>
+      <td class="date">[14 MMM]</td>
+      <td class="ref-cell">INV-2026-002</td>
+      <td>فاتورة — [بند النطاق]</td>
+      <td class="num debit">16,200.00</td>
+      <td class="num">—</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+    <tr>
+      <td class="date">[22 MMM]</td>
+      <td class="ref-cell">INV-2026-003</td>
+      <td>فاتورة — [بند النطاق]</td>
+      <td class="num debit">10,000.00</td>
+      <td class="num">—</td>
+      <td class="num balance">34,200.00</td>
+    </tr>
+    <tr>
+      <td class="date">[28 MMM]</td>
+      <td class="ref-cell">RCP-2026-002</td>
+      <td>مقبوضات — شيك رقم 4412</td>
+      <td class="num">—</td>
+      <td class="num credit">(10,000.00)</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">الرصيد الختامي (AED)</td>
+      <td class="num">36,700.00</td>
+      <td class="num">(25,000.00)</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+  </tfoot>
+</table>
+
+<div class="ageing-title">ملخّص الأعمار (AED)</div>
+<table class="ageing-table">
+  <thead>
+    <tr>
+      <th style="text-align: right;">الشريحة</th>
+      <th>جارٍ</th>
+      <th>1–30 يوم</th>
+      <th>31–60 يوم</th>
+      <th>61–90 يوم</th>
+      <th>+90 يوم</th>
+      <th>الإجمالي</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>المبلغ</td>
+      <td class="current">14,200.00</td>
+      <td class="current">0.00</td>
+      <td class="warn">10,000.00</td>
+      <td class="warn">0.00</td>
+      <td class="danger">0.00</td>
+      <td><strong>24,200.00</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footer-block">
+  <p><strong>يُرجى تسوية الرصيد المستحق قبل [تاريخ الاستحقاق].</strong> للاستفسار عن أيّ معاملة،
+  تواصل مع <span style="direction: ltr; unicode-bidi: embed">{% if brand.identity.email %}{{ brand.identity.email }}{% else %}[accounts@example.ae]{% endif %}</span>
+  مُشيراً إلى رقم الحساب أعلاه. المبالغ بالدرهم الإماراتي؛ الفواتير شاملة ضريبة القيمة المضافة حيث تنطبق.</p>
+</div>
+
+</body>
+</html>

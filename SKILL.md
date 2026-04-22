@@ -32,12 +32,12 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "NOC / formal / government / ministry / circular / authority / خطاب رسمي / شهادة عدم ممانعة / تعميم / تفويض" | `formal` | Institutional navy `#0B3D66` on off-white, Georgia/Amiri serif |
 | "CV / resume / cover letter / bio / سيرة ذاتية / خطاب تغطية / نبذة" | `personal` | Navy `#1E3A8A` sidebar on warm paper, Inter/Cairo sans-serif |
 | "syllabus / assignment / lecture notes / research proposal / خطة مقرر / واجب / محاضرة / مقترح بحثي" | `academic` | Burgundy `#7E1D4A` + sage on cream, Newsreader/Amiri serif |
-| *(v0.6)* invoice, financial summary | `financial` | *(deferred)* |
+| "invoice / tax invoice / quote / quotation / statement / financial summary / فاتورة / فاتورة ضريبية / عرض سعر / كشف حساب / ملخّص مالي" | `financial` | Emerald `#0F5F4E` + slate on warm ivory, Inter/Cairo sans |
 | *(v0.7)* white paper, article, thought leadership | `editorial` | *(deferred)* |
 | *(v0.8)* sell-sheet, product-brief, slide-deck (print PDF) | `marketing-print` | *(deferred)* |
 | *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
 
-Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0.
+Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0.
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -51,6 +51,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `formal` | `noc`, `government-letter`, `circular`, `authority-letter` |
 | `personal` | `cv`, `cover-letter`, `bio` |
 | `academic` | `syllabus`, `assignment-brief`, `lecture-notes`, `research-proposal` |
+| `financial` | `invoice`, `quote`, `statement`, `financial-summary` |
+
+### Financial doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `invoice` | Masthead + parties (TRN) + meta strip + line items + VAT totals + amount-in-words + payment block | 1–2 | `INV-*` | UAE VAT tax invoice (Fed. Decree-Law No. 8 of 2017) |
+| `quote` | Masthead + meta strip + scope (inclusions/exclusions) + pricing + totals + acceptance block | 1–3 | `QUO-*` | Commercial quotation / estimate before engagement |
+| `statement` | Masthead + balance-summary hero + ledger + ageing buckets (current / 30 / 60 / 90+) | 1–3 | `STM-*` | Statement of account / receivables ageing |
+| `financial-summary` | KPI cards + P&L table + revenue-mix bars + management commentary + outlook | 2–5 | `FIN-*` | Board / leadership financial review (quarterly, half-yearly, annual) |
 
 ### Academic doc-type picker
 

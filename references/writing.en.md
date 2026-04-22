@@ -157,6 +157,18 @@ Banned phrases that signal LLM output:
 - **Citations carry citation style from start to finish.** Pick APA / MLA / Chicago / IEEE once. Mixed styles look unprofessional and fail some committees.
 - **Arabic academic convention:** numbered sections use Eastern-Arabic digits (١ ٢ ٣) in running text but keep equations, DOIs, ISBNs, and years LTR with Western digits via `direction: ltr`. Mixing both is expected — not a bug.
 
+### Financial (Invoice, Quote, Statement, Financial-summary)
+
+- **UAE VAT tax invoice fields are non-negotiable.** Under Federal Decree-Law No. 8 of 2017, a compliant tax invoice must include the words "Tax Invoice", supplier name / address / TRN, customer name / address / TRN (if registered), sequential invoice number, invoice date, supply date (if different), item description, unit price, VAT rate and amount separately, and the total including VAT. If any field is missing, the invoice is not valid for input-VAT recovery — your client's accountant will reject it.
+- **TRN = 15 digits**, always shown in Latin digits with `direction: ltr` even inside Arabic cells. Never render a TRN in Eastern-Arabic numerals — tax authority systems read Latin digits.
+- **Currency and amounts are LTR**, regardless of language. `AED 17,600.00` reads the same in both directions. Force with `direction: ltr; unicode-bidi: embed` inside RTL table cells.
+- **Amount in words goes below the total, not beside it.** It's a legal cross-check, not decoration. Write the full form ("UAE Dirhams Seventeen Thousand Six Hundred only") — avoid abbreviation.
+- **Quote scope names inclusions AND exclusions.** The exclusions list prevents scope creep worth more than the quote itself. Name "travel," "third-party licences," "content not supplied by us." Explicit exclusions beat implicit assumptions.
+- **Statements use ageing buckets, not a flat ledger.** Current / 1–30 / 31–60 / 61–90 / 90+ days. Colour buckets: green for current, amber for 30–60, red for 90+. The client's payables clerk needs to see the age at a glance — that's what triggers payment.
+- **Financial summary — commit to a number in the commentary.** "Revenue grew" is filler. "Revenue grew 18% to AED 2.4M" is real. Management accounts are unaudited, so mark them clearly as such to avoid audit confusion later.
+- **Round intentionally.** For summaries, one decimal place is usually enough. For invoices and statements, two decimal places always — tax authorities and reconciliation systems demand it.
+- **Zero-rated vs exempt are different.** A zero-rated item (e.g., international transport, exported services) shows 0% VAT but still appears in VAT returns. An exempt item doesn't. Most UAE B2B invoices don't encounter exempts — when you do, label them so the client's accountant knows.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm;
+    @bottom-center {
+      content: "{{ company }}  |  Tax Invoice  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  /* Masthead */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18pt;
+    padding-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+  }
+
+  .masthead .brand .logo {
+    max-height: 18mm;
+    margin-bottom: 6pt;
+    display: block;
+  }
+
+  .masthead .brand .legal {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 2pt;
+  }
+
+  .masthead .brand .address {
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    line-height: 1.45;
+  }
+
+  .masthead .doc-title {
+    text-align: right;
+  }
+
+  .masthead .doc-title .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .masthead .doc-title h1 {
+    font-size: 24pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .masthead .doc-title .ref {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+  }
+
+  /* Parties (Bill From / Bill To) */
+  .parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt;
+    margin-bottom: 16pt;
+  }
+
+  .party {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 12pt;
+    background: var(--page-bg);
+  }
+
+  .party .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  .party .name {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3pt;
+  }
+
+  .party .detail {
+    font-size: 9pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+  }
+
+  .party .trn {
+    display: block;
+    margin-top: 4pt;
+    font-size: 9pt;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .party .trn .value {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  /* Meta strip: dates + currency */
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-bottom: 16pt;
+    border: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell {
+    padding: 8pt 12pt;
+    border-right: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell:last-child { border-right: 0; }
+
+  .meta-strip .label {
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 2pt;
+  }
+
+  .meta-strip .value {
+    font-size: 10pt;
+    color: var(--text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Line items table */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 14pt 0;
+    font-size: 9.5pt;
+  }
+
+  .items-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 8pt 10pt;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9pt;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .items-table th.num,
+  .items-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .items-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 8pt 10pt;
+    vertical-align: top;
+  }
+
+  .items-table .desc .title {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .items-table .desc .sub {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-top: 1pt;
+  }
+
+  .items-table tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  /* Totals */
+  .totals-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16pt;
+  }
+
+  .totals {
+    width: 70mm;
+    font-size: 10pt;
+  }
+
+  .totals .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4pt 0;
+    border-bottom: 0.25pt solid var(--border);
+  }
+
+  .totals .row .label { color: var(--text-secondary); }
+  .totals .row .value { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .totals .row.total {
+    padding: 8pt 10pt;
+    margin-top: 6pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    border-bottom: 0;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+
+  .totals .row.total .label,
+  .totals .row.total .value { color: var(--accent-on); }
+
+  /* Amount in words */
+  .amount-words {
+    font-size: 9pt;
+    padding: 8pt 12pt;
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    margin-bottom: 14pt;
+  }
+
+  .amount-words .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  /* Payment block */
+  .payment-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin-bottom: 14pt;
+  }
+
+  .payment-block h3 {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .payment-block .box {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 12pt;
+    font-size: 9.5pt;
+    line-height: 1.6;
+  }
+
+  .payment-block .box .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 2pt 0;
+  }
+
+  .payment-block .box .row .k { color: var(--text-secondary); font-size: 8.5pt; }
+  .payment-block .box .row .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* Notes + signature */
+  .footer-block {
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+  }
+
+  .footer-block p { margin: 3pt 0; }
+
+  .signature {
+    margin-top: 10pt;
+    font-size: 9pt;
+    color: var(--text-secondary);
+  }
+
+  .signature .line {
+    border-bottom: 0.5pt solid var(--border-strong);
+    width: 60mm;
+    margin: 16pt 0 3pt 0;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Masthead ===== -->
+<header class="masthead">
+  <div class="brand">
+    {% if brand and brand.logo and brand.logo.primary %}
+    <img class="logo" src="{{ brand.logo.primary }}" alt="{{ company }}" />
+    {% endif %}
+    <div class="legal">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="address">
+      [Street address, Building]<br />
+      [PO Box, City — Emirate]<br />
+      {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[billing@example.ae]{% endif %}
+      {% if brand.identity.phone %} · {{ brand.identity.phone }}{% else %} · [+971 0 000 0000]{% endif %}
+    </div>
+  </div>
+  <div class="doc-title">
+    <div class="eyebrow">Tax Invoice</div>
+    <h1>INVOICE</h1>
+    <div class="ref">{{ reference_code }}</div>
+  </div>
+</header>
+
+<!-- ===== Bill from / Bill to ===== -->
+<section class="parties">
+  <div class="party">
+    <div class="label">Bill From</div>
+    <div class="name">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="detail">
+      [Street address]<br />
+      [PO Box, City — UAE]
+    </div>
+    <span class="trn">TRN: <span class="value">[100000000000003]</span></span>
+  </div>
+  <div class="party">
+    <div class="label">Bill To</div>
+    <div class="name">[Client Legal Name LLC]</div>
+    <div class="detail">
+      [Client street address]<br />
+      [PO Box, City — UAE]<br />
+      [Attn: Accounts Payable]
+    </div>
+    <span class="trn">TRN: <span class="value">[100000000000004]</span></span>
+  </div>
+</section>
+
+<!-- ===== Meta strip ===== -->
+<section class="meta-strip">
+  <div class="cell">
+    <div class="label">Invoice Date</div>
+    <div class="value">{{ date_display }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">Supply Date</div>
+    <div class="value">{{ date_display }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">Due Date</div>
+    <div class="value">[+30 days]</div>
+  </div>
+  <div class="cell">
+    <div class="label">Currency</div>
+    <div class="value">AED</div>
+  </div>
+</section>
+
+<!-- ===== Line items ===== -->
+<table class="items-table">
+  <thead>
+    <tr>
+      <th style="width: 24pt">#</th>
+      <th>Description</th>
+      <th class="num" style="width: 50pt">Qty</th>
+      <th class="num" style="width: 70pt">Unit Price</th>
+      <th class="num" style="width: 50pt">VAT %</th>
+      <th class="num" style="width: 70pt">VAT</th>
+      <th class="num" style="width: 80pt">Total (AED)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td class="desc">
+        <div class="title">[Service / product name]</div>
+        <div class="sub">[Scope note — dates, deliverable, contract ref]</div>
+      </td>
+      <td class="num">1</td>
+      <td class="num">10,000.00</td>
+      <td class="num">5%</td>
+      <td class="num">500.00</td>
+      <td class="num">10,500.00</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td class="desc">
+        <div class="title">[Second line item]</div>
+        <div class="sub">[Short note]</div>
+      </td>
+      <td class="num">10</td>
+      <td class="num">200.00</td>
+      <td class="num">5%</td>
+      <td class="num">100.00</td>
+      <td class="num">2,100.00</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td class="desc">
+        <div class="title">[Third line item — zero-rated example]</div>
+        <div class="sub">[e.g., international transport, exported service]</div>
+      </td>
+      <td class="num">1</td>
+      <td class="num">5,000.00</td>
+      <td class="num">0%</td>
+      <td class="num">0.00</td>
+      <td class="num">5,000.00</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== Totals ===== -->
+<div class="totals-wrap">
+  <div class="totals">
+    <div class="row"><span class="label">Subtotal (excl. VAT)</span><span class="value">17,000.00</span></div>
+    <div class="row"><span class="label">Discount</span><span class="value">0.00</span></div>
+    <div class="row"><span class="label">VAT (5%)</span><span class="value">600.00</span></div>
+    <div class="row total"><span class="label">TOTAL AED</span><span class="value">17,600.00</span></div>
+  </div>
+</div>
+
+<!-- ===== Amount in words ===== -->
+<div class="amount-words">
+  <div class="label">Amount in Words</div>
+  UAE Dirhams [Seventeen Thousand Six Hundred] only.
+</div>
+
+<!-- ===== Payment ===== -->
+<div class="payment-block">
+  <div>
+    <h3>Payment Terms</h3>
+    <div class="box">
+      <p><strong>Due within [30] days</strong> from invoice date. Late payments may accrue
+      interest at [1.5%] per month. Please reference the invoice number
+      <strong>{{ reference_code }}</strong> in your remittance.</p>
+    </div>
+  </div>
+  <div>
+    <h3>Bank Details</h3>
+    <div class="box">
+      <div class="row"><span class="k">Account Name</span><span class="v">{{ brand.identity.legal_name if brand.identity.legal_name else '[Account Name]' }}</span></div>
+      <div class="row"><span class="k">Bank</span><span class="v">[Bank name]</span></div>
+      <div class="row"><span class="k">Account No.</span><span class="v">[000 000 0000 000]</span></div>
+      <div class="row"><span class="k">IBAN</span><span class="v">AE00 0000 0000 0000 0000 000</span></div>
+      <div class="row"><span class="k">Swift</span><span class="v">[BICCODE]</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Footer ===== -->
+<div class="footer-block">
+  <p><strong>Thank you for your business.</strong> Questions on this invoice should be directed to
+  {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[accounts@example.ae]{% endif %}.</p>
+  <p>This is a tax invoice issued under the UAE Federal Decree-Law No. 8 of 2017 (VAT Law) and its Executive Regulations. All figures in AED unless noted otherwise.</p>
+  <div class="signature">
+    <div class="line"></div>
+    Authorised signatory · {{ author_name }}
+  </div>
+</div>
+
+</body>
+</html>

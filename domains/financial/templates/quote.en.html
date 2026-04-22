@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm;
+    @bottom-center {
+      content: "{{ company }}  |  Quote  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .brand .logo { max-height: 18mm; margin-bottom: 6pt; display: block; }
+  .masthead .brand .legal { font-size: 11pt; font-weight: 700; color: var(--accent); margin-bottom: 2pt; }
+  .masthead .brand .address { font-size: 8.5pt; color: var(--text-secondary); line-height: 1.5; }
+
+  .masthead .doc-title { text-align: right; }
+  .masthead .doc-title .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .masthead .doc-title h1 {
+    font-size: 26pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .masthead .doc-title .ref {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+  }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 16pt;
+    border: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell { padding: 8pt 12pt; border-right: 0.5pt solid var(--border); }
+  .meta-strip .cell:last-child { border-right: 0; }
+  .meta-strip .label {
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 2pt;
+  }
+  .meta-strip .value { font-size: 10pt; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .client-block {
+    padding: 12pt 14pt;
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    margin-bottom: 16pt;
+  }
+
+  .client-block .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .client-block .name { font-size: 12pt; font-weight: 700; margin-bottom: 2pt; }
+  .client-block .detail { font-size: 9.5pt; color: var(--text-secondary); line-height: 1.5; }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 8pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 600;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-left: 22pt; }
+  li { margin-bottom: 3pt; }
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0 16pt 0;
+    font-size: 10pt;
+  }
+
+  .items-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 8pt 10pt;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5pt;
+  }
+
+  .items-table th.num,
+  .items-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .items-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 8pt 10pt;
+    vertical-align: top;
+  }
+
+  .items-table .desc .title { font-weight: 600; }
+  .items-table .desc .sub { font-size: 9pt; color: var(--text-tertiary); margin-top: 1pt; }
+
+  .totals-wrap { display: flex; justify-content: flex-end; margin-bottom: 16pt; }
+  .totals { width: 70mm; font-size: 10pt; }
+  .totals .row { display: flex; justify-content: space-between; padding: 4pt 0; border-bottom: 0.25pt solid var(--border); }
+  .totals .row .label { color: var(--text-secondary); }
+  .totals .row .value { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .totals .row.total {
+    padding: 8pt 10pt;
+    margin-top: 6pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    border-bottom: 0;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .totals .row.total .label,
+  .totals .row.total .value { color: var(--accent-on); }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin-bottom: 14pt;
+  }
+
+  .terms-grid .cell {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 14pt;
+  }
+
+  .terms-grid .cell h3 {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .terms-grid .cell p,
+  .terms-grid .cell ul { font-size: 9.5pt; margin: 0; }
+
+  .acceptance {
+    margin-top: 18pt;
+    padding-top: 14pt;
+    border-top: 1pt solid var(--accent);
+  }
+
+  .acceptance h2 { margin-top: 0; border-bottom: 0; }
+
+  .acceptance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt;
+    margin-top: 10pt;
+  }
+
+  .acceptance-grid .col { font-size: 9.5pt; }
+
+  .acceptance-grid .col .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 3pt;
+  }
+
+  .acceptance-grid .col .line {
+    border-bottom: 0.5pt solid var(--border-strong);
+    height: 22pt;
+    margin-bottom: 3pt;
+  }
+
+  .acceptance-grid .col .sub {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    {% if brand and brand.logo and brand.logo.primary %}
+    <img class="logo" src="{{ brand.logo.primary }}" alt="{{ company }}" />
+    {% endif %}
+    <div class="legal">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="address">
+      [Street address, Building]<br />
+      [PO Box, City — Emirate]<br />
+      {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[sales@example.ae]{% endif %}
+    </div>
+  </div>
+  <div class="doc-title">
+    <div class="eyebrow">Commercial Quote</div>
+    <h1>QUOTATION</h1>
+    <div class="ref">{{ reference_code }}</div>
+  </div>
+</header>
+
+<section class="meta-strip">
+  <div class="cell"><div class="label">Issued</div><div class="value">{{ date_display }}</div></div>
+  <div class="cell"><div class="label">Valid Until</div><div class="value">[+30 days]</div></div>
+  <div class="cell"><div class="label">Currency</div><div class="value">AED</div></div>
+  <div class="cell"><div class="label">Prepared By</div><div class="value">{{ author_name }}</div></div>
+</section>
+
+<section class="client-block">
+  <div class="label">Prepared For</div>
+  <div class="name">[Client Legal Name LLC]</div>
+  <div class="detail">
+    [Attn: Name of primary contact]<br />
+    [Client address, City — UAE]<br />
+    [email@client.ae]
+  </div>
+</section>
+
+<section>
+  <h2>1 · Scope</h2>
+  <p>[One paragraph. Describe what the quote covers — the outcome the client is buying, not a
+  feature list. Keep it specific to their situation.]</p>
+
+  <h3 style="font-size: 10pt; margin: 12pt 0 4pt 0;">Inclusions</h3>
+  <ul>
+    <li>[Deliverable 1 — concrete]</li>
+    <li>[Deliverable 2]</li>
+    <li>[Deliverable 3]</li>
+    <li>[Reasonable inclusion — e.g., two revision rounds, handover call]</li>
+  </ul>
+
+  <h3 style="font-size: 10pt; margin: 12pt 0 4pt 0;">Exclusions</h3>
+  <ul>
+    <li>[Out-of-scope item — name it explicitly to prevent scope creep later]</li>
+    <li>[Third-party licences / fees]</li>
+    <li>[Travel / accommodation unless agreed separately]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>2 · Pricing</h2>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 24pt">#</th>
+        <th>Description</th>
+        <th class="num" style="width: 50pt">Qty</th>
+        <th class="num" style="width: 80pt">Unit Price</th>
+        <th class="num" style="width: 90pt">Total (AED)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td class="desc"><div class="title">[Phase / service 1]</div><div class="sub">[Timing · 2 weeks]</div></td>
+        <td class="num">1</td>
+        <td class="num">15,000.00</td>
+        <td class="num">15,000.00</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="desc"><div class="title">[Phase / service 2]</div><div class="sub">[Timing · 3 weeks]</div></td>
+        <td class="num">1</td>
+        <td class="num">25,000.00</td>
+        <td class="num">25,000.00</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td class="desc"><div class="title">[Optional add-on]</div><div class="sub">[At client election]</div></td>
+        <td class="num">1</td>
+        <td class="num">8,000.00</td>
+        <td class="num">8,000.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="totals-wrap">
+    <div class="totals">
+      <div class="row"><span class="label">Subtotal (excl. VAT)</span><span class="value">48,000.00</span></div>
+      <div class="row"><span class="label">VAT (5%)</span><span class="value">2,400.00</span></div>
+      <div class="row total"><span class="label">TOTAL AED</span><span class="value">50,400.00</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="terms-grid">
+  <div class="cell">
+    <h3>Payment Schedule</h3>
+    <ul style="padding-left: 16pt;">
+      <li>[50% on acceptance]</li>
+      <li>[25% on [milestone]]</li>
+      <li>[25% on delivery]</li>
+    </ul>
+  </div>
+  <div class="cell">
+    <h3>Timeline</h3>
+    <p>[Start: within 5 business days of signed acceptance.<br />
+    Delivery: [N weeks] from start date, subject to timely client inputs.]</p>
+  </div>
+  <div class="cell">
+    <h3>Validity</h3>
+    <p>This quotation is valid until <strong>[+30 days from issue]</strong>. Prices
+    beyond this date subject to review.</p>
+  </div>
+  <div class="cell">
+    <h3>Terms &amp; Conditions</h3>
+    <p>VAT chargeable at prevailing UAE rates. Payments in AED unless agreed
+    otherwise. Late payments subject to 1.5% monthly interest. Full terms on
+    engagement letter.</p>
+  </div>
+</section>
+
+<section class="acceptance">
+  <h2>3 · Acceptance</h2>
+  <p>To proceed, please sign below and return a scanned copy to
+  {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[sales@example.ae]{% endif %}.
+  On receipt, we will issue the initial invoice and confirm the project start date.</p>
+
+  <div class="acceptance-grid">
+    <div class="col">
+      <div class="label">For {{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+      <div class="line"></div>
+      <div>{{ author_name }}</div>
+      <div class="sub">Name · Title · Date</div>
+    </div>
+    <div class="col">
+      <div class="label">Accepted by Client</div>
+      <div class="line"></div>
+      <div>[Authorised signatory name]</div>
+      <div class="sub">Name · Title · Date</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm;
+    @bottom-center {
+      content: "{{ company }}  |  Statement of Account  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.55;
+    color: var(--text);
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 12pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 14pt;
+  }
+
+  .masthead .brand .logo { max-height: 16mm; margin-bottom: 6pt; display: block; }
+  .masthead .brand .legal { font-size: 11pt; font-weight: 700; color: var(--accent); margin-bottom: 2pt; }
+  .masthead .brand .address { font-size: 8.5pt; color: var(--text-secondary); line-height: 1.45; }
+
+  .masthead .doc-title { text-align: right; }
+  .masthead .doc-title .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .masthead .doc-title h1 {
+    font-size: 22pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .masthead .doc-title .ref {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+  }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 14pt;
+    border: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell { padding: 8pt 12pt; border-right: 0.5pt solid var(--border); }
+  .meta-strip .cell:last-child { border-right: 0; }
+  .meta-strip .label { font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 600; margin-bottom: 2pt; }
+  .meta-strip .value { font-size: 10pt; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .client-block {
+    padding: 10pt 12pt;
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    margin-bottom: 14pt;
+  }
+
+  .client-block .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 3pt;
+  }
+
+  .client-block .name { font-size: 11pt; font-weight: 700; }
+  .client-block .detail { font-size: 9pt; color: var(--text-secondary); }
+
+  /* Balance summary (hero) */
+  .balance-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 14pt;
+    background: var(--accent);
+    color: var(--accent-on);
+  }
+
+  .balance-summary .cell {
+    padding: 10pt 14pt;
+    border-right: 0.5pt solid #4F887D;
+    text-align: center;
+  }
+
+  .balance-summary .cell:last-child { border-right: 0; }
+
+  .balance-summary .label {
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 3pt;
+  }
+
+  .balance-summary .value {
+    font-size: 14pt;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Ledger table */
+  .ledger {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14pt;
+    font-size: 9.5pt;
+  }
+
+  .ledger th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 8pt;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9pt;
+  }
+
+  .ledger th.num,
+  .ledger td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .ledger td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+
+  .ledger tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  .ledger .date { white-space: nowrap; color: var(--text-tertiary); font-size: 9pt; }
+  .ledger .ref-cell { font-family: 'Courier New', monospace; font-size: 8.5pt; color: var(--text-secondary); }
+
+  .ledger .balance { font-weight: 700; color: var(--accent); }
+  .ledger .debit { color: var(--danger-border); }
+  .ledger .credit { color: var(--accent); }
+
+  .ledger tfoot td {
+    border-top: 1pt solid var(--accent);
+    background: var(--table-row-alt);
+    font-weight: 700;
+    padding: 8pt;
+  }
+
+  /* Ageing summary */
+  .ageing-title {
+    font-size: 11pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 18pt 0 6pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .ageing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin-bottom: 14pt;
+  }
+
+  .ageing-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 8pt;
+    font-weight: 600;
+    font-size: 9pt;
+  }
+
+  .ageing-table td {
+    border: 0.5pt solid var(--border);
+    padding: 8pt;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+
+  .ageing-table tbody tr:first-child td:first-child {
+    text-align: left;
+    font-weight: 700;
+  }
+
+  .ageing-table .current { background: var(--success-bg); }
+  .ageing-table .warn { background: var(--warning-bg); }
+  .ageing-table .danger { background: var(--danger-bg); color: var(--danger-border); font-weight: 700; }
+
+  .footer-block {
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    {% if brand and brand.logo and brand.logo.primary %}
+    <img class="logo" src="{{ brand.logo.primary }}" alt="{{ company }}" />
+    {% endif %}
+    <div class="legal">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="address">
+      [Address]<br />
+      {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[accounts@example.ae]{% endif %}
+    </div>
+  </div>
+  <div class="doc-title">
+    <div class="eyebrow">Statement of Account</div>
+    <h1>STATEMENT</h1>
+    <div class="ref">{{ reference_code }}</div>
+  </div>
+</header>
+
+<section class="meta-strip">
+  <div class="cell"><div class="label">Statement Date</div><div class="value">{{ date_display }}</div></div>
+  <div class="cell"><div class="label">Period</div><div class="value">[01–30 Month YYYY]</div></div>
+  <div class="cell"><div class="label">Currency</div><div class="value">AED</div></div>
+  <div class="cell"><div class="label">Account No.</div><div class="value">[CLT-0042]</div></div>
+</section>
+
+<section class="client-block">
+  <div class="label">Account Holder</div>
+  <div class="name">[Client Legal Name LLC]</div>
+  <div class="detail">[Client address, City — UAE] · TRN: [100000000000004]</div>
+</section>
+
+<!-- ===== Balance summary (hero) ===== -->
+<section class="balance-summary">
+  <div class="cell">
+    <div class="label">Opening Balance</div>
+    <div class="value">12,500.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">Invoiced</div>
+    <div class="value">36,700.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">Received</div>
+    <div class="value">25,000.00</div>
+  </div>
+  <div class="cell">
+    <div class="label">Closing Balance</div>
+    <div class="value">24,200.00</div>
+  </div>
+</section>
+
+<!-- ===== Ledger ===== -->
+<table class="ledger">
+  <thead>
+    <tr>
+      <th style="width: 72pt">Date</th>
+      <th style="width: 80pt">Reference</th>
+      <th>Description</th>
+      <th class="num" style="width: 70pt">Debit</th>
+      <th class="num" style="width: 70pt">Credit</th>
+      <th class="num" style="width: 80pt">Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="date">[01 MMM]</td>
+      <td class="ref-cell">—</td>
+      <td><strong>Opening balance</strong></td>
+      <td class="num">—</td>
+      <td class="num">—</td>
+      <td class="num balance">12,500.00</td>
+    </tr>
+    <tr>
+      <td class="date">[05 MMM]</td>
+      <td class="ref-cell">INV-2026-001</td>
+      <td>Invoice — [scope line]</td>
+      <td class="num debit">10,500.00</td>
+      <td class="num">—</td>
+      <td class="num balance">23,000.00</td>
+    </tr>
+    <tr>
+      <td class="date">[10 MMM]</td>
+      <td class="ref-cell">RCP-2026-001</td>
+      <td>Payment received — bank transfer</td>
+      <td class="num">—</td>
+      <td class="num credit">(15,000.00)</td>
+      <td class="num balance">8,000.00</td>
+    </tr>
+    <tr>
+      <td class="date">[14 MMM]</td>
+      <td class="ref-cell">INV-2026-002</td>
+      <td>Invoice — [scope line]</td>
+      <td class="num debit">16,200.00</td>
+      <td class="num">—</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+    <tr>
+      <td class="date">[22 MMM]</td>
+      <td class="ref-cell">INV-2026-003</td>
+      <td>Invoice — [scope line]</td>
+      <td class="num debit">10,000.00</td>
+      <td class="num">—</td>
+      <td class="num balance">34,200.00</td>
+    </tr>
+    <tr>
+      <td class="date">[28 MMM]</td>
+      <td class="ref-cell">RCP-2026-002</td>
+      <td>Payment received — cheque #4412</td>
+      <td class="num">—</td>
+      <td class="num credit">(10,000.00)</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3">Closing balance (AED)</td>
+      <td class="num">36,700.00</td>
+      <td class="num">(25,000.00)</td>
+      <td class="num balance">24,200.00</td>
+    </tr>
+  </tfoot>
+</table>
+
+<!-- ===== Ageing ===== -->
+<div class="ageing-title">Ageing Summary (AED)</div>
+<table class="ageing-table">
+  <thead>
+    <tr>
+      <th style="text-align: left;">Bucket</th>
+      <th>Current</th>
+      <th>1–30 days</th>
+      <th>31–60 days</th>
+      <th>61–90 days</th>
+      <th>90+ days</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Amount</td>
+      <td class="current">14,200.00</td>
+      <td class="current">0.00</td>
+      <td class="warn">10,000.00</td>
+      <td class="warn">0.00</td>
+      <td class="danger">0.00</td>
+      <td><strong>24,200.00</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="footer-block">
+  <p><strong>Please remit outstanding balance by [due date].</strong> For queries on any transaction,
+  contact {% if brand.identity.email %}{{ brand.identity.email }}{% else %}[accounts@example.ae]{% endif %}
+  quoting the account number above. Figures in AED; all invoices are VAT-inclusive where applicable.</p>
+</div>
+
+</body>
+</html>

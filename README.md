@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal`, `academic` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio · syllabus, assignment-brief, lecture-notes, research-proposal |
+| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal`, `academic`, `financial` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio · syllabus, assignment-brief, lecture-notes, research-proposal · invoice, quote, statement, financial-summary |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -169,14 +169,18 @@ Each doc type ships as EN + AR peer templates at
 | | `assignment-brief` | 2–4 | `AB-*` | Student-facing task spec with rubric table |
 | | `lecture-notes` | 4–12 | `LN-*` | Main column + margin notes + exercises |
 | | `research-proposal` | 8–20 | `RP-*` | Title page + abstract + methodology + timeline + budget |
+| `financial` | `invoice` | 1–2 | `INV-*` | UAE VAT tax invoice (TRN, VAT column, amount-in-words) |
+| | `quote` | 1–3 | `QUO-*` | Commercial quotation with inclusions/exclusions + acceptance |
+| | `statement` | 1–3 | `STM-*` | Statement of account + ledger + ageing buckets |
+| | `financial-summary` | 2–5 | `FIN-*` | KPIs + P&L + revenue mix + commentary |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-Planned future domains — `financial` (invoices), `editorial` (white papers),
-`marketing-print` (sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) —
-are listed in the [Roadmap](#roadmap) and deferred past v0.5.
+Planned future domains — `editorial` (white papers), `marketing-print`
+(sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) — are listed
+in the [Roadmap](#roadmap) and deferred past v0.6.
 
 ---
 

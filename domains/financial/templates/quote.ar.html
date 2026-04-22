@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm;
+    @bottom-center {
+      content: "{{ company }}  |  عرض سعر  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .brand .logo { max-height: 18mm; margin-bottom: 6pt; display: block; }
+  .masthead .brand .legal { font-size: 11.5pt; font-weight: 700; color: var(--accent); margin-bottom: 2pt; }
+  .masthead .brand .address { font-size: 9pt; color: var(--text-secondary); line-height: 1.65; }
+
+  .masthead .doc-title { text-align: left; }
+  .masthead .doc-title .eyebrow {
+    font-size: 9.5pt;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .masthead .doc-title h1 {
+    font-size: 24pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .masthead .doc-title .ref {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .meta-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 16pt;
+    border: 0.5pt solid var(--border);
+  }
+
+  .meta-strip .cell { padding: 8pt 12pt; border-left: 0.5pt solid var(--border); }
+  .meta-strip .cell:last-child { border-left: 0; }
+  .meta-strip .label { font-size: 8pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt; }
+  .meta-strip .value { font-size: 10pt; font-weight: 700; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; text-align: right; }
+
+  .client-block {
+    padding: 12pt 14pt;
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    margin-bottom: 16pt;
+  }
+
+  .client-block .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .client-block .name { font-size: 12pt; font-weight: 700; margin-bottom: 2pt; }
+  .client-block .detail { font-size: 10pt; color: var(--text-secondary); line-height: 1.65; }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 8pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 3pt; }
+
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0 16pt 0;
+    font-size: 10pt;
+  }
+
+  .items-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 8pt 10pt;
+    text-align: right;
+    font-weight: 700;
+    font-size: 9.5pt;
+  }
+
+  .items-table th.num,
+  .items-table td.num { text-align: left; font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; }
+
+  .items-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 8pt 10pt;
+    vertical-align: top;
+  }
+
+  .items-table .desc .title { font-weight: 700; }
+  .items-table .desc .sub { font-size: 9pt; color: var(--text-tertiary); margin-top: 1pt; }
+
+  .totals-wrap { display: flex; justify-content: flex-start; margin-bottom: 16pt; }
+  .totals { width: 80mm; font-size: 10.5pt; }
+  .totals .row { display: flex; justify-content: space-between; padding: 4pt 0; border-bottom: 0.25pt solid var(--border); }
+  .totals .row .label { color: var(--text-secondary); }
+  .totals .row .value { font-variant-numeric: tabular-nums; font-weight: 700; direction: ltr; unicode-bidi: embed; }
+  .totals .row.total {
+    padding: 8pt 10pt;
+    margin-top: 6pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    border-bottom: 0;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .totals .row.total .label,
+  .totals .row.total .value { color: var(--accent-on); }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin-bottom: 14pt;
+  }
+
+  .terms-grid .cell {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 14pt;
+  }
+
+  .terms-grid .cell h3 {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .terms-grid .cell p,
+  .terms-grid .cell ul { font-size: 10pt; margin: 0; padding-right: 16pt; padding-left: 0; }
+
+  .acceptance {
+    margin-top: 18pt;
+    padding-top: 14pt;
+    border-top: 1pt solid var(--accent);
+  }
+
+  .acceptance h2 { margin-top: 0; border-bottom: 0; }
+
+  .acceptance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt;
+    margin-top: 10pt;
+  }
+
+  .acceptance-grid .col { font-size: 10pt; }
+
+  .acceptance-grid .col .label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .acceptance-grid .col .line {
+    border-bottom: 0.5pt solid var(--border-strong);
+    height: 22pt;
+    margin-bottom: 3pt;
+  }
+
+  .acceptance-grid .col .sub {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    {% if brand and brand.logo and brand.logo.primary %}
+    <img class="logo" src="{{ brand.logo.primary }}" alt="{{ company }}" />
+    {% endif %}
+    <div class="legal">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+    <div class="address">
+      [العنوان، المبنى]<br />
+      [ص.ب، المدينة — الإمارة]<br />
+      <span style="direction: ltr; unicode-bidi: embed">{% if brand.identity.email %}{{ brand.identity.email }}{% else %}[sales@example.ae]{% endif %}</span>
+    </div>
+  </div>
+  <div class="doc-title">
+    <div class="eyebrow">عرض سعر تجاري</div>
+    <h1>عرض سعر</h1>
+    <div class="ref">{{ reference_code }}</div>
+  </div>
+</header>
+
+<section class="meta-strip">
+  <div class="cell"><div class="label">تاريخ الإصدار</div><div class="value">{{ date_display }}</div></div>
+  <div class="cell"><div class="label">صالح حتى</div><div class="value">[+30 يوماً]</div></div>
+  <div class="cell"><div class="label">العملة</div><div class="value">AED</div></div>
+  <div class="cell"><div class="label">مُعدّ بواسطة</div><div class="value">{{ author_name }}</div></div>
+</section>
+
+<section class="client-block">
+  <div class="label">مُقدَّم إلى</div>
+  <div class="name">[اسم العميل القانوني ذ.م.م]</div>
+  <div class="detail">
+    [إلى: اسم جهة الاتّصال الأساسية]<br />
+    [عنوان العميل، المدينة — الإمارات]<br />
+    <span style="direction: ltr; unicode-bidi: embed">[email@client.ae]</span>
+  </div>
+</section>
+
+<section>
+  <h2>١ · النطاق</h2>
+  <p>[فقرة واحدة. صف ما يغطّيه العرض — النتيجة التي يشتريها العميل، لا قائمة ميزات.
+  اجعله محدّداً بوضعه.]</p>
+
+  <h3 style="font-size: 10.5pt; margin: 12pt 0 4pt 0;">المشمولات</h3>
+  <ul>
+    <li>[مخرج ملموس ١]</li>
+    <li>[مخرج ٢]</li>
+    <li>[مخرج ٣]</li>
+    <li>[مشمول معقول — مثل جولتَي مراجعة، مكالمة تسليم]</li>
+  </ul>
+
+  <h3 style="font-size: 10.5pt; margin: 12pt 0 4pt 0;">غير المشمول</h3>
+  <ul>
+    <li>[بند خارج النطاق — سمّه صراحة لتفادي تمدّد النطاق لاحقاً]</li>
+    <li>[تراخيص / رسوم جهات خارجية]</li>
+    <li>[السفر / الإقامة ما لم يُتّفق عليهما منفصلاً]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>٢ · التسعير</h2>
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 24pt">#</th>
+        <th>الوصف</th>
+        <th class="num" style="width: 50pt">الكمّية</th>
+        <th class="num" style="width: 80pt">سعر الوحدة</th>
+        <th class="num" style="width: 90pt">الإجمالي (AED)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td class="desc"><div class="title">[المرحلة / الخدمة ١]</div><div class="sub">[المدّة · أسبوعان]</div></td>
+        <td class="num">1</td>
+        <td class="num">15,000.00</td>
+        <td class="num">15,000.00</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td class="desc"><div class="title">[المرحلة / الخدمة ٢]</div><div class="sub">[المدّة · ٣ أسابيع]</div></td>
+        <td class="num">1</td>
+        <td class="num">25,000.00</td>
+        <td class="num">25,000.00</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td class="desc"><div class="title">[إضافة اختيارية]</div><div class="sub">[بناء على طلب العميل]</div></td>
+        <td class="num">1</td>
+        <td class="num">8,000.00</td>
+        <td class="num">8,000.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="totals-wrap">
+    <div class="totals">
+      <div class="row"><span class="label">المجموع (قبل الضريبة)</span><span class="value">48,000.00</span></div>
+      <div class="row"><span class="label">ضريبة القيمة المضافة (5%)</span><span class="value">2,400.00</span></div>
+      <div class="row total"><span class="label">الإجمالي AED</span><span class="value">50,400.00</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="terms-grid">
+  <div class="cell">
+    <h3>جدول الدفعات</h3>
+    <ul>
+      <li>[50% عند القبول]</li>
+      <li>[25% عند [مرحلة]]</li>
+      <li>[25% عند التسليم]</li>
+    </ul>
+  </div>
+  <div class="cell">
+    <h3>الجدول الزمني</h3>
+    <p>[البدء: خلال ٥ أيام عمل من توقيع القبول.<br />
+    التسليم: [N أسابيع] من تاريخ البدء، رهناً بتوفّر مدخلات العميل في حينها.]</p>
+  </div>
+  <div class="cell">
+    <h3>الصلاحية</h3>
+    <p>هذا العرض صالح حتى <strong>[+30 يوماً من الإصدار]</strong>. الأسعار
+    بعد هذا التاريخ خاضعة لإعادة تقييم.</p>
+  </div>
+  <div class="cell">
+    <h3>الشروط والأحكام</h3>
+    <p>تُطبَّق ضريبة القيمة المضافة بالمعدّلات الإماراتية السارية. الدفع بالدرهم
+    ما لم يُتّفق على خلاف ذلك. تخضع المبالغ المتأخّرة لفائدة 1.5% شهرياً. الشروط
+    الكاملة في خطاب التعاقد.</p>
+  </div>
+</section>
+
+<section class="acceptance">
+  <h2>٣ · القبول</h2>
+  <p>للبدء، يُرجى التوقيع أدناه وإعادة نسخة ممسوحة إلى
+  <span style="direction: ltr; unicode-bidi: embed">{% if brand.identity.email %}{{ brand.identity.email }}{% else %}[sales@example.ae]{% endif %}</span>.
+  عند الاستلام سنُصدر الفاتورة الأوّلية ونؤكّد تاريخ بدء المشروع.</p>
+
+  <div class="acceptance-grid">
+    <div class="col">
+      <div class="label">عن {{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+      <div class="line"></div>
+      <div>{{ author_name }}</div>
+      <div class="sub">الاسم · المسمّى · التاريخ</div>
+    </div>
+    <div class="col">
+      <div class="label">قَبِل العميل</div>
+      <div class="line"></div>
+      <div>[اسم المفوَّض بالتوقيع]</div>
+      <div class="sub">الاسم · المسمّى · التاريخ</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

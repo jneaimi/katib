@@ -1,0 +1,41 @@
+{
+  "domain": "financial",
+  "covers_allowed": [],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": null,
+    "layout": "classic"
+  },
+  "doc_types": {
+    "invoice": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 3,
+      "target_pages": [1, 2],
+      "sections_required": ["body"]
+    },
+    "quote": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 4,
+      "target_pages": [1, 3],
+      "sections_required": ["body"]
+    },
+    "statement": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 4,
+      "target_pages": [1, 3],
+      "sections_required": ["body"]
+    },
+    "financial-summary": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 8,
+      "target_pages": [2, 5],
+      "sections_required": ["body"]
+    }
+  }
+}
