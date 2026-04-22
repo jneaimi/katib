@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 15pt;
+    color: var(--text);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    padding: 18mm 22mm;
+    page-break-after: always;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .slide:last-child { page-break-after: auto; }
+
+  .slide-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    padding-top: 6pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .slide-footer .brand { font-weight: 700; color: var(--accent); }
+  .slide-footer .counter { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: embed; }
+
+  /* Title */
+  .slide.title {
+    background: var(--accent-2);
+    color: var(--accent-on);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18mm 28mm;
+  }
+
+  .slide.title::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8mm;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .slide.title .eyebrow {
+    font-size: 11pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .slide.title h1 {
+    font-size: 48pt;
+    line-height: 1.2;
+    font-weight: 700;
+    margin: 0 0 14pt 0;
+    max-width: 230mm;
+  }
+
+  .slide.title .subtitle {
+    font-size: 20pt;
+    line-height: 1.55;
+    color: #CBD5E1;
+    max-width: 220mm;
+  }
+
+  .slide.title .meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 28mm;
+    right: 28mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+    color: #94A3B8;
+  }
+
+  .slide.title .meta .author { color: var(--accent-on); font-weight: 700; }
+  .slide.title .meta .date { direction: ltr; unicode-bidi: embed; }
+
+  /* Section */
+  .slide.section {
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+  }
+
+  .slide.section .chapter-num {
+    font-size: 140pt;
+    line-height: 1;
+    font-weight: 700;
+    opacity: 0.2;
+    margin-left: 24pt;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .slide.section .chapter-text { flex: 1; }
+
+  .slide.section .label {
+    font-size: 11.5pt;
+    margin-bottom: 8pt;
+    opacity: 0.9;
+    font-weight: 700;
+  }
+
+  .slide.section h2 {
+    font-size: 40pt;
+    line-height: 1.3;
+    margin: 0;
+    font-weight: 700;
+    max-width: 200mm;
+  }
+
+  /* Content */
+  .slide h2 {
+    font-size: 28pt;
+    line-height: 1.3;
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+
+  .slide h2 .slide-num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-left: 10pt;
+  }
+
+  .slide .kicker {
+    font-size: 10.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+
+  .slide .lead {
+    font-size: 18pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 0 16pt 0;
+    max-width: 220mm;
+  }
+
+  .slide ul, .slide ol { margin: 10pt 0 0 0; padding-right: 26pt; padding-left: 0; font-size: 16pt; line-height: 1.75; }
+  .slide li { margin-bottom: 8pt; }
+  .slide li strong { color: var(--accent); }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt;
+    margin-top: 14pt;
+  }
+
+  .two-col .col {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+  }
+
+  .two-col .col h3 {
+    margin: 0 0 6pt 0;
+    font-size: 15pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .two-col .col p {
+    font-size: 13pt;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .big-figure-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .big-figure-slide .big-number {
+    font-size: 180pt;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+    margin-bottom: 10pt;
+    letter-spacing: -0.03em;
+  }
+
+  .big-figure-slide .big-caption {
+    font-size: 22pt;
+    color: var(--accent-2);
+    max-width: 200mm;
+    line-height: 1.55;
+  }
+
+  .big-figure-slide .big-note {
+    font-size: 11pt;
+    color: var(--text-tertiary);
+    margin-top: 16pt;
+    font-weight: 700;
+  }
+
+  .quote-slide {
+    display: flex;
+    align-items: center;
+    background: var(--surface-tint);
+  }
+
+  .quote-slide::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8mm;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .quote-slide blockquote {
+    font-size: 26pt;
+    line-height: 1.55;
+    margin: 0;
+    max-width: 230mm;
+    color: var(--accent-2);
+    font-weight: 400;
+  }
+
+  .quote-slide .attribution {
+    display: block;
+    margin-top: 20pt;
+    font-size: 13pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .slide.cta {
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .slide.cta .kicker { color: var(--accent-on); opacity: 0.85; }
+
+  .slide.cta h2 {
+    color: var(--accent-on);
+    font-size: 44pt;
+    line-height: 1.25;
+    max-width: 230mm;
+    margin-bottom: 16pt;
+  }
+
+  .slide.cta .contacts {
+    font-size: 18pt;
+    line-height: 1.75;
+    margin-top: 14pt;
+  }
+
+  .slide.cta .contacts .label {
+    font-size: 10.5pt;
+    opacity: 0.85;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2pt;
+  }
+
+  .slide.cta .contacts .email,
+  .slide.cta .contacts .phone {
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Slide 1 · Title ===== -->
+<div class="slide title">
+  <div class="eyebrow">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <h1>[عنوان العرض — ادّعاء أو وعد أو سؤال محدّد في ٦–١٠ كلمات]</h1>
+  <div class="subtitle">[عنوان فرعي يضيّق ما يحاجّ به هذا العرض. جملة واحدة.]</div>
+  <div class="meta">
+    <div class="author">{{ author_name }}</div>
+    <div class="date">{{ date_display }}</div>
+  </div>
+</div>
+
+<!-- ===== Slide 2 · Opening ===== -->
+<div class="slide">
+  <div class="kicker">[٠١ · الافتتاح]</div>
+  <h2>[أين نحن اليوم]</h2>
+  <p class="lead">[جملة أو جملتان تُرسيان المشكلة. بخطّ كبير يقرأ من آخر القاعة.]</p>
+  <ul>
+    <li><strong>[حقيقة ١]</strong> — [تبعة بسطر واحد].</li>
+    <li><strong>[حقيقة ٢]</strong> — [تبعة بسطر واحد].</li>
+    <li><strong>[حقيقة ٣]</strong> — [تبعة بسطر واحد].</li>
+  </ul>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">02</span>
+  </div>
+</div>
+
+<!-- ===== Slide 3 · Section divider ===== -->
+<div class="slide section">
+  <div class="chapter-num">01</div>
+  <div class="chapter-text">
+    <div class="label">الجزء الأول</div>
+    <h2>[عنوان القسم — ما تغطّيه الشرائح التالية]</h2>
+  </div>
+</div>
+
+<!-- ===== Slide 4 · Comparison ===== -->
+<div class="slide">
+  <div class="kicker">[٠٢ · المقارنة]</div>
+  <h2>[التحوّل]</h2>
+  <div class="two-col">
+    <div class="col">
+      <h3>قبل</h3>
+      <p>[ما كانت تفعله الفرق / ما كانت عليه السوق / ما كان يحصل عليه العملاء.]</p>
+    </div>
+    <div class="col">
+      <h3>بعد</h3>
+      <p>[ما الذي يتغيّر حين تُتبنّى حجّة العرض.]</p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">04</span>
+  </div>
+</div>
+
+<!-- ===== Slide 5 · Big figure ===== -->
+<div class="slide big-figure-slide">
+  <div class="big-number">+42%</div>
+  <div class="big-caption">[تسمية بجملة واحدة تُوضِّح الرقم.]</div>
+  <div class="big-note">المصدر · [الاستشهاد]</div>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">05</span>
+  </div>
+</div>
+
+<!-- ===== Slide 6 · Quote ===== -->
+<div class="slide quote-slide">
+  <div>
+    <blockquote>«[اقتباس يُدرمِن نقطة العرض. من مصدر حقيقي قابل للعزو.]»</blockquote>
+    <div class="attribution">[الاسم · المسمّى · الجهة]</div>
+  </div>
+</div>
+
+<!-- ===== Slide 7 · Approach ===== -->
+<div class="slide">
+  <div class="kicker">[٠٣ · النهج]</div>
+  <h2>[كيف نصل إلى هناك]</h2>
+  <ol>
+    <li><strong>[الخطوة ١]</strong> — [فعل + نتيجة ملموسة].</li>
+    <li><strong>[الخطوة ٢]</strong> — [فعل + نتيجة].</li>
+    <li><strong>[الخطوة ٣]</strong> — [فعل + نتيجة].</li>
+    <li><strong>[الخطوة ٤]</strong> — [فعل + نتيجة].</li>
+  </ol>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">07</span>
+  </div>
+</div>
+
+<!-- ===== Slide 8 · CTA ===== -->
+<div class="slide cta">
+  <div class="kicker">لنبنِ ذلك</div>
+  <h2>[دعوة واحدة للحركة — ما الذي تريد أن يفعله الجمهور تالياً]</h2>
+  <div class="contacts">
+    <span class="label">التواصل</span>
+    {{ author_name }} · <span class="email">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</span><br />
+    <span class="phone">{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}</span>
+  </div>
+</div>
+
+</body>
+</html>

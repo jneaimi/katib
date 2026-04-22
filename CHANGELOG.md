@@ -3,6 +3,26 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.0] — 2026-04-22
+
+### Added
+- **New domain: `marketing-print`.** Print-grade sales and pitch materials. Four bilingual doc types:
+  - `sell-sheet` — full-bleed dark hero + value-stripe (3 big numbers) + numbered feature grid + value-list + testimonial strip + orange CTA band. Single dense page. 1–2 pp.
+  - `product-brief` — masthead + problem/solution split (grey vs orange tint) + how-it-works + 2×2 benefits grid + specs table + 3-tier pricing (with featured tier) + contact footer. 2–4 pp.
+  - `capability-statement` — ink band + quick-facts row + about/mission grid + 4×2 competencies grid + differentiators list + past-performance ledger (client · scope · year) + orange contact strip (license, TRN, contact). 1–2 pp.
+  - `slide-deck` — **landscape A4** · title slide with dark hero + section dividers (large faded chapter numbers) + content slides (bullets, two-col, big-figure, quote, CTA) with consistent footer bar (brand + page counter). 8–25 slides.
+- Orange `#EA580C` accent on ink + white — high-contrast sales palette. Inter (EN) + Cairo (AR) sans-serif.
+- **Slide-deck primitives:** `A4 landscape` page rule, 8mm accent stripe on title and quote slides, 180pt big-number slide, 140pt faded chapter number on dividers, CTA slide with inverted colour treatment. RTL decks mirror the accent stripe and chapter number side.
+- **Sell-sheet hero band** bleeds to page edge via negative margins — full-bleed without manual page-box hacks.
+- **Pricing tier featured card** — 2pt accent border + tint background to visually elevate the middle tier.
+- **Capability-statement past-performance ledger** — client · scope · year grid optimised for 30-second procurement scan.
+- SKILL.md router: "sell sheet / product brief / capability statement / slide deck / pitch deck / ورقة بيع / موجز منتج / بيان قدرات / عرض تقديمي" → `marketing-print` domain. Doc-type picker table added.
+- `references/writing.{en,ar}.md`: marketing-print section on outcome-over-activity opens, one-claim-per-page discipline, big-numbers need provenance, capability-statement procurement scannability, slide-from-the-back-of-the-room type rules, section-dividers-as-rest-stops, one-CTA-per-artifact rule, testimonial specificity, Arabic slide mirroring.
+- Reference-code formats: `SS-{YYYY}-{NNN}`, `PB-{YYYY}-{NNN}`, `CAP-{YYYY}`, `DECK-{YYYY}-{NNN}`.
+
+### Changed
+- Roadmap renumbered: `marketing-print` is now **live** (was v0.8 deferred).
+
 ## [0.7.0] — 2026-04-22
 
 ### Added
@@ -208,3 +228,4 @@ packaged with an installer.
 [0.5.0]: https://github.com/jneaimi/katib/releases/tag/v0.5.0
 [0.6.0]: https://github.com/jneaimi/katib/releases/tag/v0.6.0
 [0.7.0]: https://github.com/jneaimi/katib/releases/tag/v0.7.0
+[0.8.0]: https://github.com/jneaimi/katib/releases/tag/v0.8.0

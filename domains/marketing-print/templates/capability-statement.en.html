@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 16mm;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* Header band — company + tagline */
+  .band {
+    background: var(--accent-2);
+    color: var(--accent-on);
+    padding: 14pt 18pt;
+    margin: -16mm -16mm 12pt -16mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 6pt solid var(--accent);
+  }
+
+  .band .brand {
+    font-size: 16pt;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .band .tag {
+    font-size: 9.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Main two-column grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14pt;
+    margin-bottom: 14pt;
+  }
+
+  .panel {
+    border: 0.5pt solid var(--border);
+    padding: 12pt 14pt;
+    background: var(--page-bg);
+  }
+
+  .panel.accent {
+    border-top: 3pt solid var(--accent);
+  }
+
+  .panel h3 {
+    font-size: 9.5pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .panel p { margin: 4pt 0; font-size: 9.5pt; }
+
+  .panel ul {
+    margin: 4pt 0;
+    padding-left: 18pt;
+    font-size: 9.5pt;
+  }
+
+  .panel ul li { margin-bottom: 2pt; }
+
+  /* Core competencies grid */
+  .competencies {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin: 6pt 0;
+  }
+
+  .comp {
+    background: var(--surface-tint);
+    border-left: 2pt solid var(--accent);
+    padding: 6pt 8pt;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    line-height: 1.35;
+  }
+
+  /* Past performance table */
+  .past-performance {
+    margin: 10pt 0;
+    border: 0.5pt solid var(--border);
+  }
+
+  .past-performance .row {
+    display: grid;
+    grid-template-columns: 90pt 1fr 70pt;
+    gap: 10pt;
+    padding: 8pt 12pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-size: 9.5pt;
+    align-items: baseline;
+  }
+
+  .past-performance .row:last-child { border-bottom: 0; }
+  .past-performance .row:nth-child(even) { background: var(--table-row-alt); }
+
+  .past-performance .client {
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+
+  .past-performance .year {
+    color: var(--text-tertiary);
+    font-size: 8.5pt;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .past-performance .scope { color: var(--text-secondary); }
+
+  /* Differentiators */
+  .diff-list {
+    list-style: none;
+    padding: 0;
+    margin: 6pt 0;
+  }
+
+  .diff-list li {
+    position: relative;
+    padding: 4pt 0 4pt 22pt;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    border-bottom: 0.25pt solid var(--border);
+  }
+
+  .diff-list li:last-child { border-bottom: 0; }
+
+  .diff-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 4pt;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11pt;
+  }
+
+  .diff-list li strong { color: var(--accent-2); }
+
+  /* Quick facts */
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin: 6pt 0;
+  }
+
+  .fact {
+    padding: 10pt;
+    border: 0.5pt solid var(--border);
+    text-align: center;
+  }
+
+  .fact .figure {
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 3pt;
+  }
+
+  .fact .caption {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+  }
+
+  /* Contact strip */
+  .contact-strip {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 12pt 18pt;
+    margin: 14pt -16mm -16mm -16mm;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12pt;
+    align-items: baseline;
+  }
+
+  .contact-strip .cell {
+    font-size: 9.5pt;
+    line-height: 1.45;
+  }
+
+  .contact-strip .label {
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .contact-strip .value {
+    font-weight: 700;
+    font-size: 10pt;
+  }
+
+  h2 {
+    font-size: 12pt;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin: 14pt 0 6pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 2pt solid var(--accent);
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Band ===== -->
+<header class="band">
+  <div class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <div class="tag">Capability Statement · {{ date_display }}</div>
+</header>
+
+<!-- ===== Quick facts ===== -->
+<div class="facts">
+  <div class="fact"><div class="figure">[YYYY]</div><div class="caption">Established</div></div>
+  <div class="fact"><div class="figure">[N]</div><div class="caption">Team members</div></div>
+  <div class="fact"><div class="figure">[NNN]</div><div class="caption">Engagements delivered</div></div>
+  <div class="fact"><div class="figure">[N]</div><div class="caption">Countries served</div></div>
+</div>
+
+<!-- ===== Main grid ===== -->
+<div class="grid">
+  <div class="panel accent">
+    <h3>About Us</h3>
+    <p>[Two to three sentences. Who you are, what you do, and how long you've been doing it. Frame around the client
+    not the provider — what you deliver, not what you employ to deliver it.]</p>
+    <p>[One-sentence differentiator — what competitors cannot truthfully claim.]</p>
+  </div>
+
+  <div class="panel">
+    <h3>Mission</h3>
+    <p>[One sentence. What the company exists to do for customers. Avoid aspirational vague statements.]</p>
+
+    <h3 style="margin-top: 10pt">Industries Served</h3>
+    <ul>
+      <li>[Industry 1]</li>
+      <li>[Industry 2]</li>
+      <li>[Industry 3]</li>
+      <li>[Industry 4]</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== Core competencies ===== -->
+<h2>Core Competencies</h2>
+<div class="competencies">
+  <div class="comp">[Competency 1]</div>
+  <div class="comp">[Competency 2]</div>
+  <div class="comp">[Competency 3]</div>
+  <div class="comp">[Competency 4]</div>
+  <div class="comp">[Competency 5]</div>
+  <div class="comp">[Competency 6]</div>
+  <div class="comp">[Competency 7]</div>
+  <div class="comp">[Competency 8]</div>
+</div>
+
+<!-- ===== Differentiators ===== -->
+<h2>Differentiators</h2>
+<ul class="diff-list">
+  <li><strong>[Differentiator 1].</strong> [One-sentence proof — a number, a certification, a client, or a tenure.]</li>
+  <li><strong>[Differentiator 2].</strong> [Proof.]</li>
+  <li><strong>[Differentiator 3].</strong> [Proof.]</li>
+  <li><strong>[Differentiator 4].</strong> [Proof.]</li>
+</ul>
+
+<!-- ===== Past performance ===== -->
+<h2>Past Performance</h2>
+<div class="past-performance">
+  <div class="row">
+    <div class="client">[Client 1]</div>
+    <div class="scope">[Project scope in one phrase. Outcome in numbers if possible.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[Client 2]</div>
+    <div class="scope">[Project scope and outcome.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[Client 3]</div>
+    <div class="scope">[Project scope and outcome.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[Client 4]</div>
+    <div class="scope">[Project scope and outcome.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[Client 5]</div>
+    <div class="scope">[Project scope and outcome.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+</div>
+
+<!-- ===== Contact strip ===== -->
+<div class="contact-strip">
+  <div class="cell">
+    <div class="label">Primary Contact</div>
+    <div class="value">{{ author_name }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">Email</div>
+    <div class="value">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">Phone</div>
+    <div class="value">{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">License / TRN</div>
+    <div class="value">[License #] · [TRN 15-digit]</div>
+  </div>
+</div>
+
+</body>
+</html>

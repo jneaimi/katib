@@ -1,0 +1,41 @@
+{
+  "domain": "marketing-print",
+  "covers_allowed": [],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": null,
+    "layout": "classic"
+  },
+  "doc_types": {
+    "sell-sheet": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 2,
+      "target_pages": [1, 2],
+      "sections_required": ["body"]
+    },
+    "product-brief": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 6,
+      "target_pages": [2, 4],
+      "sections_required": ["body"]
+    },
+    "capability-statement": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 2,
+      "target_pages": [1, 2],
+      "sections_required": ["body"]
+    },
+    "slide-deck": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 40,
+      "target_pages": [8, 25],
+      "sections_required": ["body"]
+    }
+  }
+}

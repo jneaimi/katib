@@ -34,10 +34,10 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "syllabus / assignment / lecture notes / research proposal / خطة مقرر / واجب / محاضرة / مقترح بحثي" | `academic` | Burgundy `#7E1D4A` + sage on cream, Newsreader/Amiri serif |
 | "invoice / tax invoice / quote / quotation / statement / financial summary / فاتورة / فاتورة ضريبية / عرض سعر / كشف حساب / ملخّص مالي" | `financial` | Emerald `#0F5F4E` + slate on warm ivory, Inter/Cairo sans |
 | "white paper / article / op-ed / opinion / thought leadership / case study / ورقة بيضاء / مقال / رأي / دراسة حالة" | `editorial` | Magazine red `#B91C1C` + ink on warm newsprint, Newsreader/Amiri serif |
-| *(v0.8)* sell-sheet, product-brief, slide-deck (print PDF) | `marketing-print` | *(deferred)* |
+| "sell sheet / product brief / capability statement / slide deck / pitch deck / ورقة بيع / موجز منتج / بيان قدرات / عرض تقديمي" | `marketing-print` | Orange `#EA580C` + ink on white, Inter/Cairo sans |
 | *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
 
-Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0, editorial live as of v0.7.0.
+Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0, editorial live as of v0.7.0, marketing-print live as of v0.8.0.
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -53,6 +53,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `academic` | `syllabus`, `assignment-brief`, `lecture-notes`, `research-proposal` |
 | `financial` | `invoice`, `quote`, `statement`, `financial-summary` |
 | `editorial` | `white-paper`, `article`, `op-ed`, `case-study` |
+| `marketing-print` | `sell-sheet`, `product-brief`, `capability-statement`, `slide-deck` |
+
+### Marketing-print doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `sell-sheet` | Dark hero + value-stripe (3 big numbers) + feature grid + value list + testimonial + CTA band | 1–2 | `SS-*` | Single-page sales one-pager, trade-show handout |
+| `product-brief` | Masthead + problem/solution split + how-it-works + benefits grid + specs table + pricing tiers + CTA | 2–4 | `PB-*` | Product or service detailed spec with pricing |
+| `capability-statement` | Band header + facts row + about/mission grid + competencies grid + differentiators + past-performance + contact strip | 1–2 | `CAP-*` | Gov-contracting / B2B capability pager |
+| `slide-deck` | **Landscape A4** · title + section dividers + content (bullet/two-col/big-figure/quote/CTA) with footer bar | 8–25 | `DECK-*` | Pitch decks, keynote slides, executive briefings — PDF export only |
 
 ### Editorial doc-type picker
 

@@ -181,6 +181,18 @@ Banned phrases that signal LLM output:
 - **Footnotes carry weight in white papers, not op-eds.** White papers cite sources rigorously — readers check footnotes. Op-eds embed sources in running prose; a bristling footnote column reads as over-armouring.
 - **Steel-man the opposition.** Articles and op-eds that only present supporting evidence feel propagandistic. Readers trust writers who engage the strongest counter-argument, not the weakest.
 
+### Marketing-print (Sell-sheet, Product-brief, Capability-statement, Slide-deck)
+
+- **Lead with the outcome, not the activity.** Sell-sheets and slide decks live or die on the first 5 seconds. "We help you reduce onboarding time" is weak. "Onboarding drops from 6 weeks to 4" is strong. The customer does not buy your features — they buy the change.
+- **One claim per page.** A sell-sheet with three headlines has no headline. A slide with four competing points is a slide with zero memorable points. Pick the one thing; move the rest to supporting material.
+- **Big numbers earn their size.** The value stripe, big-figure slide, and metric cards only work when the numbers are real, current, and specific. "Faster" is meaningless; "42% faster within 90 days" is decisive. If you can't name the source, the number is decoration.
+- **Capability statements are gov/B2B procurement tools — format matters.** Four quick facts, clear competencies grid, past-performance table with client + scope + year, differentiators with proof, contact + TRN + license. If a procurement officer can't scan it in 30 seconds, it was written wrong.
+- **Slide decks read from the back of the room.** If body copy goes below 16pt, rewrite. Six words per bullet, seven bullets per slide, whichever comes first. Slides are speaker aids — detailed arguments belong in the one-pager that precedes or follows them.
+- **Section dividers are rest stops, not decoration.** Every 4–6 content slides, insert a coloured divider with part number and section heading. Audience attention resets; the slide count reflects narrative arcs, not just pages.
+- **One CTA per artifact.** Whatever you ask the reader to do — book a call, reply to the email, approve the proposal — say it in one line, place it at the end, and repeat the contact details. If you ask for three things, you'll get zero.
+- **Testimonials need specifics or they're filler.** "Great team to work with" adds nothing. "Cut our reporting cycle from a week to a day" is worth the column inches. If the quote could apply to any competitor, cut it.
+- **Arabic slide-decks mirror everything.** Landscape A4 stays landscape, but section dividers flip (chapter number to the left, text to the right), phone numbers and emails go LTR inside RTL slides, page-counter stays Latin.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

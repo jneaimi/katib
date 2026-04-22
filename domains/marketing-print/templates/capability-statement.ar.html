@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 16mm;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .band {
+    background: var(--accent-2);
+    color: var(--accent-on);
+    padding: 14pt 18pt;
+    margin: -16mm -16mm 12pt -16mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 6pt solid var(--accent);
+  }
+
+  .band .brand {
+    font-size: 16pt;
+    font-weight: 700;
+  }
+
+  .band .tag {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 14pt;
+    margin-bottom: 14pt;
+  }
+
+  .panel {
+    border: 0.5pt solid var(--border);
+    padding: 12pt 14pt;
+    background: var(--page-bg);
+  }
+
+  .panel.accent { border-top: 3pt solid var(--accent); }
+
+  .panel h3 {
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .panel p { margin: 4pt 0; font-size: 10pt; }
+  .panel ul { margin: 4pt 0; padding-right: 18pt; padding-left: 0; font-size: 10pt; }
+  .panel ul li { margin-bottom: 2pt; }
+
+  .competencies {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin: 6pt 0;
+  }
+
+  .comp {
+    background: var(--surface-tint);
+    border-right: 2pt solid var(--accent);
+    padding: 6pt 8pt;
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: var(--accent-2);
+    line-height: 1.55;
+  }
+
+  .past-performance {
+    margin: 10pt 0;
+    border: 0.5pt solid var(--border);
+  }
+
+  .past-performance .row {
+    display: grid;
+    grid-template-columns: 90pt 1fr 70pt;
+    gap: 10pt;
+    padding: 8pt 12pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-size: 10pt;
+    align-items: baseline;
+  }
+
+  .past-performance .row:last-child { border-bottom: 0; }
+  .past-performance .row:nth-child(even) { background: var(--table-row-alt); }
+
+  .past-performance .client { font-weight: 700; color: var(--accent-2); }
+
+  .past-performance .year {
+    color: var(--text-tertiary);
+    font-size: 9pt;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .past-performance .scope { color: var(--text-secondary); }
+
+  .diff-list {
+    list-style: none;
+    padding: 0;
+    margin: 6pt 0;
+  }
+
+  .diff-list li {
+    position: relative;
+    padding: 4pt 22pt 4pt 0;
+    font-size: 10pt;
+    line-height: 1.7;
+    border-bottom: 0.25pt solid var(--border);
+  }
+
+  .diff-list li:last-child { border-bottom: 0; }
+
+  .diff-list li::before {
+    content: "←";
+    position: absolute;
+    right: 0;
+    top: 4pt;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11pt;
+  }
+
+  .diff-list li strong { color: var(--accent-2); }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6pt;
+    margin: 6pt 0;
+  }
+
+  .fact {
+    padding: 10pt;
+    border: 0.5pt solid var(--border);
+    text-align: center;
+  }
+
+  .fact .figure {
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+    margin-bottom: 3pt;
+  }
+
+  .fact .caption {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+  }
+
+  .contact-strip {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 12pt 18pt;
+    margin: 14pt -16mm -16mm -16mm;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12pt;
+    align-items: baseline;
+  }
+
+  .contact-strip .cell { font-size: 10pt; line-height: 1.6; }
+
+  .contact-strip .label {
+    font-size: 8pt;
+    opacity: 0.85;
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .contact-strip .value { font-weight: 700; font-size: 10pt; }
+  .contact-strip .value.ltr { direction: ltr; unicode-bidi: embed; text-align: right; }
+
+  h2 {
+    font-size: 12pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 14pt 0 6pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 2pt solid var(--accent);
+  }
+  </style>
+</head>
+<body>
+
+<header class="band">
+  <div class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <div class="tag">بيان القدرات · {{ date_display }}</div>
+</header>
+
+<div class="facts">
+  <div class="fact"><div class="figure">[YYYY]</div><div class="caption">التأسيس</div></div>
+  <div class="fact"><div class="figure">[N]</div><div class="caption">أعضاء الفريق</div></div>
+  <div class="fact"><div class="figure">[NNN]</div><div class="caption">مشاركة مُنجَزة</div></div>
+  <div class="fact"><div class="figure">[N]</div><div class="caption">دول مخدومة</div></div>
+</div>
+
+<div class="grid">
+  <div class="panel accent">
+    <h3>عنّا</h3>
+    <p>[جملتان أو ثلاث. مَن نحن، وما نفعل، ومنذ متى نفعله. أطّره حول العميل لا المورّد — ما تُسلّمه لا ما توظّفه للتسليم.]</p>
+    <p>[جملة تمييز واحدة — ما لا يستطيع المنافسون ادّعاءه بصدق.]</p>
+  </div>
+
+  <div class="panel">
+    <h3>الرسالة</h3>
+    <p>[جملة واحدة. لماذا وُجدت الشركة لخدمة العملاء. تجنّب العبارات الطموحة الفضفاضة.]</p>
+
+    <h3 style="margin-top: 10pt">القطاعات المخدومة</h3>
+    <ul>
+      <li>[قطاع ١]</li>
+      <li>[قطاع ٢]</li>
+      <li>[قطاع ٣]</li>
+      <li>[قطاع ٤]</li>
+    </ul>
+  </div>
+</div>
+
+<h2>الكفاءات الجوهرية</h2>
+<div class="competencies">
+  <div class="comp">[كفاءة ١]</div>
+  <div class="comp">[كفاءة ٢]</div>
+  <div class="comp">[كفاءة ٣]</div>
+  <div class="comp">[كفاءة ٤]</div>
+  <div class="comp">[كفاءة ٥]</div>
+  <div class="comp">[كفاءة ٦]</div>
+  <div class="comp">[كفاءة ٧]</div>
+  <div class="comp">[كفاءة ٨]</div>
+</div>
+
+<h2>عناصر التمييز</h2>
+<ul class="diff-list">
+  <li><strong>[عنصر التمييز ١].</strong> [إثبات في جملة واحدة — رقم، شهادة، عميل، أو مدّة.]</li>
+  <li><strong>[عنصر التمييز ٢].</strong> [الإثبات.]</li>
+  <li><strong>[عنصر التمييز ٣].</strong> [الإثبات.]</li>
+  <li><strong>[عنصر التمييز ٤].</strong> [الإثبات.]</li>
+</ul>
+
+<h2>سجلّ الأداء</h2>
+<div class="past-performance">
+  <div class="row">
+    <div class="client">[العميل ١]</div>
+    <div class="scope">[نطاق المشروع في عبارة. النتيجة بالأرقام إن أمكن.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[العميل ٢]</div>
+    <div class="scope">[نطاق المشروع ونتيجته.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[العميل ٣]</div>
+    <div class="scope">[نطاق المشروع ونتيجته.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[العميل ٤]</div>
+    <div class="scope">[نطاق المشروع ونتيجته.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+  <div class="row">
+    <div class="client">[العميل ٥]</div>
+    <div class="scope">[نطاق المشروع ونتيجته.]</div>
+    <div class="year">[YYYY]</div>
+  </div>
+</div>
+
+<div class="contact-strip">
+  <div class="cell">
+    <div class="label">جهة التواصل الرئيسية</div>
+    <div class="value">{{ author_name }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">البريد الإلكتروني</div>
+    <div class="value ltr">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">الهاتف</div>
+    <div class="value ltr">{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}</div>
+  </div>
+  <div class="cell">
+    <div class="label">الترخيص / الرقم الضريبي</div>
+    <div class="value ltr">[License #] · [TRN 15 digits]</div>
+  </div>
+</div>
+
+</body>
+</html>

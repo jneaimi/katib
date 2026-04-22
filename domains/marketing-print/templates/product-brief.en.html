@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm;
+    @bottom-center {
+      content: "{{ company }}  |  Product Brief  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .masthead {
+    border-bottom: 3pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 16pt;
+  }
+
+  .masthead .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .masthead h1 {
+    font-size: 30pt;
+    line-height: 1.1;
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--accent-2);
+  }
+
+  .masthead .subtitle {
+    font-size: 13pt;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    max-width: 150mm;
+  }
+
+  h2 {
+    font-size: 14pt;
+    color: var(--accent-2);
+    margin: 22pt 0 8pt 0;
+    font-weight: 700;
+    padding-bottom: 3pt;
+    border-bottom: 1pt solid var(--border);
+  }
+
+  h2 .num {
+    color: var(--accent);
+    margin-right: 8pt;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 12pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-left: 22pt; }
+  li { margin-bottom: 3pt; }
+
+  /* Problem/Solution split */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 12pt 0;
+  }
+
+  .split .panel {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--page-bg);
+  }
+
+  .split .panel.problem { border-top: 3pt solid var(--text-tertiary); }
+  .split .panel.solution { border-top: 3pt solid var(--accent); background: var(--surface-tint); }
+
+  .split .panel h3 {
+    margin-top: 0;
+    font-size: 12pt;
+  }
+
+  .split .panel.problem h3 { color: var(--text-tertiary); }
+  .split .panel.solution h3 { color: var(--accent); }
+
+  /* Spec table */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .spec-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5pt;
+  }
+
+  .spec-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .spec-table tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  .spec-table .label {
+    font-weight: 700;
+    color: var(--accent-2);
+    width: 90pt;
+  }
+
+  /* Benefits row */
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .benefit {
+    padding: 10pt 14pt;
+    border-left: 3pt solid var(--accent);
+    background: var(--surface-tint);
+  }
+
+  .benefit h3 {
+    margin: 0 0 2pt 0;
+    font-size: 11pt;
+    color: var(--accent);
+  }
+
+  .benefit p { font-size: 9.5pt; margin: 0; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Pricing table */
+  .pricing {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .tier {
+    border: 0.5pt solid var(--border);
+    padding: 14pt 16pt;
+    text-align: center;
+  }
+
+  .tier.featured {
+    border: 2pt solid var(--accent);
+    background: var(--surface-tint);
+  }
+
+  .tier .name {
+    font-size: 11pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .tier.featured .name { color: var(--accent); }
+
+  .tier .price {
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--accent-2);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 3pt;
+  }
+
+  .tier .unit {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 10pt;
+  }
+
+  .tier ul {
+    text-align: left;
+    font-size: 9.5pt;
+    padding-left: 18pt;
+    margin: 0;
+  }
+
+  .tier li { margin-bottom: 2pt; }
+
+  /* Contact footer */
+  .contact-footer {
+    margin-top: 22pt;
+    padding: 14pt 16pt;
+    background: var(--accent-2);
+    color: var(--accent-on);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .contact-footer .call {
+    font-size: 13pt;
+    font-weight: 700;
+  }
+
+  .contact-footer .reach {
+    font-size: 10pt;
+    text-align: right;
+    line-height: 1.55;
+  }
+
+  .contact-footer .reach a,
+  .contact-footer .reach .channel { color: var(--accent); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Product Brief · [Category]</div>
+  <h1>[Product Name]</h1>
+  <div class="subtitle">[Single-sentence positioning statement. What it is, for whom, and what it does uniquely.]</div>
+</header>
+
+<section>
+  <h2><span class="num">1</span>Problem &amp; Solution</h2>
+  <div class="split">
+    <div class="panel problem">
+      <h3>The problem today</h3>
+      <p>[Describe the problem in the customer's language. Name the specific pain — time lost, money spent, risk carried, or friction endured.]</p>
+    </div>
+    <div class="panel solution">
+      <h3>How {{ brand.identity.legal_name if brand.identity.legal_name else '[Product]' }} solves it</h3>
+      <p>[Explain the mechanism, not just the feature. Readers buy when they understand *why* it works, not only *that* it works.]</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>How It Works</h2>
+  <ol>
+    <li><strong>[Step 1 — verb-first].</strong> [One-sentence description of what happens at this stage.]</li>
+    <li><strong>[Step 2].</strong> [Description.]</li>
+    <li><strong>[Step 3].</strong> [Description.]</li>
+    <li><strong>[Step 4].</strong> [Description.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">3</span>Key Benefits</h2>
+  <div class="benefits">
+    <div class="benefit">
+      <h3>[Benefit 1 — numeric if possible]</h3>
+      <p>[One-sentence explanation.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[Benefit 2]</h3>
+      <p>[Explanation.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[Benefit 3]</h3>
+      <p>[Explanation.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[Benefit 4]</h3>
+      <p>[Explanation.]</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">4</span>Specifications</h2>
+  <table class="spec-table">
+    <tbody>
+      <tr><td class="label">Deployment</td><td>[SaaS / on-prem / hybrid]</td></tr>
+      <tr><td class="label">Integrations</td><td>[Key systems / APIs supported]</td></tr>
+      <tr><td class="label">Languages</td><td>English · Arabic · [others]</td></tr>
+      <tr><td class="label">SLA</td><td>[Uptime guarantee and response window]</td></tr>
+      <tr><td class="label">Compliance</td><td>[GDPR · UAE Data Law · ISO 27001 · as applicable]</td></tr>
+      <tr><td class="label">Onboarding</td><td>[Time-to-first-value in days]</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">5</span>Pricing</h2>
+  <div class="pricing">
+    <div class="tier">
+      <div class="name">Starter</div>
+      <div class="price">AED [X,000]</div>
+      <div class="unit">/ month · billed annually</div>
+      <ul>
+        <li>[Entry feature]</li>
+        <li>[Entry feature]</li>
+        <li>[Entry feature]</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <div class="name">Growth</div>
+      <div class="price">AED [X,000]</div>
+      <div class="unit">/ month · billed annually</div>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>[Growth feature]</li>
+        <li>[Growth feature]</li>
+        <li>[Growth feature]</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="name">Enterprise</div>
+      <div class="price">Custom</div>
+      <div class="unit">Volume · SLA · dedicated support</div>
+      <ul>
+        <li>Everything in Growth</li>
+        <li>[Enterprise feature]</li>
+        <li>[Enterprise feature]</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Contact ===== -->
+<div class="contact-footer">
+  <div class="call">Ready to try {{ brand.identity.legal_name if brand.identity.legal_name else '[Product]' }}?</div>
+  <div class="reach">
+    Reach out to <span class="channel">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</span>
+    <br />{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}
+  </div>
+</div>
+
+</body>
+</html>

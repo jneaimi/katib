@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Every slide is a full landscape page */
+  .slide {
+    width: 297mm;
+    height: 210mm;
+    padding: 18mm 22mm;
+    page-break-after: always;
+    position: relative;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .slide:last-child { page-break-after: auto; }
+
+  /* Footer bar — same on every content slide */
+  .slide-footer {
+    position: absolute;
+    bottom: 8mm;
+    left: 22mm;
+    right: 22mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+    padding-top: 6pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .slide-footer .brand { font-weight: 700; color: var(--accent); text-transform: uppercase; }
+
+  .slide-footer .counter { font-variant-numeric: tabular-nums; }
+
+  /* ===== Title slide ===== */
+  .slide.title {
+    background: var(--accent-2);
+    color: var(--accent-on);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18mm 28mm;
+  }
+
+  .slide.title::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 8mm;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .slide.title .eyebrow {
+    font-size: 11pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .slide.title h1 {
+    font-size: 52pt;
+    line-height: 1.05;
+    font-weight: 700;
+    margin: 0 0 14pt 0;
+    max-width: 230mm;
+    letter-spacing: -0.01em;
+  }
+
+  .slide.title .subtitle {
+    font-size: 20pt;
+    line-height: 1.35;
+    color: #CBD5E1;
+    max-width: 220mm;
+  }
+
+  .slide.title .meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 28mm;
+    right: 28mm;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11pt;
+    color: #94A3B8;
+  }
+
+  .slide.title .meta .author { color: var(--accent-on); font-weight: 700; }
+
+  /* ===== Section divider ===== */
+  .slide.section {
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    align-items: center;
+  }
+
+  .slide.section .chapter-num {
+    font-size: 140pt;
+    line-height: 1;
+    font-weight: 700;
+    opacity: 0.2;
+    margin-right: 24pt;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slide.section .chapter-text {
+    flex: 1;
+  }
+
+  .slide.section .label {
+    font-size: 11pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8pt;
+    opacity: 0.9;
+    font-weight: 700;
+  }
+
+  .slide.section h2 {
+    font-size: 44pt;
+    line-height: 1.1;
+    margin: 0;
+    font-weight: 700;
+    max-width: 200mm;
+  }
+
+  /* ===== Content slide ===== */
+  .slide h2 {
+    font-size: 28pt;
+    line-height: 1.2;
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+
+  .slide h2 .slide-num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 10pt;
+    letter-spacing: -0.02em;
+  }
+
+  .slide .kicker {
+    font-size: 10pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 8pt;
+  }
+
+  .slide .lead {
+    font-size: 18pt;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    margin: 0 0 16pt 0;
+    max-width: 220mm;
+  }
+
+  .slide ul, .slide ol { margin: 10pt 0 0 0; padding-left: 26pt; font-size: 16pt; line-height: 1.55; }
+  .slide li { margin-bottom: 8pt; }
+  .slide li strong { color: var(--accent); }
+
+  /* ===== Two-column slide ===== */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18pt;
+    margin-top: 14pt;
+  }
+
+  .two-col .col {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+  }
+
+  .two-col .col h3 {
+    margin: 0 0 6pt 0;
+    font-size: 15pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .two-col .col p {
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* ===== Big-figure slide ===== */
+  .big-figure-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .big-figure-slide .big-number {
+    font-size: 180pt;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 10pt;
+    letter-spacing: -0.03em;
+  }
+
+  .big-figure-slide .big-caption {
+    font-size: 22pt;
+    color: var(--accent-2);
+    max-width: 200mm;
+    line-height: 1.35;
+  }
+
+  .big-figure-slide .big-note {
+    font-size: 11pt;
+    color: var(--text-tertiary);
+    margin-top: 16pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ===== Quote slide ===== */
+  .quote-slide {
+    display: flex;
+    align-items: center;
+    background: var(--surface-tint);
+  }
+
+  .quote-slide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 8mm;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .quote-slide blockquote {
+    font-size: 26pt;
+    line-height: 1.35;
+    margin: 0;
+    max-width: 230mm;
+    color: var(--accent-2);
+    font-weight: 400;
+  }
+
+  .quote-slide .attribution {
+    display: block;
+    margin-top: 20pt;
+    font-size: 13pt;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* ===== CTA slide ===== */
+  .slide.cta {
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .slide.cta .kicker { color: var(--accent-on); opacity: 0.85; }
+
+  .slide.cta h2 {
+    color: var(--accent-on);
+    font-size: 48pt;
+    line-height: 1.1;
+    max-width: 230mm;
+    margin-bottom: 16pt;
+  }
+
+  .slide.cta .contacts {
+    font-size: 18pt;
+    line-height: 1.6;
+    margin-top: 14pt;
+  }
+
+  .slide.cta .contacts .label {
+    font-size: 10pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2pt;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Slide 1 · Title ===== -->
+<div class="slide title">
+  <div class="eyebrow">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <h1>[Deck Headline — a claim, a promise, or a specific question in 6–10 words]</h1>
+  <div class="subtitle">[Subtitle that narrows what this deck argues. One sentence.]</div>
+  <div class="meta">
+    <div class="author">{{ author_name }}</div>
+    <div>{{ date_display }}</div>
+  </div>
+</div>
+
+<!-- ===== Slide 2 · Lead-in content ===== -->
+<div class="slide">
+  <div class="kicker">[01 · Opening]</div>
+  <h2>[Where we are today]</h2>
+  <p class="lead">[One or two sentences that set up the problem. Big enough type to read from the back of a room.]</p>
+  <ul>
+    <li><strong>[Fact 1]</strong> — [one-line implication].</li>
+    <li><strong>[Fact 2]</strong> — [one-line implication].</li>
+    <li><strong>[Fact 3]</strong> — [one-line implication].</li>
+  </ul>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">02</span>
+  </div>
+</div>
+
+<!-- ===== Slide 3 · Section divider ===== -->
+<div class="slide section">
+  <div class="chapter-num">01</div>
+  <div class="chapter-text">
+    <div class="label">Part One</div>
+    <h2>[Section heading — what the next few slides cover]</h2>
+  </div>
+</div>
+
+<!-- ===== Slide 4 · Two-column comparison ===== -->
+<div class="slide">
+  <div class="kicker">[02 · Comparison]</div>
+  <h2>[The shift]</h2>
+  <div class="two-col">
+    <div class="col">
+      <h3>Before</h3>
+      <p>[What teams did / what the market looked like / what customers got.]</p>
+    </div>
+    <div class="col">
+      <h3>After</h3>
+      <p>[What changes when the argument of the deck is adopted.]</p>
+    </div>
+  </div>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">04</span>
+  </div>
+</div>
+
+<!-- ===== Slide 5 · Big figure ===== -->
+<div class="slide big-figure-slide">
+  <div class="big-number">+42%</div>
+  <div class="big-caption">[One-sentence caption that makes the number legible.]</div>
+  <div class="big-note">Source · [citation]</div>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">05</span>
+  </div>
+</div>
+
+<!-- ===== Slide 6 · Quote ===== -->
+<div class="slide quote-slide">
+  <div>
+    <blockquote>"[A quote that dramatises the deck's point. From a real, attributable source.]"</blockquote>
+    <div class="attribution">[Name · Title · Organisation]</div>
+  </div>
+</div>
+
+<!-- ===== Slide 7 · Content ===== -->
+<div class="slide">
+  <div class="kicker">[03 · Approach]</div>
+  <h2>[How we get there]</h2>
+  <ol>
+    <li><strong>[Step 1]</strong> — [action verb + concrete outcome].</li>
+    <li><strong>[Step 2]</strong> — [action + outcome].</li>
+    <li><strong>[Step 3]</strong> — [action + outcome].</li>
+    <li><strong>[Step 4]</strong> — [action + outcome].</li>
+  </ol>
+  <div class="slide-footer">
+    <span class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</span>
+    <span class="counter">07</span>
+  </div>
+</div>
+
+<!-- ===== Slide 8 · CTA ===== -->
+<div class="slide cta">
+  <div class="kicker">Let's build it</div>
+  <h2>[Single call-to-action — what you want the audience to do next]</h2>
+  <div class="contacts">
+    <span class="label">Contact</span>
+    {{ author_name }} · {{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}<br />
+    {{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}
+  </div>
+</div>
+
+</body>
+</html>

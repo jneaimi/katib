@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm;
+    @bottom-center {
+      content: "{{ company }}  |  موجز المنتج  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .masthead {
+    border-bottom: 3pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 16pt;
+  }
+
+  .masthead .eyebrow {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .masthead h1 {
+    font-size: 28pt;
+    line-height: 1.25;
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    color: var(--accent-2);
+  }
+
+  .masthead .subtitle {
+    font-size: 13pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 150mm;
+  }
+
+  h2 {
+    font-size: 14pt;
+    color: var(--accent-2);
+    margin: 22pt 0 8pt 0;
+    font-weight: 700;
+    padding-bottom: 3pt;
+    border-bottom: 1pt solid var(--border);
+  }
+
+  h2 .num {
+    color: var(--accent);
+    margin-left: 8pt;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 11.5pt;
+    color: var(--text);
+    margin: 12pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 3pt; }
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 12pt 0;
+  }
+
+  .split .panel {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--page-bg);
+  }
+
+  .split .panel.problem { border-top: 3pt solid var(--text-tertiary); }
+  .split .panel.solution { border-top: 3pt solid var(--accent); background: var(--surface-tint); }
+
+  .split .panel h3 { margin-top: 0; font-size: 12pt; }
+  .split .panel.problem h3 { color: var(--text-tertiary); }
+  .split .panel.solution h3 { color: var(--accent); }
+
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10.5pt;
+  }
+
+  .spec-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .spec-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .spec-table tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  .spec-table .label {
+    font-weight: 700;
+    color: var(--accent-2);
+    width: 90pt;
+  }
+
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .benefit {
+    padding: 10pt 14pt;
+    border-right: 3pt solid var(--accent);
+    background: var(--surface-tint);
+  }
+
+  .benefit h3 {
+    margin: 0 0 2pt 0;
+    font-size: 11.5pt;
+    color: var(--accent);
+  }
+
+  .benefit p { font-size: 10pt; margin: 0; color: var(--text-secondary); line-height: 1.7; }
+
+  .pricing {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .tier {
+    border: 0.5pt solid var(--border);
+    padding: 14pt 16pt;
+    text-align: center;
+  }
+
+  .tier.featured {
+    border: 2pt solid var(--accent);
+    background: var(--surface-tint);
+  }
+
+  .tier .name {
+    font-size: 11.5pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .tier.featured .name { color: var(--accent); }
+
+  .tier .price {
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--accent-2);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+    margin-bottom: 3pt;
+  }
+
+  .tier .unit { font-size: 9.5pt; color: var(--text-tertiary); margin-bottom: 10pt; }
+
+  .tier ul {
+    text-align: right;
+    font-size: 10pt;
+    padding-right: 18pt;
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .tier li { margin-bottom: 2pt; }
+
+  .contact-footer {
+    margin-top: 22pt;
+    padding: 14pt 16pt;
+    background: var(--accent-2);
+    color: var(--accent-on);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .contact-footer .call {
+    font-size: 13pt;
+    font-weight: 700;
+  }
+
+  .contact-footer .reach {
+    font-size: 10.5pt;
+    text-align: left;
+    line-height: 1.7;
+  }
+
+  .contact-footer .reach .channel {
+    color: var(--accent);
+    font-weight: 700;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">موجز المنتج · [الفئة]</div>
+  <h1>[اسم المنتج]</h1>
+  <div class="subtitle">[بيان تموضع في جملة واحدة. ماذا يكون، ولمن، وما الذي يفعله بشكل فريد.]</div>
+</header>
+
+<section>
+  <h2><span class="num">١</span>المشكلة والحلّ</h2>
+  <div class="split">
+    <div class="panel problem">
+      <h3>المشكلة اليوم</h3>
+      <p>[صِف المشكلة بلغة العميل. سمِّ الألم المحدّد — وقتاً ضائعاً، أو مالاً مدفوعاً، أو مخاطر محمولة، أو احتكاكاً متكرّراً.]</p>
+    </div>
+    <div class="panel solution">
+      <h3>كيف يحلّها {{ brand.identity.legal_name if brand.identity.legal_name else '[المنتج]' }}</h3>
+      <p>[اشرح الآلية لا الميزة وحدها. القرّاء يشترون حين يفهمون *لماذا* يعمل، لا فقط *أنّه* يعمل.]</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">٢</span>كيف يعمل</h2>
+  <ol>
+    <li><strong>[الخطوة ١ — ابدأ بفعل].</strong> [وصف جملة واحدة لما يحدث في هذه المرحلة.]</li>
+    <li><strong>[الخطوة ٢].</strong> [الوصف.]</li>
+    <li><strong>[الخطوة ٣].</strong> [الوصف.]</li>
+    <li><strong>[الخطوة ٤].</strong> [الوصف.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٣</span>المنافع الرئيسية</h2>
+  <div class="benefits">
+    <div class="benefit">
+      <h3>[منفعة ١ — رقمية إن أمكن]</h3>
+      <p>[شرح في جملة.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[منفعة ٢]</h3>
+      <p>[الشرح.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[منفعة ٣]</h3>
+      <p>[الشرح.]</p>
+    </div>
+    <div class="benefit">
+      <h3>[منفعة ٤]</h3>
+      <p>[الشرح.]</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">٤</span>المواصفات</h2>
+  <table class="spec-table">
+    <tbody>
+      <tr><td class="label">النشر</td><td>[سحابي / محلي / هجين]</td></tr>
+      <tr><td class="label">التكامل</td><td>[الأنظمة / الواجهات المدعومة]</td></tr>
+      <tr><td class="label">اللغات</td><td>العربية · الإنجليزية · [أخرى]</td></tr>
+      <tr><td class="label">اتفاقية الخدمة</td><td>[ضمان التوفّر ومدّة الاستجابة]</td></tr>
+      <tr><td class="label">الامتثال</td><td>[GDPR · قانون البيانات الإماراتي · ISO 27001 · حسب الانطباق]</td></tr>
+      <tr><td class="label">التمكين</td><td>[الزمن حتى القيمة الأولى بالأيّام]</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">٥</span>التسعير</h2>
+  <div class="pricing">
+    <div class="tier">
+      <div class="name">البداية</div>
+      <div class="price">AED [X,000]</div>
+      <div class="unit">/ شهرياً · فوترة سنوية</div>
+      <ul>
+        <li>[ميزة أساسية]</li>
+        <li>[ميزة أساسية]</li>
+        <li>[ميزة أساسية]</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <div class="name">النموّ</div>
+      <div class="price">AED [X,000]</div>
+      <div class="unit">/ شهرياً · فوترة سنوية</div>
+      <ul>
+        <li>كلّ ما في البداية</li>
+        <li>[ميزة نموّ]</li>
+        <li>[ميزة نموّ]</li>
+        <li>[ميزة نموّ]</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="name">المؤسسات</div>
+      <div class="price">مخصّص</div>
+      <div class="unit">حجم · SLA · دعم مخصّص</div>
+      <ul>
+        <li>كلّ ما في النموّ</li>
+        <li>[ميزة مؤسسات]</li>
+        <li>[ميزة مؤسسات]</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="contact-footer">
+  <div class="call">جاهز لتجربة {{ brand.identity.legal_name if brand.identity.legal_name else '[المنتج]' }}؟</div>
+  <div class="reach">
+    تواصل معنا على <span class="channel">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</span>
+    <br /><span class="channel">{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}</span>
+  </div>
+</div>
+
+</body>
+</html>

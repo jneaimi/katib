@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* Hero band */
+  .hero {
+    background: var(--accent-2);
+    color: var(--accent-on);
+    padding: 20pt 22pt;
+    margin: -18mm -18mm 14pt -18mm;
+    position: relative;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40mm;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .hero .brand {
+    font-size: 10pt;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6pt;
+  }
+
+  .hero h1 {
+    font-size: 28pt;
+    line-height: 1.1;
+    margin: 0 0 8pt 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    max-width: 120mm;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero .promise {
+    font-size: 13pt;
+    line-height: 1.45;
+    font-weight: 400;
+    color: #E2E8F0;
+    max-width: 120mm;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Value stripe — big number highlight */
+  .value-stripe {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin: 14pt 0;
+    border: 2pt solid var(--accent);
+  }
+
+  .value-stripe .cell {
+    padding: 14pt 12pt;
+    text-align: center;
+    border-right: 0.5pt solid var(--border);
+  }
+
+  .value-stripe .cell:last-child { border-right: 0; }
+
+  .value-stripe .figure {
+    font-size: 24pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4pt;
+  }
+
+  .value-stripe .caption {
+    font-size: 8.5pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+
+  /* Body */
+  h2 {
+    font-size: 15pt;
+    color: var(--accent-2);
+    margin: 18pt 0 8pt 0;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  h2::before {
+    content: "";
+    display: inline-block;
+    width: 20pt;
+    height: 3pt;
+    background: var(--accent);
+    vertical-align: middle;
+    margin-right: 8pt;
+  }
+
+  p { margin: 6pt 0; }
+
+  /* Feature grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .feature {
+    padding: 12pt 14pt;
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+    background: var(--page-bg);
+  }
+
+  .feature .num {
+    display: inline-block;
+    width: 22pt;
+    height: 22pt;
+    line-height: 22pt;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-weight: 700;
+    border-radius: 50%;
+    margin-bottom: 6pt;
+    font-size: 11pt;
+  }
+
+  .feature h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 0 0 4pt 0;
+    font-weight: 700;
+  }
+
+  .feature p {
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  /* CTA band */
+  .cta {
+    background: var(--cta-bg);
+    color: var(--cta-fg);
+    padding: 18pt 22pt;
+    margin: 20pt -18mm -18mm -18mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cta .message {
+    font-size: 14pt;
+    font-weight: 700;
+    max-width: 110mm;
+    line-height: 1.3;
+  }
+
+  .cta .contacts {
+    text-align: right;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+
+  .cta .contacts .channel {
+    font-weight: 600;
+    display: block;
+  }
+
+  .cta .contacts .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+
+  /* Bulleted value list */
+  .value-list {
+    list-style: none;
+    padding: 0;
+    margin: 10pt 0;
+  }
+
+  .value-list li {
+    padding: 6pt 0 6pt 22pt;
+    border-bottom: 0.25pt solid var(--border);
+    font-size: 10pt;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  .value-list li:last-child { border-bottom: 0; }
+
+  .value-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 6pt;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12pt;
+  }
+
+  .value-list li strong {
+    color: var(--accent-2);
+    margin-right: 4pt;
+  }
+
+  /* Testimonial strip */
+  .testimonial {
+    background: var(--surface-tint);
+    border-left: 3pt solid var(--accent);
+    padding: 12pt 16pt;
+    margin: 14pt 0;
+    font-size: 10.5pt;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .testimonial .attribution {
+    display: block;
+    font-size: 8.5pt;
+    font-style: normal;
+    color: var(--text-tertiary);
+    margin-top: 6pt;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <h1>[Single-claim headline — what you do, for whom, in 8 words]</h1>
+  <div class="promise">[One-sentence value promise. Under 20 words. Lead with the outcome the customer gets, not the feature list.]</div>
+</header>
+
+<!-- ===== Value stripe ===== -->
+<div class="value-stripe">
+  <div class="cell">
+    <div class="figure">+42%</div>
+    <div class="caption">Primary outcome</div>
+  </div>
+  <div class="cell">
+    <div class="figure">4.2×</div>
+    <div class="caption">ROI in year one</div>
+  </div>
+  <div class="cell">
+    <div class="figure">90 days</div>
+    <div class="caption">To first value</div>
+  </div>
+</div>
+
+<!-- ===== What it is ===== -->
+<section>
+  <h2>What It Is</h2>
+  <p>[Two to three sentences. Describe the offering in the customer's own language — the problem it solves, the audience it serves, the category it belongs to. Avoid jargon a buyer wouldn't use in conversation.]</p>
+</section>
+
+<!-- ===== Feature grid ===== -->
+<section>
+  <h2>Why It Works</h2>
+  <div class="features">
+    <div class="feature">
+      <div class="num">1</div>
+      <h3>[Reason 1 — short phrase]</h3>
+      <p>[One-sentence benefit statement, with a number if possible.]</p>
+    </div>
+    <div class="feature">
+      <div class="num">2</div>
+      <h3>[Reason 2]</h3>
+      <p>[Benefit statement.]</p>
+    </div>
+    <div class="feature">
+      <div class="num">3</div>
+      <h3>[Reason 3]</h3>
+      <p>[Benefit statement.]</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Value list ===== -->
+<section>
+  <h2>What You Get</h2>
+  <ul class="value-list">
+    <li><strong>Outcome 1 —</strong> [specific deliverable + when it lands].</li>
+    <li><strong>Outcome 2 —</strong> [specific deliverable].</li>
+    <li><strong>Outcome 3 —</strong> [specific deliverable].</li>
+    <li><strong>Outcome 4 —</strong> [specific deliverable].</li>
+  </ul>
+</section>
+
+<!-- ===== Testimonial ===== -->
+<div class="testimonial">
+  "[A customer quote with a specific outcome in it — not a generic compliment. One sentence, unguarded.]"
+  <span class="attribution">[Name · Title · Company]</span>
+</div>
+
+<!-- ===== CTA ===== -->
+<div class="cta">
+  <div class="message">Ready to [action verb the customer takes]? Let's talk.</div>
+  <div class="contacts">
+    <div class="label">Contact</div>
+    <span class="channel">{{ brand.identity.email if brand.identity.email else '[sales@example.ae]' }}</span>
+    <span class="channel">{{ brand.identity.phone if brand.identity.phone else '[+971 00 000 0000]' }}</span>
+  </div>
+</div>
+
+</body>
+</html>
