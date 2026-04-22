@@ -214,6 +214,20 @@ def render_manifest_body(meta: dict[str, Any], folder_name: str, folder: Path | 
     # Purpose line
     purpose = meta.get("purpose", f"{meta['doc_type']} in the {meta['domain']} domain")
 
+    # Re-render path — derive from the actual folder location when we have it
+    # (project routing means the folder lives under either content/katib/ or
+    # projects/<slug>/outputs/). Fall back to project-aware reconstruction
+    # when no folder was passed (rare — only for legacy call sites).
+    if folder is not None:
+        try:
+            rebuild_path = "~/" + str(folder.relative_to(Path.home()))
+        except ValueError:
+            rebuild_path = str(folder)
+    elif project == "katib":
+        rebuild_path = f"~/vault/content/katib/{meta['domain']}/{folder_name}"
+    else:
+        rebuild_path = f"~/vault/projects/{project}/outputs/{meta['domain']}/{folder_name}"
+
     body = f"""
 # {title}
 
@@ -232,7 +246,7 @@ Part of [[projects/{project}/index|{project}]]. Generated {meta.get('created', _
 ## Re-render
 
 ```bash
-/katib rebuild ~/vault/content/katib/{meta['domain']}/{folder_name}/
+/katib rebuild {rebuild_path}/
 ```
 """
     return body.lstrip()

@@ -3,6 +3,47 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.18.2] — 2026-04-22 — Fix stale rebuild paths + broken index wikilinks
+
+Bug caught post-migration when reviewing the vault through Soul Hub's
+note viewer — the migration left two classes of broken links that the
+Phase 4 frontmatter-only audit missed.
+
+### Fixed
+- **`manifest.py` hardcoded the rebuild path as `~/vault/content/katib/...`**
+  in every manifest body, ignoring project routing. New rendered
+  manifests now derive the rebuild path from the folder's actual
+  location (falls back to project-aware reconstruction when no folder
+  is passed).
+- **30 existing manifests** with stale rebuild paths rewritten via
+  atomic temp-file-then-replace. Every `--project=<other>` render +
+  every Phase-4 relocated folder was affected.
+- **10 broken wikilinks in `content/index.md`** pointing at the old
+  pre-migration `content/katib/...` paths. `repair_manifest_links.py`
+  walked each one, located where the folder landed in the `projects/`
+  tree, and repointed the link.
+
+### Added
+- **`scripts/repair_manifest_links.py`** — idempotent repair script.
+  Scans every katib manifest, rewrites the rebuild block if it doesn't
+  match the folder's current location, plus sweeps `content/index.md`
+  for broken `[[content/katib/.../manifest]]` wikilinks. Dry-run
+  default, `--execute` to write.
+
+### Why this escaped the Phase 4 audit
+`audit_vault.py` only validated frontmatter against the schema + zone
+governance. The body (including the rebuild block) wasn't in scope.
+The hardcoded path was technically frontmatter-independent — every
+render wrote it, even before the migration. Phase 4 surfaced it
+because relocating folders made the already-wrong path newly visible.
+
+### Tests
+- `test-all.sh`, `test-tutorial.sh`, `test-meta-validator.sh` all green
+  with the new `manifest.py`. Fresh renders write the correct rebuild
+  path derived from the output folder.
+- Post-repair audit: 79/79 clean, repair script reports 0 candidates
+  on a second run (idempotent).
+
 ## [0.18.1] — 2026-04-22 — Housekeeping (CI gate + fallback reconciler)
 
 Two small utilities flagged as worth-having in ADR §22's retrospective.
