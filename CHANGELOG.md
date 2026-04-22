@@ -3,6 +3,29 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.11.0] — 2026-04-22
+
+### Added
+- **`scripts/add_domain.py` — one-command domain scaffolder.** Closes the self-improvement loop: `reflect.py`'s `new-domain-candidate` proposals are now actionable with a single command. Given a slug, generates `domains/<name>/tokens.json` + `styles.json` + skeleton templates (one per doc-type × lang) and patches the two router tables in `SKILL.md`. After writing, runs `build.py --check` automatically to verify the scaffold is valid.
+  - **Three operating modes:** interactive Q&A (`python3 scripts/add_domain.py <name>`), non-interactive from JSON (`--from-json <file>`), and dry-run (`--dry-run` — prints plan, writes nothing).
+  - **Eight palette presets**: `warm`, `cool`, `emerald`, `burgundy`, `navy-gold`, `editorial-red`, `slate`, `neutral`. Each defines all 13 semantic-color tokens that domains rely on (`--page-bg`, `--accent`, `--border`, `--tag-bg`, etc.) — inspect with `--list-presets`.
+  - **Four font presets**: `sans-modern` (Inter/Cairo), `serif-editorial` (Newsreader/Amiri), `serif-formal` (Georgia/Amiri), `corporate` (Arial/Tajawal). EN + AR pair correctly for each.
+  - **Safety rails**: refuses to overwrite existing domains without `--force`; rejects invalid slugs (must match `^[a-z][a-z0-9-]*[a-z0-9]$`); `SKILL.md` patching is idempotent (re-scaffolding with `--force` does not duplicate router/doc-type rows).
+  - **Skeleton templates** are minimal but valid — include cover page (minimalist-typographic), one heading, a "skeleton note" callout explaining what to edit, and two section stubs. Render successfully out of the box; authors replace the content with real structure.
+- **`scripts/test-add-domain.sh`** — 11-step test harness with scratch-copy isolation: asserts dry-run is pure, six files land correctly, tokens/styles JSON is well-formed, `build.py --check` passes, EN + AR renders produce non-empty PDFs, `SKILL.md` has exactly one router + one doc-type row placed in the right tables, overwrite protection works, `--force` is idempotent, invalid names rejected.
+
+### Context
+- Before v0.11.0, `reflect.py` could surface `new-domain-candidate` proposals but adding a domain was a 30-minute manual scaffold (copy tutorial, rewrite tokens, fix 10 fields, update SKILL.md twice, debug broken templates). This patch collapses that to one command.
+- Skeleton templates explicitly reference `references/design.<lang>.md` + `references/writing.<lang>.md` in their body copy so authors see exactly which spec files to read before filling in content.
+
+### Tests
+- `test-add-domain.sh`: 11/11 steps pass.
+- `test-ar-svg.sh`: 8/8 pass (no regression on the v0.10.2 AR-in-SVG lint).
+- Confirmed the scaffold produces valid PDFs in both EN (2 pp) and AR (2 pp) for the `slate`/`sans-modern` preset.
+
+### Philosophy
+- v0.10.x closed the *diagnostic* side of the self-improvement loop (capture runs, surface clusters, flag candidates). v0.11.0 closes the *execution* side — reflect's output becomes input to a generator. The skill now grows by running.
+
 ## [0.10.2] — 2026-04-22
 
 ### Added
