@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 30mm 25mm 25mm 25mm;
+  }
+
+  body { font-family: var(--font-primary); font-size: 11pt; line-height: 1.6; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 22pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .letterhead .brand-block .logo {
+    display: block;
+    max-width: 50mm;
+    margin-bottom: 6pt;
+  }
+
+  .letterhead .brand-block .company-name {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+
+  .letterhead .brand-block .company-legal {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-top: 2pt;
+  }
+
+  .letterhead .ref-block {
+    text-align: right;
+    font-size: 9.5pt;
+  }
+
+  .letterhead .ref-block .row {
+    margin-bottom: 4pt;
+  }
+
+  .letterhead .ref-block .label {
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 8pt;
+    margin-right: 4pt;
+  }
+
+  .letterhead .ref-block .value {
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .doc-marker {
+    text-align: center;
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin: 20pt 0 14pt 0;
+    padding: 8pt 0;
+    border-top: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .opener {
+    text-align: center;
+    font-size: 13pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin: 18pt 0 20pt 0;
+    color: var(--text);
+  }
+
+  p.body { margin: 0 0 10pt 0; text-align: justify; }
+
+  .employee-block {
+    background: #F9FAF8;
+    border-left: 3pt solid var(--accent);
+    padding: 14pt 18pt;
+    margin: 16pt 0;
+    font-size: 10.5pt;
+  }
+
+  .employee-block .row {
+    display: grid;
+    grid-template-columns: 45mm 1fr;
+    padding: 5pt 0;
+    border-bottom: 0.5pt dotted var(--border);
+  }
+
+  .employee-block .row:last-child { border-bottom: none; }
+
+  .employee-block .label {
+    color: var(--field-label);
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .employee-block .value {
+    color: var(--field-value);
+    font-weight: 600;
+  }
+
+  .purpose {
+    margin: 14pt 0;
+    padding: 10pt 14pt;
+    background: #F3F4F6;
+    border-radius: 2pt;
+  }
+
+  .purpose .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .validity-line {
+    text-align: center;
+    margin: 16pt 0;
+    padding: 8pt 12pt;
+    border: 0.5pt dashed var(--border-strong);
+    font-size: 10pt;
+    color: var(--text-secondary);
+  }
+
+  .validity-line strong {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .closing-para {
+    margin: 18pt 0 26pt 0;
+  }
+
+  .signature-block {
+    margin-top: 30pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40pt;
+  }
+
+  .signature-block .box {
+    padding-top: 34pt;
+    border-top: 0.5pt solid var(--text);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .signature-block .box .name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 10pt;
+    margin-bottom: 2pt;
+  }
+
+  .signature-block .box .title {
+    font-size: 9pt;
+    margin-bottom: 2pt;
+  }
+
+  .stamp-hint {
+    position: absolute;
+    right: 25mm;
+    bottom: 40mm;
+    width: 36mm;
+    height: 36mm;
+    border: 1.5pt solid var(--stamp-red);
+    border-radius: 50%;
+    color: var(--stamp-red);
+    font-size: 8pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    letter-spacing: 0.1em;
+    opacity: 0.4;
+  }
+
+  .footer-note {
+    margin-top: 26pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Letterhead ===== -->
+  <div class="letterhead">
+    <div class="brand-block">
+      {% if brand.logo.primary %}<img class="logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="company-name">{{ company }}</div>
+      {% if brand.legal_name and brand.legal_name != brand.name %}<div class="company-legal">{{ brand.legal_name }}</div>{% endif %}
+    </div>
+    <div class="ref-block">
+      <div class="row"><span class="label">Ref:</span><span class="value">{{ reference_code }}</span></div>
+      <div class="row"><span class="label">Date:</span><span class="value">{{ today }}</span></div>
+    </div>
+  </div>
+
+  <div class="doc-marker">NO OBJECTION CERTIFICATE</div>
+
+  <div class="opener">TO WHOM IT MAY CONCERN</div>
+
+  <p class="body">
+    This letter is to confirm that the following individual is currently employed with {{ company }} in the capacity stated below, and that the company has no objection to the purpose specified below.
+  </p>
+
+  <!-- ===== Employee details ===== -->
+  <div class="employee-block">
+    <div class="row">
+      <div class="label">Name</div>
+      <div class="value">[Full name as per passport]</div>
+    </div>
+    <div class="row">
+      <div class="label">Nationality</div>
+      <div class="value">[Nationality]</div>
+    </div>
+    <div class="row">
+      <div class="label">Passport No.</div>
+      <div class="value">[Passport number]</div>
+    </div>
+    <div class="row">
+      <div class="label">Emirates ID</div>
+      <div class="value">[784-YYYY-NNNNNNN-N]</div>
+    </div>
+    <div class="row">
+      <div class="label">Position</div>
+      <div class="value">[Job title]</div>
+    </div>
+    <div class="row">
+      <div class="label">Date of Joining</div>
+      <div class="value">[YYYY-MM-DD]</div>
+    </div>
+    <div class="row">
+      <div class="label">Employment Status</div>
+      <div class="value">Active — Full Time</div>
+    </div>
+  </div>
+
+  <!-- ===== Purpose ===== -->
+  <div class="purpose">
+    <div class="label">Purpose of this letter</div>
+    <p style="margin: 0;">[Purpose: e.g., visa application to [country], school enrolment for [child name], bank account opening at [institution], embassy visit, business travel for [reason].]</p>
+  </div>
+
+  <!-- ===== Validity ===== -->
+  <div class="validity-line">
+    This letter is valid for <strong>[30 / 60 / 90]</strong> days from the date of issuance unless otherwise stated.
+  </div>
+
+  <p class="closing-para">
+    Should further verification or clarification be required, please contact the undersigned at the details below.
+    We confirm that this letter is issued upon the request of the employee named above for the stated purpose only.
+  </p>
+
+  <!-- ===== Signature ===== -->
+  <div class="signature-block">
+    <div class="box">
+      <div class="name">{{ author_name }}</div>
+      <div class="title">[Title — e.g., HR Manager]</div>
+      <div>{{ brand.identity.email if brand.identity.email else '' }}</div>
+    </div>
+    <div class="box">
+      <div class="name">Authorised signatory</div>
+      <div class="title">Signature &amp; company stamp</div>
+    </div>
+  </div>
+
+  <div class="stamp-hint">COMPANY<br>STAMP</div>
+
+  <div class="footer-note">
+    This document is issued by {{ company }}. Unauthorised alteration or reproduction is prohibited.
+  </div>
+
+</body>
+</html>

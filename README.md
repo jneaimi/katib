@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial`, `report` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report |
+| **Domains** | `business-proposal`, `tutorial`, `report`, `formal` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -158,16 +158,20 @@ Each doc type ships as EN + AR peer templates at
 | | `progress-report` | 5–15 | `RPT-P-*` | Periodic status update — KPIs, milestones, risks |
 | | `annual-report` | 20–60 | `RPT-A-*` | Year-end institutional review |
 | | `audit-report` | 10–25 | `RPT-AU-*` | Compliance, security, or process audit |
+| `formal` | `noc` | 1 | `NOC-*` | UAE No-Objection Certificate for visa / school / bank / travel |
+| | `government-letter` | 1–2 | `GOV-*` | Submissions to ministries, authorities, regulators |
+| | `circular` | 1–2 | `CIR-*` | Internal company-wide announcements |
+| | `authority-letter` | 1 | `AUTH-*` | Delegation of a specific act (not full POA) |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-Planned future domains — `formal` (NOCs, government letters), `personal`
-(CVs, cover letters, bios), `academic` (syllabi, lecture notes),
-`financial` (invoices), `editorial` (white papers), `marketing-print`
-(sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) — are
-listed in the [Roadmap](#roadmap) and deferred in v0.2.
+Planned future domains — `personal` (CVs, cover letters, bios),
+`academic` (syllabi, lecture notes), `financial` (invoices),
+`editorial` (white papers), `marketing-print` (sell-sheets, slide
+decks as PDF), `legal` (contracts, NDAs) — are listed in the
+[Roadmap](#roadmap) and deferred in v0.3.
 
 ---
 

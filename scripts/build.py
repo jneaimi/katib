@@ -306,9 +306,14 @@ def render_template(
 
     doc_meta = styles["doc_types"][doc_type]
     if cover_style is None:
-        cover_style = styles["defaults"]["cover"]
-    if cover_style not in styles["covers_allowed"]:
-        raise ValueError(f"cover_style {cover_style!r} not allowed for domain {domain!r}")
+        cover_style = styles["defaults"].get("cover")
+    # Cover-less domains (e.g. `formal`): covers_allowed may be [] and defaults.cover may be null.
+    # In that case we skip cover validation and render without a cover page.
+    if styles.get("covers_allowed"):
+        if cover_style not in styles["covers_allowed"]:
+            raise ValueError(f"cover_style {cover_style!r} not allowed for domain {domain!r}")
+    else:
+        cover_style = None  # ensure downstream knows there's no cover
 
     # Layout resolution: per-doc-type default > domain default > global fallback
     if layout is None or layout == "":
@@ -523,7 +528,7 @@ def main():
     parser.add_argument("--cover", default=None, help="Cover style (defaults to domain default)")
     parser.add_argument("--layout", default=None, help="Layout (default: from domain styles.json defaults.layout, fallback 'classic')")
     parser.add_argument("--project", default="katib")
-    parser.add_argument("--ref", default=None, help="Reference code (e.g., PROP-2026-001)")
+    parser.add_argument("--ref", default=None, help="Reference code (e.g., TITS-TP-2026-001)")
     parser.add_argument("--purpose", default=None)
     parser.add_argument("--slug", default=None, help="Custom folder slug (use to co-locate EN+AR in one folder)")
     parser.add_argument("--with-cover", action="store_true", help="Generate cover.png via Gemini Nano Banana 2 before render")

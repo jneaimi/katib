@@ -29,13 +29,15 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "proposal / SOW / commercial offer / عرض تجاري" | `business-proposal` | Navy `#1B2A4A` + Gold `#C5A44E`, Arial |
 | "how-to / tutorial / onboarding / handoff / cheatsheet / دليل / شرح" | `tutorial` | Teal/slate on warm off-white, mono for code |
 | "report / research / annual / audit / progress / تقرير / دراسة / تدقيق" | `report` | Slate `#2E3A4B` + teal accent, Newsreader serif |
-| *(v0.3)* formal letter, government, compliance, NOC | `formal` | *(deferred)* |
+| "NOC / formal / government / ministry / circular / authority / خطاب رسمي / شهادة عدم ممانعة / تعميم / تفويض" | `formal` | Institutional navy `#0B3D66` on off-white, Georgia/Amiri serif |
 | *(v0.4)* CV, cover letter, bio | `personal` | *(deferred)* |
 | *(v0.5)* syllabus, assignment brief, lecture notes | `academic` | *(deferred)* |
 | *(v0.6)* invoice, financial summary | `financial` | *(deferred)* |
 | *(v0.7)* white paper, article, thought leadership | `editorial` | *(deferred)* |
-| *(v0.8)* sell-sheet, product-brief, capability-statement, slide-deck | `marketing-print` | *(deferred)* |
+| *(v0.8)* sell-sheet, product-brief, slide-deck (print PDF) | `marketing-print` | *(deferred)* |
 | *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
+
+Formal now **live** as of v0.3.0 (was deferred).
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -46,6 +48,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `business-proposal` | `proposal`, `one-pager`, `letter` |
 | `tutorial` | `how-to`, `cheatsheet`, `tutorial`, `onboarding`, `handoff` |
 | `report` | `research-report`, `progress-report`, `annual-report`, `audit-report` |
+| `formal` | `noc`, `government-letter`, `circular`, `authority-letter` |
+
+### Formal doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `noc` | Pre-structured fields + purpose + validity + stamp block | 1 | `NOC-*` | UAE No-Objection Certificate for visa / school / bank / travel |
+| `government-letter` | Islamic greeting + honorific + subject + formal body + closing formula | 1–2 | `GOV-*` | Submissions to ministries, authorities, regulators |
+| `circular` | Distribution banner + TO/FROM/CC + subject + action items + effective date | 1–2 | `CIR-*` | Internal company-wide announcements and policy changes |
+| `authority-letter` | Grantor/Grantee blocks + scope list + validity + stamp block | 1 | `AUTH-*` | Delegation of a specific act (not full POA) |
 
 ### Report doc-type picker
 

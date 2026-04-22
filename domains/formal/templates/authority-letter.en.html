@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page { size: A4; margin: 30mm 25mm 28mm 25mm; }
+
+  body { font-family: var(--font-primary); font-size: 11pt; line-height: 1.65; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 24pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .letterhead .logo { display: block; max-width: 50mm; margin-bottom: 6pt; }
+  .letterhead .company-name { font-size: 13pt; font-weight: 700; color: var(--accent); }
+  .letterhead .company-legal { font-size: 8.5pt; color: var(--text-tertiary); }
+
+  .letterhead .ref-block { text-align: right; font-size: 9.5pt; }
+  .letterhead .ref-block .row { margin-bottom: 4pt; }
+  .letterhead .ref-block .label {
+    color: var(--text-tertiary);
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4pt;
+  }
+  .letterhead .ref-block .value { font-weight: 600; }
+
+  .doc-marker {
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    padding: 8pt 0;
+    border-top: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+    margin: 0 0 22pt 0;
+  }
+
+  .opener {
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 0 0 18pt 0;
+  }
+
+  p.body { margin: 0 0 10pt 0; text-align: justify; }
+
+  .party-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 16pt 0;
+  }
+
+  .party {
+    padding: 12pt 14pt;
+    background: #F9FAF8;
+    border-top: 3pt solid var(--accent);
+  }
+
+  .party .role {
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .party .row {
+    display: grid;
+    grid-template-columns: 40mm 1fr;
+    padding: 4pt 0;
+    border-bottom: 0.5pt dotted var(--border);
+    font-size: 10pt;
+  }
+
+  .party .row:last-child { border-bottom: none; }
+
+  .party .row .label { color: var(--field-label); font-size: 9pt; }
+  .party .row .value { color: var(--field-value); font-weight: 600; }
+
+  .scope-block {
+    margin: 14pt 0;
+    padding: 14pt 18pt;
+    background: #F3F4F6;
+    border-left: 3pt solid var(--accent);
+  }
+
+  .scope-block .label {
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .scope-block ol { margin: 0; padding-left: 20pt; }
+  .scope-block li { margin-bottom: 5pt; font-size: 10.5pt; }
+
+  .validity-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 16pt 0;
+  }
+
+  .validity-block .cell {
+    padding: 10pt 12pt;
+    border: 0.5pt solid var(--border);
+    font-size: 10pt;
+  }
+
+  .validity-block .cell .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3pt;
+  }
+
+  .validity-block .cell .value { font-weight: 700; color: var(--text); font-size: 11pt; }
+
+  .closing-para { margin: 18pt 0; }
+
+  .signature-block {
+    margin-top: 30pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40pt;
+  }
+
+  .signature-block .box {
+    padding-top: 34pt;
+    border-top: 0.5pt solid var(--text);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .signature-block .box .name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 10pt;
+    margin-bottom: 2pt;
+  }
+
+  .signature-block .box .title { font-size: 9pt; margin-bottom: 2pt; }
+
+  .stamp-hint {
+    position: absolute;
+    right: 25mm;
+    bottom: 45mm;
+    width: 36mm;
+    height: 36mm;
+    border: 1.5pt solid var(--stamp-red);
+    border-radius: 50%;
+    color: var(--stamp-red);
+    font-size: 8pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    letter-spacing: 0.1em;
+    opacity: 0.4;
+  }
+
+  .footer-note {
+    margin-top: 26pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="letterhead">
+    <div>
+      {% if brand.logo.primary %}<img class="logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="company-name">{{ company }}</div>
+      {% if brand.legal_name and brand.legal_name != brand.name %}<div class="company-legal">{{ brand.legal_name }}</div>{% endif %}
+    </div>
+    <div class="ref-block">
+      <div class="row"><span class="label">Ref:</span><span class="value">{{ reference_code }}</span></div>
+      <div class="row"><span class="label">Date:</span><span class="value">{{ today }}</span></div>
+    </div>
+  </div>
+
+  <div class="doc-marker">LETTER OF AUTHORISATION</div>
+
+  <div class="opener">TO WHOM IT MAY CONCERN</div>
+
+  <p class="body">
+    This letter confirms that the party named as Grantor below has authorised the party named as Grantee below to act on the Grantor's behalf within the scope defined herein and for the validity period specified.
+  </p>
+
+  <!-- ===== Parties ===== -->
+  <div class="party-grid">
+    <div class="party">
+      <div class="role">Grantor</div>
+      <div class="row"><div class="label">Name</div><div class="value">{{ company }}</div></div>
+      <div class="row"><div class="label">Authorised by</div><div class="value">{{ author_name }}</div></div>
+      <div class="row"><div class="label">Title</div><div class="value">[Title]</div></div>
+      <div class="row"><div class="label">Trade Licence</div><div class="value">[TL-NNNN]</div></div>
+    </div>
+    <div class="party">
+      <div class="role">Grantee</div>
+      <div class="row"><div class="label">Name</div><div class="value">[Full name]</div></div>
+      <div class="row"><div class="label">Passport No.</div><div class="value">[Passport]</div></div>
+      <div class="row"><div class="label">Emirates ID</div><div class="value">[784-YYYY-NNNNNNN-N]</div></div>
+      <div class="row"><div class="label">Nationality</div><div class="value">[Nationality]</div></div>
+    </div>
+  </div>
+
+  <!-- ===== Scope ===== -->
+  <div class="scope-block">
+    <div class="label">Scope of authority</div>
+    <ol>
+      <li>[Specific act 1 — e.g., submit and collect documents at authority X on the Grantor's behalf]</li>
+      <li>[Specific act 2 — e.g., sign and endorse documents related to matter Y]</li>
+      <li>[Specific act 3 — e.g., represent the Grantor in meetings scheduled on YYYY-MM-DD at venue Z]</li>
+    </ol>
+  </div>
+
+  <!-- ===== Validity ===== -->
+  <div class="validity-block">
+    <div class="cell">
+      <div class="label">Valid from</div>
+      <div class="value">[YYYY-MM-DD]</div>
+    </div>
+    <div class="cell">
+      <div class="label">Valid to</div>
+      <div class="value">[YYYY-MM-DD]</div>
+    </div>
+  </div>
+
+  <p class="closing-para">
+    This authorisation is limited to the acts listed above. No additional authority is conferred by implication. The Grantor retains the right to revoke this authorisation at any time by written notice.
+  </p>
+
+  <!-- ===== Signatures ===== -->
+  <div class="signature-block">
+    <div class="box">
+      <div class="name">{{ author_name }}</div>
+      <div class="title">Authorised signatory, {{ company }}</div>
+      <div>Signature &amp; company stamp</div>
+    </div>
+    <div class="box">
+      <div class="name">[Grantee name]</div>
+      <div class="title">Acknowledged &amp; accepted</div>
+      <div>Signature</div>
+    </div>
+  </div>
+
+  <div class="stamp-hint">COMPANY<br>STAMP</div>
+
+  <div class="footer-note">
+    {{ company }} · {{ brand.legal_name if brand.legal_name else '' }} · Reference: {{ reference_code }}
+  </div>
+
+</body>
+</html>

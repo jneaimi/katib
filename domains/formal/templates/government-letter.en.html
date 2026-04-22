@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 30mm 25mm 28mm 25mm;
+  }
+
+  body { font-family: var(--font-primary); font-size: 11pt; line-height: 1.7; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 24pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .letterhead .logo {
+    display: block;
+    max-width: 50mm;
+    margin-bottom: 6pt;
+  }
+
+  .letterhead .company-name {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .letterhead .company-legal {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .letterhead .ref-block {
+    text-align: right;
+    font-size: 9.5pt;
+  }
+
+  .letterhead .ref-block .row { margin-bottom: 4pt; }
+
+  .letterhead .ref-block .label {
+    color: var(--text-tertiary);
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4pt;
+  }
+
+  .letterhead .ref-block .value { font-weight: 600; }
+
+  .recipient-block {
+    margin-bottom: 18pt;
+    font-size: 11pt;
+  }
+
+  .recipient-block .to-label {
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 4pt;
+  }
+
+  .recipient-block .recipient-name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 12pt;
+  }
+
+  .recipient-block .recipient-title,
+  .recipient-block .recipient-org {
+    color: var(--text-secondary);
+  }
+
+  .subject-line {
+    margin: 14pt 0;
+    padding: 10pt 14pt;
+    background: #F3F4F6;
+    border-left: 3pt solid var(--accent);
+  }
+
+  .subject-line .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .subject-line .value {
+    font-size: 12pt;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .salutation {
+    margin: 18pt 0 10pt 0;
+    font-weight: 600;
+    font-size: 11.5pt;
+  }
+
+  p.body {
+    margin: 0 0 10pt 0;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .closing {
+    margin-top: 22pt;
+    font-size: 11.5pt;
+  }
+
+  .signature-block {
+    margin-top: 40pt;
+    padding-top: 30pt;
+    border-top: 0.5pt solid var(--text);
+    max-width: 80mm;
+    font-size: 10pt;
+  }
+
+  .signature-block .name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 11pt;
+    margin-bottom: 2pt;
+  }
+
+  .signature-block .title { color: var(--text-secondary); margin-bottom: 2pt; }
+
+  .signature-block .contact { color: var(--text-tertiary); font-size: 9pt; margin-top: 4pt; }
+
+  .footer-note {
+    margin-top: 40pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="letterhead">
+    <div>
+      {% if brand.logo.primary %}<img class="logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="company-name">{{ company }}</div>
+      {% if brand.legal_name and brand.legal_name != brand.name %}<div class="company-legal">{{ brand.legal_name }}</div>{% endif %}
+    </div>
+    <div class="ref-block">
+      <div class="row"><span class="label">Ref:</span><span class="value">{{ reference_code }}</span></div>
+      <div class="row"><span class="label">Date:</span><span class="value">{{ today }}</span></div>
+    </div>
+  </div>
+
+  <div class="recipient-block">
+    <div class="to-label">To</div>
+    <div class="recipient-name">[Recipient Name]</div>
+    <div class="recipient-title">[Title / position]</div>
+    <div class="recipient-org">[Ministry / Authority / Department]</div>
+    <div class="recipient-org">[City, UAE]</div>
+  </div>
+
+  <div class="subject-line">
+    <div class="label">Subject</div>
+    <div class="value">{{ title }}</div>
+  </div>
+
+  <div class="salutation">Dear [Mr. / Ms. / Dr.] [Name],</div>
+
+  <p class="body">
+    With reference to [matter / prior correspondence / application dated YYYY-MM-DD], we respectfully submit the following.
+  </p>
+
+  <p class="body">
+    [Body paragraph 1 — state the purpose and factual basis clearly and without ornament. Cite any prior reference number if one exists.]
+  </p>
+
+  <p class="body">
+    [Body paragraph 2 — the specific request, position, or clarification being submitted. Be precise; formal correspondence is weakened by vagueness.]
+  </p>
+
+  <p class="body">
+    We remain at your disposal for any further clarification or documentation that may be required in this regard.
+  </p>
+
+  <div class="closing">Yours sincerely,</div>
+
+  <div class="signature-block">
+    <div class="name">{{ author_name }}</div>
+    <div class="title">[Your title]</div>
+    <div class="title">{{ company }}</div>
+    <div class="contact">{{ brand.identity.email if brand.identity.email else '' }}</div>
+  </div>
+
+  <div class="footer-note">
+    {{ company }} · {{ brand.legal_name if brand.legal_name else '' }}
+  </div>
+
+</body>
+</html>

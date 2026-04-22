@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page { size: A4; margin: 30mm 25mm 28mm 25mm; }
+
+  body { font-family: var(--font-primary); font-size: 12pt; line-height: 1.9; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 24pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .letterhead .logo { display: block; max-width: 50mm; margin-bottom: 6pt; }
+  .letterhead .company-name { font-size: 14pt; font-weight: 700; color: var(--accent); }
+  .letterhead .company-legal { font-size: 9pt; color: var(--text-tertiary); }
+
+  .letterhead .ref-block { text-align: left; font-size: 10pt; }
+  .letterhead .ref-block .row { margin-bottom: 4pt; }
+  .letterhead .ref-block .label { color: var(--text-tertiary); font-size: 9pt; margin-left: 4pt; }
+  .letterhead .ref-block .value { font-weight: 600; }
+
+  .doc-marker {
+    text-align: center;
+    font-size: 13pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    padding: 8pt 0;
+    border-top: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+    margin: 0 0 22pt 0;
+  }
+
+  .opener {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: 700;
+    margin: 0 0 8pt 0;
+  }
+
+  .islamic-greeting {
+    text-align: center;
+    font-size: 12pt;
+    color: var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  p.body { margin: 0 0 10pt 0; text-align: justify; }
+
+  .party-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 16pt 0;
+  }
+
+  .party {
+    padding: 12pt 14pt;
+    background: #F9FAF8;
+    border-top: 3pt solid var(--accent);
+  }
+
+  .party .role {
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .party .row {
+    display: grid;
+    grid-template-columns: 40mm 1fr;
+    padding: 4pt 0;
+    border-bottom: 0.5pt dotted var(--border);
+    font-size: 11pt;
+  }
+
+  .party .row:last-child { border-bottom: none; }
+
+  .party .row .label { color: var(--field-label); font-size: 10pt; }
+  .party .row .value { color: var(--field-value); font-weight: 600; }
+  .party .row .value.ltr { direction: ltr; unicode-bidi: embed; text-align: right; }
+
+  .scope-block {
+    margin: 14pt 0;
+    padding: 14pt 18pt;
+    background: #F3F4F6;
+    border-right: 3pt solid var(--accent);
+    border-left: none;
+  }
+
+  .scope-block .label {
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .scope-block ol { margin: 0; padding-right: 20pt; padding-left: 0; }
+  .scope-block li { margin-bottom: 5pt; font-size: 11.5pt; }
+
+  .validity-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt;
+    margin: 16pt 0;
+  }
+
+  .validity-block .cell {
+    padding: 10pt 12pt;
+    border: 0.5pt solid var(--border);
+    font-size: 11pt;
+  }
+
+  .validity-block .cell .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .validity-block .cell .value { font-weight: 700; color: var(--text); font-size: 12pt; }
+
+  .closing-para { margin: 18pt 0; }
+
+  .closing-formula {
+    margin: 22pt 0 8pt 0;
+    font-size: 12pt;
+    color: var(--text);
+  }
+
+  .signature-block {
+    margin-top: 30pt;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40pt;
+  }
+
+  .signature-block .box {
+    padding-top: 34pt;
+    border-top: 0.5pt solid var(--text);
+    font-size: 10.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .signature-block .box .name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 11pt;
+    margin-bottom: 2pt;
+  }
+
+  .signature-block .box .title { font-size: 10pt; margin-bottom: 2pt; }
+
+  .stamp-hint {
+    position: absolute;
+    left: 25mm;
+    bottom: 45mm;
+    width: 36mm;
+    height: 36mm;
+    border: 1.5pt solid var(--stamp-red);
+    border-radius: 50%;
+    color: var(--stamp-red);
+    font-size: 9pt;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0.4;
+  }
+
+  .footer-note {
+    margin-top: 26pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="letterhead">
+    <div>
+      {% if brand.logo.primary %}<img class="logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="company-name">{{ company }}</div>
+      {% if brand.legal_name and brand.legal_name != brand.name %}<div class="company-legal">{{ brand.legal_name }}</div>{% endif %}
+    </div>
+    <div class="ref-block">
+      <div class="row"><span class="label">المرجع:</span><span class="value">{{ reference_code }}</span></div>
+      <div class="row"><span class="label">التاريخ:</span><span class="value">{{ today }}</span></div>
+    </div>
+  </div>
+
+  <div class="doc-marker">خطاب تفويض</div>
+
+  <div class="opener">إلى مَن يهمّه الأمر</div>
+  <div class="islamic-greeting">السلام عليكم ورحمة الله وبركاته</div>
+
+  <p class="body">
+    يُفيد هذا الخطاب بأنّ الطرف المُسمّى «المفوِّض» أدناه قد فوّض الطرف المُسمّى «المفوَّض إليه» أدناه بالتصرّف نيابةً عنه في الحدود الموضّحة في هذا الخطاب وخلال مدّة الصلاحية المبيَّنة.
+  </p>
+
+  <!-- ===== الأطراف ===== -->
+  <div class="party-grid">
+    <div class="party">
+      <div class="role">المفوِّض</div>
+      <div class="row"><div class="label">الاسم</div><div class="value">{{ company }}</div></div>
+      <div class="row"><div class="label">الموقّع المخوَّل</div><div class="value">{{ author_name }}</div></div>
+      <div class="row"><div class="label">المسمّى</div><div class="value">[المسمّى الوظيفي]</div></div>
+      <div class="row"><div class="label">الرخصة التجارية</div><div class="value ltr">TL-NNNN</div></div>
+    </div>
+    <div class="party">
+      <div class="role">المفوَّض إليه</div>
+      <div class="row"><div class="label">الاسم الكامل</div><div class="value">[الاسم الكامل]</div></div>
+      <div class="row"><div class="label">رقم جواز السفر</div><div class="value ltr">[رقم الجواز]</div></div>
+      <div class="row"><div class="label">الهويّة الإماراتية</div><div class="value ltr">784-YYYY-NNNNNNN-N</div></div>
+      <div class="row"><div class="label">الجنسية</div><div class="value">[الجنسية]</div></div>
+    </div>
+  </div>
+
+  <!-- ===== نطاق التفويض ===== -->
+  <div class="scope-block">
+    <div class="label">نطاق التفويض</div>
+    <ol>
+      <li>[إجراء محدَّد ١ — مثال: تقديم واستلام المستندات لدى الجهة س نيابةً عن المفوِّض]</li>
+      <li>[إجراء محدَّد ٢ — مثال: التوقيع وتأييد المستندات المتعلّقة بالموضوع ص]</li>
+      <li>[إجراء محدَّد ٣ — مثال: تمثيل المفوِّض في الاجتماعات المقرَّرة بتاريخ YYYY-MM-DD في المكان ع]</li>
+    </ol>
+  </div>
+
+  <!-- ===== الصلاحية ===== -->
+  <div class="validity-block">
+    <div class="cell">
+      <div class="label">ساري من</div>
+      <div class="value">[YYYY-MM-DD]</div>
+    </div>
+    <div class="cell">
+      <div class="label">ساري إلى</div>
+      <div class="value">[YYYY-MM-DD]</div>
+    </div>
+  </div>
+
+  <p class="closing-para">
+    هذا التفويض مقصور على الإجراءات المبيَّنة أعلاه، ولا يُمنح أيّ صلاحية إضافية بالتضمين. ويحتفظ المفوِّض بالحقّ في إلغاء هذا التفويض في أيّ وقت بموجب إشعار كتابي.
+  </p>
+
+  <p class="closing-formula">وتفضّلوا بقبول فائق الاحترام والتقدير،،</p>
+
+  <!-- ===== التوقيع ===== -->
+  <div class="signature-block">
+    <div class="box">
+      <div class="name">{{ author_name }}</div>
+      <div class="title">الموقّع المفوَّض، {{ company }}</div>
+      <div>التوقيع وختم الشركة</div>
+    </div>
+    <div class="box">
+      <div class="name">[اسم المفوَّض إليه]</div>
+      <div class="title">اطّلع وقَبِل</div>
+      <div>التوقيع</div>
+    </div>
+  </div>
+
+  <div class="stamp-hint">ختم<br>الشركة</div>
+
+  <div class="footer-note">
+    {{ company }} · {{ brand.legal_name if brand.legal_name else '' }} · المرجع: {{ reference_code }}
+  </div>
+
+</body>
+</html>

@@ -114,6 +114,17 @@ Banned phrases that signal LLM output:
 - Screenshots follow the step they illustrate, not before
 - Use callouts for: prerequisites (before the steps), warnings (inline), pro-tips (inline), troubleshooting (end)
 
+### Formal (NOC, government-letter, circular, authority-letter)
+
+- **Third person** throughout the body. "The company confirms" — not "We confirm". Signature block is the place for individuals.
+- **Date + reference code + subject line** are structural, not optional. Every formal letter carries at minimum: `Ref:`, `Date:`, subject, and "To Whom It May Concern" or addressed recipient.
+- **NOC purpose must be specific.** "For visa application" is too vague. Write: "For visa application to [country] through [embassy/consulate], valid for the duration of the trip scheduled [date range]."
+- Validity periods are written explicitly: "Valid for 30 days from date of issuance."
+- **Authority letters scope must list acts, not verbs alone.** Not "Authorised to sign documents" — instead: "Authorised to sign employment contracts under AED 100,000 with suppliers in Abu Dhabi only."
+- Circulars always specify an **effective date** and an **expiry / until-superseded clause.**
+- No marketing language. No "we are pleased to" or "we are delighted to." Formal correspondence states.
+- **Acronym conventions:** spell out on first use — "No-Objection Certificate (NOC)" — then use the acronym.
+
 ### Report (Research, Progress, Annual, Audit)
 
 - **Informational register**, not persuasive. A report documents findings; a proposal sells them.
