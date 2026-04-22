@@ -3,6 +3,34 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.18.1] — 2026-04-22 — Housekeeping (CI gate + fallback reconciler)
+
+Two small utilities flagged as worth-having in ADR §22's retrospective.
+No changes to render path or governance contract.
+
+### Added
+- **`audit_vault.py --summary`** — one-line counts (`total=N clean=N
+  errors=N warnings=N fallbacks=N`) suitable for CI gates. Returns
+  exit 1 if any manifest has an error; other output modes always
+  return 0. Also adds `fallbacks` counter (manifests tagged
+  `katib-fallback` from an API-unreachable render).
+- **`scripts/reconcile_fallbacks.py`** — walks the vault for manifests
+  tagged `katib-fallback`, re-POSTs each one through Soul Hub, strips
+  the tag on success. Dry-run default, `--execute` to apply, `--yes`
+  to skip the confirmation prompt (for CI). Forces `KATIB_VAULT_MODE=strict`
+  internally so a second API failure fails loud instead of silently
+  re-writing the same file.
+
+### Why now
+After Phase 5 closed the migration, two items remained in §22's
+retrospective as "latent risk / nice-to-have":
+1. No CI-friendly audit output — `--verbose` and `--json` are both
+   too much for a pipeline gate; `--summary` is the missing primitive.
+2. No reconciliation path for the `katib-fallback` tag — if Soul Hub
+   is ever down during a batch render, fallbacks accumulate and
+   nothing cleans them up automatically. The tag is visible in
+   `audit_vault.py --json` output, but no tool acted on it.
+
 ## [0.18.0] — 2026-04-22 — Phase 5 of vault-integration migration (integration polish — migration complete)
 
 Final phase of the vault-integration migration (ADR §20). No behaviour

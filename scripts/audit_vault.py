@@ -15,11 +15,15 @@ Usage:
     python3 scripts/audit_vault.py                       # summary to stdout
     python3 scripts/audit_vault.py --verbose             # every violation listed
     python3 scripts/audit_vault.py --json                # machine-readable
+    python3 scripts/audit_vault.py --summary             # one-line counts for CI
     python3 scripts/audit_vault.py --report              # write markdown report to
                                                          # ~/vault/knowledge/katib-audit-YYYY-MM-DD.md
     python3 scripts/audit_vault.py --vault-root /path    # override vault root
 
-Exit code: 0 if any manifests were audited (success = ran to completion).
+Exit code:
+  0 — ran to completion; no errors (in --summary mode also no warnings)
+  1 — ran to completion but found errors (only in --summary mode)
+  2 — vault root missing
 """
 from __future__ import annotations
 
@@ -74,6 +78,7 @@ def audit_manifest(path: Path, vault_root: Path) -> dict:
       doc_type    — frontmatter `doc_type`
       katib_version — frontmatter `katib_version` (often stale on legacy)
       source_agent  — frontmatter `source_agent`
+      tags        — list[str] from frontmatter `tags` (used to detect katib-fallback)
       violations  — list[SchemaViolation]
       errors      — count of severity='error' violations
       warns       — count of severity='warn' violations
@@ -95,6 +100,7 @@ def audit_manifest(path: Path, vault_root: Path) -> dict:
         "doc_type": None,
         "katib_version": None,
         "source_agent": None,
+        "tags": [],
         "violations": [],
         "errors": 0,
         "warns": 0,
@@ -113,12 +119,25 @@ def audit_manifest(path: Path, vault_root: Path) -> dict:
     base["doc_type"] = meta.get("doc_type")
     base["katib_version"] = meta.get("katib_version")
     base["source_agent"] = meta.get("source_agent")
+    tags = meta.get("tags") or []
+    base["tags"] = list(tags) if isinstance(tags, list) else []
 
     violations = validate(meta, zone=zone, content_length=content_len)
     base["violations"] = violations
     base["errors"] = sum(1 for v in violations if v.severity == "error")
     base["warns"] = sum(1 for v in violations if v.severity == "warn")
     return base
+
+
+def format_oneline_summary(results: list[dict]) -> str:
+    """Single-line counts for CI gates. Stable, whitespace-separated."""
+    total = len(results)
+    clean = sum(1 for r in results if not r["violations"] and not r["parse_error"])
+    errors = sum(1 for r in results if r["errors"])
+    warnings = sum(1 for r in results if not r["errors"] and r["warns"])
+    fallbacks = sum(1 for r in results if "katib-fallback" in r["tags"])
+    return (f"total={total} clean={clean} errors={errors} "
+            f"warnings={warnings} fallbacks={fallbacks}")
 
 
 def _violation_message(v: SchemaViolation) -> str:
@@ -324,6 +343,8 @@ def main() -> int:
                         help="List every violation for every manifest (not just summary)")
     parser.add_argument("--json", action="store_true",
                         help="Emit machine-readable JSON instead of text")
+    parser.add_argument("--summary", action="store_true",
+                        help="One-line counts for CI gates. Exits 1 if any errors.")
     parser.add_argument("--report", nargs="?", const="auto", default=None,
                         help="Write markdown report to the vault. Pass a path or use 'auto' "
                              "for ~/vault/knowledge/katib-audit-YYYY-MM-DD.md")
@@ -338,7 +359,9 @@ def main() -> int:
     manifests = find_manifests(vault_root)
     results = [audit_manifest(m, vault_root) for m in manifests]
 
-    if args.json:
+    if args.summary:
+        print(format_oneline_summary(results))
+    elif args.json:
         print(to_json(results))
     elif args.verbose:
         print(format_text_verbose(results))
@@ -355,6 +378,10 @@ def main() -> int:
         report_path.write_text(format_markdown_report(results), encoding="utf-8")
         print(f"\n→ report written: {report_path}", file=sys.stderr)
 
+    # CI gate: --summary mode returns non-zero when any manifest has an error.
+    # Other modes always return 0 (they're informational/human-facing).
+    if args.summary and any(r["errors"] for r in results):
+        return 1
     return 0
 
 
