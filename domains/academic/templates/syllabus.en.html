@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Syllabus  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .masthead {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 14pt;
+    margin-bottom: 18pt;
+  }
+
+  .masthead .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 4pt;
+    font-weight: 600;
+  }
+
+  .masthead h1 {
+    font-size: 26pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  .masthead .course-code {
+    font-size: 11pt;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt 24pt;
+    margin-bottom: 20pt;
+    font-size: 10pt;
+  }
+
+  .meta-grid .label {
+    color: var(--text-tertiary);
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2pt;
+  }
+
+  .meta-grid .value { color: var(--text); }
+
+  h2 {
+    font-size: 14pt;
+    color: var(--accent);
+    margin: 20pt 0 10pt 0;
+    padding-bottom: 3pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 14pt 0 6pt 0;
+    font-weight: 700;
+  }
+
+  ul, ol { margin: 6pt 0; padding-left: 20pt; }
+  li { margin-bottom: 4pt; }
+
+  .schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0 16pt 0;
+    font-size: 10pt;
+  }
+
+  .schedule-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 500;
+    font-size: 9.5pt;
+  }
+
+  .schedule-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .schedule-table tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+  .schedule-table .week { white-space: nowrap; font-weight: 600; color: var(--accent); }
+  .schedule-table .dates { white-space: nowrap; color: var(--text-tertiary); font-size: 9pt; }
+
+  .grading-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+
+  .grading-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .grading-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .grading-table .pct { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .callout {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10pt;
+  }
+
+  .callout .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Course Syllabus</div>
+  <h1>[Course Title]</h1>
+  <div class="course-code">[DEPT-000] · [Semester, YYYY]</div>
+</header>
+
+<div class="meta-grid">
+  <div>
+    <div class="label">Instructor</div>
+    <div class="value">{{ author_name }}</div>
+  </div>
+  <div>
+    <div class="label">Email</div>
+    <div class="value">{{ brand.identity.email if brand.identity.email else '[instructor@example.edu]' }}</div>
+  </div>
+  <div>
+    <div class="label">Meeting Time</div>
+    <div class="value">[Day, HH:MM–HH:MM]</div>
+  </div>
+  <div>
+    <div class="label">Classroom</div>
+    <div class="value">[Building, Room]</div>
+  </div>
+  <div>
+    <div class="label">Office Hours</div>
+    <div class="value">[Day HH:MM–HH:MM, or by appointment]</div>
+  </div>
+  <div>
+    <div class="label">Credits</div>
+    <div class="value">[N credit-hours]</div>
+  </div>
+</div>
+
+<section>
+  <h2>Course Description</h2>
+  <p>[Two to four sentences. State what the course covers, at what level, and how it fits the program. Avoid marketing tone — describe the terrain a student will traverse.]</p>
+</section>
+
+<section>
+  <h2>Learning Objectives</h2>
+  <p>By the end of this course, students will be able to:</p>
+  <ol>
+    <li>[Verb-first, measurable outcome — e.g., "Analyze primary sources and identify implicit assumptions."]</li>
+    <li>[Second outcome]</li>
+    <li>[Third outcome]</li>
+    <li>[Fourth outcome]</li>
+    <li>[Fifth outcome]</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Prerequisites</h2>
+  <ul>
+    <li>[Prerequisite course or equivalent knowledge]</li>
+    <li>[Prerequisite tools / software / access]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Required Texts &amp; Materials</h2>
+  <ul>
+    <li>[Author, <em>Title</em> (Publisher, YYYY). ISBN.]</li>
+    <li>[Author, <em>Title</em> — optional]</li>
+    <li>[Course pack / online platform access]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Weekly Schedule</h2>
+  <table class="schedule-table">
+    <thead>
+      <tr>
+        <th style="width: 40pt">Week</th>
+        <th style="width: 70pt">Dates</th>
+        <th>Topic &amp; Readings</th>
+        <th style="width: 90pt">Assignments</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="week">1</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic / reading pp. xx–yy]</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="week">2</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic / reading]</td>
+        <td>[Reading response]</td>
+      </tr>
+      <tr>
+        <td class="week">3</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="week">4</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>[Problem set 1]</td>
+      </tr>
+      <tr>
+        <td class="week">5</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="week">6</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>[Midterm]</td>
+      </tr>
+      <tr>
+        <td class="week">7</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td class="week">8</td>
+        <td class="dates">[MMM DD]</td>
+        <td>[Topic]</td>
+        <td>[Paper proposal]</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Grading</h2>
+  <table class="grading-table">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th style="width: 70pt">Weight</th>
+        <th style="width: 120pt">Due</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Participation &amp; attendance</td><td class="pct">10%</td><td>Ongoing</td></tr>
+      <tr><td>Problem sets / reading responses</td><td class="pct">25%</td><td>Weekly</td></tr>
+      <tr><td>Midterm examination</td><td class="pct">25%</td><td>[Week 6]</td></tr>
+      <tr><td>Final paper / project</td><td class="pct">30%</td><td>[Week N]</td></tr>
+      <tr><td>Final presentation</td><td class="pct">10%</td><td>[Week N]</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Course Policies</h2>
+
+  <h3>Attendance</h3>
+  <p>[State policy: how many absences are permitted, consequences, how to request excused absence.]</p>
+
+  <h3>Late Work</h3>
+  <p>[State policy: grace period, penalty per day, extension request process.]</p>
+
+  <h3>Academic Integrity</h3>
+  <div class="callout">
+    <div class="label">Integrity Policy</div>
+    All submitted work must be the student's own. Citations are required for every quoted or paraphrased idea.
+    Violations follow [Institution]'s academic integrity procedures. Collaboration, if permitted, must be disclosed.
+  </div>
+
+  <h3>Accommodations</h3>
+  <p>Students who require accommodations should contact [Office of Disability Services] within the first two weeks
+  of the semester. All accommodations will be handled confidentially.</p>
+
+  <h3>Communication</h3>
+  <p>Email response within [24/48] hours on weekdays. Urgent matters: use [channel]. Course announcements posted to
+  [LMS / platform].</p>
+</section>
+
+</body>
+</html>

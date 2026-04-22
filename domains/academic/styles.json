@@ -1,0 +1,43 @@
+{
+  "domain": "academic",
+  "covers_allowed": [
+    "minimalist-typographic"
+  ],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": "minimalist-typographic",
+    "layout": "classic"
+  },
+  "doc_types": {
+    "syllabus": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 8,
+      "target_pages": [3, 6],
+      "sections_required": ["body"]
+    },
+    "assignment-brief": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 6,
+      "target_pages": [2, 4],
+      "sections_required": ["body"]
+    },
+    "lecture-notes": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 20,
+      "target_pages": [4, 12],
+      "sections_required": ["body"]
+    },
+    "research-proposal": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 30,
+      "target_pages": [8, 20],
+      "sections_required": ["cover", "body"]
+    }
+  }
+}

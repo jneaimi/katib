@@ -31,14 +31,13 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "report / research / annual / audit / progress / تقرير / دراسة / تدقيق" | `report` | Slate `#2E3A4B` + teal accent, Newsreader serif |
 | "NOC / formal / government / ministry / circular / authority / خطاب رسمي / شهادة عدم ممانعة / تعميم / تفويض" | `formal` | Institutional navy `#0B3D66` on off-white, Georgia/Amiri serif |
 | "CV / resume / cover letter / bio / سيرة ذاتية / خطاب تغطية / نبذة" | `personal` | Navy `#1E3A8A` sidebar on warm paper, Inter/Cairo sans-serif |
-| *(v0.4)* CV, cover letter, bio | `personal` | *(deferred)* |
-| *(v0.5)* syllabus, assignment brief, lecture notes | `academic` | *(deferred)* |
+| "syllabus / assignment / lecture notes / research proposal / خطة مقرر / واجب / محاضرة / مقترح بحثي" | `academic` | Burgundy `#7E1D4A` + sage on cream, Newsreader/Amiri serif |
 | *(v0.6)* invoice, financial summary | `financial` | *(deferred)* |
 | *(v0.7)* white paper, article, thought leadership | `editorial` | *(deferred)* |
 | *(v0.8)* sell-sheet, product-brief, slide-deck (print PDF) | `marketing-print` | *(deferred)* |
 | *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
 
-Formal now **live** as of v0.3.0 (was deferred).
+Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0.
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -51,6 +50,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `report` | `research-report`, `progress-report`, `annual-report`, `audit-report` |
 | `formal` | `noc`, `government-letter`, `circular`, `authority-letter` |
 | `personal` | `cv`, `cover-letter`, `bio` |
+| `academic` | `syllabus`, `assignment-brief`, `lecture-notes`, `research-proposal` |
+
+### Academic doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `syllabus` | Masthead + meta + objectives + schedule table + grading + policies | 3–6 | `SYL-*` | Course overview for a semester or program |
+| `assignment-brief` | Task heading + due banner + deliverables + rubric table | 2–4 | `AB-*` | Student-facing spec for a specific piece of assessment |
+| `lecture-notes` | Main column + margin notes (prerequisite, common mistake, next lecture) + exercises | 4–12 | `LN-*` | Structured handout supporting a single lecture |
+| `research-proposal` | Title page + abstract + questions + methodology + timeline + budget + references | 8–20 | `RP-*` | Funding application, thesis proposal, IRB submission |
 
 ### Personal doc-type picker
 

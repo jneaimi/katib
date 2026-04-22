@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  ملاحظات المحاضرة  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.85;
+    color: var(--text);
+  }
+
+  .masthead {
+    border-bottom: 1pt solid var(--accent);
+    padding-bottom: 10pt;
+    margin-bottom: 16pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .masthead .course {
+    font-size: 9.5pt;
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .masthead .date {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  h1 {
+    font-size: 22pt;
+    color: var(--accent);
+    margin: 0 0 14pt 0;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h1 .lecture-num {
+    font-size: 11pt;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    margin-left: 10pt;
+  }
+
+  .objectives-box {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 0 0 20pt 0;
+  }
+
+  .objectives-box .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .objectives-box ol { margin: 4pt 0 0 0; padding-right: 18pt; padding-left: 0; }
+  .objectives-box li { margin-bottom: 2pt; font-size: 10.5pt; }
+
+  /* Two-column layout: main content + margin notes */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 45mm;
+    gap: 10mm;
+  }
+
+  main.content h2 {
+    font-size: 14pt;
+    color: var(--accent);
+    margin: 16pt 0 6pt 0;
+    padding-bottom: 2pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 700;
+  }
+
+  main.content h3 {
+    font-size: 11.5pt;
+    color: var(--text);
+    margin: 12pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  main.content p { margin: 6pt 0; }
+  main.content ul, main.content ol { margin: 6pt 0; padding-right: 20pt; padding-left: 0; }
+  main.content li { margin-bottom: 3pt; }
+
+  .key-term {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .definition {
+    border-right: 2pt solid var(--accent-2);
+    padding-right: 10pt;
+    margin: 8pt 0;
+    font-size: 10.5pt;
+  }
+
+  .definition .term {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 11pt;
+    display: block;
+    margin-bottom: 2pt;
+  }
+
+  .formula {
+    background: var(--code-bg);
+    padding: 8pt 12pt;
+    margin: 10pt 0;
+    font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
+    font-size: 11.5pt;
+    text-align: center;
+    border: 0.5pt solid var(--border);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .formula .label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-family: var(--font-primary);
+    display: block;
+    margin-top: 4pt;
+    direction: rtl;
+  }
+
+  aside.margin-notes {
+    font-size: 9pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  aside.margin-notes .note {
+    background: var(--table-row-alt);
+    padding: 7pt 9pt;
+    margin-bottom: 10pt;
+    border-top: 1pt solid var(--border);
+  }
+
+  aside.margin-notes .note .label {
+    font-size: 8pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .example-box {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    background: var(--page-bg);
+  }
+
+  .example-box .label {
+    font-size: 9pt;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .exercises {
+    background: var(--warning-bg);
+    border-right: 3pt solid var(--warning-border);
+    padding: 10pt 14pt;
+    margin: 16pt 0;
+  }
+
+  .exercises .label {
+    font-size: 9pt;
+    color: var(--warning-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .exercises ol { padding-right: 20pt; padding-left: 0; }
+
+  .further-reading {
+    margin-top: 16pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 10pt;
+  }
+
+  .further-reading h3 {
+    font-size: 10.5pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+  }
+
+  .further-reading ul { padding-right: 18pt; padding-left: 0; }
+  .further-reading li { margin-bottom: 2pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="course">[رمز المقرر · اسم المقرر]</div>
+  <div class="date">{{ date_display }}</div>
+</header>
+
+<h1>[عنوان المحاضرة]<span class="lecture-num">المحاضرة [N]</span></h1>
+
+<div class="objectives-box">
+  <div class="label">مخرجات التعلّم — ينتهي الطالب قادراً على:</div>
+  <ol>
+    <li>[مخرج محدّد قابل للقياس]</li>
+    <li>[المخرج الثاني]</li>
+    <li>[المخرج الثالث]</li>
+  </ol>
+</div>
+
+<div class="content-grid">
+
+<main class="content">
+
+  <section>
+    <h2>١ · الحافز</h2>
+    <p>[ابدأ بمشكلة أو سؤال ملموس. لماذا يوجد هذا الموضوع أصلاً؟ ما الذي يتعذّر إنجازه من دونه؟ جملتان إلى أربع.
+    تجنّب إعادة سرد المخرجات.]</p>
+  </section>
+
+  <section>
+    <h2>٢ · المفاهيم الأساسية</h2>
+
+    <div class="definition">
+      <span class="term">[المصطلح المفتاحي]</span>
+      [تعريف دقيق في جملة أو جملتين. تجنّب الدور المنطقي — لا تستخدم المصطلح في تعريف نفسه.]
+    </div>
+
+    <div class="definition">
+      <span class="term">[المصطلح الثاني]</span>
+      [التعريف.]
+    </div>
+
+    <p>[فقرة ربط. كيف تترابط هذه المصطلحات؟ استخدم <span class="key-term">خطّاً مائزاً</span> عند أوّل ظهور للمصطلح
+    داخل السياق الجاري.]</p>
+
+    <h3>٢٫١ · [موضوع فرعي]</h3>
+    <p>[فقرة.]</p>
+
+    <div class="formula">
+      f(x) = ax² + bx + c
+      <span class="label">المعادلة ١ — [ما تعبّر عنه المعادلة]</span>
+    </div>
+
+    <h3>٢٫٢ · [موضوع فرعي]</h3>
+    <p>[فقرة.]</p>
+  </section>
+
+  <section>
+    <h2>٣ · مثال محلول</h2>
+    <div class="example-box">
+      <div class="label">مثال ١</div>
+      <p><em>المسألة.</em> [صِغها بدقّة.]</p>
+      <p><em>المنهج.</em> [خطوات متسلسلة. رقّمها إن تجاوزت ثلاثاً.]</p>
+      <p><em>الإجابة.</em> [النتيجة مع الوحدات.]</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>٤ · [قسم لاحق]</h2>
+    <p>[فقرة. ابنِ على المثال المحلول أو قدّم حالة تضادّ.]</p>
+    <ul>
+      <li>[نقطة]</li>
+      <li>[نقطة]</li>
+      <li>[نقطة]</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>٥ · خلاصة</h2>
+    <p>[ثلاث إلى خمس جمل. استخلص الفكرة الواحدة التي ينبغي تذكّرها، والإجراء الواحد الذي ينبغي التدرّب عليه،
+    والخطأ الشائع الواحد الذي ينبغي تجنّبه. تجنّب القوائم هنا — السرد المترابط يرسّخ النموذج الذهني.]</p>
+  </section>
+
+  <div class="exercises">
+    <div class="label">تمارين للجلسة القادمة</div>
+    <ol>
+      <li>[مسألة ١ — تتمرّن على المخرج ١]</li>
+      <li>[مسألة ٢ — تتمرّن على المخرج ٢]</li>
+      <li>[مسألة ٣ — اختيارية تتجاوز نطاق المحاضرة]</li>
+    </ol>
+  </div>
+
+  <div class="further-reading">
+    <h3>للقراءة المعمّقة</h3>
+    <ul>
+      <li>[المؤلف، <em>العنوان</em>، صفحات xx–yy — المعالجة المرجعية]</li>
+      <li>[المؤلف، «عنوان المقال»، اسم الدورية المجلّد(العدد)، صفحات xx–yy — زاوية بديلة]</li>
+    </ul>
+  </div>
+
+</main>
+
+<aside class="margin-notes">
+  <div class="note">
+    <div class="label">متطلّب سابق</div>
+    يُفترض أن يكون الطالب متمكّناً من [المفهوم السابق من المحاضرة N−1].
+  </div>
+
+  <div class="note">
+    <div class="label">خطأ شائع</div>
+    [الخطأ الذي يقع فيه الطلاب عادةً عند أوّل لقاء بالموضوع. سطر واحد.]
+  </div>
+
+  <div class="note">
+    <div class="label">لمحة تاريخية</div>
+    [سياق اختياري — متى صيغ المفهوم ومَن صاغه.]</div>
+
+  <div class="note">
+    <div class="label">لماذا يهمّ</div>
+    [تطبيق عملي، جملة واحدة.]
+  </div>
+
+  <div class="note">
+    <div class="label">المحاضرة القادمة</div>
+    [سطر واحد — ما الذي يُبنى على محاضرة اليوم.]
+  </div>
+</aside>
+
+</div>
+
+</body>
+</html>

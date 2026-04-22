@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  Research Proposal  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Title page */
+  .title-page {
+    height: 247mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-left: 10pt;
+    border-left: 4pt solid var(--accent);
+    margin-top: 30mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 9.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1 {
+    font-size: 30pt;
+    line-height: 1.2;
+    color: var(--accent);
+    margin: 0 0 10pt 0;
+    font-weight: 500;
+    max-width: 160mm;
+  }
+
+  .title-page .subtitle {
+    font-size: 13pt;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 150mm;
+    margin-top: 10pt;
+  }
+
+  .title-page .meta-block {
+    border-top: 0.5pt solid var(--border);
+    padding-top: 18pt;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14pt 40pt;
+  }
+
+  .title-page .meta-label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-value {
+    font-size: 11pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 16pt;
+    color: var(--accent);
+    margin: 22pt 0 8pt 0;
+    padding-left: 10pt;
+    border-left: 2.5pt solid var(--accent);
+    font-weight: 500;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12pt;
+    color: var(--text);
+    margin: 14pt 0 5pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-left: 22pt; }
+  li { margin-bottom: 4pt; }
+
+  .abstract {
+    background: var(--table-row-alt);
+    padding: 16pt 18pt;
+    margin-bottom: 14pt;
+    border-left: 2.5pt solid var(--accent-2);
+    font-size: 10.5pt;
+    line-height: 1.65;
+  }
+
+  .abstract .label {
+    font-size: 8.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .abstract .keywords {
+    margin-top: 8pt;
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+  }
+
+  .abstract .keywords strong {
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .q-block {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 12pt 16pt;
+    margin: 12pt 0;
+  }
+
+  .q-block .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .q-block ol { margin: 0; padding-left: 20pt; }
+
+  .timeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .timeline-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .timeline-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .timeline-table .phase {
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .timeline-table .duration {
+    white-space: nowrap;
+    color: var(--text-tertiary);
+    font-size: 9pt;
+  }
+
+  .budget-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .budget-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .budget-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .budget-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .budget-table tfoot td {
+    font-weight: 700;
+    background: var(--table-row-alt);
+  }
+
+  .references {
+    font-size: 9.5pt;
+    line-height: 1.55;
+  }
+
+  .references ol {
+    padding-left: 22pt;
+  }
+
+  .references li {
+    margin-bottom: 6pt;
+    text-indent: -6pt;
+    padding-left: 6pt;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Title page ===== -->
+<div class="title-page">
+  <div class="brand-bar">
+    <div class="eyebrow">Research Proposal</div>
+    <h1>[Working Title of the Proposed Study]</h1>
+    <div class="subtitle">[Optional: a subtitle that narrows scope or names the method]</div>
+  </div>
+
+  <div class="meta-block">
+    <div>
+      <div class="meta-label">Principal Investigator</div>
+      <div class="meta-value">{{ author_name }}</div>
+    </div>
+    <div>
+      <div class="meta-label">Affiliation</div>
+      <div class="meta-value">{{ brand.identity.legal_name if brand.identity.legal_name else '[Department, Institution]' }}</div>
+    </div>
+    <div>
+      <div class="meta-label">Submitted to</div>
+      <div class="meta-value">[Funding body / Department / Committee]</div>
+    </div>
+    <div>
+      <div class="meta-label">Date</div>
+      <div class="meta-value">{{ date_display }}</div>
+    </div>
+    <div>
+      <div class="meta-label">Proposed duration</div>
+      <div class="meta-value">[N months]</div>
+    </div>
+    <div>
+      <div class="meta-label">Requested budget</div>
+      <div class="meta-value">[AED / USD — optional if not financial]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Abstract ===== -->
+<section>
+  <h2>1 · Abstract</h2>
+  <div class="abstract">
+    <div class="label">Summary</div>
+    <p>[Two hundred words. State the problem, the gap in existing literature, the research question, the proposed
+    method, the expected contribution. One sentence each. Avoid hedging — commit to a claim.]</p>
+    <div class="keywords"><strong>Keywords:</strong> [term], [term], [term], [term], [term]</div>
+  </div>
+</section>
+
+<!-- ===== Introduction ===== -->
+<section>
+  <h2>2 · Introduction</h2>
+  <p>[Open with the problem domain. What is at stake? Why does this question matter now?]</p>
+  <p>[Narrow to the specific problem. What remains unresolved?]</p>
+  <p>[State the contribution this proposal will make in one sentence.]</p>
+
+  <div class="q-block">
+    <div class="label">Research Questions</div>
+    <ol>
+      <li>[Primary question — answerable, specific, empirical.]</li>
+      <li>[Sub-question that narrows the primary.]</li>
+      <li>[Sub-question with a different dimension.]</li>
+    </ol>
+  </div>
+
+  <h3>Hypotheses</h3>
+  <ul>
+    <li><strong>H1:</strong> [Testable statement — X is related to Y in direction Z.]</li>
+    <li><strong>H2:</strong> [Testable statement.]</li>
+  </ul>
+</section>
+
+<!-- ===== Literature review ===== -->
+<section>
+  <h2>3 · Literature Review</h2>
+  <p>[Open with the canonical treatment of the problem. Cite the three or four works everyone working in this area
+  has read.]</p>
+
+  <h3>3.1 · [First sub-theme]</h3>
+  <p>[Summarise the state of knowledge. Cite. Point to the limit of current work.]</p>
+
+  <h3>3.2 · [Second sub-theme]</h3>
+  <p>[Summarise. Cite. Point to the limit.]</p>
+
+  <h3>3.3 · Gap</h3>
+  <p>[Name the gap precisely. One paragraph. The gap should be what this proposal will fill — no more, no less.]</p>
+</section>
+
+<!-- ===== Methodology ===== -->
+<section>
+  <h2>4 · Methodology</h2>
+
+  <h3>4.1 · Research design</h3>
+  <p>[Qualitative / quantitative / mixed / computational. Why this design fits the question.]</p>
+
+  <h3>4.2 · Data &amp; sample</h3>
+  <ul>
+    <li><strong>Population:</strong> [who / what is being studied]</li>
+    <li><strong>Sample size:</strong> [N, and power-analysis justification if quantitative]</li>
+    <li><strong>Sampling strategy:</strong> [random / purposive / theoretical / etc.]</li>
+    <li><strong>Data sources:</strong> [interviews / survey / dataset / corpus]</li>
+  </ul>
+
+  <h3>4.3 · Analysis plan</h3>
+  <p>[Statistical tests, coding framework, or computational pipeline. Be specific enough that a reader could
+  replicate the analysis.]</p>
+
+  <h3>4.4 · Ethical considerations</h3>
+  <p>[IRB / ethics-committee approval status. Consent procedures. Data protection (GDPR / UAE Data Law). Risk to
+  participants, if any, and mitigation.]</p>
+</section>
+
+<!-- ===== Timeline ===== -->
+<section>
+  <h2>5 · Timeline</h2>
+  <table class="timeline-table">
+    <thead>
+      <tr>
+        <th style="width: 100pt">Phase</th>
+        <th style="width: 80pt">Duration</th>
+        <th>Activities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="phase">1 · Preparation</td>
+        <td class="duration">Months 1–2</td>
+        <td>Ethics approval · instrument design · pilot test</td>
+      </tr>
+      <tr>
+        <td class="phase">2 · Data collection</td>
+        <td class="duration">Months 3–6</td>
+        <td>[Fieldwork / survey deployment / experiments]</td>
+      </tr>
+      <tr>
+        <td class="phase">3 · Analysis</td>
+        <td class="duration">Months 7–9</td>
+        <td>[Coding / statistical modelling / computational runs]</td>
+      </tr>
+      <tr>
+        <td class="phase">4 · Write-up</td>
+        <td class="duration">Months 10–12</td>
+        <td>Dissertation / paper drafts · revisions · submission</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== Expected outcomes ===== -->
+<section>
+  <h2>6 · Expected Outcomes</h2>
+  <ul>
+    <li><strong>Theoretical contribution:</strong> [What the field will know that it did not before.]</li>
+    <li><strong>Methodological contribution:</strong> [New instrument, technique, or procedure — if applicable.]</li>
+    <li><strong>Practical contribution:</strong> [Policy, industry, or applied implication.]</li>
+    <li><strong>Publications:</strong> [Target journals and conferences.]</li>
+  </ul>
+</section>
+
+<!-- ===== Budget ===== -->
+<section>
+  <h2>7 · Budget</h2>
+  <table class="budget-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Detail</th>
+        <th style="width: 80pt">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Personnel</td><td>[Research assistant, N months]</td><td class="num">[00,000]</td></tr>
+      <tr><td>Equipment</td><td>[Software licences / hardware]</td><td class="num">[00,000]</td></tr>
+      <tr><td>Travel</td><td>[Fieldwork / conference]</td><td class="num">[00,000]</td></tr>
+      <tr><td>Materials</td><td>[Participant incentives / publication fees]</td><td class="num">[00,000]</td></tr>
+      <tr><td>Other</td><td>[Specify]</td><td class="num">[00,000]</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="2">Total</td><td class="num">[AED 000,000]</td></tr>
+    </tfoot>
+  </table>
+</section>
+
+<!-- ===== References ===== -->
+<section class="references">
+  <h2>8 · References</h2>
+  <ol>
+    <li>[Author, A. (YYYY). <em>Title of work</em>. Publisher.]</li>
+    <li>[Author, B. (YYYY). Title of article. <em>Journal Name</em>, Vol(Issue), pp–pp.]</li>
+    <li>[Author, C. &amp; Author, D. (YYYY). Title. In <em>Edited Volume</em> (pp. xx–yy). Publisher.]</li>
+    <li>[Additional entries — use citation style specified by the host institution or funder.]</li>
+  </ol>
+</section>
+
+</body>
+</html>

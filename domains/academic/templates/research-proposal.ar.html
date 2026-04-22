@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  مقترح بحثي  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11.5pt;
+    line-height: 1.95;
+    color: var(--text);
+  }
+
+  /* Title page */
+  .title-page {
+    height: 247mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-right: 10pt;
+    border-right: 4pt solid var(--accent);
+    margin-top: 30mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 9.5pt;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1 {
+    font-size: 28pt;
+    line-height: 1.3;
+    color: var(--accent);
+    margin: 0 0 10pt 0;
+    font-weight: 700;
+    max-width: 160mm;
+  }
+
+  .title-page .subtitle {
+    font-size: 13pt;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    max-width: 150mm;
+    margin-top: 10pt;
+  }
+
+  .title-page .meta-block {
+    border-top: 0.5pt solid var(--border);
+    padding-top: 18pt;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14pt 40pt;
+  }
+
+  .title-page .meta-label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-value {
+    font-size: 11pt;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .title-page .meta-value.ltr {
+    direction: ltr;
+    unicode-bidi: embed;
+    text-align: right;
+  }
+
+  h2 {
+    font-size: 16pt;
+    color: var(--accent);
+    margin: 22pt 0 8pt 0;
+    padding-right: 10pt;
+    border-right: 2.5pt solid var(--accent);
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-size: 12.5pt;
+    color: var(--text);
+    margin: 14pt 0 5pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+  ul, ol { margin: 6pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 4pt; }
+
+  .abstract {
+    background: var(--table-row-alt);
+    padding: 16pt 18pt;
+    margin-bottom: 14pt;
+    border-right: 2.5pt solid var(--accent-2);
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  .abstract .label {
+    font-size: 9pt;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .abstract .keywords {
+    margin-top: 8pt;
+    font-size: 10pt;
+    color: var(--text-secondary);
+  }
+
+  .abstract .keywords strong {
+    color: var(--accent-2);
+    font-weight: 700;
+  }
+
+  .q-block {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    padding: 12pt 16pt;
+    margin: 12pt 0;
+  }
+
+  .q-block .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .q-block ol { margin: 0; padding-right: 20pt; padding-left: 0; }
+
+  .timeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10.5pt;
+  }
+
+  .timeline-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .timeline-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .timeline-table .phase {
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .timeline-table .duration {
+    white-space: nowrap;
+    color: var(--text-tertiary);
+    font-size: 9.5pt;
+  }
+
+  .budget-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10.5pt;
+  }
+
+  .budget-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .budget-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .budget-table .num {
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .budget-table tfoot td {
+    font-weight: 700;
+    background: var(--table-row-alt);
+  }
+
+  .references {
+    font-size: 10pt;
+    line-height: 1.65;
+  }
+
+  .references ol {
+    padding-right: 22pt;
+    padding-left: 0;
+  }
+
+  .references li {
+    margin-bottom: 6pt;
+  }
+  </style>
+</head>
+<body>
+
+<!-- ===== Title page ===== -->
+<div class="title-page">
+  <div class="brand-bar">
+    <div class="eyebrow">مقترح بحثي</div>
+    <h1>[العنوان المبدئي للدراسة المقترحة]</h1>
+    <div class="subtitle">[اختياري: عنوان فرعي يضيّق النطاق أو يسمّي المنهج]</div>
+  </div>
+
+  <div class="meta-block">
+    <div>
+      <div class="meta-label">الباحث الرئيسي</div>
+      <div class="meta-value">{{ author_name }}</div>
+    </div>
+    <div>
+      <div class="meta-label">الجهة</div>
+      <div class="meta-value">{{ brand.identity.legal_name if brand.identity.legal_name else '[القسم، المؤسسة]' }}</div>
+    </div>
+    <div>
+      <div class="meta-label">مقدَّم إلى</div>
+      <div class="meta-value">[جهة التمويل / القسم / اللجنة]</div>
+    </div>
+    <div>
+      <div class="meta-label">التاريخ</div>
+      <div class="meta-value">{{ date_display }}</div>
+    </div>
+    <div>
+      <div class="meta-label">المدّة المقترحة</div>
+      <div class="meta-value">[N شهراً]</div>
+    </div>
+    <div>
+      <div class="meta-label">الميزانية المطلوبة</div>
+      <div class="meta-value">[درهم / دولار]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Abstract ===== -->
+<section>
+  <h2>١ · المُلخَّص</h2>
+  <div class="abstract">
+    <div class="label">ملخّص تنفيذي</div>
+    <p>[مئتا كلمة. اذكر المشكلة، الفجوة في الأدبيات، السؤال البحثي، المنهج المقترح، الإسهام المتوقّع. جملة لكلّ عنصر.
+    تجنّب التحفّظ — التزم بادّعاء محدّد.]</p>
+    <div class="keywords"><strong>الكلمات المفتاحية:</strong> [مصطلح]، [مصطلح]، [مصطلح]، [مصطلح]، [مصطلح]</div>
+  </div>
+</section>
+
+<!-- ===== Introduction ===== -->
+<section>
+  <h2>٢ · المقدّمة</h2>
+  <p>[افتح بمجال المشكلة. ما المحكّ؟ لماذا يهمّ هذا السؤال الآن؟]</p>
+  <p>[ضيّق إلى المشكلة المحدّدة. ما الذي يبقى غير محسوم؟]</p>
+  <p>[عرّف الإسهام الذي سيقدّمه هذا المقترح في جملة واحدة.]</p>
+
+  <div class="q-block">
+    <div class="label">الأسئلة البحثية</div>
+    <ol>
+      <li>[السؤال الرئيسي — قابل للإجابة، محدّد، تجريبي.]</li>
+      <li>[سؤال فرعي يضيّق الرئيسي.]</li>
+      <li>[سؤال فرعي ببعد مختلف.]</li>
+    </ol>
+  </div>
+
+  <h3>الفرضيات</h3>
+  <ul>
+    <li><strong>ف١:</strong> [عبارة قابلة للاختبار — X مرتبط بـ Y باتّجاه Z.]</li>
+    <li><strong>ف٢:</strong> [عبارة قابلة للاختبار.]</li>
+  </ul>
+</section>
+
+<!-- ===== Literature review ===== -->
+<section>
+  <h2>٣ · مراجعة الأدبيات</h2>
+  <p>[افتح بالمعالجة المرجعية للمشكلة. استشهد بالأعمال الثلاثة أو الأربعة التي قرأها كلّ من عمل في هذا المجال.]</p>
+
+  <h3>٣٫١ · [المحور الأوّل]</h3>
+  <p>[لخّص حالة المعرفة. وثّق. أشر إلى حدود العمل الحالي.]</p>
+
+  <h3>٣٫٢ · [المحور الثاني]</h3>
+  <p>[لخّص. وثّق. أشر إلى الحدود.]</p>
+
+  <h3>٣٫٣ · الفجوة</h3>
+  <p>[سمِّ الفجوة بدقّة. فقرة واحدة. الفجوة يجب أن تكون ما سيردمه هذا المقترح — لا أكثر ولا أقلّ.]</p>
+</section>
+
+<!-- ===== Methodology ===== -->
+<section>
+  <h2>٤ · المنهجية</h2>
+
+  <h3>٤٫١ · تصميم البحث</h3>
+  <p>[كيفي / كمّي / مختلط / حاسوبي. لماذا يناسب هذا التصميم السؤال.]</p>
+
+  <h3>٤٫٢ · البيانات والعيّنة</h3>
+  <ul>
+    <li><strong>المجتمع:</strong> [مَن / ما يُدرَس]</li>
+    <li><strong>حجم العيّنة:</strong> [N، مع مبرّر تحليل القدرة إن كان كمّياً]</li>
+    <li><strong>استراتيجية أخذ العيّنة:</strong> [عشوائية / غرضية / نظرية / غيرها]</li>
+    <li><strong>مصادر البيانات:</strong> [مقابلات / استبيان / قاعدة بيانات / متن]</li>
+  </ul>
+
+  <h3>٤٫٣ · خطة التحليل</h3>
+  <p>[اختبارات إحصائية، إطار ترميز، أو خطّ أنابيب حاسوبي. محدّد بما يكفي لإعادة إنتاج التحليل.]</p>
+
+  <h3>٤٫٤ · الاعتبارات الأخلاقية</h3>
+  <p>[حالة موافقة لجنة الأخلاقيات. إجراءات الموافقة. حماية البيانات (اللائحة الأوروبية / قانون البيانات الإماراتي).
+  المخاطر على المشاركين والتخفيف.]</p>
+</section>
+
+<!-- ===== Timeline ===== -->
+<section>
+  <h2>٥ · الجدول الزمني</h2>
+  <table class="timeline-table">
+    <thead>
+      <tr>
+        <th style="width: 110pt">المرحلة</th>
+        <th style="width: 80pt">المدّة</th>
+        <th>الأنشطة</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="phase">١ · التحضير</td>
+        <td class="duration">الشهران ١–٢</td>
+        <td>موافقة الأخلاقيات · تصميم الأداة · اختبار تجريبي</td>
+      </tr>
+      <tr>
+        <td class="phase">٢ · جمع البيانات</td>
+        <td class="duration">الشهور ٣–٦</td>
+        <td>[عمل ميداني / نشر استبيان / تجارب]</td>
+      </tr>
+      <tr>
+        <td class="phase">٣ · التحليل</td>
+        <td class="duration">الشهور ٧–٩</td>
+        <td>[ترميز / نمذجة إحصائية / تشغيل حاسوبي]</td>
+      </tr>
+      <tr>
+        <td class="phase">٤ · الكتابة</td>
+        <td class="duration">الشهور ١٠–١٢</td>
+        <td>مسوّدات الرسالة / الأوراق · المراجعة · التقديم</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ===== Expected outcomes ===== -->
+<section>
+  <h2>٦ · النتائج المتوقّعة</h2>
+  <ul>
+    <li><strong>الإسهام النظري:</strong> [ما الذي ستعرفه الحقل بعد هذا البحث ولم يعرفه قبله.]</li>
+    <li><strong>الإسهام المنهجي:</strong> [أداة أو تقنية أو إجراء جديد — إن وُجد.]</li>
+    <li><strong>الإسهام التطبيقي:</strong> [تبعات على السياسة أو الصناعة أو الممارسة.]</li>
+    <li><strong>النشر:</strong> [الدوريات والمؤتمرات المستهدفة.]</li>
+  </ul>
+</section>
+
+<!-- ===== Budget ===== -->
+<section>
+  <h2>٧ · الميزانية</h2>
+  <table class="budget-table">
+    <thead>
+      <tr>
+        <th>البند</th>
+        <th>التفصيل</th>
+        <th style="width: 90pt">المبلغ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>الكادر البشري</td><td>[مساعد باحث، N شهراً]</td><td class="num">00,000</td></tr>
+      <tr><td>المعدّات</td><td>[تراخيص برمجية / عتاد]</td><td class="num">00,000</td></tr>
+      <tr><td>السفر</td><td>[عمل ميداني / مؤتمر]</td><td class="num">00,000</td></tr>
+      <tr><td>المواد</td><td>[حوافز المشاركين / رسوم النشر]</td><td class="num">00,000</td></tr>
+      <tr><td>أخرى</td><td>[حدّد]</td><td class="num">00,000</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="2">الإجمالي</td><td class="num">AED 000,000</td></tr>
+    </tfoot>
+  </table>
+</section>
+
+<!-- ===== References ===== -->
+<section class="references">
+  <h2>٨ · المراجع</h2>
+  <ol>
+    <li>[المؤلف، (السنة). <em>عنوان العمل</em>. دار النشر.]</li>
+    <li>[المؤلف، (السنة). عنوان المقال. <em>اسم الدورية</em>، المجلّد(العدد)، ص–ص.]</li>
+    <li>[المؤلف وآخرون. (السنة). العنوان. في <em>الكتاب المحرَّر</em> (ص xx–yy). دار النشر.]</li>
+    <li>[مدخلات إضافية — استخدم أسلوب التوثيق الذي تشترطه الجهة المستضيفة أو الممولة.]</li>
+  </ol>
+</section>
+
+</body>
+</html>

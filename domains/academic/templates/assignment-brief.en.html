@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Assignment Brief  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .masthead {
+    margin-bottom: 16pt;
+  }
+
+  .masthead .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  .masthead h1 {
+    font-size: 22pt;
+    color: var(--accent);
+    margin: 0 0 3pt 0;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .masthead .course-line {
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .due-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 10pt 14pt;
+    margin: 12pt 0 18pt 0;
+  }
+
+  .due-banner .due-label {
+    font-size: 8.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 2pt;
+  }
+
+  .due-banner .due-value {
+    font-size: 13pt;
+    font-weight: 600;
+  }
+
+  .due-banner .weight {
+    text-align: right;
+  }
+
+  .due-banner .weight .pct {
+    font-size: 18pt;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 8pt 0;
+    padding-bottom: 2pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 12pt 0 5pt 0;
+    font-weight: 700;
+  }
+
+  ul, ol { margin: 6pt 0; padding-left: 20pt; }
+  li { margin-bottom: 3pt; }
+
+  .rubric-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 9.5pt;
+  }
+
+  .rubric-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 8pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .rubric-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+
+  .rubric-table .criterion { font-weight: 700; color: var(--accent); }
+  .rubric-table .pct { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+
+  .callout {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10pt;
+  }
+
+  .callout.warn {
+    background: var(--warning-bg);
+    border-left-color: var(--warning-border);
+  }
+
+  .callout .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .callout.warn .label { color: var(--warning-border); }
+
+  .submission-box {
+    border: 0.5pt solid var(--border);
+    padding: 12pt 14pt;
+    margin: 10pt 0;
+  }
+
+  .submission-box h3 { margin-top: 0; }
+  .submission-box ul { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">Assignment Brief</div>
+  <h1>[Assignment Title]</h1>
+  <div class="course-line">[DEPT-000 · Course Title] · {{ author_name }}</div>
+</header>
+
+<div class="due-banner">
+  <div>
+    <div class="due-label">Due</div>
+    <div class="due-value">[Day, Month DD, YYYY · HH:MM]</div>
+  </div>
+  <div class="weight">
+    <div class="due-label">Weight</div>
+    <div class="pct">[25%]</div>
+  </div>
+</div>
+
+<section>
+  <h2>Overview</h2>
+  <p>[One paragraph. What the student will produce and why. Frame it as a response to a question or problem that the
+  course has built toward. Do not describe the format yet — that belongs in Deliverables.]</p>
+</section>
+
+<section>
+  <h2>Learning Objectives Assessed</h2>
+  <p>This assignment assesses the following course objectives:</p>
+  <ul>
+    <li>[Objective 1 — verbatim or closely mapped from syllabus]</li>
+    <li>[Objective 2]</li>
+    <li>[Objective 3]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Task</h2>
+  <p>[Describe the task precisely. If there's a prompt to respond to, place it in quotes. If there are choices, enumerate them.]</p>
+  <h3>Required Elements</h3>
+  <ol>
+    <li>[Element 1 — specific, checkable]</li>
+    <li>[Element 2]</li>
+    <li>[Element 3]</li>
+    <li>[Element 4]</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Deliverables</h2>
+  <div class="submission-box">
+    <h3>What to submit</h3>
+    <ul>
+      <li><strong>Format:</strong> [PDF / DOCX / Jupyter notebook / etc.]</li>
+      <li><strong>Length:</strong> [1,500–2,000 words / 8–10 pages / N lines of code]</li>
+      <li><strong>File naming:</strong> <code>LASTNAME_FIRSTNAME_[assignment-slug].pdf</code></li>
+      <li><strong>Citation style:</strong> [APA 7 / MLA 9 / Chicago / IEEE]</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Grading Rubric</h2>
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th style="width: 120pt">Criterion</th>
+        <th>Description</th>
+        <th style="width: 50pt">Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="criterion">Argument &amp; thesis</td>
+        <td>Claim is specific, defensible, and sustained across the piece.</td>
+        <td class="pct">30%</td>
+      </tr>
+      <tr>
+        <td class="criterion">Evidence &amp; analysis</td>
+        <td>Evidence is relevant and accurately cited; analysis moves beyond summary.</td>
+        <td class="pct">30%</td>
+      </tr>
+      <tr>
+        <td class="criterion">Structure &amp; clarity</td>
+        <td>Logical flow, clear transitions, readable prose.</td>
+        <td class="pct">20%</td>
+      </tr>
+      <tr>
+        <td class="criterion">Mechanics &amp; citation</td>
+        <td>Grammar, formatting, citation style applied consistently.</td>
+        <td class="pct">10%</td>
+      </tr>
+      <tr>
+        <td class="criterion">Originality</td>
+        <td>Independent thinking; goes beyond course reading.</td>
+        <td class="pct">10%</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>Submission Instructions</h2>
+  <ol>
+    <li>Upload the file to [LMS link / email].</li>
+    <li>Submit by [time] on [date]; late submissions lose [5%] per calendar day up to [N] days, after which work will not be accepted without a documented excuse.</li>
+    <li>Keep a backup copy of your file until the grade is returned.</li>
+  </ol>
+
+  <div class="callout warn">
+    <div class="label">Academic Integrity</div>
+    All submitted work must be your own. Cite every quoted, paraphrased, or summarised idea. Use of AI tools must follow
+    the policy stated in the syllabus — when in doubt, ask before submitting.
+  </div>
+</section>
+
+<section>
+  <h2>Support &amp; Office Hours</h2>
+  <p>Questions on this brief: email {{ brand.identity.email if brand.identity.email else '[instructor@example.edu]' }}
+  or visit office hours [day, time]. Questions asked after [date] may not receive a reply before the deadline.</p>
+</section>
+
+</body>
+</html>

@@ -146,6 +146,17 @@ Banned phrases that signal LLM output:
 - Avoid recommending action verbs in research reports ("organizations should…"); reserve recommendations for audit and progress types.
 - Arabic peers: keep tables LTR-numeric where numbers appear (use `direction: ltr` on `.num` cells). Don't translate acronyms like `AUD-001` — keep Latin for traceability.
 
+### Academic (Syllabus, Assignment-brief, Lecture-notes, Research-proposal)
+
+- **Measurable learning objectives.** Every objective starts with a verb from Bloom's upper tiers where possible — "analyze," "evaluate," "design" — not "understand" or "know." The objective names a behavior an instructor can observe and assess.
+- **Syllabus is a contract.** Late policy, grade weights, and attendance expectations must be unambiguous. If a student appeals a grade in week 10, the syllabus is the document you both point at. Vague phrasing loses that appeal.
+- **Assignment briefs name the rubric before the task.** Students write to the rubric; if the rubric shows up at the bottom, half the class misses it. Lead with weight and criteria, then the task.
+- **Lecture notes are a handout, not a transcript.** Compress the lecture into the 5–7 claims that must survive the week. Margin notes (prerequisite, common mistake, next-lecture teaser) do more work than long body prose.
+- **Research proposals commit.** Hedge-language is a tell that the writer does not yet know what they're proposing. Replace "this study aims to explore" with "this study will measure X in Y using Z." Reviewers reward specificity.
+- **Gap section is the core of a literature review.** Three or four paragraphs of prior work are prologue; the gap paragraph is why the proposal deserves funding. Don't bury it.
+- **Citations carry citation style from start to finish.** Pick APA / MLA / Chicago / IEEE once. Mixed styles look unprofessional and fail some committees.
+- **Arabic academic convention:** numbered sections use Eastern-Arabic digits (١ ٢ ٣) in running text but keep equations, DOIs, ISBNs, and years LTR with Western digits via `direction: ltr`. Mixing both is expected — not a bug.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

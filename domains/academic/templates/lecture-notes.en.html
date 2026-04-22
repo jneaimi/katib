@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Lecture Notes  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .masthead {
+    border-bottom: 1pt solid var(--accent);
+    padding-bottom: 10pt;
+    margin-bottom: 16pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .masthead .course {
+    font-size: 9.5pt;
+    color: var(--accent-2);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .masthead .date {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+  }
+
+  h1 {
+    font-size: 22pt;
+    color: var(--accent);
+    margin: 0 0 14pt 0;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  h1 .lecture-num {
+    font-size: 11pt;
+    color: var(--text-tertiary);
+    font-weight: 400;
+    margin-right: 10pt;
+    letter-spacing: 0.05em;
+  }
+
+  .objectives-box {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 0 0 20pt 0;
+  }
+
+  .objectives-box .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .objectives-box ol { margin: 4pt 0 0 0; padding-left: 18pt; }
+  .objectives-box li { margin-bottom: 2pt; font-size: 10pt; }
+
+  /* Two-column layout: main content + margin notes */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 45mm;
+    gap: 10mm;
+  }
+
+  main.content h2 {
+    font-size: 14pt;
+    color: var(--accent);
+    margin: 16pt 0 6pt 0;
+    padding-bottom: 2pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 500;
+  }
+
+  main.content h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 12pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  main.content p { margin: 6pt 0; }
+  main.content ul, main.content ol { margin: 6pt 0; padding-left: 20pt; }
+  main.content li { margin-bottom: 3pt; }
+
+  .key-term {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .definition {
+    border-left: 2pt solid var(--accent-2);
+    padding-left: 10pt;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+
+  .definition .term {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 10.5pt;
+    display: block;
+    margin-bottom: 2pt;
+  }
+
+  .formula {
+    background: var(--code-bg);
+    padding: 8pt 12pt;
+    margin: 10pt 0;
+    font-family: 'STIX Two Math', 'Cambria Math', 'Times New Roman', serif;
+    font-size: 11pt;
+    text-align: center;
+    border: 0.5pt solid var(--border);
+  }
+
+  .formula .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    font-family: var(--font-primary);
+    display: block;
+    margin-top: 4pt;
+  }
+
+  aside.margin-notes {
+    font-size: 8.5pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+  }
+
+  aside.margin-notes .note {
+    background: var(--table-row-alt);
+    padding: 7pt 9pt;
+    margin-bottom: 10pt;
+    border-top: 1pt solid var(--border);
+  }
+
+  aside.margin-notes .note .label {
+    font-size: 7.5pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 2pt;
+  }
+
+  .example-box {
+    border: 0.5pt solid var(--border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    background: var(--page-bg);
+  }
+
+  .example-box .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .exercises {
+    background: var(--warning-bg);
+    border-left: 3pt solid var(--warning-border);
+    padding: 10pt 14pt;
+    margin: 16pt 0;
+  }
+
+  .exercises .label {
+    font-size: 8pt;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--warning-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .further-reading {
+    margin-top: 16pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 9.5pt;
+  }
+
+  .further-reading h3 {
+    font-size: 10pt;
+    color: var(--accent);
+    margin: 0 0 4pt 0;
+  }
+
+  .further-reading ul { padding-left: 18pt; }
+  .further-reading li { margin-bottom: 2pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="course">[DEPT-000 · Course Title]</div>
+  <div class="date">{{ date_display }}</div>
+</header>
+
+<h1><span class="lecture-num">LECTURE [N]</span>[Lecture Title]</h1>
+
+<div class="objectives-box">
+  <div class="label">Learning Objectives — after this lecture you will be able to:</div>
+  <ol>
+    <li>[Specific, measurable outcome]</li>
+    <li>[Second outcome]</li>
+    <li>[Third outcome]</li>
+  </ol>
+</div>
+
+<div class="content-grid">
+
+<main class="content">
+
+  <section>
+    <h2>1 · Motivation</h2>
+    <p>[Open with a concrete problem or question. Why does today's topic exist? What cannot be done without it? Two to
+    four sentences. Avoid restating the objectives.]</p>
+  </section>
+
+  <section>
+    <h2>2 · Core Concepts</h2>
+
+    <div class="definition">
+      <span class="term">[Key term]</span>
+      [Precise definition in one or two sentences. Avoid circular phrasing — don't use the term in its own definition.]
+    </div>
+
+    <div class="definition">
+      <span class="term">[Second key term]</span>
+      [Definition.]
+    </div>
+
+    <p>[Connecting paragraph. How do these terms relate? Use a <span class="key-term">signal word</span> when a term
+    appears for the first time in running text.]</p>
+
+    <h3>2.1 · [Subtopic]</h3>
+    <p>[Body paragraph.]</p>
+
+    <div class="formula">
+      f(x) = ax² + bx + c
+      <span class="label">Eq. 1 — [what the formula expresses]</span>
+    </div>
+
+    <h3>2.2 · [Subtopic]</h3>
+    <p>[Body paragraph.]</p>
+  </section>
+
+  <section>
+    <h2>3 · Worked Example</h2>
+    <div class="example-box">
+      <div class="label">Example 1</div>
+      <p><em>Problem.</em> [State the problem precisely.]</p>
+      <p><em>Approach.</em> [Step-by-step reasoning. Number the steps if there are more than three.]</p>
+      <p><em>Answer.</em> [Final result with units.]</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>4 · [Further Section]</h2>
+    <p>[Body paragraph. Build on the worked example or introduce a contrast case.]</p>
+    <ul>
+      <li>[Point]</li>
+      <li>[Point]</li>
+      <li>[Point]</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>5 · Summary</h2>
+    <p>[Three to five sentences. Recap the one idea a student should remember, the one procedure they should
+    practise, and the one common mistake to avoid. Avoid bullet lists here — the narrative reinforces the mental model.]</p>
+  </section>
+
+  <div class="exercises">
+    <div class="label">Exercises for next session</div>
+    <ol>
+      <li>[Problem 1 — directly exercises Objective 1]</li>
+      <li>[Problem 2 — directly exercises Objective 2]</li>
+      <li>[Problem 3 — optional, stretches beyond lecture content]</li>
+    </ol>
+  </div>
+
+  <div class="further-reading">
+    <h3>Further Reading</h3>
+    <ul>
+      <li>[Author, <em>Title</em>, pp. xx–yy — canonical treatment]</li>
+      <li>[Author, "Article," Journal Vol(Issue), pp. xx–yy — alternative angle]</li>
+    </ul>
+  </div>
+
+</main>
+
+<aside class="margin-notes">
+  <div class="note">
+    <div class="label">Prerequisite</div>
+    Students should already be comfortable with [prior concept from Lecture N−1].
+  </div>
+
+  <div class="note">
+    <div class="label">Common mistake</div>
+    [Mistake students typically make when first meeting this topic. One line.]
+  </div>
+
+  <div class="note">
+    <div class="label">Historical note</div>
+    [Optional context — when a concept was first formulated and by whom.]
+  </div>
+
+  <div class="note">
+    <div class="label">Why it matters</div>
+    [Real-world application, in one sentence.]
+  </div>
+
+  <div class="note">
+    <div class="label">Next lecture</div>
+    [One-line teaser — what builds on today's lecture.]
+  </div>
+</aside>
+
+</div>
+
+</body>
+</html>

@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio |
+| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal`, `academic` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio · syllabus, assignment-brief, lecture-notes, research-proposal |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -165,15 +165,18 @@ Each doc type ships as EN + AR peer templates at
 | `personal` | `cv` | 1–2 | `CV-*` | Two-column CV with GCC fields (nationality, visa, photo, languages) |
 | | `cover-letter` | 1 | `CL-*` | Three-paragraph role application with masthead |
 | | `bio` | 1 | `BIO-*` | Speaker bio with short/medium/long variants |
+| `academic` | `syllabus` | 3–6 | `SYL-*` | Course overview: objectives, schedule, grading, policies |
+| | `assignment-brief` | 2–4 | `AB-*` | Student-facing task spec with rubric table |
+| | `lecture-notes` | 4–12 | `LN-*` | Main column + margin notes + exercises |
+| | `research-proposal` | 8–20 | `RP-*` | Title page + abstract + methodology + timeline + budget |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-Planned future domains — `academic` (syllabi, lecture notes),
-`financial` (invoices), `editorial` (white papers), `marketing-print`
-(sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) — are
-listed in the [Roadmap](#roadmap) and deferred in v0.4.
+Planned future domains — `financial` (invoices), `editorial` (white papers),
+`marketing-print` (sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) —
+are listed in the [Roadmap](#roadmap) and deferred past v0.5.
 
 ---
 

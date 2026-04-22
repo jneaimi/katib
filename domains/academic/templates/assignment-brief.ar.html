@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  وصف الواجب  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.85;
+    color: var(--text);
+  }
+
+  .masthead { margin-bottom: 16pt; }
+
+  .masthead .eyebrow {
+    font-size: 9.5pt;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .masthead h1 {
+    font-size: 22pt;
+    color: var(--accent);
+    margin: 0 0 3pt 0;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .masthead .course-line {
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+  }
+
+  .due-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 10pt 14pt;
+    margin: 12pt 0 18pt 0;
+  }
+
+  .due-banner .due-label {
+    font-size: 9pt;
+    opacity: 0.85;
+    margin-bottom: 2pt;
+  }
+
+  .due-banner .due-value {
+    font-size: 13pt;
+    font-weight: 700;
+  }
+
+  .due-banner .weight { text-align: left; }
+
+  .due-banner .weight .pct {
+    font-size: 18pt;
+    font-weight: 700;
+    line-height: 1;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 8pt 0;
+    padding-bottom: 2pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 11.5pt;
+    color: var(--text);
+    margin: 12pt 0 5pt 0;
+    font-weight: 700;
+  }
+
+  ul, ol { margin: 6pt 0; padding-right: 20pt; padding-left: 0; }
+  li { margin-bottom: 3pt; }
+
+  .rubric-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .rubric-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 8pt;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .rubric-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 8pt;
+    vertical-align: top;
+  }
+
+  .rubric-table .criterion { font-weight: 700; color: var(--accent); }
+  .rubric-table .pct { text-align: left; font-variant-numeric: tabular-nums; font-weight: 700; direction: ltr; unicode-bidi: embed; }
+
+  .callout {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    font-size: 10.5pt;
+  }
+
+  .callout.warn {
+    background: var(--warning-bg);
+    border-right-color: var(--warning-border);
+  }
+
+  .callout .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .callout.warn .label { color: var(--warning-border); }
+
+  .submission-box {
+    border: 0.5pt solid var(--border);
+    padding: 12pt 14pt;
+    margin: 10pt 0;
+  }
+
+  .submission-box h3 { margin-top: 0; }
+  .submission-box ul { margin-bottom: 0; }
+
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--code-bg);
+    padding: 1pt 4pt;
+    font-size: 9.5pt;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="eyebrow">وصف الواجب</div>
+  <h1>[عنوان الواجب]</h1>
+  <div class="course-line">[رمز المقرر — اسم المقرر] · {{ author_name }}</div>
+</header>
+
+<div class="due-banner">
+  <div>
+    <div class="due-label">موعد التسليم</div>
+    <div class="due-value">[اليوم، DD الشهر YYYY · HH:MM]</div>
+  </div>
+  <div class="weight">
+    <div class="due-label">الوزن</div>
+    <div class="pct">25%</div>
+  </div>
+</div>
+
+<section>
+  <h2>نظرة عامّة</h2>
+  <p>[فقرة واحدة. ما الذي سينتجه الطالب ولماذا. قدّم المهمّة باعتبارها استجابة لسؤال أو مشكلة بنى المقرر أساسها.
+  لا تصف الصيغة الشكلية هنا — مكانها قسم التسليمات.]</p>
+</section>
+
+<section>
+  <h2>مخرجات التعلّم المُقيَّمة</h2>
+  <p>يُقيّم هذا الواجب مخرجات المقرر التالية:</p>
+  <ul>
+    <li>[المخرج ١ — حرفياً أو مصاغاً من خطة المقرر]</li>
+    <li>[المخرج ٢]</li>
+    <li>[المخرج ٣]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>المهمّة</h2>
+  <p>[صِف المهمّة بدقّة. إن كان ثمّة سؤال موجّه، ضعه بين علامتَي اقتباس. إن كان ثمّة خيارات، عدّدها.]</p>
+  <h3>العناصر المطلوبة</h3>
+  <ol>
+    <li>[عنصر ١ — محدّد وقابل للتحقّق]</li>
+    <li>[عنصر ٢]</li>
+    <li>[عنصر ٣]</li>
+    <li>[عنصر ٤]</li>
+  </ol>
+</section>
+
+<section>
+  <h2>التسليمات</h2>
+  <div class="submission-box">
+    <h3>ما يُسلَّم</h3>
+    <ul>
+      <li><strong>الصيغة:</strong> [PDF / DOCX / Jupyter notebook / غيرها]</li>
+      <li><strong>الطول:</strong> [١٥٠٠–٢٠٠٠ كلمة / ٨–١٠ صفحات / N سطر برمجي]</li>
+      <li><strong>تسمية الملف:</strong> <code dir="ltr">LASTNAME_FIRSTNAME_[assignment-slug].pdf</code></li>
+      <li><strong>أسلوب التوثيق:</strong> [APA 7 / MLA 9 / Chicago / IEEE]</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>سلم التقييم</h2>
+  <table class="rubric-table">
+    <thead>
+      <tr>
+        <th style="width: 120pt">المعيار</th>
+        <th>الوصف</th>
+        <th style="width: 50pt">الوزن</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="criterion">الأطروحة والحجّة</td>
+        <td>ادّعاء محدّد قابل للدفاع، يمتدّ على طول العمل.</td>
+        <td class="pct">30%</td>
+      </tr>
+      <tr>
+        <td class="criterion">الأدلّة والتحليل</td>
+        <td>الأدلّة ذات صلة وموثّقة بدقّة؛ التحليل يتجاوز التلخيص.</td>
+        <td class="pct">30%</td>
+      </tr>
+      <tr>
+        <td class="criterion">البنية والوضوح</td>
+        <td>تدفّق منطقي، انتقالات واضحة، لغة مقروءة.</td>
+        <td class="pct">20%</td>
+      </tr>
+      <tr>
+        <td class="criterion">الصياغة والتوثيق</td>
+        <td>سلامة لغوية، اتّساق في التنسيق وأسلوب التوثيق.</td>
+        <td class="pct">10%</td>
+      </tr>
+      <tr>
+        <td class="criterion">الأصالة</td>
+        <td>تفكير مستقلّ يتجاوز مراجع المقرر.</td>
+        <td class="pct">10%</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2>تعليمات التسليم</h2>
+  <ol>
+    <li>ارفع الملف إلى [رابط منصّة التعلّم / البريد].</li>
+    <li>التسليم قبل الساعة [الوقت] في تاريخ [التاريخ]؛ التسليم المتأخّر يخسر [٥٪] عن كلّ يوم تقويمي حتى [N] أيام، وبعدها لا يُقبل العمل إلا بعذر موثّق.</li>
+    <li>احتفظ بنسخة احتياطية حتى تُعاد الدرجة.</li>
+  </ol>
+
+  <div class="callout warn">
+    <div class="label">النزاهة الأكاديمية</div>
+    كلّ عمل مُسلَّم يجب أن يكون من إنجازك. وثّق كلّ اقتباس أو إعادة صياغة أو تلخيص. استخدام أدوات الذكاء الاصطناعي
+    يخضع للسياسة الواردة في خطة المقرر — عند الشكّ، اسأل قبل التسليم.
+  </div>
+</section>
+
+<section>
+  <h2>الدعم والساعات المكتبية</h2>
+  <p>استفسارات هذا الواجب: راسل <span style="direction:ltr; unicode-bidi:embed">{{ brand.identity.email if brand.identity.email else '[instructor@example.edu]' }}</span>
+  أو احضر الساعات المكتبية [اليوم، الوقت]. الأسئلة بعد [تاريخ] قد لا تلقى ردّاً قبل الموعد النهائي.</p>
+</section>
+
+</body>
+</html>
