@@ -1,0 +1,37 @@
+{#
+  Timeline baseline with tick marks + date labels.
+
+  Context:
+    axis.y           (int)        — baseline y-coordinate
+    axis.x_start     (int)        — baseline start x
+    axis.x_end       (int)        — baseline end x
+    axis.ticks       (list[dict]) — each: {x: N, label: 'Q1 2026'}
+
+  Usage:
+    {% set axis = {
+      'y': 160, 'x_start': 40, 'x_end': 960,
+      'ticks': [
+        {'x': 120, 'label': 'Q1 2026'},
+        {'x': 320, 'label': 'Q2 2026'},
+        {'x': 520, 'label': 'Q3 2026'},
+        {'x': 720, 'label': 'Q4 2026'}
+      ]
+    } %}
+    {% include 'references/diagrams/snippets/timeline-axis.svg.j2' %}
+#}
+<!-- Baseline -->
+<line x1="{{ axis.x_start }}" y1="{{ axis.y }}"
+      x2="{{ axis.x_end }}"   y2="{{ axis.y }}"
+      stroke="{{ colors.text_secondary }}" stroke-width="1"/>
+
+{% for tick in axis.ticks %}
+<!-- Tick -->
+<line x1="{{ tick.x }}" y1="{{ axis.y - 4 }}"
+      x2="{{ tick.x }}" y2="{{ axis.y + 4 }}"
+      stroke="{{ colors.text_secondary }}" stroke-width="1"/>
+
+<!-- Date label -->
+<text x="{{ tick.x }}" y="{{ axis.y + 22 }}" fill="{{ colors.text_tertiary }}"
+      font-size="8" font-family="ui-monospace, monospace" text-anchor="middle"
+      letter-spacing="0.14em">{{ tick.label }}</text>
+{% endfor %}

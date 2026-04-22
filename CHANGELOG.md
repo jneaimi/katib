@@ -3,6 +3,74 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.20.0] — 2026-04-22 — Diagram catalog (13 types + editorial primitives)
+
+Replaces the monolithic `references/diagrams.md` (278 lines, 5 patterns)
+with a progressive-disclosure catalog of **13 diagram types**, **2 editorial
+primitives**, and **5 reusable Jinja snippets**. Structure, complexity budget,
+and anti-pattern taxonomy adapted from Cathryn Lavery's
+[`diagram-design`](https://github.com/cathrynlavery/diagram-design) (MIT).
+
+### Added
+
+- **`references/diagrams/index.md`** — catalog entry point with philosophy
+  (restraint + deletion), type selection guide, universal anti-patterns, and
+  the complexity budget (max 9 nodes, max 12 arrows, max 2 accent elements,
+  4px grid, per-type limits).
+- **`references/diagrams/style.md`** — maps Katib's `colors.*` context to
+  semantic roles (`accent`, `ink`, `paper`, `muted`, etc.) used across all
+  type specs. Includes the node-type → treatment table (focal / backend /
+  store / external / input / optional / security) and the accent-tint
+  composition pattern.
+- **`references/diagrams/primitives.md`** — shared SVG building blocks:
+  arrow markers (default / accent / link), masked node box, arrow labels,
+  legend strip, optional dotted-paper background.
+- **`references/diagrams/rtl-notes.md`** — consolidates the bilingual /
+  Arabic overlay pattern (`.diagram-stage` + `.diagram-label`), coordinate
+  math, flow-direction mirroring rules, and the `build.py --check` lint.
+- **13 type-specific references** — each 40–120 lines covering layout
+  conventions, primitives, anti-patterns, and bilingual notes:
+  `type-architecture.md`, `type-flowchart.md`, `type-sequence.md`,
+  `type-state.md`, `type-er.md`, `type-timeline.md`, `type-swimlane.md`,
+  `type-quadrant.md` (including the consultant 2×2 scenario variant),
+  `type-nested.md`, `type-tree.md`, `type-layers.md`, `type-venn.md`,
+  `type-pyramid.md`.
+- **2 editorial primitives** — `primitive-annotation.md` (italic-serif
+  marginalia callouts with dashed Bézier leader + landing dot) and
+  `primitive-sketchy.md` (optional hand-drawn SVG displacement filter for
+  essays / editorial-domain diagrams).
+- **5 Jinja snippets** under `references/diagrams/snippets/` — ready to
+  `{% include %}` inside diagram SVGs: `arrow-markers.svg.j2`,
+  `node-box.svg.j2`, `annotation-callout.svg.j2`, `legend-strip.svg.j2`,
+  `timeline-axis.svg.j2`. Each reads from `{{ colors.* }}` so the active
+  brand applies automatically.
+
+### Changed
+
+- **`SKILL.md`** Step 5 tier table now points at
+  `diagrams/index.md → diagrams/type-<name>.md` instead of the single file.
+- **`scripts/build.py`** Arabic-in-SVG lint error message now references
+  `references/diagrams/rtl-notes.md` (the new home of that rule).
+- **`references/diagrams.md`** retained as a compat stub with quick-jump
+  table to the new catalog — keeps older wikilinks from breaking.
+
+### Philosophy
+
+> "The highest-quality move is usually deletion."
+
+Every node earns its place. Every connection carries information. `colors.accent`
+is editorial, not a flag — 1–2 focal elements per diagram. Target density 4/10.
+Above 9 nodes it's probably two diagrams.
+
+### Attribution
+
+Catalog taxonomy © 2024–2026 Cathryn Lavery,
+[`diagram-design`](https://github.com/cathrynlavery/diagram-design) (MIT).
+Katib-specific additions: Jinja color interpolation instead of CSS custom
+properties (WeasyPrint can't resolve `var()` in SVG attributes), bilingual
+EN + AR overlay patterns, per-domain font inheritance, per-type RTL notes,
+compat stub for existing references.
+
 ## [0.19.0] — 2026-04-22 — Self-sustained Arabic quality (anti-slop + fact-integrity + content lint)
 
 Prompted by a concrete failure: a rendered Arabic article in this session

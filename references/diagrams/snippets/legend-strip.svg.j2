@@ -1,0 +1,46 @@
+{#
+  Bottom legend strip — horizontal, with a hairline separator.
+  Expand the SVG viewBox height by ~60px to accommodate.
+
+  Context:
+    legend.y         (int)        — y-coordinate of the separator line
+    legend.viewbox_w (int)        — total SVG viewBox width
+    legend.items     (list[dict]) — each: {kind: 'swatch'|'line'|'dashed', color: '...', label: '...', x: N}
+
+  Usage:
+    {% set legend = {
+      'y': 280, 'viewbox_w': 960,
+      'items': [
+        {'kind': 'swatch', 'color': colors.accent, 'label': 'Focal',        'x': 110},
+        {'kind': 'line',   'color': colors.text_secondary, 'label': 'Default arrow', 'x': 240},
+        {'kind': 'dashed', 'color': colors.text_secondary, 'label': 'Async / return','x': 400}
+      ]
+    } %}
+    {% include 'references/diagrams/snippets/legend-strip.svg.j2' %}
+#}
+<!-- Separator line -->
+<line x1="30" y1="{{ legend.y }}"
+      x2="{{ legend.viewbox_w - 30 }}" y2="{{ legend.y }}"
+      stroke="{{ colors.border }}" stroke-width="0.8"/>
+
+<!-- LEGEND eyebrow -->
+<text x="30" y="{{ legend.y + 16 }}" fill="{{ colors.text_secondary }}" font-size="8"
+      font-family="ui-monospace, monospace" letter-spacing="0.14em">LEGEND</text>
+
+<!-- Items -->
+{% for item in legend.items %}
+  {% set ly = legend.y + 10 %}
+  {% if item.kind == 'swatch' %}
+<rect x="{{ item.x }}" y="{{ ly }}" width="16" height="10" rx="2"
+      fill="{{ item.color }}" fill-opacity="0.08"
+      stroke="{{ item.color }}" stroke-width="1"/>
+  {% elif item.kind == 'line' %}
+<line x1="{{ item.x }}" y1="{{ ly + 6 }}" x2="{{ item.x + 20 }}" y2="{{ ly + 6 }}"
+      stroke="{{ item.color }}" stroke-width="1"/>
+  {% elif item.kind == 'dashed' %}
+<line x1="{{ item.x }}" y1="{{ ly + 6 }}" x2="{{ item.x + 20 }}" y2="{{ ly + 6 }}"
+      stroke="{{ item.color }}" stroke-width="1" stroke-dasharray="4,3"/>
+  {% endif %}
+<text x="{{ item.x + 26 }}" y="{{ ly + 9 }}" fill="{{ colors.text }}" font-size="9"
+      font-family="inherit">{{ item.label }}</text>
+{% endfor %}

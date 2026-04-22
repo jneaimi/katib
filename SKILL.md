@@ -179,7 +179,7 @@ Pick the tier that matches the task. Default to the lowest that covers the work.
 | **Content-only** | Updating text in existing doc, translating, swapping bullets | `CHEATSHEET.{lang}.md` only |
 | **Layout tweak** | Adjusting spacing, section order, font size within spec | `CHEATSHEET` + `design.{lang}.md` |
 | **New document** | Building from scratch or from raw content | `design` + `writing` + `production.md` |
-| **Diagram** | Embedding SVG in a doc | `diagrams.md` only |
+| **Diagram** | Embedding SVG in a doc | `diagrams/index.md` → `diagrams/type-<name>.md` (pick one of 13) |
 | **Screenshot** | Tutorial with screenshots | `screenshots.md` + `tutorial-primitives.md` |
 | **Troubleshoot** | Render bug, font issue, page overflow | `production.md` first |
 

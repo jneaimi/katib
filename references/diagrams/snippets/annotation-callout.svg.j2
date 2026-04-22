@@ -1,0 +1,57 @@
+{#
+  Italic-serif editorial callout with dashed Bézier leader + landing dot.
+  Max 2 per diagram (see primitive-annotation.md).
+
+  Context:
+    callout.text_x, callout.text_y    (int) — where the text sits (margin)
+    callout.target_x, callout.target_y (int) — where the dot lands
+    callout.control_x, callout.control_y (int) — Bézier control point
+    callout.text                       (str) — the aside (EN only — on AR, use HTML overlay)
+    callout.intent                     (str) — 'neutral' | 'accent' | 'muted' (default 'neutral')
+    callout.anchor                     (str) — 'start' | 'middle' | 'end' (default 'end')
+
+  Usage:
+    {% set callout = {
+      'text_x': 904, 'text_y': 36,
+      'target_x': 520, 'target_y': 216,
+      'control_x': 700, 'control_y': 84,
+      'text': 'no imports, no configuration',
+      'intent': 'neutral', 'anchor': 'end'
+    } %}
+    {% include 'references/diagrams/snippets/annotation-callout.svg.j2' %}
+#}
+{% set intent = callout.intent | default('neutral') %}
+{% set anchor = callout.anchor | default('end') %}
+
+{% if intent == 'accent' %}
+  {% set text_color   = colors.accent %}
+  {% set leader_color = colors.accent %}
+  {% set leader_op    = '0.5' %}
+  {% set dot_color    = colors.accent %}
+{% elif intent == 'muted' %}
+  {% set text_color   = colors.text_secondary %}
+  {% set leader_color = colors.border %}
+  {% set leader_op    = '1' %}
+  {% set dot_color    = colors.text_secondary %}
+{% else %}
+  {% set text_color   = colors.text %}
+  {% set leader_color = colors.text_secondary %}
+  {% set leader_op    = '0.7' %}
+  {% set dot_color    = colors.text %}
+{% endif %}
+
+<!-- Italic serif text -->
+<text x="{{ callout.text_x }}" y="{{ callout.text_y }}"
+      fill="{{ text_color }}" font-size="14" font-style="italic"
+      text-anchor="{{ anchor }}" font-family="inherit">{{ callout.text }}</text>
+
+<!-- Dashed Bézier leader -->
+<path d="M {{ callout.text_x }} {{ callout.text_y + 8 }}
+         Q {{ callout.control_x }} {{ callout.control_y }}
+           {{ callout.target_x }} {{ callout.target_y }}"
+      fill="none" stroke="{{ leader_color }}" stroke-width="1"
+      stroke-dasharray="4,3" opacity="{{ leader_op }}"/>
+
+<!-- Landing dot -->
+<circle cx="{{ callout.target_x }}" cy="{{ callout.target_y }}" r="2"
+        fill="{{ dot_color }}"/>

@@ -1,0 +1,24 @@
+{#
+  Arrow marker definitions — three variants.
+  Include inside an SVG <defs> block:
+    <svg ...>
+      <defs>
+        {% include 'references/diagrams/snippets/arrow-markers.svg.j2' %}
+      </defs>
+      ...
+    </svg>
+#}
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="{{ colors.text_secondary }}"/>
+</marker>
+
+<marker id="arrow-accent" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="{{ colors.accent }}"/>
+</marker>
+
+<marker id="arrow-link" viewBox="0 0 10 10" refX="8" refY="5"
+        markerWidth="6" markerHeight="6" orient="auto">
+  <path d="M 0 0 L 10 5 L 0 10 z" fill="{{ colors.accent_2 | default(colors.accent) }}"/>
+</marker>

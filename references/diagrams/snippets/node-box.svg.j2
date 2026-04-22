@@ -1,0 +1,59 @@
+{#
+  Parameterized node box with optional type tag + sublabel.
+
+  Context vars (pass via {% set %} or nested dict):
+    x, y             (int)     — top-left corner, divisible by 4
+    w, h             (int)     — size, divisible by 4 (e.g. 160, 48)
+    rx               (int)     — corner radius (default 6)
+    fill             (str)     — fill color (from style.md treatment)
+    stroke           (str)     — stroke color (from style.md treatment)
+    stroke_dash      (str)     — optional dash array ("4,3" etc.)
+    name             (str)     — human-readable name (body sans)
+    tag              (str)     — optional 3–6 char type tag ("API", "DB")
+    sublabel         (str)     — optional monospace sublabel
+
+  Usage:
+    {% set node = {
+      'x': 40, 'y': 80, 'w': 160, 'h': 48,
+      'fill': colors.page_bg, 'stroke': colors.text,
+      'name': 'API Gateway', 'tag': 'API', 'sublabel': 'nginx:443'
+    } %}
+    {% include 'references/diagrams/snippets/node-box.svg.j2' %}
+#}
+{% set rx       = node.rx       | default(6) %}
+{% set stroke_dash = node.stroke_dash | default('') %}
+
+<!-- Paper mask (prevents bleed-through) -->
+<rect x="{{ node.x }}" y="{{ node.y }}" width="{{ node.w }}" height="{{ node.h }}"
+      rx="{{ rx }}" fill="{{ colors.page_bg }}"/>
+
+<!-- Styled box -->
+<rect x="{{ node.x }}" y="{{ node.y }}" width="{{ node.w }}" height="{{ node.h }}"
+      rx="{{ rx }}"
+      fill="{{ node.fill }}"
+      stroke="{{ node.stroke }}" stroke-width="1"
+      {% if stroke_dash %}stroke-dasharray="{{ stroke_dash }}"{% endif %}/>
+
+{% if node.tag %}
+<!-- Type tag (rx=2 rectangle, not a pill) -->
+<rect x="{{ node.x + 8 }}" y="{{ node.y + 6 }}" width="28" height="12" rx="2"
+      fill="none" stroke="{{ node.stroke }}" stroke-width="0.8" opacity="0.40"/>
+<text x="{{ node.x + 22 }}" y="{{ node.y + 15 }}"
+      fill="{{ node.stroke }}" font-size="7"
+      font-family="ui-monospace, monospace" text-anchor="middle"
+      letter-spacing="0.08em" opacity="0.8">{{ node.tag }}</text>
+{% endif %}
+
+<!-- Node name (body sans) -->
+{% set cx = node.x + (node.w // 2) %}
+{% set cy = node.y + (node.h // 2) %}
+<text x="{{ cx }}" y="{{ cy + (2 if not node.sublabel else -4) }}"
+      fill="{{ colors.text }}" font-size="12" font-weight="600"
+      text-anchor="middle" font-family="inherit">{{ node.name }}</text>
+
+{% if node.sublabel %}
+<!-- Technical sublabel (monospace) -->
+<text x="{{ cx }}" y="{{ cy + 12 }}"
+      fill="{{ colors.text_secondary }}" font-size="9"
+      font-family="ui-monospace, monospace" text-anchor="middle">{{ node.sublabel }}</text>
+{% endif %}
