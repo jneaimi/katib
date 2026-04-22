@@ -3,6 +3,28 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.12.0] — 2026-04-22
+
+### Added
+- **`scripts/install_fonts.py` — fetch the 7 OFL fonts Katib depends on** and drop them in the OS-standard user font directory (`~/Library/Fonts/Katib/` on macOS, `~/.local/share/fonts/Katib/` on Linux). Previously, a fresh machine produced technically-valid PDFs where Amiri silently rendered as Times, Cairo as Arial, Inter as Helvetica — the templates compiled but the typography was wrong. Installer closes that silent-failure path.
+  - **7 families, 18 files**: Cairo (variable AR sans), Amiri (AR serif, 4 statics), Tajawal (AR corporate sans, 3 statics), IBM Plex Sans Arabic (AR fallback, 4 statics), Inter (variable EN sans + italic), Newsreader (variable EN serif + italic), JetBrains Mono (variable EN mono + italic). Total fetch: ~5 MB over the wire.
+  - **Source**: `github.com/google/fonts` raw files (OFL-1.1 collection, tracked from upstream).
+  - **Five modes**: `--list` (manifest, no network), `--verify` (check what's installed vs the manifest), default install (fetch missing), `--force` (re-download all), `--dry-run` (preview only). `--only "Cairo,Amiri"` limits to a subset.
+  - **Safety**: small-response guard (<1 KB = 404 HTML disguised as OK), percent-encodes variable-font names like `Cairo[slnt,wght].ttf`, logs SHA-256 of every download for future pinning, skips files already present unless `--force`, calls `fc-cache` on Linux to refresh fontconfig.
+  - **Windows**: not supported in v0.12.0 — exits with guidance to install manually from the same URLs.
+- **`scripts/test-install-fonts.sh`** — 8-step harness with live-network tests that auto-skip when offline. Asserts: `--list` offline, unknown `--only` family rejected, `--dry-run` pure, JetBrains Mono variable-font fetched (187 KB), re-run idempotent (skipped=2), `--force` re-fetches and refreshes mtime, `--verify` distinguishes 2 installed vs 16 missing, Amiri family (4 static files) fetched.
+
+### Context
+- WeasyPrint resolves font families through fontconfig (macOS/Linux). If a family name in `tokens.json` isn't in the OS font cache, WeasyPrint falls back silently without a warning — templates compile, PDFs ship, but a document meant to render in Amiri ships in the system serif.
+- Bundling fonts in the npm package was considered and rejected: the npm distribution would carry ~5 MB of binaries for a skill that many users won't even render AR content with. Fetch-on-install keeps the package lean and makes font presence explicit/opt-in.
+
+### Tests
+- `test-install-fonts.sh`: 8/8 steps pass (live network).
+- No regressions: `test-add-domain.sh` 11/11, `test-ar-svg.sh` 8/8.
+
+### Philosophy
+- v0.12.0 fixes a failure mode that was invisible before: renders looked "fine" without the required fonts because the system fonts are adequate *as fallbacks* — they just aren't what the domain declared. The installer makes font state explicit, and `--verify` gives a one-command answer to "why doesn't my AR Amiri render look right."
+
 ## [0.11.0] — 2026-04-22
 
 ### Added
