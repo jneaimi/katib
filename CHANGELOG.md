@@ -3,6 +3,21 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.10.1] — 2026-04-22
+
+### Added
+- **`katib-walkthrough` doc type** (tutorial domain) — a full self-documenting Katib tutorial, rendered bilingually (EN + AR) as the first real dogfood of the ADR's complete scope: jasem brand cascade, Gemini `friendly-illustration` cover, four inline SVG diagrams, colour-swatch palette, cheatsheet grid, 13 pages per language. Target 8–18 pp, limit 25 pp. Reference prefix `TUT-KATIB-*`.
+- **`.diagram-stage` / `.diagram-label` CSS primitive** for Arabic-safe SVG diagrams. Positions Arabic text as HTML overlays at viewBox-percentage coordinates on top of an SVG that carries only geometry, English labels, and numeric axes.
+
+### Fixed
+- **Arabic-in-SVG shaping.** WeasyPrint's native SVG text renderer does not run Arabic shaping via HarfBuzz — letters render in isolated presentation forms and do not join. Verified with a minimal test (`كاتب — الدليل` → `بتاك — ليلدلا` in extracted text). `foreignObject` does not fall back to the HTML text path either. Workaround: move Arabic `<text>` out of SVG into positioned HTML divs inside a `.diagram-stage` wrapper. Verified end-to-end — all 14 distinct Arabic diagram labels in `katib-walkthrough.ar.html` now extract as properly-shaped strings from the rendered PDF.
+
+### Changed
+- Tutorial domain `styles.json`: `katib-walkthrough` doc_type registered.
+
+### Philosophy
+- The Arabic-in-SVG fix is a shape, not just a one-off patch. Any future AR template embedding Arabic text in SVG will hit the same bug; using the `.diagram-stage` overlay pattern as the canonical path keeps RTL diagrams renderable indefinitely. To be captured in `references/diagrams.md` + a CSS-lint rule in a follow-up.
+
 ## [0.10.0] — 2026-04-22
 
 ### Added
