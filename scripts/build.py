@@ -318,6 +318,7 @@ def render_template(
     brand: dict | None = None,
     agent: str | None = None,
     source_context: str | None = None,
+    strict_governance: bool | None = None,
 ) -> Path:
     """Render HTML template → PDF in a new vault folder. Returns the folder path."""
     try:
@@ -384,6 +385,95 @@ def render_template(
     slug_dir.mkdir(parents=True, exist_ok=True)
     (slug_dir / "source").mkdir(exist_ok=True)
     (slug_dir / "assets").mkdir(exist_ok=True)
+
+    # ===== Phase 3: pre-render governance check =====
+    # Fail fast *before* the expensive PDF render if the target zone would
+    # reject the write. Default: on when we're going to POST to the API
+    # (mode=api|strict), off for fs mode. Explicit strict_governance=False
+    # can disable it (e.g. when developing against a zone whose CLAUDE.md
+    # is known-stale).
+    vault_mode = os.environ.get("KATIB_VAULT_MODE", "api").lower().strip()
+    if strict_governance is None:
+        strict_governance = vault_mode in ("api", "strict")
+
+    if strict_governance and vault_mode != "fs":
+        try:
+            vault_root = Path(cfg["output"]["vault_path"]).expanduser().parent.parent
+            # Use config helper if available (handles KATIB_VAULT_ROOT override).
+            from config import resolve_vault_root as _resolve_vr
+            vault_root = _resolve_vr(cfg)
+        except Exception:
+            vault_root = None
+
+        if vault_root is not None:
+            try:
+                slug_dir.resolve().relative_to(vault_root.resolve())
+                in_vault = True
+            except ValueError:
+                in_vault = False
+
+            if in_vault:
+                from vault_client import (
+                    ZonePreCheckError,
+                    get_zone_governance,
+                    validate_against_zone_governance,
+                )
+                zone_path = slug_dir.resolve().relative_to(vault_root.resolve()).as_posix()
+                governance = get_zone_governance(zone_path)
+
+                if governance is not None:
+                    # Build a *proposed* meta for validation — enough to exercise
+                    # allowedTypes + requiredFields. Mirrors what write_manifest
+                    # will later post. Keep in sync with the meta dict below.
+                    today_iso = today
+                    proposed_meta = {
+                        "type": "output",
+                        "created": today_iso,
+                        "updated": today_iso,
+                        "tags": ["katib", project, "auto-generated"],
+                        "project": project,
+                        "domain": domain,
+                        "doc_type": doc_type,
+                        "languages": [lang],
+                        "formats": ["pdf"],
+                        "cover_style": cover_style,
+                        "layout": layout,
+                    }
+                    violations = validate_against_zone_governance(
+                        proposed_meta, "manifest.md", governance,
+                    )
+                    if violations:
+                        print(
+                            f"✗ pre-render governance check failed for zone '{zone_path}':",
+                            file=sys.stderr,
+                        )
+                        for v in violations:
+                            print(f"    · {v}", file=sys.stderr)
+                        print(
+                            f"  Zone governance resolved from: "
+                            f"'{governance.resolved_from}' (allowedTypes="
+                            f"{governance.allowed_types or '∅'}, "
+                            f"requiredFields={governance.required_fields or '∅'})",
+                            file=sys.stderr,
+                        )
+                        # Clean up the empty slug_dir we just created — otherwise
+                        # a failed pre-check leaves noise in the vault.
+                        try:
+                            if slug_dir.exists() and not any(slug_dir.iterdir()):
+                                slug_dir.rmdir()
+                            elif slug_dir.exists() and list(slug_dir.iterdir()) == [
+                                slug_dir / "source", slug_dir / "assets"
+                            ]:
+                                (slug_dir / "source").rmdir()
+                                (slug_dir / "assets").rmdir()
+                                slug_dir.rmdir()
+                        except OSError:
+                            pass  # best-effort cleanup; not worth failing over
+                        raise ZonePreCheckError(
+                            f"zone '{zone_path}' would reject this manifest "
+                            f"({len(violations)} violation{'s' if len(violations) != 1 else ''})",
+                            violations=violations,
+                        )
 
     # Cover generation (opt-in) — happens before HTML render so templates can reference assets/cover.png
     cover_render_meta: dict[str, Any]
@@ -610,6 +700,19 @@ def main():
     parser.add_argument("--brand", default=None, help="Brand profile name (resolves to ~/.katib/brands/<name>.yaml or <skill>/brands/<name>.yaml)")
     parser.add_argument("--brand-file", default=None, help="Direct path to a brand profile YAML (overrides --brand)")
     parser.add_argument("--agent", default=None, help="source_agent identifier for write audit log (default: $KATIB_AGENT_ID or 'katib-cli')")
+    parser.add_argument(
+        "--strict-governance",
+        dest="strict_governance",
+        action="store_true",
+        default=None,
+        help="Pre-check target zone governance via GET /api/vault/zones/<path> before rendering. Default: on when KATIB_VAULT_MODE=api|strict, off for fs.",
+    )
+    parser.add_argument(
+        "--no-strict-governance",
+        dest="strict_governance",
+        action="store_false",
+        help="Disable the pre-render governance check even when vault mode is api|strict.",
+    )
 
     # modes
     parser.add_argument("--check", action="store_true", help="CSS/template lint only, no render")
@@ -675,22 +778,30 @@ def main():
             print(f"✗ {e}", file=sys.stderr)
             sys.exit(1)
 
-    render_template(
-        domain=args.domain,
-        doc_type=args.doc_type,
-        lang=args.lang,
-        title=args.title,
-        cfg=cfg,
-        cover_style=args.cover,
-        layout=args.layout,
-        project=args.project,
-        agent=args.agent,
-        reference_code=args.ref,
-        purpose=args.purpose,
-        with_cover=args.with_cover or args.force_cover,
-        force_cover=args.force_cover,
-        brand=brand,
-    )
+    from vault_client import ZonePreCheckError
+    try:
+        render_template(
+            domain=args.domain,
+            doc_type=args.doc_type,
+            lang=args.lang,
+            title=args.title,
+            cfg=cfg,
+            cover_style=args.cover,
+            layout=args.layout,
+            project=args.project,
+            agent=args.agent,
+            reference_code=args.ref,
+            purpose=args.purpose,
+            with_cover=args.with_cover or args.force_cover,
+            force_cover=args.force_cover,
+            brand=brand,
+            strict_governance=args.strict_governance,
+        )
+    except ZonePreCheckError as e:
+        # Pre-check already printed the violations. Exit 4 = governance error,
+        # matching vault_client.create_note's VaultGovernanceError exit code.
+        print(f"  → skip this check with --no-strict-governance", file=sys.stderr)
+        sys.exit(4)
 
 
 if __name__ == "__main__":

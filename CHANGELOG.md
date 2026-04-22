@@ -3,6 +3,74 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.16.0] — 2026-04-22 — Phase 3 of vault-integration migration
+
+Third of five phases (ADR §20). Adds **pre-render governance checking**:
+Katib fetches the target zone's governance via a new Soul Hub endpoint
+(`GET /api/vault/zones/<path>`) and validates the proposed manifest against
+it *before* starting the expensive PDF render. If the zone would reject
+the write, the build fails fast with a readable error. No more rendering
+12 pages of PDF only to discover the target zone disallows `type: output`.
+
+### Added
+- **`GET /api/vault/zones/<path>`** (Soul Hub) — new read-only endpoint
+  returning `{zone, resolvedFrom, allowedTypes, requiredFields, namingPattern, requireTemplate}`
+  for any zone path, resolving the governance hierarchy walk automatically.
+  Wraps the existing `GovernanceResolver.resolve()` (previously private).
+  Path validation mirrors the `POST /api/vault/notes` handler (no `..`, no
+  null bytes, regex allow-list). Implemented via a new public
+  `VaultEngine.resolveZone()` method.
+- **`vault_client.get_zone_governance(zone)`** — Python client. Returns
+  a `ZoneGovernance` dict (camelCase + snake_case accessors) with a 60s
+  in-memory cache (keyed on zone + base URL). Graceful fallback: network
+  failures, 404 (old Soul Hub), or non-JSON responses all return None with
+  a stderr warning — pre-check is advisory, not load-bearing.
+- **`vault_client.validate_against_zone_governance()`** — runs a proposed
+  `(meta, filename)` against the fetched governance dict. Mirrors the
+  server's `createNote()` validation so whatever passes locally passes
+  the POST. Returns a list of violation strings.
+- **`ZonePreCheckError` exception** + **`clear_zone_cache()` helper** for
+  test harnesses.
+- **`build.py --strict-governance` / `--no-strict-governance` CLI flags**
+  — default: on when `KATIB_VAULT_MODE` is `api`/`strict`, off for `fs`.
+  The check fires *before* cover generation + HTML render, so a bad zone
+  aborts the build in ~50ms instead of after the full render pipeline.
+  Empty slug_dir cleanup on pre-check failure so the vault stays tidy.
+- **`scripts/test-strict-governance.sh`** — 12-step harness covering
+  import + exports, fs-mode short-circuit, network failure graceful
+  degrade, violation detection (type, required fields, naming pattern),
+  cache behaviour (measured 1100× speedup), CLI flag gating, and two
+  live-API assertions against the running Soul Hub.
+
+### Changed
+- **`render_template()`** signature gains `strict_governance: bool | None`.
+  When the target slug_dir lives under the vault root and a non-fs mode is
+  active, it fetches zone governance and validates. `ZonePreCheckError` is
+  caught at the CLI top level and maps to exit 4 — same code as governance
+  rejections from Phase 2, so callers see uniform behaviour.
+- **`test-brand.sh` — `--project` values simplified** from
+  `katib-shadow-test`, `katib-brand-smoke`, etc. to plain `katib`. Phase 2's
+  routing change meant those `katib-*` slugs landed in
+  `projects/<slug>/outputs/` but the shell script's hardcoded file-checks
+  still looked in `content/katib/`. Using `--project katib` + unique
+  `--slug` values keeps test output in the legacy path the script expects.
+  Purely a test-side fix — no production behaviour change.
+
+### Docs / infrastructure
+- Skill + dev-repo `pyproject.toml` and `package.json` bumped to 0.16.0.
+- ADR §20 Phase 3 marked ✓ DONE with outcome paragraph.
+- Soul Hub's governance scan runs at init; zone CLAUDE.md changes take
+  effect after a server restart (or an out-of-band zone creation that
+  triggers `governance.scan()` as a side effect — see index.ts:743).
+
+### Tests
+- `test-strict-governance.sh`: 12/12 pass (10 offline + 2 live-API).
+- Regression: all 10 prior harnesses green — `test-meta-validator` (11),
+  `test-all` (6 renders), `test-tutorial` (10 + merge), `test-alt-bundles`
+  (18), `test-brand` (fixed + 70+ assertions across 5 steps),
+  `test-images` (8 goldens), `test-feedback` (8), `test-add-domain` (11),
+  `test-vault-client` (16). `test-install-fonts` (live network, 8).
+
 ## [0.15.0] — 2026-04-22 — Phase 2 of vault-integration migration
 
 Second of five phases (ADR §20). Wires Katib's first-writes through Soul Hub's

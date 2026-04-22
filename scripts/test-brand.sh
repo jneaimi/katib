@@ -281,7 +281,7 @@ print(f'  ✓ {assertions} v1.4 polish assertions pass')
 echo ""
 echo "▶ Step 1d: --brand-file shadow warning"
 SHADOW_OUT=$(uv run scripts/build.py one-pager --domain business-proposal --lang en \
-  --title 'Shadow test' --project 'katib-shadow-test' --slug katib-shadow-test \
+  --title 'Shadow test' --project 'katib' --slug katib-shadow-test \
   --brand example --brand-file "$(pwd)/brands/triden.yaml" 2>&1)
 if echo "$SHADOW_OUT" | grep -q 'overrides --brand'; then
   echo "  ✓ shadow warning emitted when both flags passed"
@@ -302,7 +302,7 @@ uv run scripts/build.py one-pager \
   --domain business-proposal \
   --lang en \
   --title "Brand smoke test one-pager" \
-  --project "katib-brand-smoke" \
+  --project "katib" \
   --slug katib-brand-smoke \
   --ref "BRAND-SMOKE-001" \
   --brand example 2>&1 | tail -4
@@ -351,7 +351,7 @@ uv run scripts/build.py one-pager \
   --domain business-proposal \
   --lang en \
   --title "Default render" \
-  --project "katib-brand-regression" \
+  --project "katib" \
   --slug katib-brand-regression \
   --ref "REG-001" 2>&1 | tail -3
 
@@ -422,7 +422,7 @@ uv run scripts/build.py how-to \
   --domain tutorial \
   --lang en \
   --title "Logo smoke test" \
-  --project "katib-logo-smoke" \
+  --project "katib" \
   --slug katib-logo-smoke \
   --brand example 2>&1 | tail -3
 
@@ -448,7 +448,7 @@ uv run scripts/build.py how-to \
   --domain tutorial \
   --lang en \
   --title "No-logo smoke test" \
-  --project "katib-nologo-smoke" \
+  --project "katib" \
   --slug katib-nologo-smoke \
   --brand triden 2>&1 | tail -2
 

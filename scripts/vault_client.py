@@ -284,6 +284,186 @@ def create_note(
     )
 
 
+# ===================== ZONE GOVERNANCE (Phase 3) =====================
+
+# In-memory cache. Zones rarely change; 60s is long enough to dedupe the
+# pre-render check across a bilingual EN+AR render, short enough that a
+# human edit to CLAUDE.md + Soul Hub rescan becomes visible without restart.
+_ZONE_CACHE: dict[str, tuple[float, dict[str, Any]]] = {}
+_ZONE_CACHE_TTL = 60.0
+
+
+class ZoneGovernance(dict):
+    """Minimal wrapper so callers can do `zone.allowed_types` or `zone['allowedTypes']`.
+
+    The server returns camelCase (TypeScript convention). Python callers may
+    reach for snake_case. This dict exposes both without duplicating storage.
+    """
+
+    @property
+    def allowed_types(self) -> list[str]:
+        return self.get("allowedTypes", [])
+
+    @property
+    def required_fields(self) -> list[str]:
+        return self.get("requiredFields", [])
+
+    @property
+    def naming_pattern(self) -> str | None:
+        return self.get("namingPattern")
+
+    @property
+    def require_template(self) -> bool:
+        return bool(self.get("requireTemplate"))
+
+    @property
+    def resolved_from(self) -> str:
+        return self.get("resolvedFrom", "")
+
+
+def get_zone_governance(zone: str, *, use_cache: bool = True) -> ZoneGovernance | None:
+    """Fetch zone governance from Soul Hub's GET /api/vault/zones/<path>.
+
+    Returns None in three benign cases:
+      - KATIB_VAULT_MODE=fs (no API path, pre-check is skipped by design)
+      - endpoint absent (pre-Phase-3 Soul Hub still running) — we detect this
+        by getting a non-JSON response body and degrade silently with a warning
+      - network failure (connection refused, timeout) — same warning, same skip
+
+    Raises nothing. Pre-render checks should treat None as "no governance
+    info available; proceed at your own risk" — a subsequent POST still gets
+    governance-checked server-side, so this is advisory, not blocking.
+
+    Cache: per-zone, 60s TTL. Keyed on zone path + base URL so switching
+    SOUL_HUB_URL in the same process doesn't return stale results.
+    """
+    import time
+
+    if _mode() == "fs":
+        return None
+
+    cache_key = f"{_base_url()}::{zone}"
+    now = time.monotonic()
+    if use_cache and (hit := _ZONE_CACHE.get(cache_key)):
+        expires_at, cached = hit
+        if now < expires_at:
+            return ZoneGovernance(cached)
+
+    url = f"{_base_url()}/api/vault/zones/{zone}"
+    try:
+        req = urllib.request.Request(url, method="GET")
+        with urllib.request.urlopen(req, timeout=_timeout()) as resp:
+            status = resp.status
+            body_bytes = resp.read()
+    except urllib.error.HTTPError as e:
+        status = e.code
+        body_bytes = e.read()
+    except (urllib.error.URLError, socket.timeout, ConnectionError, OSError) as e:
+        print(
+            f"⚠ zone governance unavailable ({url}: {e}) — pre-render check skipped",
+            file=sys.stderr,
+        )
+        return None
+
+    if status != 200:
+        print(
+            f"⚠ zone governance returned HTTP {status} for {zone} — pre-render check skipped",
+            file=sys.stderr,
+        )
+        return None
+
+    try:
+        data = json.loads(body_bytes.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        # Pre-Phase-3 Soul Hub doesn't have this route and SvelteKit serves the
+        # SPA shell as HTML. Don't loop forever — cache the miss for the TTL
+        # window so we don't probe repeatedly during a bilingual render.
+        print(
+            f"⚠ zone governance endpoint not available yet (non-JSON response) — "
+            f"pre-render check skipped. Soul Hub may need a restart after a fresh build.",
+            file=sys.stderr,
+        )
+        _ZONE_CACHE[cache_key] = (now + _ZONE_CACHE_TTL, {})
+        return None
+
+    if not isinstance(data, dict) or "allowedTypes" not in data:
+        # Response parsed but isn't the expected shape — treat as unavailable
+        print(
+            f"⚠ unexpected zone governance payload shape for {zone} — pre-render check skipped",
+            file=sys.stderr,
+        )
+        return None
+
+    _ZONE_CACHE[cache_key] = (now + _ZONE_CACHE_TTL, data)
+    return ZoneGovernance(data)
+
+
+def clear_zone_cache() -> None:
+    """Drop all cached zone governance responses. Test harnesses call this
+    between assertions so the 60s TTL doesn't mask bugs.
+    """
+    _ZONE_CACHE.clear()
+
+
+class ZonePreCheckError(VaultError):
+    """Pre-render governance check failed — the proposed write would be rejected.
+
+    Carries the list of violations so callers can print all of them, not just
+    the first. Separate from VaultGovernanceError because it fires *before*
+    the write, and can be disabled via --no-strict-governance.
+    """
+
+    def __init__(self, message: str, *, violations: list[str]):
+        super().__init__(message)
+        self.violations = violations
+
+
+def validate_against_zone_governance(
+    meta: dict[str, Any],
+    filename: str,
+    governance: ZoneGovernance,
+) -> list[str]:
+    """Run a proposed (meta, filename) against the governance rules.
+
+    Returns a list of human-readable violation strings (empty = pass).
+    Caller decides whether to raise or warn — build.py raises
+    ZonePreCheckError in strict mode and warns otherwise.
+
+    Mirrors soul-hub/src/lib/vault/index.ts createNote() validation, so that
+    what we accept here is what the server will accept on POST. Kept
+    deliberately shallow — deep schema validation is meta_validator's job.
+    """
+    violations: list[str] = []
+
+    # Allowed types
+    allowed = governance.allowed_types
+    meta_type = meta.get("type")
+    if allowed and meta_type not in allowed:
+        violations.append(
+            f"type={meta_type!r} not in zone allowedTypes. "
+            f"Allowed: {', '.join(allowed)}"
+        )
+
+    # Required fields
+    for field in governance.required_fields:
+        if field not in meta or meta[field] in (None, "", [], {}):
+            violations.append(f"required field missing: {field!r}")
+
+    # Naming pattern
+    if pattern := governance.naming_pattern:
+        import re
+        try:
+            if not re.search(pattern, filename):
+                violations.append(
+                    f"filename {filename!r} does not match zone naming pattern {pattern!r}"
+                )
+        except re.error:
+            # Invalid regex in CLAUDE.md — server will also fail to apply it; skip
+            pass
+
+    return violations
+
+
 def derive_zone_and_filename(slug_dir: Path, vault_root: Path, filename: str) -> tuple[str, str]:
     """Compute (zone, filename) for a POST body from a slug_dir path.
 
