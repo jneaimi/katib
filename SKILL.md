@@ -252,6 +252,34 @@ Visual anomalies → `references/production.md`.
 
 Self-improvement & template evolution → see **Reflect** below.
 
+## Step 8 · Vault integration
+
+Katib is **vault-first by default**: every successful render lands as a governed
+note in the Soul Hub vault. Outputs route based on `--project`:
+
+| `--project <slug>` | Output lands under | Governed by |
+|---|---|---|
+| `katib` (default) | `<vault>/content/katib/<domain>/<slug>/` | `content/katib/CLAUDE.md` |
+| anything else | `<vault>/projects/<slug>/outputs/<domain>/<slug>/` | `projects/CLAUDE.md` + `projects/<slug>/CLAUDE.md` |
+
+Before rendering, Katib fetches the target zone's governance via
+`GET /api/vault/zones/<path>` and validates the proposed manifest. If the zone
+would reject the write, the build fails fast with exit code 4 — no PDF render
+happens, no orphan folders get left behind.
+
+Switch modes with `KATIB_VAULT_MODE`:
+
+| Mode | Behaviour |
+|---|---|
+| `api` (default) | POST manifest to Soul Hub; pre-check governance; fall back to FS if the API is unreachable (adds a `katib-fallback` tag) |
+| `strict` | Same as `api`, but fail hard on network errors — never fall back |
+| `fs` | Skip the API entirely; write directly to the filesystem (offline-friendly for render tests) |
+
+Disable pre-render governance checking with `--no-strict-governance` (useful
+when developing against a zone whose `CLAUDE.md` is known-stale). For the full
+story — endpoint contract, caching, fallback semantics, migration tooling — see
+`references/vault.md`.
+
 ## Feedback protocol
 
 When the user gives **vague feedback** ("looks off", "not elegant", "spacing weird", "غير لائق"):

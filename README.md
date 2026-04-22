@@ -130,12 +130,22 @@ uv run scripts/build.py --list-brands
 
 Generated folders land in:
 
-- `~/vault/content/katib/<domain>/<date>-<slug>/` — if `~/vault/` exists (Obsidian users)
-- `~/Documents/katib/<domain>/<date>-<slug>/` — otherwise
+| `--project <slug>` | Output root |
+|---|---|
+| `katib` (default) | `~/vault/content/katib/<domain>/<date>-<slug>/` |
+| anything else | `~/vault/projects/<slug>/outputs/<domain>/<date>-<slug>/` |
+| no vault | `~/Documents/katib/<domain>/<date>-<slug>/` |
 
 Override anywhere with `KATIB_OUTPUT_ROOT=/path/to/elsewhere`.
 
 Each folder contains the PDF(s), a `manifest.md`, a `source/` copy of the rendered HTML, and a `.katib/run.json` with build metadata.
+
+**Vault integration** — Katib is vault-API-first by default: every render
+POSTs to Soul Hub for zone validation + duplicate-content detection, with
+graceful filesystem fallback if the API is unreachable. Switch modes with
+`KATIB_VAULT_MODE=api|strict|fs` (api is default, strict fails hard on
+network errors, fs skips the API entirely). Full story in
+`references/vault.md`.
 
 ---
 

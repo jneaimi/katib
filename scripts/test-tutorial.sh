@@ -11,7 +11,8 @@ set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SKILL_DIR"
 
-# Phase 2 regression: pin render tests to fs mode (see test-all.sh comment).
+# Render harness — defaults to fs mode to stay offline-friendly. Override with
+# KATIB_VAULT_MODE=api in CI if you want to exercise the full API write path.
 export KATIB_VAULT_MODE="${KATIB_VAULT_MODE:-fs}"
 
 TITLE_HOWTO_EN="How to preview a PDF in Soul Hub"

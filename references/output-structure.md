@@ -4,13 +4,20 @@ Every generation produces a single self-contained folder under the configured
 output root. The folder IS the atomic unit — artifact, manifest, source,
 metadata, and assets all live together for trivial re-render and archival.
 
-**Default output roots** (installer picks one based on what's on your system):
+**Default output roots** — chosen at render time based on `--project <slug>`:
 
 | Situation | Root |
 |---|---|
-| `~/vault/` exists (Obsidian users) | `~/vault/content/katib/` |
+| `~/vault/` exists + `--project katib` (default) | `~/vault/content/katib/` |
+| `~/vault/` exists + `--project <other>` | `~/vault/projects/<slug>/outputs/` |
 | No vault | `~/Documents/katib/` |
 | Override anywhere | `$KATIB_OUTPUT_ROOT` |
+
+Project-routed outputs inherit governance from `projects/CLAUDE.md` and any
+`projects/<slug>/CLAUDE.md` override. Katib-zone outputs are governed by
+`content/katib/CLAUDE.md`. The pre-render governance check validates against
+whichever zone the output is destined for. See `references/vault.md` for the
+full story.
 
 Examples below use `$OUT` as a stand-in for whichever root is active.
 
@@ -186,10 +193,15 @@ Set by `~/.config/katib/config.yaml → output.destination`:
 
 | Mode | Where artifacts land | Manifest? |
 |---|---|---|
-| `vault` | `~/vault/content/katib/<domain>/<slug>/` | Yes, in same folder |
+| `vault` | `~/vault/content/katib/<domain>/<slug>/` (or `~/vault/projects/<slug>/outputs/...` with `--project`) | Yes, in same folder |
 | `custom` | `output.custom_path` (default `~/Documents/katib/`) | Optional via `always_create_manifest: true/false` |
 
 The installer writes `destination: vault` if `~/vault/` exists at install time, otherwise `destination: custom` — you can flip it in `~/.config/katib/config.yaml` any time.
+
+In vault mode, the write path goes through `POST /api/vault/notes` by default
+(`KATIB_VAULT_MODE=api`) — pre-render governance check + duplicate-content
+detection + graceful filesystem fallback. See `references/vault.md` for the
+full mode matrix and exit-code contract.
 
 ## Memory (separate from output)
 

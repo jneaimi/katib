@@ -7,10 +7,10 @@ set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SKILL_DIR"
 
-# Regression harness — pin to fs mode so renders don't hit the live Soul Hub
-# vault API. Phase 2 introduced the API write path; test-vault-client.sh is
-# the one harness that exercises it end-to-end. Everything else tests render
-# behaviour and should stay deterministic + offline-friendly.
+# Render harnesses default to fs mode so they stay offline-friendly and don't
+# depend on a running Soul Hub. The API write path has its own end-to-end
+# harness (test-vault-client.sh). Override by setting KATIB_VAULT_MODE=api
+# in CI if you want to exercise the full vault integration.
 export KATIB_VAULT_MODE="${KATIB_VAULT_MODE:-fs}"
 
 REF="TITS-TP-2026-001"

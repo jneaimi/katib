@@ -3,6 +3,75 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.18.0] — 2026-04-22 — Phase 5 of vault-integration migration (integration polish — migration complete)
+
+Final phase of the vault-integration migration (ADR §20). No behaviour
+change — all-docs, all-cleanup. Vault-first mode becomes the documented
+default, test-harness wording gets modernised, the ADR closes out with
+lessons learned. With v0.18.0, every one of the five phases is shipped,
+tagged, and regression-covered.
+
+### Added
+- **`references/vault.md`** — new 10-section reference doc covering the
+  vault-integration contract end-to-end: routing (`--project` behaviour),
+  mode matrix (`KATIB_VAULT_MODE=api|strict|fs`), pre-render governance
+  check, manifest contract, fallback semantics + `katib-fallback` tag,
+  incident recovery (`recover_vault.py`), audit + migration tooling,
+  exit-code contract, configuration, related files.
+- **`SKILL.md` Step 8 — Vault integration** — concise routing + mode
+  table for Claude Code users, pointer to `references/vault.md` for the
+  full story.
+- **`README.md` vault integration callout** — "Generated folders land in"
+  section now shows the project-routing matrix; new paragraph explains
+  `KATIB_VAULT_MODE` defaults.
+
+### Changed
+- **`references/output-structure.md`** — updated "Default output roots"
+  table with project-routing matrix; added vault-mode note to
+  "Destination modes (config)".
+- **Test harness comments cleaned up.** `test-all.sh`, `test-tutorial.sh`,
+  and `test-brand.sh` previously had "Phase 2 regression: pin render
+  tests to fs mode" — reframed as "render harness defaults to fs mode,
+  override with `KATIB_VAULT_MODE=api` in CI to exercise the full API
+  write path." The `${KATIB_VAULT_MODE:-fs}` override pattern stays —
+  that's the contract.
+
+### Docs / infrastructure
+- Skill + dev-repo `pyproject.toml` and `package.json` bumped to 0.18.0.
+- **ADR §20 Phase 5 marked ✓ DONE** with an outcome paragraph recording
+  two deviations from the original plan (kept `KATIB_VAULT_MODE` env var
+  instead of adding `--vault-mode` CLI flag; named reference doc
+  `vault.md` for naming-convention consistency).
+- **ADR §22 added — "Vault integration complete — lessons learned"** —
+  retrospective covering what worked (phase shape, env-var as three-way
+  switch, graceful fallback with marker tag, pre-render check, atomic
+  FS writes), what hurt (pyyaml date parsing, duplicate-content detector
+  on rewrites, delete-before-write, hardcoded test paths), what would
+  have saved time (`recover_vault.py` from day one, contract tests for
+  the API client earlier, YAML coercion as default), and metrics at
+  close (5 tagged releases, 11 regression harnesses, 79/79 clean, 1
+  incident, 0 data lost).
+
+### Tests
+- All 11 regression harnesses green:
+  `test-meta-validator` (11), `test-all` (6 renders), `test-tutorial`
+  (10 renders + merge), `test-alt-bundles` (18), `test-brand` (70+),
+  `test-images` (8 goldens), `test-feedback` (8), `test-add-domain`
+  (11), `test-vault-client` (16), `test-strict-governance` (12),
+  `test-migration` (11). `test-install-fonts` (live network, 8).
+- Final vault audit: **79/79 clean, 0 errors, 0 warnings**.
+
+### Migration closed
+With this release, ADR §20's five-phase migration is complete. Katib is
+a vault-API-first client — no more writing directly to disk without
+governance validation, no more tag-pollution, no more silent failures
+when the vault rejects a write. The API path is the default for every
+render; graceful FS fallback with a `katib-fallback` marker tag covers
+the "Soul Hub is temporarily down" case; `KATIB_VAULT_MODE=strict` is
+available for CI; `KATIB_VAULT_MODE=fs` is available for offline render
+tests. All five migration versions (v0.14.0 → v0.18.0) shipped with
+their own test harnesses and committed independently.
+
 ## [0.17.0] — 2026-04-22 — Phase 4 of vault-integration migration (audit + migration + recovery)
 
 Fourth of five phases (ADR §20). Retroactively cleans the 78 legacy
