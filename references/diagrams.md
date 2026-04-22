@@ -195,3 +195,84 @@ If you draft a diagram in Figma/Excalidraw and export raw SVG, the file will hav
 - **Complex flowcharts / sequence diagrams** → consider a Mermaid-to-SVG build step (not wired today; ask and we'll add it).
 - **Hand-sketched / expressive diagrams** → the `/diagram` skill produces Excalidraw PNGs, but they pixelate in print; use sparingly.
 - **Data viz with many points** → render via Python (matplotlib → SVG export), then paste the SVG source and optionally rewrite colors.
+
+---
+
+## Bilingual diagrams (Arabic labels)
+
+> **Rule:** Never put Arabic text inside `<svg>`. `build.py --check` will fail the build. Use the HTML-overlay pattern below.
+
+**Why:** WeasyPrint's native SVG text renderer does not run HarfBuzz shaping. Arabic `<text>` elements render in their isolated Unicode presentation forms — the letters don't join, and the word is unreadable. `<foreignObject>` doesn't fix it either, because WeasyPrint's SVG path doesn't hand control to the HTML text engine for embedded content. The HTML path, however, shapes Arabic correctly. So: **keep SVG for geometry, English labels, and numeric axes; put Arabic labels in HTML positioned absolutely on top.**
+
+### The primitive: `.diagram-stage` + `.diagram-label`
+
+Declare these once at the top of your AR template `<style>` block:
+
+```css
+.diagram-stage {
+  position: relative;
+  direction: ltr;            /* keep positioning math sane */
+  width: 100%;
+  max-width: 170mm;
+  margin: 0 auto;
+}
+.diagram-stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.diagram-label {
+  position: absolute;
+  direction: rtl;            /* Arabic shaping via HTML text engine */
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  line-height: 1.1;
+  font-family: var(--font-primary);   /* Cairo / Amiri */
+  color: #18181B;
+}
+/* Size modifiers — pick whichever matches the original SVG font-size */
+.diagram-label.dl-xs { font-size: 7pt;  color: #71717A; }
+.diagram-label.dl-sm { font-size: 8pt;  color: #3F3F46; }
+.diagram-label.dl-md { font-size: 9pt;  color: #3F3F46; }
+.diagram-label.dl-lg { font-size: 14pt; font-weight: 700; }
+.diagram-label.dl-bold { font-weight: 700; }
+.diagram-label.dl-muted { color: #71717A; }
+```
+
+### Coordinate math
+
+Inside SVG you'd write `<text x="260" y="156">كاتب</text>`. With the overlay pattern, position the HTML label at the **same point in percent of the viewBox**:
+
+```
+left % = (svg_x / viewBox_width) * 100
+top  % = (svg_y / viewBox_height) * 100
+```
+
+So `x=260, y=156` in a `viewBox="0 0 520 300"` becomes `left: 50%; top: 52%;`. The `transform: translate(-50%, -50%)` on `.diagram-label` centres the text on that point — matching SVG's `text-anchor="middle"` behaviour.
+
+### Worked example
+
+```html
+<figure class="diagram">
+  <div class="diagram-stage">
+    <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+      <!-- geometry only — no Arabic text -->
+      <rect x="220" y="130" width="80" height="40" rx="4" fill="{{ colors.accent }}"/>
+      <line x1="220" y1="140" x2="90" y2="30" stroke="#A1A1AA" stroke-width="0.5"/>
+      <rect x="10" y="18" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+    </svg>
+    <!-- Arabic labels overlaid at viewBox-percentage coordinates -->
+    <div class="diagram-label dl-lg" style="left: 50%;   top: 52%;">كاتب</div>
+    <div class="diagram-label dl-bold" style="left: 16.3%; top: 10%;">عرض تجاري</div>
+  </div>
+  <figcaption>…</figcaption>
+</figure>
+```
+
+### What about English labels?
+
+English text, numeric axis labels, and monospace code names (`shot.py`, `build.py`) shape correctly inside SVG — keep them there. Only Arabic needs overlays. Mixed-script labels (Arabic + English in the same span) should go through HTML regardless, so direction and bidi are handled by the HTML engine.
+
+### The lint rule
+
+`build.py --check` scans every `*.ar.html` template for Arabic characters inside `<text>` or `<tspan>` elements nested in `<svg>`. Any hit emits a violation. Keeps the skill from silently shipping unreadable Arabic diagrams.

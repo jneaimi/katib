@@ -265,8 +265,34 @@ def check_css_violations(template_dir: Path) -> tuple[bool, list[str]]:
                     violations.append(
                         f"{path.relative_to(SKILL_ROOT)}: <pre> or <code> missing dir=\"ltr\" in AR template"
                     )
+                # WeasyPrint's SVG renderer doesn't run Arabic shaping — letters
+                # disconnect into isolated forms. Use the .diagram-stage / .diagram-label
+                # HTML-overlay pattern instead (see references/diagrams.md).
+                check_arabic_in_svg(text, path, violations)
 
     return len(violations) == 0, violations
+
+
+_AR_CHAR = re.compile(r"[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]")
+
+
+def check_arabic_in_svg(text: str, path: Path, violations: list[str]) -> None:
+    """Flag any <text>/<tspan> element inside an <svg> block that contains Arabic
+    characters. WeasyPrint does not shape Arabic in SVG text — migrate to the
+    .diagram-stage overlay pattern documented in references/diagrams.md."""
+    for svg_match in re.finditer(r"<svg\b[^>]*>(.*?)</svg>", text, re.DOTALL | re.IGNORECASE):
+        svg_body = svg_match.group(1)
+        for el_match in re.finditer(
+            r"<(text|tspan)\b[^>]*>(.*?)</\1>", svg_body, re.DOTALL | re.IGNORECASE
+        ):
+            content = el_match.group(2)
+            if _AR_CHAR.search(content):
+                snippet = content.strip()[:40].replace("\n", " ")
+                violations.append(
+                    f"{path.relative_to(SKILL_ROOT)}: Arabic text in SVG <{el_match.group(1)}> "
+                    f"(\"{snippet}\") — WeasyPrint can't shape Arabic in SVG. "
+                    f"Use .diagram-stage HTML overlay pattern (see references/diagrams.md)."
+                )
 
 
 # ===================== RENDER MODE =====================

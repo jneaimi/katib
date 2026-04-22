@@ -42,6 +42,10 @@ from config import load_config  # noqa: E402
 from memory import filter_since, memory_path, read_jsonl  # noqa: E402
 
 PROPOSAL_MIN_REPEATS = 3
+# `unused-doc-type` is noisy before a skill has accumulated real usage.
+# Skip the proposal entirely when total runs in the window fall below this
+# threshold — otherwise day-2 installs flag every template for deprecation.
+UNUSED_MIN_TOTAL_RUNS = 20
 
 
 def parse_since(spec: str | None) -> int | None:
@@ -170,19 +174,22 @@ def build_proposals(summary: dict) -> list[dict]:
             ),
         })
 
-    # Unused doc types — stale templates
-    used = {doc for doc, _ in summary["by_doc"]}
-    all_types = _discover_doc_types()
-    for key in sorted(all_types):
-        if key not in used and not summary["domain_filter"]:
-            proposals.append({
-                "kind": "unused-doc-type",
-                "doc_type": key,
-                "action": (
-                    f"{key} has not been rendered in this window. Flag for possible deprecation "
-                    f"— but confirm with the user before removing."
-                ),
-            })
+    # Unused doc types — stale templates.
+    # Suppressed until the skill has accumulated real usage (see UNUSED_MIN_TOTAL_RUNS),
+    # otherwise early-life installs flag every template as a deprecation candidate.
+    if summary["runs_total"] >= UNUSED_MIN_TOTAL_RUNS:
+        used = {doc for doc, _ in summary["by_doc"]}
+        all_types = _discover_doc_types()
+        for key in sorted(all_types):
+            if key not in used and not summary["domain_filter"]:
+                proposals.append({
+                    "kind": "unused-doc-type",
+                    "doc_type": key,
+                    "action": (
+                        f"{key} has not been rendered in this window. Flag for possible deprecation "
+                        f"— but confirm with the user before removing."
+                    ),
+                })
 
     return proposals
 
@@ -245,9 +252,22 @@ def format_text(summary: dict, proposals: list[dict]) -> str:
             lines.append(f"  {n:>4}  {name}")
         lines.append("")
 
-    if proposals:
-        lines.append("## Proposals")
+    # Note when unused-doc-type proposals are suppressed due to early-life runs
+    suppression_note = None
+    if summary["runs_total"] < UNUSED_MIN_TOTAL_RUNS:
+        suppression_note = (
+            f"_`unused-doc-type` proposals suppressed "
+            f"({summary['runs_total']} runs < {UNUSED_MIN_TOTAL_RUNS} minimum). "
+            f"Render more to surface deprecation candidates._"
+        )
+
+    lines.append("## Proposals")
+    lines.append("")
+    if suppression_note:
+        lines.append(suppression_note)
         lines.append("")
+
+    if proposals:
         for i, p in enumerate(proposals, 1):
             lines.append(f"### {i}. {p['kind']}")
             for key, val in p.items():
@@ -264,9 +284,7 @@ def format_text(summary: dict, proposals: list[dict]) -> str:
             lines.append("")
             lines.append(f"> {p['action']}")
             lines.append("")
-    else:
-        lines.append("## Proposals")
-        lines.append("")
+    elif not suppression_note:
         lines.append(
             "_Nothing recurs ≥3 times in this window. Keep capturing corrections as "
             "they come up — reflect will surface patterns once there's signal._"

@@ -3,6 +3,23 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.10.2] — 2026-04-22
+
+### Added
+- **CSS-lint rule: Arabic text inside `<svg>`** — `build.py --check` now fails the build if any `*.ar.html` template embeds Arabic characters in a `<text>` or `<tspan>` element nested in `<svg>`. WeasyPrint's SVG renderer does not shape Arabic, so this catches the class of silent-failure bugs that shipped the walkthrough's first AR render broken. Violation message names the offending file and points at the `.diagram-stage` overlay pattern in `references/diagrams.md`.
+- **`references/diagrams.md`: "Bilingual diagrams (Arabic labels)" section** — documents the `.diagram-stage` + `.diagram-label` primitive, the viewBox-percentage coordinate math, a copy-paste worked example, and the when-to-reach-for-English-vs-Arabic split. Canonical path for RTL diagrams going forward.
+- **`scripts/test-ar-svg.sh`** — test harness with 4 cases, 8 assertions: clean skill passes, bad AR template is rejected with a helpful violation, overlay-pattern template passes, and English SVG text in an AR template is allowed (no false positive).
+
+### Changed
+- **`reflect.py`: bootstrap-noise suppression** for the `unused-doc-type` proposal. When fewer than 20 runs have been logged in the active window, the check is suppressed entirely and replaced with a one-line suppression note (`_\`unused-doc-type\` proposals suppressed (N runs < 20 minimum)_`). Above 20 runs, behaviour is unchanged. Rationale: day-two installs were flagging every template as a deprecation candidate, producing ~40 false positives per report.
+
+### Tests
+- `test-ar-svg.sh` passes: 8/8 assertions.
+- Existing harnesses (`test-all`, `test-tutorial`, `test-brand`, `test-alt-bundles`, `test-images`) — all still pass. Batch render of all 34 doc types × 2 langs: 80/80 pass.
+
+### Philosophy
+- The Arabic-in-SVG fix is now a shape *and* a guard. v0.10.1 shipped the `.diagram-stage` primitive as a one-off workaround; v0.10.2 promotes it to the canonical path documented in `diagrams.md` with a lint rule behind it. Future AR templates can't regress this silently.
+
 ## [0.10.1] — 2026-04-22
 
 ### Added
