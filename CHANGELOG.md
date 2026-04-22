@@ -3,6 +3,27 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.13.0] — 2026-04-22
+
+### Added
+- **`scripts/feedback.py` — CLI for logging user corrections to `feedback.jsonl`.** Closes the signal-capture side of the reflect loop: v0.10.0 added reflect.py's `string-swap` detection, but the underlying `log_feedback()` helper was a Python API no one invoked mid-conversation. A `python3 scripts/feedback.py add …` one-liner makes it the natural step after "change X to Y" corrections.
+  - **Three subcommands.** `add --before X --after Y --domain tutorial --lang en [--reason …] [--doc …]` writes a row. `list [--since 7d] [--domain …] [--lang …] [--limit N]` prints recent rows (most recent last). `search <term>` finds rows where the term appears in either the `before` or `after` field.
+  - **Round-trip verified**: three identical `add` calls in a domain/lang make `reflect.py --json` emit a `string-swap` proposal with `count=3`; one-off corrections stay correctly below the threshold.
+- **`scripts/test-feedback.sh`** — 8-step harness covering: add-flag validation, row shape, idempotent multi-add, list, list filters, search (hit + miss), reflect integration (string-swap fires at 3), single correction suppressed at threshold. Uses a scratch `.katib/config.yaml` to isolate memory.location so the live vault stays clean.
+
+### Changed
+- **`SKILL.md` — `Inline feedback capture` section rewritten.** The old guidance showed `from memory import log_feedback` — but Claude can't import Python modules interactively. Replaced with the bash one-liner + a list/search cheatsheet so Claude actually has a callable command after the user says "change X to Y" in a Katib conversation.
+
+### Context
+- reflect.py has always been able to surface `string-swap` proposals. The bottleneck was the input side: corrections happened in conversation, got applied to templates, but never reached `feedback.jsonl`. v0.13.0 removes that gap — Claude now runs one command after each correction, and the same `before → after` pair recurring ≥3 times in a domain/lang produces an actionable proposal in the next reflect run.
+
+### Tests
+- `test-feedback.sh`: 8/8 steps pass.
+- No regressions: `test-add-domain.sh` 11/11, `test-ar-svg.sh` 8/8, `test-install-fonts.sh` 8/8.
+
+### Philosophy
+- v0.10.x built the diagnostic half of the self-improvement loop (capture, cluster, propose). v0.11.0 built the execution half (`add_domain.py`). v0.13.0 closes the input side that had silently starved the loop. Each correction the user makes is now a durable data point — the skill learns what it renders worse than the user wants, and reflect can finally surface it.
+
 ## [0.12.0] — 2026-04-22
 
 ### Added

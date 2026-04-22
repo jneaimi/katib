@@ -277,12 +277,22 @@ Every successful `build.py` render appends one line to `{memory.location}/runs.j
 {"ts": "...", "domain": "...", "doc": "...", "lang": "...", "layout": "...", "pages": N, "output": "..."}
 ```
 
-When the user makes a correction (explicitly says "change X to Y", "this phrasing is off", "wrong color"), capture it to `feedback.jsonl` in the same directory. Use the `log_feedback` helper in `scripts/memory.py`:
+When the user makes a correction (explicitly says "change X to Y", "this phrasing is off", "wrong color"), capture it via the `feedback.py` CLI **after** applying the edit. Reflect then receives real signal and surfaces a `string-swap` proposal once the same `before → after` pair recurs ≥3 times in one domain/lang.
 
-```python
-from memory import log_feedback
-log_feedback(cfg, domain="tutorial", lang="en",
-             before="click", after="select", reason="consistency")
+```bash
+python3 scripts/feedback.py add \
+    --before "click" --after "select" \
+    --domain tutorial --lang en \
+    --reason "UI consistency"
+```
+
+Browse what's been logged:
+
+```bash
+python3 scripts/feedback.py list                 # last 20 rows
+python3 scripts/feedback.py list --since 30d     # filter window
+python3 scripts/feedback.py list --domain report # filter domain
+python3 scripts/feedback.py search "click"       # rows where "click" appears in before or after
 ```
 
 When the user requests a doc type that doesn't fit any existing domain, route to the closest and call `log_domain_request` so reflect can flag a candidate new domain.
