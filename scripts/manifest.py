@@ -8,7 +8,7 @@ Usage:
     from manifest import write_manifest, append_index_entry
 
     meta = {
-        "title": "Sample Proposal",
+        "title": "UAEN Training Program",
         "domain": "business-proposal",
         "doc_type": "proposal",
         "languages": ["en", "ar"],
@@ -27,11 +27,89 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-KATIB_VERSION = "0.1.0"
+
+def _get_katib_version() -> str:
+    """Read katib version from pyproject.toml, with fallback chain.
+
+    Precedence: importlib.metadata (installed pkg) → pyproject.toml (dev) → "unknown".
+    Before v0.14.0 this was a hardcoded "0.1.0" that silently drifted 13 versions.
+    """
+    try:
+        from importlib.metadata import version, PackageNotFoundError
+        try:
+            return version("katib")
+        except PackageNotFoundError:
+            pass
+    except ImportError:
+        pass
+
+    # Dev fallback: read pyproject.toml from the skill root
+    skill_root = Path(__file__).resolve().parent.parent
+    pyproject = skill_root / "pyproject.toml"
+    if pyproject.exists():
+        try:
+            import tomllib  # Python 3.11+
+        except ImportError:
+            tomllib = None
+        if tomllib:
+            try:
+                data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+                v = data.get("project", {}).get("version")
+                if v:
+                    return v
+            except Exception:
+                pass
+        # Last-resort regex parse for 3.10
+        m = re.search(r'^version\s*=\s*"([^"]+)"', pyproject.read_text(encoding="utf-8"), re.MULTILINE)
+        if m:
+            return m.group(1)
+    return "unknown"
+
+
+KATIB_VERSION = _get_katib_version()
+
+# Fields the Katib build pipeline must set before calling write_manifest.
+# Everything here becomes part of the frontmatter (either directly or as a
+# derived tag). Kept in lockstep with meta_validator.KATIB_REQUIRED.
 REQUIRED_FIELDS = {
     "title", "domain", "doc_type", "languages", "formats",
     "cover_style", "layout", "project"
 }
+
+
+def _resolve_source_agent(meta: dict[str, Any]) -> str:
+    """source_agent precedence: explicit meta > KATIB_AGENT_ID env > default 'katib-cli'.
+
+    v0.13.0 and earlier hardcoded "claude-opus-4-7" as the default, which poisoned
+    the write audit log — every Katib manifest claimed to be from one fake agent.
+    """
+    if meta.get("source_agent"):
+        return meta["source_agent"]
+    env_agent = os.environ.get("KATIB_AGENT_ID")
+    if env_agent:
+        return env_agent
+    return "katib-cli"
+
+
+def _build_tags(meta: dict[str, Any]) -> list[str]:
+    """Return the clean tag list for a Katib manifest.
+
+    Shape: [katib, <project>, auto-generated]. No domain/doc_type/langs —
+    those already live as structured frontmatter fields and polluting tags
+    with them creates collisions with other zones' tag taxonomy (e.g.
+    "personal" is a project tag elsewhere; was showing up as Katib's domain).
+
+    `auto-generated` is included preemptively — the vault engine adds it
+    automatically when `source_agent` is set, so pre-adding it keeps tag
+    shape identical across FS writes (today) and API writes (Phase 2).
+    """
+    tags = ["katib"]
+    project = meta.get("project", "katib")
+    if project and project != "katib" and project not in tags:
+        tags.append(project)
+    if "auto-generated" not in tags:
+        tags.append("auto-generated")
+    return tags
 
 
 def _slugify(text: str, max_len: int = 60) -> str:
@@ -57,14 +135,21 @@ def validate_meta(meta: dict[str, Any]) -> None:
 
 
 def build_frontmatter(meta: dict[str, Any], *, created: str, updated: str) -> dict[str, Any]:
-    tags = ["katib", meta["domain"], meta["doc_type"], *meta["languages"]]
-    if meta.get("project") and meta["project"] != "katib":
-        tags.append(meta["project"])
-    return {
+    """Construct the manifest frontmatter dict.
+
+    v0.14.0 changes (ADR §20 Phase 1):
+      - tags: [katib, project, auto-generated] only (domain/doc_type/langs
+        moved to structured fields; see _build_tags docstring)
+      - katib_version: auto-read from pyproject.toml, not hardcoded
+      - source_agent: resolved via env/meta, defaults to 'katib-cli' not 'claude-opus-4-7'
+      - source_context: new optional field — holds the short run-id so each
+        manifest can be traced back to a specific Katib render
+    """
+    fm: dict[str, Any] = {
         "type": "output",
         "created": created,
         "updated": updated,
-        "tags": tags,
+        "tags": _build_tags(meta),
         "project": meta.get("project", "katib"),
         "domain": meta["domain"],
         "doc_type": meta["doc_type"],
@@ -73,9 +158,13 @@ def build_frontmatter(meta: dict[str, Any], *, created: str, updated: str) -> di
         "cover_style": meta["cover_style"],
         "layout": meta["layout"],
         "katib_version": KATIB_VERSION,
-        "source_agent": meta.get("source_agent", "claude-opus-4-7"),
-        **({"reference_code": meta["reference_code"]} if meta.get("reference_code") else {}),
+        "source_agent": _resolve_source_agent(meta),
     }
+    if meta.get("source_context"):
+        fm["source_context"] = meta["source_context"]
+    if meta.get("reference_code"):
+        fm["reference_code"] = meta["reference_code"]
+    return fm
 
 
 def _yaml_dump(data: dict[str, Any]) -> str:
@@ -240,7 +329,8 @@ def write_run_json(folder: Path, meta: dict[str, Any], render_meta: dict[str, An
         "layout": meta["layout"],
         "page_counts": merged_page_counts,
         "verify": render_meta.get("verify", {"passed": None, "checks": []}),
-        "source_agent": meta.get("source_agent", "claude-opus-4-7"),
+        "source_agent": _resolve_source_agent(meta),
+        **({"source_context": meta["source_context"]} if meta.get("source_context") else {}),
         **({"reference_code": meta["reference_code"]} if meta.get("reference_code") else {}),
     }
     run_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
@@ -307,16 +397,16 @@ if __name__ == "__main__":
     # Smoke test
     import tempfile
     sample_meta = {
-        "title": "Sample Proposal",
+        "title": "UAEN Training Program",
         "domain": "business-proposal",
         "doc_type": "proposal",
         "languages": ["en", "ar"],
         "formats": ["pdf"],
         "cover_style": "neural-cartography",
         "layout": "classic",
-        "project": "example-project",
-        "reference_code": "PROP-2026-001",
-        "purpose": "Example proposal — replace with your own content",
+        "project": "ils-offers",
+        "reference_code": "TITS-TP-2026-001",
+        "purpose": "UAEN Full-Stack AI Vibe Coder Training Program proposal",
     }
     with tempfile.TemporaryDirectory() as td:
         folder = Path(td) / folder_name(_today_iso(), sample_meta["title"])

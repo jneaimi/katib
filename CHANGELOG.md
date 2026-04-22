@@ -3,6 +3,40 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.14.0] — 2026-04-22 — Phase 1 of vault-integration migration
+
+First of five phases (ADR §20) to bring Katib's vault writes into line with the Soul Hub vault engine's governance. This phase is **schema-only** — no network calls, no routing changes, fully reversible. Builds the metadata contract that Phase 2 will post to `/api/vault/notes`. Closes all of category (C) from the breach audit (metadata drift) and the `auto-generated` tag portion of (A).
+
+### Added
+- **`scripts/meta_validator.py` (295 lines)** — schema gate that mirrors the vault engine's governance exactly. Encodes `GLOBAL_REQUIRED_FIELDS`, `MAX_NOTE_SIZE`, content/katib/projects/knowledge zone allowed-types + required-fields. Validates a proposed frontmatter dict against a target zone and returns a list of `SchemaViolation` objects (error or warn). Catches: global missing fields, zone-specific missing fields, disallowed types, missing `katib` tag, missing `auto-generated` tag, tag pollution (domain/doc_type/lang in tags when those are already structured fields), project-path mismatch, size over 1 MB.
+  - CLI: `--manifest <path>` (validates an on-disk manifest.md, infers zone from path), `--describe-schema` (dumps full schema as JSON).
+  - Python API: `from meta_validator import validate; violations = validate(meta, zone=...)`.
+  - Drift prevention note: kept in lockstep with `soul-hub/src/lib/vault/types.ts` and `vault/*/CLAUDE.md` so Phase 2 API writes don't hit surprises.
+- **`scripts/test-meta-validator.sh`** — 11-step harness covering every violation path plus an integration check that live `manifest.py` output validates clean for both `content/katib/tutorial` and `projects/<slug>/outputs`.
+- **`--agent` CLI flag** on `build.py` — explicit `source_agent` override for write audit log. Precedence: `--agent` → `$KATIB_AGENT_ID` → default `katib-cli`. Previously hardcoded `claude-opus-4-7` which poisoned the write log.
+- **`source_context` frontmatter field** — 8-char BLAKE2s hash of the slug directory name. Stable across EN/AR co-located renders (both use the same folder). Traces each manifest back to a specific Katib run.
+
+### Changed
+- **`manifest.py` — `katib_version` auto-read from `pyproject.toml`** via `importlib.metadata.version("katib")`, with fallback to parsing `pyproject.toml` directly for dev installs. Previously hardcoded `"0.1.0"` at module scope and drifted 13 versions. Both `manifest.md` frontmatter and `.katib/run.json` now carry the correct version.
+- **`manifest.py` — tag builder rewritten.** New shape: `["katib", <project>, "auto-generated"]`. Prunes `domain`, `doc_type`, `languages` from tags (those are already structured fields; tagging them polluted the vault's tag taxonomy and collided with project tags like `personal`). `auto-generated` is pre-added to match the auto-tag the vault engine applies when `source_agent` is present — keeps tag shape stable across FS and API writes.
+- **`manifest.py` — `source_agent` default changed** from literal `"claude-opus-4-7"` to the env-resolved `katib-cli`. Both `manifest.md` and `.katib/run.json` use the new `_resolve_source_agent()` helper.
+- **`manifest.py` — `source_context` field threaded through** both `build_frontmatter()` and `write_run_json()`.
+- **`build.py`** — `render_template()` signature gains `agent` and `source_context`; generates the BLAKE2s run-id when caller doesn't supply one.
+- **Skill's `pyproject.toml`** — bumped to 0.14.0 (was stale at 0.1.0 from before v0.2.0 due to the install script not syncing it). Needed for `importlib.metadata.version()` to return a truthful number in dev mode.
+
+### Tests
+- `test-meta-validator.sh`: 11/11 pass.
+- Regression: all 9 existing harnesses green — `test-ar-svg` (8), `test-add-domain` (11), `test-feedback` (8), `test-install-fonts` (8), `test-all` (business-proposal 6 renders), `test-tutorial` (tutorial 10 renders + manifest merge), `test-brand` (14), `test-alt-bundles` (18).
+
+### Philosophy
+- Phase 1 is explicitly schema-first. No network, no routing change, no user-visible behaviour change except the cleaner frontmatter. This is the foundation Phase 2 depends on: once validator and engine schemas agree, Phase 2's API POST is just plumbing. Drift detection is the point — if either side changes without the other, the validator will start rejecting manifests and we'll catch it before the API does in Phase 2.
+
+### What's next (ADR §20)
+- **Phase 2 (v0.15.0)** — `scripts/vault_client.py` + `manifest.py` POST to `/api/vault/notes`, with FS fallback. `--project <slug>` routing to `projects/<slug>/outputs/`.
+- **Phase 3 (v0.16.0)** — Zone governance learning (pre-render fetch of `CLAUDE.md` rules).
+- **Phase 4 (v0.17.0)** — `audit_vault.py` + `migrate_vault.py` (one-shot, dry-run default).
+- **Phase 5 (v0.18.0)** — Integration polish; vault-first mode becomes default.
+
 ## [0.13.0] — 2026-04-22
 
 ### Added

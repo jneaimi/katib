@@ -311,6 +311,8 @@ def render_template(
     with_cover: bool = False,
     force_cover: bool = False,
     brand: dict | None = None,
+    agent: str | None = None,
+    source_context: str | None = None,
 ) -> Path:
     """Render HTML template → PDF in a new vault folder. Returns the folder path."""
     try:
@@ -446,6 +448,14 @@ def render_template(
     target_range = doc_meta.get("target_pages") or []
     under_target = bool(target_range) and pages < target_range[0]
 
+    # Source context: short run-id so manifest frontmatter can be traced back to
+    # a specific Katib render. Use first 8 chars of a UUID4 — enough entropy for
+    # audit-log lookups, cheap to generate, stable across EN/AR co-located runs
+    # because we derive it from the slug_dir name (shared between languages).
+    import hashlib
+    if not source_context:
+        source_context = hashlib.blake2s(slug_dir.name.encode(), digest_size=4).hexdigest()
+
     # Meta for manifest
     meta = {
         "title": title,
@@ -458,7 +468,10 @@ def render_template(
         "project": project,
         "created": today,
         "purpose": purpose,
+        "source_context": source_context,
     }
+    if agent:
+        meta["source_agent"] = agent
     if reference_code:
         meta["reference_code"] = reference_code
 
@@ -573,6 +586,7 @@ def main():
     parser.add_argument("--force-cover", action="store_true", help="Regenerate cover even if assets/cover.png exists (implies --with-cover)")
     parser.add_argument("--brand", default=None, help="Brand profile name (resolves to ~/.katib/brands/<name>.yaml or <skill>/brands/<name>.yaml)")
     parser.add_argument("--brand-file", default=None, help="Direct path to a brand profile YAML (overrides --brand)")
+    parser.add_argument("--agent", default=None, help="source_agent identifier for write audit log (default: $KATIB_AGENT_ID or 'katib-cli')")
 
     # modes
     parser.add_argument("--check", action="store_true", help="CSS/template lint only, no render")
@@ -647,6 +661,7 @@ def main():
         cover_style=args.cover,
         layout=args.layout,
         project=args.project,
+        agent=args.agent,
         reference_code=args.ref,
         purpose=args.purpose,
         with_cover=args.with_cover or args.force_cover,
