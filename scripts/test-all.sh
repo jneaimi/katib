@@ -7,12 +7,18 @@ set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SKILL_DIR"
 
-REF="PROP-2026-001"
-PROJECT="example-project"
-TITLE_EN="Sample Proposal — Services Agreement"
-TITLE_AR="عرض نموذجي — اتفاقية خدمات"
-PURPOSE_EN="Illustrative deliverable used by the test harness"
-PURPOSE_AR="وثيقة توضيحية تستخدمها حزمة الاختبارات"
+# Regression harness — pin to fs mode so renders don't hit the live Soul Hub
+# vault API. Phase 2 introduced the API write path; test-vault-client.sh is
+# the one harness that exercises it end-to-end. Everything else tests render
+# behaviour and should stay deterministic + offline-friendly.
+export KATIB_VAULT_MODE="${KATIB_VAULT_MODE:-fs}"
+
+REF="TITS-TP-2026-001"
+PROJECT="ils-offers"
+TITLE_EN="UAEN Full-Stack AI Training Program"
+TITLE_AR="برنامج تدريب الذكاء الاصطناعي الشامل لجامعة الإمارات"
+PURPOSE_EN="Hybrid Split delivery — 2 groups of 9, 6 weeks, AED 615K"
+PURPOSE_AR="تسليم هجين — مجموعتان من ٩، ستة أسابيع، ٦١٥ ألف درهم"
 
 render() {
   local doc="$1" lang="$2"

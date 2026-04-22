@@ -34,7 +34,12 @@ from typing import Any
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SKILL_ROOT / "scripts"))
 
-from config import load_config, resolve_output_root  # noqa: E402
+from config import (  # noqa: E402
+    load_config,
+    resolve_output_root,
+    resolve_project_outputs_root,
+    resolve_vault_root,
+)
 from manifest import (  # noqa: E402
     append_index_entry,
     folder_name,
@@ -360,7 +365,16 @@ def render_template(
 
     # Build output folder — include doc_type to avoid collisions across doc types for the same title
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    out_root = Path(os.environ.get("KATIB_OUTPUT_ROOT", str(resolve_output_root(cfg))))
+
+    # Routing (Phase 2 of vault-integration migration):
+    #   project=katib  → legacy <vault>/content/katib/<domain>/<slug>/ (governed by content/katib/CLAUDE.md)
+    #   project=<slug> → <vault>/projects/<slug>/outputs/<domain>/<slug>/ (governed by projects/CLAUDE.md)
+    # KATIB_OUTPUT_ROOT env var overrides both paths — used by tests to isolate writes.
+    if env_root := os.environ.get("KATIB_OUTPUT_ROOT"):
+        out_root = Path(env_root)
+    else:
+        out_root = resolve_project_outputs_root(cfg, project)
+
     # Folder name format: YYYY-MM-DD-<doc_type>-<slug>
     # User can override entire slug via --slug (for EN+AR co-location)
     if slug_override := os.environ.get("KATIB_SLUG_OVERRIDE"):
@@ -476,7 +490,16 @@ def render_template(
         meta["reference_code"] = reference_code
 
     # Write manifest + run.json
-    write_manifest(slug_dir, meta)
+    # vault_root goes through to manifest.py so first-writes route via the
+    # Soul Hub API (Phase 2). When KATIB_OUTPUT_ROOT redirects output to a
+    # scratch path outside the vault, write_manifest detects that and does
+    # a pure FS write — no API call. Updates (merge path) also stay on FS.
+    vault_root_for_write: Path | None
+    try:
+        vault_root_for_write = resolve_vault_root(cfg)
+    except Exception:
+        vault_root_for_write = None
+    write_manifest(slug_dir, meta, vault_root=vault_root_for_write)
     render_meta = {
         "page_counts": {pdf_path.name: pages},
         "cover": {"style": cover_style, **cover_render_meta},

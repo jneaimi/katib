@@ -11,6 +11,9 @@ set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SKILL_DIR"
 
+# Phase 2 regression: pin render tests to fs mode (see test-all.sh comment).
+export KATIB_VAULT_MODE="${KATIB_VAULT_MODE:-fs}"
+
 TITLE_HOWTO_EN="How to preview a PDF in Soul Hub"
 TITLE_HOWTO_AR="كيف تعاين ملف PDF في Soul Hub"
 TITLE_CHEAT_EN="Soul Hub keyboard shortcuts"

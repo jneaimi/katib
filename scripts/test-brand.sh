@@ -7,6 +7,9 @@ set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$SKILL_DIR"
 
+# Phase 2 regression: pin render tests to fs mode (see test-all.sh comment).
+export KATIB_VAULT_MODE="${KATIB_VAULT_MODE:-fs}"
+
 echo "▶ Katib brand profile smoke test"
 echo ""
 

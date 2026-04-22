@@ -131,14 +131,57 @@ def _validate(cfg: dict) -> None:
 
 
 def resolve_output_root(cfg: dict) -> Path:
-    """Return the absolute output root for generated folders."""
+    """Return the absolute output root for generated folders (project=katib default).
+
+    This is historically the content/katib/ tree. For project-routed outputs
+    (--project <non-katib>), see resolve_project_outputs_root().
+    """
     if cfg["output"]["destination"] == "vault":
         return Path(cfg["output"]["vault_path"]).expanduser()
     return Path(cfg["output"]["custom_path"]).expanduser()
 
 
+def resolve_vault_root(cfg: dict) -> Path:
+    """Return the Obsidian vault root (the folder that contains content/, projects/, etc.).
+
+    Resolution order:
+      1. KATIB_VAULT_ROOT env var (testing + overrides)
+      2. cfg['output']['vault_root'] if explicitly set
+      3. Strip `content/katib` from vault_path — the default convention
+
+    Used by vault_client for API writes (needs the vault-relative zone path)
+    and for project-routing (needs to reach projects/<slug>/outputs/).
+    """
+    env_root = os.environ.get("KATIB_VAULT_ROOT")
+    if env_root:
+        return Path(env_root).expanduser()
+
+    cfg_root = cfg.get("output", {}).get("vault_root")
+    if cfg_root:
+        return Path(cfg_root).expanduser()
+
+    # Convention: vault_path = <vault_root>/content/katib
+    vault_path = Path(cfg["output"]["vault_path"]).expanduser()
+    return vault_path.parent.parent
+
+
+def resolve_project_outputs_root(cfg: dict, project: str) -> Path:
+    """Return the outputs folder for a given project slug.
+
+    project=katib → legacy content/katib/ tree (resolve_output_root)
+    project=<other> → <vault_root>/projects/<slug>/outputs/
+
+    The projects/<slug>/ path is governed by projects/CLAUDE.md which already
+    declares the 'output' type and the required fields (type, created, tags, project).
+    Phase 1's meta_validator enforces the same shape locally before we POST.
+    """
+    if project == "katib":
+        return resolve_output_root(cfg)
+    return resolve_vault_root(cfg) / "projects" / project / "outputs"
+
+
 def slug_folder(cfg: dict, domain: str, date_str: str, slug: str) -> Path:
-    """Return the absolute folder path for a new generation."""
+    """Return the absolute folder path for a new generation (legacy katib path)."""
     root = resolve_output_root(cfg)
     return root / domain / f"{date_str}-{slug}"
 

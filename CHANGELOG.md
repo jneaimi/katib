@@ -3,6 +3,76 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.15.0] — 2026-04-22 — Phase 2 of vault-integration migration
+
+Second of five phases (ADR §20). Wires Katib's first-writes through Soul Hub's
+`POST /api/vault/notes` endpoint — the governance gate — with an FS fallback
+when the API is unreachable. Also introduces project-scoped output routing:
+`--project <slug>` (for any slug other than `katib`) now lands outputs in
+`projects/<slug>/outputs/` instead of `content/katib/`. Closes category (A)
+governance-bypass and category (B) zone-misrouting from the breach audit.
+
+### Added
+- **`scripts/vault_client.py` (~320 lines)** — HTTP client for Soul Hub's
+  `POST /api/vault/notes`. Uses stdlib urllib only (no new deps). Three modes
+  selectable via `KATIB_VAULT_MODE`:
+  - `api` (default): prefer API, fall back to FS with `katib-fallback` tag
+  - `strict`: API only, raise `VaultNetworkError` on any connection failure
+  - `fs`: skip API entirely (legacy path, used by regression harnesses)
+
+  Exceptions: `VaultGovernanceError` (4xx reject — caller must fix metadata),
+  `VaultConflictError` (409 duplicate path or content), `VaultNetworkError`
+  (connection refused / timeout), `VaultWriteResult` dataclass reports the
+  backend taken (`api`, `fallback`, `fs`).
+- **`config.py — resolve_vault_root()`** — derives the Obsidian vault root
+  from `output.vault_path` (convention: `<root>/content/katib`). Overridable
+  via `KATIB_VAULT_ROOT` env var or `cfg.output.vault_root`.
+- **`config.py — resolve_project_outputs_root()`** — new routing helper.
+  `project=katib` → legacy `content/katib/` tree; `project=<other>` →
+  `<vault>/projects/<slug>/outputs/`. Governed by `projects/CLAUDE.md`
+  (inherits the `output` type + `type, created, tags, project` requirements
+  that Phase 1's validator already enforces locally).
+- **`scripts/test-vault-client.sh`** — 16-step harness covering: import +
+  public API, FS fallback path + `katib-fallback` tag injection, strict-mode
+  network failure, fs-mode skip-API, zone/filename derivation, project
+  routing (katib vs. other), fs-mode build.py smoke, and two live-API
+  assertions against Soul Hub (happy path + governance reject).
+
+### Changed
+- **`manifest.py — write_manifest(..., vault_root=Path)`** — first-writes
+  route through `vault_client.create_note()` when `vault_root` is supplied
+  and the folder lives under it. Updates (second-language render merging
+  into an existing manifest) stay on FS; `katib-fallback` tag is preserved
+  through the merge so the reconcile job (Phase 4) can still find them.
+  PUT-based governed updates deferred to Phase 5.
+- **`build.py — render_template()`** — `--project` CLI flag now drives
+  real output routing, not just a metadata field. Default (`katib`) keeps
+  the legacy `content/katib/` path; other values route to
+  `projects/<slug>/outputs/`. Also wires `vault_root` through to
+  `write_manifest` for the governance gate.
+- **Regression harnesses pinned to `KATIB_VAULT_MODE=fs`** — `test-all.sh`,
+  `test-tutorial.sh`, `test-brand.sh`. Keeps render tests offline-friendly
+  and avoids Soul Hub's duplicate-content detector flagging repeat runs.
+  `test-vault-client.sh` is the one harness that exercises the live API.
+- **`vault/content/katib/CLAUDE.md — Allowed Types` rewritten** from
+  markdown prose (`` `output` (every manifest), `index` (zone index) ``)
+  to clean bullets (`- output` / `- index`). The governance parser
+  splits on commas and couldn't extract type names from the decorated
+  form, so previously the zone's allowed-types list parsed as garbage
+  and the API blocked all Katib writes.
+
+### Docs / infrastructure
+- Skill + dev-repo `pyproject.toml` and `package.json` bumped to 0.15.0.
+- ADR §20 Phase 2 marked ✓ DONE with outcome paragraph.
+
+### Tests
+- `test-vault-client.sh`: 16/16 pass.
+- Regression: all 9 existing harnesses green — `test-meta-validator` (11),
+  `test-all` (business-proposal 6 renders), `test-tutorial` (10 renders +
+  manifest merge), `test-alt-bundles` (18), `test-brand` (14),
+  `test-images` (8 goldens), `test-feedback` (8), `test-add-domain` (11),
+  `test-install-fonts` (live-network, 8).
+
 ## [0.14.0] — 2026-04-22 — Phase 1 of vault-integration migration
 
 First of five phases (ADR §20) to bring Katib's vault writes into line with the Soul Hub vault engine's governance. This phase is **schema-only** — no network calls, no routing changes, fully reversible. Builds the metadata contract that Phase 2 will post to `/api/vault/notes`. Closes all of category (C) from the breach audit (metadata drift) and the `auto-generated` tag portion of (A).

@@ -256,21 +256,40 @@ def _merge_dedupe(*lists: list[str]) -> list[str]:
     return list(seen.keys())
 
 
-def write_manifest(folder: Path, meta: dict[str, Any], *, update: bool = False) -> Path:
+def write_manifest(
+    folder: Path,
+    meta: dict[str, Any],
+    *,
+    update: bool = False,
+    vault_root: Path | None = None,
+) -> Path:
     """Write manifest.md into the generation folder.
 
-    If a manifest already exists, `languages` and `formats` are merged (union, dedup,
-    preserving order) so that a second-language render doesn't erase the first.
-    `created` is always preserved from the existing manifest; `updated` is always bumped.
-    Other scalar fields (title, cover_style, etc.) let the new render win — callers that
-    want to preserve first-write semantics should not overwrite those fields.
+    First write (no existing manifest.md) routes through the Soul Hub vault API
+    when `vault_root` is supplied and the folder is under it — this is the
+    governance gate introduced in Phase 2 of the vault-integration migration.
+    On API network failure (mode=api), falls back to FS with a `katib-fallback`
+    tag (added by vault_client, not here). On governance rejection, the error
+    is raised unchanged — the caller must fix the metadata, not bypass it.
+
+    Update (manifest.md already exists) stays on FS even when vault_root is
+    supplied — merging languages/formats requires a read-modify-write that the
+    vault API's PUT endpoint supports, but wiring that is deferred to Phase 5.
+    The merge logic here unchanged from v0.14.0.
+
+    Args:
+      folder: slug directory (contains manifest.md + source/ + .katib/)
+      meta:   merged metadata dict — validated by meta_validator before call
+      update: hint only — actual create/update decision is based on manifest.md existence
+      vault_root: Obsidian vault root. If None, writes go straight to FS.
     """
     validate_meta(meta)
     manifest_path = folder / "manifest.md"
     now = _today_iso()
 
     merged_meta = dict(meta)
-    if manifest_path.exists():
+    is_update = manifest_path.exists()
+    if is_update:
         existing = manifest_path.read_text(encoding="utf-8")
         m = re.search(r"^created:\s*(\S+)", existing, re.MULTILINE)
         created = m.group(1) if m else meta.get("created", now)
@@ -282,14 +301,51 @@ def write_manifest(folder: Path, meta: dict[str, Any], *, update: bool = False) 
         existing_fmts = _parse_list_field(existing, "formats")
         if existing_fmts:
             merged_meta["formats"] = _merge_dedupe(existing_fmts, list(meta["formats"]))
+
+        # Preserve katib-fallback tag if it was present — signals a prior write
+        # went out through FS fallback and still needs reconciling. The reconcile
+        # job removes the tag after replaying through the API.
+        if re.search(r"tags:.*katib-fallback", existing):
+            if "tags" in merged_meta and "katib-fallback" not in merged_meta["tags"]:
+                merged_meta["tags"] = list(merged_meta["tags"]) + ["katib-fallback"]
     else:
         created = meta.get("created", now)
 
     frontmatter = build_frontmatter(merged_meta, created=created, updated=now)
     body = render_manifest_body(merged_meta, folder.name, folder=folder)
+    fm_yaml = _yaml_dump(frontmatter)
 
-    content = f"---\n{_yaml_dump(frontmatter)}\n---\n\n{body}"
-    manifest_path.write_text(content, encoding="utf-8")
+    # Updates stay on FS (see Phase 5 for PUT support)
+    if is_update:
+        manifest_path.write_text(f"---\n{fm_yaml}\n---\n\n{body}", encoding="utf-8")
+        return manifest_path
+
+    # First write — try vault API if we have a vault_root AND folder lives under it
+    if vault_root is not None:
+        try:
+            from vault_client import (  # local import to avoid import cost in fs-only paths
+                VaultError,
+                create_note,
+                derive_zone_and_filename,
+            )
+            zone, filename = derive_zone_and_filename(folder, vault_root, "manifest.md")
+        except Exception:
+            # Either import failed or folder is outside vault_root — pure FS path
+            manifest_path.write_text(f"---\n{fm_yaml}\n---\n\n{body}", encoding="utf-8")
+            return manifest_path
+
+        result = create_note(
+            zone,
+            filename,
+            frontmatter,
+            body,
+            vault_root=vault_root,
+            frontmatter_yaml=fm_yaml,
+        )
+        return result.path
+
+    # No vault_root provided — direct FS write
+    manifest_path.write_text(f"---\n{fm_yaml}\n---\n\n{body}", encoding="utf-8")
     return manifest_path
 
 
