@@ -3,6 +3,21 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.10.0] — 2026-04-22
+
+### Added
+- **Self-improvement loop (`reflect.py`) — the ADR's deferred v0.2 command lands.** Reads the three passive-capture logs (`runs.jsonl`, `feedback.jsonl`, `domain-requests.jsonl`) under the configured `memory.location` and surfaces three proposal types when a pattern recurs ≥3 times: `string-swap` (repeated before→after corrections → audit `references/writing.<lang>.md` + templates), `new-domain-candidate` (repeated routes to the same closest-match domain → consider a new domain or doc_type), `unused-doc-type` (zero renders in the window → flag for possible deprecation).
+- `scripts/reflect.py` CLI: `--since Nd|Nw|all` (default 30d), `--domain <d>`, `--stats`, `--propose` (write Markdown proposal to `<memory>/proposals/<ts>-reflect.md`), `--json` (machine-readable output). Read-only by design — applying proposals stays manual.
+- `scripts/memory.py` — shared helper module with `log_run`, `log_feedback`, `log_domain_request`, `read_jsonl`, `filter_since`. Ensures every log row carries a UTC ISO timestamp and non-ASCII-safe Arabic fields.
+- Passive capture is **now actually wired.** `build.py` calls `log_run()` at the end of every successful render, writing one line per PDF to `runs.jsonl` (domain, doc, lang, layout, cover_style, pages, brand, output path).
+
+### Changed
+- `SKILL.md`: "Inline feedback capture (v0 passive logging)" section rewritten to reflect that (a) `build.py` genuinely writes to `{memory.location}/runs.jsonl` now, and (b) there is a live Reflect command to read those logs. Added the proposal-trigger table and the read-only-by-design note.
+- `SKILL.md` Step 7 build block closes with a pointer to Reflect for template evolution.
+
+### Philosophy
+- Thresholds stay conservative: 3-count minimum across a 30-day window. Proposals surface leads; humans decide. No auto-edits in v0 — drift risk on weak signal outweighs convenience.
+
 ## [0.9.0] — 2026-04-22
 
 ### Added

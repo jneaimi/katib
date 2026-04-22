@@ -331,6 +331,19 @@ uv run scripts/frame.py assets/screenshots/step-1.png --chrome mac --theme light
 | `--url <url>` | URL shown in the URL bar (default reads from `<image>.meta.json`) |
 | `--out <path>` / `--force` / `--dry-run` | Standard output controls |
 
+### `reflect.py` — surface self-improvement leads
+
+```bash
+uv run scripts/reflect.py                   # summary of last 30 days
+uv run scripts/reflect.py --since 7d        # Nd | Nw | all
+uv run scripts/reflect.py --domain tutorial # filter to one domain
+uv run scripts/reflect.py --stats           # counts only, skip proposals
+uv run scripts/reflect.py --propose         # also write Markdown proposal to memory/proposals/
+uv run scripts/reflect.py --json            # machine-readable
+```
+
+Reads `runs.jsonl`, `feedback.jsonl`, and `domain-requests.jsonl` under `{memory.location}` (default `~/.local/share/katib/memory/`) and proposes — never applies — template, phrasing, or domain changes when a pattern recurs ≥3 times in the window. Apply manually after review.
+
 ### Test harnesses
 
 ```bash
@@ -619,11 +632,17 @@ Typography: [Newsreader](https://fonts.google.com/specimen/Newsreader),
 
 ## Roadmap
 
-- [ ] `formal` domain — government letters, compliance documents
-- [ ] `personal` domain — CVs, cover letters
-- [ ] `marketing-pitch` domain — launch decks, investor one-pagers
-- [ ] `editorial` domain — articles, white papers, thought leadership
-- [ ] `/katib reflect` — replay + learn from captured feedback
+- [x] `formal` domain — government letters, compliance documents (v0.3.0)
+- [x] `personal` domain — CVs, cover letters (v0.4.0)
+- [x] `academic` domain — syllabi, lecture notes, research proposals (v0.5.0)
+- [x] `financial` domain — invoices, quotes, statements (v0.6.0)
+- [x] `editorial` domain — articles, white papers, op-eds (v0.7.0)
+- [x] `marketing-print` domain — sell sheets, product briefs, slide decks (v0.8.0)
+- [x] `legal` domain — service agreements, MOUs, NDAs, engagement letters (v0.9.0)
+- [x] `reflect.py` — surface self-improvement leads from captured feedback (v0.10.0)
+- [ ] `katib add-domain` / `add-style` scaffolder commands
+- [ ] `katib install-font` — OFL font installer
+- [ ] Auto-apply mode for reflect proposals (currently read-only)
 - [ ] Mermaid-to-SVG helper (optional, opt-in)
 - [ ] Native Windows via GTK3 runtime bundling (community contributions welcome)
 

@@ -250,6 +250,8 @@ bash scripts/test-images.sh       # annotate + frame golden-image regression (8 
 
 Visual anomalies → `references/production.md`.
 
+Self-improvement & template evolution → see **Reflect** below.
+
 ## Feedback protocol
 
 When the user gives **vague feedback** ("looks off", "not elegant", "spacing weird", "غير لائق"):
@@ -267,21 +269,44 @@ Template response: **"X is currently set to Y. Would you like (a) [specific alte
 
 Never say "I'll adjust the spacing" without naming the exact property and its new value.
 
-## Inline feedback capture (v0 passive logging)
+## Inline feedback capture
 
-After every delivery, `build.py` appends one line to `.katib-memory/runs.jsonl`:
-
-```json
-{"ts": "...", "domain": "...", "doc": "...", "lang": "...", "tier": "...", "output": "..."}
-```
-
-When the user makes a correction (explicitly says "change X to Y", "this phrasing is off", "wrong color"), capture it to `.katib-memory/feedback.jsonl`:
+Every successful `build.py` render appends one line to `{memory.location}/runs.jsonl` (default `~/.local/share/katib/memory/`):
 
 ```json
-{"ts": "...", "domain": "...", "lang": "...", "before": "...", "after": "...", "reason": "..."}
+{"ts": "...", "domain": "...", "doc": "...", "lang": "...", "layout": "...", "pages": N, "output": "..."}
 ```
 
-These logs feed future `/katib reflect` in v0.2. No commands in v0 — just capture.
+When the user makes a correction (explicitly says "change X to Y", "this phrasing is off", "wrong color"), capture it to `feedback.jsonl` in the same directory. Use the `log_feedback` helper in `scripts/memory.py`:
+
+```python
+from memory import log_feedback
+log_feedback(cfg, domain="tutorial", lang="en",
+             before="click", after="select", reason="consistency")
+```
+
+When the user requests a doc type that doesn't fit any existing domain, route to the closest and call `log_domain_request` so reflect can flag a candidate new domain.
+
+## Reflect — surface self-improvement leads
+
+```bash
+python3 scripts/reflect.py                       # summary of last 30 days
+python3 scripts/reflect.py --since 7d            # Nd | Nw | all
+python3 scripts/reflect.py --domain tutorial     # filter to one domain
+python3 scripts/reflect.py --stats               # counts only, skip proposals
+python3 scripts/reflect.py --propose             # also write Markdown proposal to memory/proposals/
+python3 scripts/reflect.py --json                # machine-readable
+```
+
+`reflect.py` reads the three jsonl logs and surfaces three proposal types — each fires only when a pattern recurs **≥3 times** in the window:
+
+| Proposal | Trigger | Suggested action |
+|---|---|---|
+| `string-swap` | Same `before → after` correction ≥3× in one domain/lang | Audit `domains/<d>/templates/` + `references/writing.<lang>.md`; replace where universally correct |
+| `new-domain-candidate` | ≥3 requests routed to the same closest-match domain | Review samples; add a doc_type to that domain or a new domain |
+| `unused-doc-type` | A doc type in `styles.json` rendered 0 times in the window | Flag for possible deprecation; confirm before removing |
+
+**reflect.py is read-only by design.** It does not edit templates, tokens, or references. Apply changes manually after reviewing the proposal — this keeps the skill from drifting on weak signal. When in doubt, widen the window (`--since 90d`) before acting.
 
 ---
 

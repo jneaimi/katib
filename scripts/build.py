@@ -42,6 +42,7 @@ from manifest import (  # noqa: E402
     write_run_json,
     write_tokens_snapshot,
 )
+from memory import log_run  # noqa: E402
 
 DEBUG = os.environ.get("KATIB_DEBUG") == "1"
 
@@ -443,6 +444,17 @@ def render_template(
         "verify": {"passed": not over_limit, "checks": ["page-limit"]},
     }
     write_run_json(slug_dir, meta, render_meta)
+
+    # Passive capture — one line in runs.jsonl for reflect.py to analyse later
+    if brand:
+        meta_for_log = {**meta, "brand_name": brand.get("name") or brand.get("id")}
+    else:
+        meta_for_log = meta
+    try:
+        log_run(cfg, meta_for_log, render_meta, pdf_path)
+    except Exception as e:
+        if DEBUG:
+            print(f"⚠ memory log skipped: {e}", file=sys.stderr)
 
     # Append to vault index (only if destination=vault AND slug_dir is actually under it —
     # KATIB_OUTPUT_ROOT can redirect output to a scratch path for testing)
