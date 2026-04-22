@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-right {
+      content: "{{ reference_code or 'TUT-KATIB-001' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-left {
+      content: "صفحة " counter(page) " من " counter(pages);
+      font-family: var(--font-primary);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  /* Cover — CSS-only */
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    left: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+  .cover-page .cover-title {
+    font-size: 42pt;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.2;
+    max-width: 150mm;
+  }
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 18pt;
+    line-height: 1.6;
+    max-width: 140mm;
+  }
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  /* Cover — image-based (Gemini) */
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; right: 22mm;
+    width: 150mm;
+    font-size: 34pt;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    text-align: right;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 62mm; right: 22mm;
+    width: 150mm;
+    font-size: 12pt;
+    color: var(--accent);
+    line-height: 1.6;
+    text-align: right;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { right: 10mm; }
+  .cover-page-image .cover-date { left: 10mm; }
+
+  /* Diagram containers */
+  .diagram {
+    margin: 14pt 0 10pt 0;
+    padding: 0;
+    page-break-inside: avoid;
+  }
+  .diagram figcaption {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-top: 4pt;
+    text-align: center;
+  }
+  .diagram svg { display: block; margin: 0 auto; max-width: 100%; }
+
+  /* Arabic-safe diagram stage: HTML overlays on top of SVG geometry
+     (WeasyPrint's SVG renderer doesn't shape Arabic — letters disconnect) */
+  .diagram-stage {
+    position: relative;
+    direction: ltr;
+    width: 100%;
+    max-width: 170mm;
+    margin: 0 auto;
+  }
+  .diagram-stage svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .diagram-label {
+    position: absolute;
+    direction: rtl;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    line-height: 1.1;
+    font-family: var(--font-primary);
+    color: #18181B;
+  }
+  .diagram-label.dl-xs { font-size: 7pt; color: #71717A; }
+  .diagram-label.dl-sm { font-size: 8pt; color: #3F3F46; }
+  .diagram-label.dl-md { font-size: 9pt; color: #3F3F46; }
+  .diagram-label.dl-lg { font-size: 14pt; font-weight: 700; color: #18181B; }
+  .diagram-label.dl-bold { font-weight: 700; }
+  .diagram-label.dl-muted { color: #71717A; }
+
+  /* Code block — always LTR */
+  pre.code {
+    background: var(--code-bg, #27272A);
+    color: var(--code-fg, #FAFAFA);
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    line-height: 1.6;
+    padding: 10pt 12pt;
+    border-radius: 4pt;
+    white-space: pre-wrap;
+    margin: 8pt 0;
+    page-break-inside: avoid;
+    direction: ltr;
+    text-align: left;
+  }
+  pre.code .comment { color: #A1A1AA; }
+
+  /* Domain table */
+  table.domain-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 9.5pt;
+  }
+  table.domain-table th {
+    text-align: right;
+    padding: 5pt 7pt;
+    background: var(--tag-bg, #FEF3C7);
+    color: var(--tag-fg, #78350F);
+    font-size: 8.5pt;
+    letter-spacing: 0.02em;
+    border-bottom: 1pt solid var(--border-strong);
+  }
+  table.domain-table td {
+    padding: 5pt 7pt;
+    border-bottom: 0.5pt solid var(--border);
+    vertical-align: top;
+    text-align: right;
+  }
+  table.domain-table td code {
+    direction: ltr;
+    unicode-bidi: embed;
+    font-size: 8.5pt;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* Palette swatches */
+  .palette-row {
+    display: flex;
+    gap: 8pt;
+    margin: 8pt 0;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    flex: 1 0 0;
+    min-width: 30mm;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .swatch .chip {
+    height: 22mm;
+    display: block;
+  }
+  .swatch .label {
+    font-family: var(--font-mono);
+    font-size: 7.5pt;
+    color: var(--text-tertiary);
+    padding: 3pt 0;
+    display: block;
+    background: var(--page-bg);
+  }
+  .swatch .hex {
+    font-family: var(--font-mono);
+    font-size: 7pt;
+    color: var(--text-secondary);
+    padding: 0 0 3pt 0;
+    display: block;
+    background: var(--page-bg);
+  }
+
+  /* Cheatsheet grid */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    margin: 8pt 0;
+  }
+  .cheat-card {
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 6pt 8pt;
+    page-break-inside: avoid;
+  }
+  .cheat-card h4 {
+    margin: 0 0 3pt 0;
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .cheat-card p {
+    margin: 0;
+    font-size: 9pt;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .cheat-card code {
+    direction: ltr;
+    unicode-bidi: embed;
+    font-size: 8pt;
+    background: var(--tag-bg, #FEF3C7);
+    color: var(--tag-fg, #78350F);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+  }
+
+  /* Key-value list */
+  dl.kv {
+    display: grid;
+    grid-template-columns: 40mm 1fr;
+    row-gap: 4pt;
+    column-gap: 8pt;
+    margin: 6pt 0 10pt 0;
+    font-size: 10pt;
+  }
+  dl.kv dt {
+    font-weight: 700;
+    color: var(--text);
+    direction: ltr;
+    unicode-bidi: embed;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    text-align: left;
+  }
+  dl.kv dd {
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  /* Pull quote / marker */
+  .marker {
+    border-right: 3pt solid var(--accent);
+    padding: 4pt 10pt 4pt 0;
+    margin: 8pt 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 10.5pt;
+    line-height: 1.7;
+  }
+
+  /* Lead paragraph — slightly larger, generous line-height for Arabic */
+  p.lead { line-height: 1.75; }
+
+  /* Arabic body rhythm */
+  body, p, li { line-height: 1.75; }
+  h2, h3 { line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "TUT-KATIB-001" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">الدليل الكامل</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "TUT-KATIB-001" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Preface -->
+  <p class="lead">كاتب هو أداة إنتاج مستندات بجودة طباعية، ثنائية اللغة (عربي + إنجليزي)، تعمل داخل Claude Code. يأخذك هذا الدليل من التثبيت الأول وحتى حلقة التحسّن الذاتي، في ستّ وحدات مرتّبة.</p>
+
+  <div class="objectives">
+    <span class="label">ما ستتعلّمه</span>
+    <ul>
+      <li>تثبيت كاتب وإنتاج أوّل ملف PDF في أقل من خمس دقائق.</li>
+      <li>اختيار المجال المناسب ونوع المستند والغلاف والتنسيق لأيّ تسليم.</li>
+      <li>تطبيق هوية علامتك الشخصية لتبدو كل المستندات كأنها لك.</li>
+      <li>دمج مخطّطات ولقطات شاشة ورسوم بيانية مدمجة داخل الصفحة، بجودة طباعية.</li>
+      <li>تمكين كاتب من التعلّم من تصويباتك عبر أداة <code dir="ltr">reflect.py</code>.</li>
+    </ul>
+  </div>
+
+  <h2>قبل أن تبدأ</h2>
+  <ul class="checklist">
+    <li>نظام macOS أو Linux مع Python 3.10 أو أحدث، وأداة <code dir="ltr">uv</code> مثبّتة.</li>
+    <li>Claude Code مُثبّت، مع تسجيل هذه المهارة في المسار <code dir="ltr">~/.claude/skills/katib/</code>.</li>
+    <li>مجلد Obsidian (أو أي مجلد تختاره) كجذر للمخرجات.</li>
+    <li>اختياري: <code dir="ltr">GEMINI_API_KEY</code> لإنتاج الأغلفة التصويرية (~0.12 دولار للغلاف الواحد).</li>
+  </ul>
+
+  <!-- Module 1 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 1 · الأساسيات</div>
+      <h2>التثبيت والإنتاج الأوّل</h2>
+      <p class="module-intro">خمس دقائق من الصفر حتى ملف PDF يحمل هويتك. ستثبّت المهارة، تضبط مسارات الإخراج، وتنتج مستنداً من صفحة واحدة — لتكون لديك إشارة قاطعة بأن خط الإنتاج يعمل كاملاً.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>تثبيت كاتب عبر المثبّت المرفق أو عبر npm.</li>
+        <li>إنشاء إعدادات المستخدم في <code dir="ltr">~/.config/katib/config.yaml</code>.</li>
+        <li>إنتاج عيّنة المستند المكوّن من صفحة واحدة ثم فحص مجلد المخرجات.</li>
+      </ul>
+    </div>
+
+    <h3>الخطوات</h3>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>ثبّت المهارة</h3>
+          <p>يأتي كاتب بطريقتين للتثبيت: يمكنك استنساخ المستودع وتشغيل المثبّت المرفق، أو التثبيت مباشرة عبر npm إن كنت تفضّل أمراً واحداً.</p>
+<pre class="code" dir="ltr"><span class="comment"># الخيار أ — المثبّت المرفق</span>
+git clone https://github.com/jneaimi/katib.git
+cd katib &amp;&amp; bash install.sh
+
+<span class="comment"># الخيار ب — عبر npm</span>
+npm i -g @jasemal/katib &amp;&amp; katib install</pre>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>اضبط المخرجات والهوية</h3>
+          <p>انسخ ملف الإعدادات النموذجي، وأخبر كاتب أين يضع المستندات المولّدة. المفتاح <code dir="ltr">memory.location</code> هو المكان الذي تقرأ منه أداة <code dir="ltr">reflect.py</code> سجلّاتها لاحقاً.</p>
+<pre class="code" dir="ltr"><span class="comment"># ~/.config/katib/config.yaml</span>
+output:
+  destination: vault
+  vault_path: ~/vault/content/katib
+
+memory:
+  location: ~/.local/share/katib/memory
+
+identity:
+  author_name: "Jasem Al Neaimi"
+  company: "TridenITS"</pre>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>أنتج أوّل مستند</h3>
+          <p>أنتج مستنداً من نوع عرض تجاري على صفحة واحدة. عند أوّل تشغيل، تتولّى <code dir="ltr">uv</code> تحميل اعتماديات كاتب المعرّفة في PEP-723 تلقائياً.</p>
+<pre class="code" dir="ltr">uv run scripts/build.py one-pager \
+  --lang ar --title "كاتب يعمل" \
+  --purpose "أوّل إنتاج"</pre>
+          <p>ستظهر لك رسالة تثبت نجاح الإنتاج. يحتوي مجلد الإخراج على ملف PDF، ونسخة HTML الأصلية بعد التصيير، وبيان <code dir="ltr">manifest.md</code>، ولقطة للرموز التصميمية، وملف <code dir="ltr">.katib/run.json</code> متوافق مع Obsidian.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">تلميح</span>
+      <p>عيّن المتغيّر <code dir="ltr">KATIB_OUTPUT_ROOT=/tmp/scratch</code> قبل تشغيل الإنتاج ليُرسَل الإخراج إلى مسار مؤقّت — مفيد عند التجربة على القوالب.</p>
+    </div>
+  </section>
+
+  <!-- Module 2 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 2 · التصنيف</div>
+      <h2>المجالات العشرة</h2>
+      <p class="module-intro">كلّ مستند ستنتجه عبر كاتب ينتمي إلى أحد عشرة مجالات. كلّ مجال يحمل لوحته اللونية، وانضباطه الطباعي، وحدوده في عدد الصفحات، وبادئة ترميزه المرجعي الخاصّة به.</p>
+    </div>
+
+    <!-- Domain taxonomy diagram — Arabic labels as HTML overlays (WeasyPrint SVG can't shape Arabic) -->
+    <figure class="diagram">
+      <div class="diagram-stage">
+        <svg viewBox="0 0 520 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- Centre node -->
+          <rect x="220" y="130" width="80" height="40" rx="4" fill="{{ colors.accent or '#F59E0B' }}" />
+
+          <!-- 10 spokes: lines + boxes only; Arabic labels overlaid in HTML below -->
+          <g>
+            <line x1="220" y1="140" x2="90"  y2="30"  stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="10"  y="18"  width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="220" y1="145" x2="90"  y2="85"  stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="10"  y="72"  width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="220" y1="150" x2="90"  y2="140" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="10"  y="128" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="220" y1="155" x2="90"  y2="195" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="10"  y="183" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="220" y1="160" x2="90"  y2="250" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="10"  y="238" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="300" y1="140" x2="430" y2="30"  stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="360" y="18"  width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="300" y1="145" x2="430" y2="85"  stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="360" y="72"  width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="300" y1="150" x2="430" y2="140" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="360" y="128" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="300" y1="155" x2="430" y2="195" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="360" y="183" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+
+            <line x1="300" y1="160" x2="430" y2="250" stroke="#A1A1AA" stroke-width="0.5"/>
+            <rect x="360" y="238" width="150" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          </g>
+        </svg>
+        <!-- Arabic overlays: position in % of 520×300 viewBox -->
+        <div class="diagram-label dl-lg" style="left: 50%;    top: 50.0%;">كاتب</div>
+        <div class="diagram-label dl-bold" style="left: 16.3%; top: 10.0%; color:#1B2A4A;">عرض تجاري</div>
+        <div class="diagram-label dl-bold" style="left: 16.3%; top: 28.0%; color:#0B6659;">أدلّة تعليمية</div>
+        <div class="diagram-label dl-bold" style="left: 16.3%; top: 46.7%; color:#2E3A4B;">تقارير</div>
+        <div class="diagram-label dl-bold" style="left: 16.3%; top: 65.0%; color:#0B3D66;">خطابات رسمية</div>
+        <div class="diagram-label dl-bold" style="left: 16.3%; top: 83.3%; color:#1E3A8A;">مستندات شخصية</div>
+        <div class="diagram-label dl-bold" style="left: 83.6%; top: 10.0%; color:#7E1D4A;">أكاديمي</div>
+        <div class="diagram-label dl-bold" style="left: 83.6%; top: 28.0%; color:#0F5F4E;">مالي</div>
+        <div class="diagram-label dl-bold" style="left: 83.6%; top: 46.7%; color:#B91C1C;">تحريري</div>
+        <div class="diagram-label dl-bold" style="left: 83.6%; top: 65.0%; color:#EA580C;">تسويقي مطبوع</div>
+        <div class="diagram-label dl-bold" style="left: 83.6%; top: 83.3%; color:#1E3A5F;">قانوني</div>
+      </div>
+      <figcaption>عشرة مجالات، لكلٍّ منها لوحته اللونية وطباعته وحدوده في عدد الصفحات.</figcaption>
+    </figure>
+
+    <h3>جدول الاختيار السريع</h3>
+    <table class="domain-table">
+      <thead>
+        <tr><th>الإشارة من المستخدم</th><th>المجال</th><th>أنواع المستندات</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>عرض تجاري، كرّاس نطاق عمل</td><td><code dir="ltr">business-proposal</code></td><td>proposal، one-pager، letter</td></tr>
+        <tr><td>دليل تعليمي، تهيئة موظف جديد، تسليم مهام</td><td><code dir="ltr">tutorial</code></td><td>how-to، cheatsheet، tutorial، onboarding، handoff</td></tr>
+        <tr><td>تقرير بحثي، تدقيق، سنوي</td><td><code dir="ltr">report</code></td><td>research، progress، annual، audit</td></tr>
+        <tr><td>شهادة عدم ممانعة، تفويض، تعميم</td><td><code dir="ltr">formal</code></td><td>noc، government-letter، circular، authority-letter</td></tr>
+        <tr><td>سيرة ذاتية، خطاب تغطية، نبذة</td><td><code dir="ltr">personal</code></td><td>cv، cover-letter، bio</td></tr>
+        <tr><td>خطة مقرر، واجب، مقترح بحثي</td><td><code dir="ltr">academic</code></td><td>syllabus، assignment-brief، lecture-notes، research-proposal</td></tr>
+        <tr><td>فاتورة، عرض سعر، كشف حساب</td><td><code dir="ltr">financial</code></td><td>invoice، quote، statement، financial-summary</td></tr>
+        <tr><td>ورقة بيضاء، مقال، رأي</td><td><code dir="ltr">editorial</code></td><td>white-paper، article، op-ed، case-study</td></tr>
+        <tr><td>ورقة بيع، موجز منتج، عرض تقديمي</td><td><code dir="ltr">marketing-print</code></td><td>sell-sheet، product-brief، capability-statement، slide-deck</td></tr>
+        <tr><td>اتفاقية خدمات، مذكّرة تفاهم، عدم إفصاح</td><td><code dir="ltr">legal</code></td><td>service-agreement، mou، nda، engagement-letter</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-label">كيف يعمل التوجيه</span>
+      <p>عندما تقول لكاتب «اصنع لي عرضاً تجارياً»، يُطابق المفتاح مع <code dir="ltr">business-proposal</code>. أمّا المستندات التي لا تنتمي لأيّ مجال قائم فتُوجَّه إلى الأقرب، وتُسجَّل في <code dir="ltr">domain-requests.jsonl</code> ليتمكّن <code dir="ltr">reflect.py</code> من اقتراح مجالات جديدة لاحقاً.</p>
+    </div>
+  </section>
+
+  <!-- Module 3 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 3 · الهوية</div>
+      <h2>ملفات الهوية — اجعل المستند يشبهك</h2>
+      <p class="module-intro">كلّ إنتاج في كاتب يحترم تسلسلاً من أربع طبقات: رموز المجال الافتراضية ← ملف الهوية ← إعدادات سطر الأوامر ← التعديلات المباشرة داخل القالب. ملف الهوية نفسه مجرّد ملف YAML واحد يُغيّر الألوان والخطوط واسم الكاتب والشعار، دون المساس بأيّ قالب.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>كتابة ملف هوية YAML في المسار <code dir="ltr">~/.katib/brands/&lt;name&gt;.yaml</code>.</li>
+        <li>تمرير الخيار <code dir="ltr">--brand &lt;name&gt;</code> لأيّ عملية إنتاج.</li>
+        <li>فهم أيّ حقل يعود إلى القيمة الافتراضية للمجال عند عدم تعريفه في الهوية.</li>
+      </ul>
+    </div>
+
+    <h3>هويّة جاسم كمثال حيّ</h3>
+    <p>هذا المستند نفسه منتج بهوية <code dir="ltr">jasem</code> — لوحة «الجمر الدافئ» بالكهرماني والبرتقالي، خطّ Cairo، ورقة فاتحة دافئة. قارِن اللوحة أدناه مع لوحة مجال <code dir="ltr">tutorial</code> الافتراضية (الفيروزي على ورقة دافئة) التي كنت سترى بها المستند لو لم تُحدِّد أيّ هوية.</p>
+
+    <!-- Palette swatches -->
+    <div class="palette-row">
+      <figure class="swatch">
+        <span class="chip" style="background: #F59E0B;"></span>
+        <span class="label">accent</span>
+        <span class="hex">#F59E0B</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FB923C;"></span>
+        <span class="label">accent_2</span>
+        <span class="hex">#FB923C</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #18181B;"></span>
+        <span class="label">text</span>
+        <span class="hex">#18181B</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FAFAFA; border: 0.5pt solid #E4E4E7;"></span>
+        <span class="label">page_bg</span>
+        <span class="hex">#FAFAFA</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FEF3C7;"></span>
+        <span class="label">tag_bg</span>
+        <span class="hex">#FEF3C7</span>
+      </figure>
+    </div>
+
+    <h3>ملف الهوية</h3>
+<pre class="code" dir="ltr"><span class="comment"># ~/.katib/brands/jasem.yaml</span>
+name: Jasem Al Neaimi
+name_ar: جاسم النعيمي
+
+identity:
+  author_name: Jasem Al Neaimi
+  email: jasem@jneaimi.com
+
+colors:
+  accent:            "#F59E0B"   <span class="comment"># كهرماني</span>
+  accent_secondary:  "#FB923C"   <span class="comment"># برتقالي</span>
+  page_bg:           "#FAFAFA"
+  text:              "#18181B"
+
+fonts:
+  en:
+    primary: "Newsreader"
+    fallback: "Georgia, 'Times New Roman', serif"
+  ar:
+    primary: "Cairo"
+    fallback: "Amiri, 'Traditional Arabic', serif"
+
+logo:
+  primary: logos/jasem.svg
+  max_height_mm: 14</pre>
+
+    <h3>كيف تستخدمها</h3>
+<pre class="code" dir="ltr">uv run scripts/build.py proposal \
+  --domain business-proposal --lang ar \
+  --brand jasem --with-cover \
+  --title "عرض مشروع الرصد والمراقبة"</pre>
+
+    <div class="do-dont">
+      <div class="do">
+        <span class="label">افعل</span>
+        احذف الحقول التي تريدها أن تعود إلى القيم الافتراضية للمجال — الهويات الجزئية مقبولة.
+      </div>
+      <div class="dont">
+        <span class="label">لا تفعل</span>
+        لا تُثبّت ألوان الهوية داخل القالب مباشرةً. استخدم <code dir="ltr">var(--accent)</code> ليعمل تبديل الهويات.
+      </div>
+    </div>
+  </section>
+
+  <!-- Module 4 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 4 · التركيب</div>
+      <h2>الأغلفة والتنسيقات والمخطّطات ولقطات الشاشة</h2>
+      <p class="module-intro">يأتي كاتب بثلاثة محرّكات للأغلفة، وتنسيقين داخليّين، ومخطّطات SVG مدمجة بجودة طباعية، وخطّ إنتاج كامل للقطات الشاشة في الأدلّة التعليمية. هذه الوحدة هي مرجعك السريع للتركيب.</p>
+    </div>
+
+    <h3>أنماط الأغلفة</h3>
+    <dl class="kv">
+      <dt>minimalist-typographic</dt><dd>مجاني وقطعي، يعتمد CSS فقط. مناسب للمجالات التحريرية والخطابات الرسمية والمستندات الشخصية.</dd>
+      <dt>neural-cartography</dt><dd>يعتمد Gemini Nano Banana 2. بكلفة ~0.12 دولار للغلاف. ثقل مؤسسي — للعروض التجارية والخطابات الرسمية.</dd>
+      <dt>friendly-illustration</dt><dd>يعتمد Gemini Nano Banana 2. بكلفة ~0.12 دولار للغلاف. طابع دافئ وودود — للأدلّة التعليمية (وهو الغلاف الذي يزيّن هذا المستند بالذات).</dd>
+    </dl>
+
+    <h3>خطّ إنتاج لقطات الشاشة</h3>
+    <figure class="diagram">
+      <div class="diagram-stage">
+        <svg viewBox="0 0 520 110" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrR" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent or '#F59E0B' }}"/>
+            </marker>
+          </defs>
+
+          <!-- RTL pipeline: start right, flow left -->
+          <rect x="400" y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="455" y="52" text-anchor="middle" font-weight="700" font-family="monospace" font-size="11" fill="#18181B">shot.py</text>
+
+          <line x1="400" y1="55" x2="370" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR)"/>
+
+          <rect x="255" y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="310" y="52" text-anchor="middle" font-weight="700" font-family="monospace" font-size="11" fill="#18181B">annotate.py</text>
+
+          <line x1="255" y1="55" x2="225" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR)"/>
+
+          <rect x="110" y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="165" y="52" text-anchor="middle" font-weight="700" font-family="monospace" font-size="11" fill="#18181B">frame.py</text>
+
+          <line x1="110" y1="55" x2="80" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR)"/>
+
+          <rect x="15" y="30" width="60" height="50" rx="4" fill="{{ colors.accent or '#F59E0B' }}" stroke="none"/>
+          <text x="45" y="52" text-anchor="middle" font-weight="700" font-size="11" fill="#18181B">PDF</text>
+          <text x="45" y="68" text-anchor="middle" font-size="8" fill="#18181B">WeasyPrint</text>
+        </svg>
+        <!-- Arabic sub-labels positioned at viewBox % — y=68 in vb 520×110 → 61.8% -->
+        <div class="diagram-label dl-sm" style="left: 87.5%; top: 61.8%;">التقاط عبر Playwright</div>
+        <div class="diagram-label dl-sm" style="left: 59.6%; top: 61.8%;">أسهم ولصائق وتشويش</div>
+        <div class="diagram-label dl-sm" style="left: 31.7%; top: 61.8%;">إطار المتصفّح</div>
+      </div>
+      <figcaption>الالتقاط ← الإشارة ← التأطير ← الدمج داخل القالب تلقائياً عبر اكتشاف الاسم.</figcaption>
+    </figure>
+
+    <h3>المخطّطات المدمجة</h3>
+    <p>المخطّطات في كاتب عبارة عن SVG مدمج مباشرة داخل قالب HTML. يصيّر WeasyPrint الـ SVG أصلياً، فتبقى حادّة عند أي دقة طباعة، والنصّ داخلها قابل للاختيار والبحث، والألوان يمكنها اعتماد الهوية النشطة عبر استبدال القيم بمتغيّرات Jinja مثل رمز اللون اللوني الأساسي. <em>كلّ مخطّط في هذا المستند منشأ بهذه الطريقة.</em></p>
+
+    <div class="callout callout-info">
+      <span class="callout-label">متى تستخدم ماذا</span>
+      <p>اعتمد SVG المدمج للمعمارية وتدفّق البيانات والرسوم البيانية — بجودة طباعية. استخدم مهارة <code dir="ltr">/diagram</code> (Excalidraw) للمحتوى التعبيري أو المرسوم يدوياً، لكنّه يتحوّل إلى نقطي عند الطباعة. أمّا لقطات الشاشة فتمرّ عبر سلسلة <code dir="ltr">shot → annotate → frame</code>.</p>
+    </div>
+  </section>
+
+  <!-- Module 5 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 5 · التحسّن الذاتي</div>
+      <h2>Reflect — دع كاتب يتعلّم منك</h2>
+      <p class="module-intro">كلّ إنتاج ناجح يُضيف سطراً إلى <code dir="ltr">runs.jsonl</code>. كلّ تصويب تُسجّله يذهب إلى <code dir="ltr">feedback.jsonl</code>. أنواع المستندات التي لا تنتمي لمجال قائم تهبط في <code dir="ltr">domain-requests.jsonl</code>. تقرأ أداة <code dir="ltr">reflect.py</code> الملفات الثلاثة وتَستخرج اقتراحات قابلة للتنفيذ — للقراءة فقط ودون تطبيق تلقائي.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">أهداف الوحدة</span>
+      <ul>
+        <li>فهم سجلّات الالتقاط السلبي الثلاثة.</li>
+        <li>تشغيل <code dir="ltr">reflect.py</code> مع نوافذ زمنية وترشيحات بحسب المجال.</li>
+        <li>معرفة متى تفعّل عتبة التكرار (≥ ثلاث مرّات) كلّ نوع من الاقتراحات.</li>
+      </ul>
+    </div>
+
+    <!-- Reflect data flow — Arabic as HTML overlay -->
+    <figure class="diagram">
+      <div class="diagram-stage">
+        <svg viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrR2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent or '#F59E0B' }}"/>
+            </marker>
+          </defs>
+
+          <!-- build.py (right) -->
+          <rect x="410" y="90" width="100" height="40" rx="4" fill="{{ colors.accent_2 or '#FB923C' }}"/>
+          <text x="460" y="108" text-anchor="middle" font-weight="700" font-family="monospace" font-size="11" fill="#18181B">build.py</text>
+
+          <!-- three logs (centre) -->
+          <rect x="200" y="12" width="180" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="290" y="28" text-anchor="middle" font-family="monospace" font-size="10" fill="#18181B">runs.jsonl</text>
+
+          <rect x="200" y="94" width="180" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="290" y="110" text-anchor="middle" font-family="monospace" font-size="10" fill="#18181B">feedback.jsonl</text>
+
+          <rect x="200" y="176" width="180" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="290" y="192" text-anchor="middle" font-family="monospace" font-size="10" fill="#18181B">domain-requests.jsonl</text>
+
+          <!-- arrows from build to logs -->
+          <line x1="410" y1="105" x2="380" y2="30"  stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR2)"/>
+          <line x1="410" y1="110" x2="380" y2="110" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR2)"/>
+          <line x1="410" y1="115" x2="380" y2="190" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arrR2)"/>
+
+          <!-- reflect.py (left) -->
+          <rect x="20" y="90" width="120" height="40" rx="4" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <text x="80" y="108" text-anchor="middle" font-weight="700" font-family="monospace" font-size="11" fill="#18181B">reflect.py</text>
+
+          <!-- arrows from logs to reflect -->
+          <line x1="200" y1="30"  x2="140" y2="102" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arrR2)"/>
+          <line x1="200" y1="110" x2="140" y2="110" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arrR2)"/>
+          <line x1="200" y1="190" x2="140" y2="118" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arrR2)"/>
+        </svg>
+        <!-- Arabic overlays: viewBox 520×220 -->
+        <div class="diagram-label dl-sm" style="left: 88.5%; top: 55.5%;">إنتاج PDF</div>
+        <div class="diagram-label dl-xs" style="left: 55.8%; top: 18.2%;">سطر لكلّ إنتاج</div>
+        <div class="diagram-label dl-xs" style="left: 55.8%; top: 55.5%;">تصويبات المستخدم</div>
+        <div class="diagram-label dl-xs" style="left: 55.8%; top: 92.7%;">مستندات غير مصنّفة</div>
+        <div class="diagram-label dl-sm" style="left: 15.4%; top: 55.5%;">تحليل واقتراح</div>
+        <div class="diagram-label dl-xs" style="left: 88.5%; top: 38.6%;">عند كلّ إنتاج ناجح</div>
+        <div class="diagram-label dl-xs" style="left: 15.4%; top: 38.6%;">قراءة فقط</div>
+      </div>
+      <figcaption>الالتقاط السلبي ← reflect يقترح ولا يطبّق أبداً. التطبيق يدوي بعد المراجعة.</figcaption>
+    </figure>
+
+    <h3>أنواع الاقتراحات الثلاثة</h3>
+    <p>لا يُفعَّل أيّ اقتراح إلّا عند تكرار النمط <strong>ثلاث مرّات فأكثر</strong> ضمن النافذة الزمنية النشطة (افتراضياً 30 يوماً). الرسم أدناه يوضّح سبب هذا الحدّ بالذات: أقلّ من ثلاث يعني ضجيجاً، عند الثلاث تبدأ الإشارة.</p>
+
+    <!-- Threshold bar chart — Arabic labels as HTML overlay -->
+    <figure class="diagram">
+      <div class="diagram-stage">
+        <svg viewBox="0 0 520 180" xmlns="http://www.w3.org/2000/svg">
+          <!-- Axes -->
+          <line x1="460" y1="20" x2="460" y2="140" stroke="#A1A1AA" stroke-width="0.75"/>
+          <line x1="460" y1="140" x2="20" y2="140" stroke="#A1A1AA" stroke-width="0.75"/>
+
+          <!-- Y axis numbers (Latin numerals render fine in SVG) -->
+          <text x="466" y="144" font-family="monospace" font-size="8" fill="#71717A">0</text>
+          <text x="466" y="104" font-family="monospace" font-size="8" fill="#71717A">1</text>
+          <text x="466" y="64"  font-family="monospace" font-size="8" fill="#71717A">2</text>
+          <text x="466" y="24"  font-family="monospace" font-size="8" fill="#71717A">≥3</text>
+
+          <!-- Threshold line -->
+          <line x1="460" y1="24" x2="20" y2="24" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="0.75" stroke-dasharray="3 2"/>
+
+          <!-- Bars -->
+          <rect x="370" y="100" width="60" height="40"  fill="#E4E4E7"/>
+          <rect x="280" y="60"  width="60" height="80"  fill="#E4E4E7"/>
+          <rect x="190" y="24"  width="60" height="116" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <rect x="100" y="24"  width="60" height="116" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <rect x="100" y="4"   width="60" height="20"  fill="{{ colors.accent_2 or '#FB923C' }}"/>
+        </svg>
+        <!-- Arabic overlays: viewBox 520×180 -->
+        <div class="diagram-label" style="left: 6.5%; top: 11.1%; font-size: 7pt; font-style: italic; color: {{ colors.accent or '#F59E0B' }};">عتبة الاقتراح</div>
+
+        <div class="diagram-label"        style="left: 76.9%; top: 86.7%; font-size: 9pt;">تصويب واحد</div>
+        <div class="diagram-label dl-muted" style="left: 76.9%; top: 93.3%; font-size: 7pt;">ضجيج — تجاهل</div>
+
+        <div class="diagram-label"        style="left: 59.6%; top: 86.7%; font-size: 9pt;">تصويبان</div>
+        <div class="diagram-label dl-muted" style="left: 59.6%; top: 93.3%; font-size: 7pt;">لا يزال ضجيجاً</div>
+
+        <div class="diagram-label dl-bold" style="left: 42.3%; top: 86.7%; font-size: 9pt;">ثلاث تصويبات</div>
+        <div class="diagram-label dl-muted" style="left: 42.3%; top: 93.3%; font-size: 7pt;">إشارة — اقتراح</div>
+
+        <div class="diagram-label dl-bold" style="left: 25.0%; top: 86.7%; font-size: 9pt;">خمس فأكثر</div>
+        <div class="diagram-label dl-muted" style="left: 25.0%; top: 93.3%; font-size: 7pt;">تصرّف الآن</div>
+      </div>
+      <figcaption>قاعدة «ثلاث مرّات فأكثر» تُبقي الاقتراحات خارج منطقة الضجيج. وسِّع النافذة عبر <code dir="ltr">--since Nd</code>.</figcaption>
+    </figure>
+
+    <h3>أنواع الاقتراحات</h3>
+    <dl class="kv">
+      <dt>string-swap</dt><dd>تصويب متكرّر من صيغة إلى أخرى ضمن مجال ولغة واحدة. راجع القوالب وملف <code dir="ltr">references/writing.&lt;lang&gt;.md</code>.</dd>
+      <dt>new-domain-candidate</dt><dd>طلبات متكرّرة تُوجَّه إلى المجال الأقرب نفسه. فكّر في إضافة نوع مستند جديد أو مجال جديد.</dd>
+      <dt>unused-doc-type</dt><dd>نوع مستند مسجّل في <code dir="ltr">styles.json</code> لم يُنتَج ولو مرّة خلال النافذة. مرشّح للإلغاء — <em>أكّد قبل الحذف.</em></dd>
+    </dl>
+
+    <h3>جلسة نموذجية</h3>
+<pre class="code" dir="ltr">uv run scripts/reflect.py                       <span class="comment"># آخر 30 يوماً</span>
+uv run scripts/reflect.py --since 7d             <span class="comment"># تضييق النافذة</span>
+uv run scripts/reflect.py --domain tutorial      <span class="comment"># ترشيح حسب المجال</span>
+uv run scripts/reflect.py --propose              <span class="comment"># كتابة ملف اقتراح Markdown</span>
+uv run scripts/reflect.py --json                 <span class="comment"># مخرجات قابلة للمعالجة آلياً</span></pre>
+
+    <div class="marker">
+      أداة reflect.py للقراءة فقط عن قصد. لا تُعدّل القوالب ولا الرموز التصميمية ولا المراجع. التطبيق يدوي بعد المراجعة — هذا ما يحمي المهارة من الانجراف مع إشارة ضعيفة.
+    </div>
+  </section>
+
+  <!-- Module 6 / Appendix -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">الوحدة 6 · الملحق</div>
+      <h2>بطاقة الأوامر السريعة</h2>
+      <p class="module-intro">كلّ ما يقدّمه كاتب من أدوات سطر أوامر، مجتمعاً في مكان واحد.</p>
+    </div>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <h4>إنتاج مستند</h4>
+        <p><code dir="ltr">build.py &lt;doc-type&gt; --domain &lt;d&gt; --lang &lt;l&gt; --brand &lt;name&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>إنتاج مع غلاف</h4>
+        <p>أضف <code dir="ltr">--with-cover --cover &lt;style&gt;</code>. يتطلّب <code dir="ltr">GEMINI_API_KEY</code>.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>جمع العربي والإنجليزي</h4>
+        <p>مرّر نفس <code dir="ltr">--slug</code> للإنتاجين.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>التحقّق من مجلد</h4>
+        <p><code dir="ltr">build.py --verify &lt;folder&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>فحص القوالب</h4>
+        <p><code dir="ltr">build.py --check</code> — سريع، بلا إنتاج.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>عرض الهويات</h4>
+        <p><code dir="ltr">build.py --list-brands</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>توليد غلاف</h4>
+        <p><code dir="ltr">cover.py --domain &lt;d&gt; --style &lt;s&gt; --out &lt;path&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>لقطة شاشة</h4>
+        <p><code dir="ltr">shot.py web &lt;url&gt; --out &lt;path&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>إشارات وتسمية</h4>
+        <p><code dir="ltr">annotate.py &lt;png&gt; --arrow x,y --label "..."</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>تأطير</h4>
+        <p><code dir="ltr">frame.py &lt;png&gt; --style browser-safari</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Reflect</h4>
+        <p><code dir="ltr">reflect.py [--since Nd] [--domain &lt;d&gt;] [--propose] [--json]</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>الاختبارات</h4>
+        <p><code dir="ltr">test-all.sh</code> · <code dir="ltr">test-tutorial.sh</code> · <code dir="ltr">test-brand.sh</code></p>
+      </div>
+    </div>
+
+    <h3>متغيّرات البيئة</h3>
+    <dl class="kv">
+      <dt>KATIB_OUTPUT_ROOT</dt><dd>تجاوز جذر المخرجات — مفيد للإنتاج المؤقّت.</dd>
+      <dt>KATIB_SLUG_OVERRIDE</dt><dd>فرض اسم مجلد محدّد للإنتاج التالي (أو استخدم <code dir="ltr">--slug</code>).</dd>
+      <dt>KATIB_IMAGE_MODEL</dt><dd>تجاوز نموذج Gemini للأغلفة (افتراضياً <code dir="ltr">nano-banana-2</code>).</dd>
+      <dt>KATIB_CACHE_DIR</dt><dd>مجلد ذاكرة التخزين المؤقّت للقطات.</dd>
+      <dt>KATIB_DEBUG=1</dt><dd>إخراج تفصيلي للإنتاج.</dd>
+      <dt>GEMINI_API_KEY</dt><dd>مطلوب للأغلفة التصويرية.</dd>
+    </dl>
+
+    <h3>بنية الملفات التي يجب أن تعرفها</h3>
+    <dl class="kv">
+      <dt>domains/&lt;d&gt;/</dt><dd>يحتوي <code dir="ltr">tokens.json</code> و<code dir="ltr">styles.json</code> ومجلد <code dir="ltr">templates/*.{en,ar}.html</code>.</dd>
+      <dt>styles/layouts/</dt><dd>CSS المشترك (<code dir="ltr">classic</code>، <code dir="ltr">workbook</code>، <code dir="ltr">cheatsheet</code>).</dd>
+      <dt>brands/</dt><dd>ملفات الهوية المرفقة. ملفات المستخدم تعيش في <code dir="ltr">~/.katib/brands/</code>.</dd>
+      <dt>scripts/</dt><dd>النصوص البرمجية: <code dir="ltr">build.py</code>، <code dir="ltr">cover.py</code>، <code dir="ltr">shot.py</code>، <code dir="ltr">annotate.py</code>، <code dir="ltr">frame.py</code>، <code dir="ltr">reflect.py</code>، <code dir="ltr">memory.py</code>.</dd>
+      <dt>references/</dt><dd>أدلّة التصميم والكتابة والإنتاج والمخطّطات ولقطات الشاشة — تُحمَّل حسب مستوى التفصيل المطلوب.</dd>
+    </dl>
+  </section>
+
+  <h2>الخلاصة</h2>
+  <p>بهذا تكون قد أغلقت الحلقة كاملةً: التثبيت، التوجيه إلى مجال، اختيار نوع مستند، تطبيق هوية، دمج مخطّطات ولقطات شاشة، والسماح لأداة <code dir="ltr">reflect.py</code> بكشف الأنماط مع تراكم استخدامك. كاتب مهارة حازمة عن قصد — وهذا بالضبط ما يجعل المخرجات جاهزة للطباعة دون أن تفكّر في قرارات التصميم مع كلّ إنتاج.</p>
+
+  <h2>ما التالي</h2>
+  <ul>
+    <li>أنتج تسليماً حقيقياً — عرضك التجاري الأوّل لعميل، أو دليلاً كنت تؤجّله منذ فترة.</li>
+    <li>اكتب ملف هوية ثانياً لعميل، وسلّمه مسوّدات جاهزة للطباعة.</li>
+    <li>بعد عشرة أو عشرين إنتاجاً، شغّل <code dir="ltr">reflect.py</code> وشاهد أيّ الأنماط تطفو على السطح — هكذا يتعلّم كاتب ما تحتاجه <em>أنت</em> تحديداً.</li>
+  </ul>
+
+</body>
+</html>

@@ -53,6 +53,14 @@
       "page_limit": 15,
       "target_pages": [3, 12],
       "sections_required": ["body"]
+    },
+    "katib-walkthrough": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "default_layout": "workbook",
+      "page_limit": 25,
+      "target_pages": [8, 18],
+      "sections_required": ["cover", "body"]
     }
   }
 }

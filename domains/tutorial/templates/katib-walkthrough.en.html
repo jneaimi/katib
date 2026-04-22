@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 18mm 20mm 20mm 20mm;
+    @bottom-left {
+      content: "{{ reference_code or 'TUT-KATIB-001' }}";
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @bottom-right {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: var(--font-mono);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @bottom-left { content: none; }
+    @bottom-right { content: none; }
+  }
+
+  /* Cover — CSS-only */
+  .cover-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    page-break-after: always;
+    position: relative;
+  }
+  .cover-page .cover-eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+  }
+  .cover-page .brand-logo {
+    display: block;
+    max-width: 60mm;
+    margin: 0 auto 20pt auto;
+  }
+  .cover-page-image .brand-logo {
+    position: absolute;
+    top: 14mm;
+    right: 14mm;
+    max-width: 50mm;
+    z-index: 3;
+  }
+  .cover-page .cover-title {
+    font-size: 40pt;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 150mm;
+  }
+  .cover-page .cover-subtitle {
+    font-size: 13pt;
+    font-weight: 400;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 18pt;
+    line-height: 1.4;
+    max-width: 140mm;
+  }
+  .cover-page .cover-rule {
+    width: 40mm;
+    height: 0.5pt;
+    background: var(--border-strong);
+    margin: 26pt 0;
+  }
+  .cover-page .cover-meta {
+    position: absolute;
+    bottom: 18mm;
+    left: 20mm;
+    right: 20mm;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+  }
+
+  /* Cover — image-based (Gemini) */
+  .cover-page-image {
+    height: 253mm;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+    background: var(--page-bg);
+  }
+  .cover-page-image .cover-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-page-image .cover-title {
+    position: absolute;
+    top: 22mm; left: 22mm;
+    width: 150mm;
+    font-size: 32pt;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-subtitle {
+    position: absolute;
+    top: 60mm; left: 22mm;
+    width: 150mm;
+    font-size: 12pt;
+    color: var(--accent);
+    line-height: 1.45;
+    margin: 0;
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref,
+  .cover-page-image .cover-date {
+    position: absolute;
+    bottom: 10mm;
+    font-family: var(--font-mono);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    z-index: 2;
+  }
+  .cover-page-image .cover-ref { left: 10mm; }
+  .cover-page-image .cover-date { right: 10mm; }
+
+  /* Diagram containers */
+  .diagram {
+    margin: 14pt 0 10pt 0;
+    padding: 0;
+    page-break-inside: avoid;
+  }
+  .diagram figcaption {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-top: 4pt;
+    text-align: center;
+  }
+  .diagram svg { display: block; margin: 0 auto; max-width: 100%; }
+
+  /* Code block */
+  pre.code {
+    background: var(--code-bg, #27272A);
+    color: var(--code-fg, #FAFAFA);
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    line-height: 1.5;
+    padding: 10pt 12pt;
+    border-radius: 4pt;
+    white-space: pre-wrap;
+    margin: 8pt 0;
+    page-break-inside: avoid;
+  }
+  pre.code .comment { color: #A1A1AA; }
+
+  /* Domain table */
+  table.domain-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 9pt;
+  }
+  table.domain-table th {
+    text-align: left;
+    padding: 5pt 7pt;
+    background: var(--tag-bg, #FEF3C7);
+    color: var(--tag-fg, #78350F);
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-bottom: 1pt solid var(--border-strong);
+  }
+  table.domain-table td {
+    padding: 5pt 7pt;
+    border-bottom: 0.5pt solid var(--border);
+    vertical-align: top;
+  }
+  table.domain-table td code {
+    font-size: 8.5pt;
+    background: transparent;
+    padding: 0;
+  }
+
+  /* Palette swatches */
+  .palette-row {
+    display: flex;
+    gap: 8pt;
+    margin: 8pt 0;
+    flex-wrap: wrap;
+  }
+  .swatch {
+    flex: 1 0 0;
+    min-width: 30mm;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+  }
+  .swatch .chip {
+    height: 22mm;
+    display: block;
+  }
+  .swatch .label {
+    font-family: var(--font-mono);
+    font-size: 7.5pt;
+    color: var(--text-tertiary);
+    padding: 3pt 0;
+    display: block;
+    background: var(--page-bg);
+  }
+  .swatch .hex {
+    font-family: var(--font-mono);
+    font-size: 7pt;
+    color: var(--text-secondary);
+    padding: 0 0 3pt 0;
+    display: block;
+    background: var(--page-bg);
+  }
+
+  /* Cheatsheet grid */
+  .cheat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt;
+    margin: 8pt 0;
+  }
+  .cheat-card {
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 6pt 8pt;
+    page-break-inside: avoid;
+  }
+  .cheat-card h4 {
+    margin: 0 0 3pt 0;
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .cheat-card p {
+    margin: 0;
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .cheat-card code {
+    font-size: 8pt;
+    background: var(--tag-bg, #FEF3C7);
+    color: var(--tag-fg, #78350F);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+  }
+
+  /* Key-value list */
+  dl.kv {
+    display: grid;
+    grid-template-columns: 34mm 1fr;
+    row-gap: 4pt;
+    column-gap: 8pt;
+    margin: 6pt 0 10pt 0;
+    font-size: 9.5pt;
+  }
+  dl.kv dt {
+    font-weight: 600;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+  }
+  dl.kv dd {
+    margin: 0;
+    color: var(--text-secondary);
+  }
+
+  /* Pull quote / marker */
+  .marker {
+    border-left: 3pt solid var(--accent);
+    padding: 4pt 0 4pt 10pt;
+    margin: 8pt 0;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-size: 10pt;
+  }
+  html[dir="rtl"] .marker {
+    border-left: 0;
+    border-right: 3pt solid var(--accent);
+    padding: 4pt 10pt 4pt 0;
+  }
+  </style>
+</head>
+<body>
+
+  {% if cover_image_src %}
+  <section class="cover-page-image">
+    <img class="cover-bg" src="{{ cover_image_src }}" alt="">
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-ref">{{ reference_code or "TUT-KATIB-001" }}</div>
+    <div class="cover-date">{{ today }}</div>
+  </section>
+  {% else %}
+  <section class="cover-page">
+    <div class="cover-eyebrow">The Complete Walkthrough</div>
+    {% if brand.logo.primary %}<img class="brand-logo" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <h1 class="cover-title">{{ title }}</h1>
+    {% if subtitle %}<p class="cover-subtitle">{{ subtitle }}</p>{% endif %}
+    <div class="cover-rule"></div>
+    <div class="cover-meta">
+      <span>{{ reference_code or "TUT-KATIB-001" }}</span>
+      <span>{{ today }}</span>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Preface -->
+  <p class="lead">Katib (<span style="font-family: var(--font-display);">كاتب</span>) is the writer &mdash; a bilingual, print-grade document generator that lives inside Claude Code. This walkthrough takes you from install to self-improvement in six modules.</p>
+
+  <div class="objectives">
+    <span class="label">What you'll learn</span>
+    <ul>
+      <li>Install Katib and render your first PDF in under five minutes.</li>
+      <li>Pick the right domain, doc type, cover, and layout for any deliverable.</li>
+      <li>Apply your personal brand so every document looks like yours.</li>
+      <li>Embed print-grade diagrams, screenshots, and inline charts.</li>
+      <li>Let Katib learn from your corrections via <code>reflect.py</code>.</li>
+    </ul>
+  </div>
+
+  <h2>Before you begin</h2>
+  <ul class="checklist">
+    <li>macOS or Linux with Python 3.10+ and <code>uv</code> installed.</li>
+    <li>Claude Code installed, with this skill registered at <code>~/.claude/skills/katib/</code>.</li>
+    <li>An Obsidian vault (or any folder) set as your output root.</li>
+    <li>Optional: <code>GEMINI_API_KEY</code> for image-based covers (~$0.12 per cover).</li>
+  </ul>
+
+  <!-- Module 1 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 1 &middot; Foundations</div>
+      <h2>Install &amp; first render</h2>
+      <p class="module-intro">Five minutes from zero to a branded PDF. You'll install the skill, configure output paths, and render a one-pager so you have proof the pipeline works end-to-end.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Install Katib via the shipped installer or from npm.</li>
+        <li>Create a user config at <code>~/.config/katib/config.yaml</code>.</li>
+        <li>Render the one-pager sample and inspect the output folder.</li>
+      </ul>
+    </div>
+
+    <h3>Steps</h3>
+    <ol class="steps">
+      <li class="step">
+        <div class="step-body">
+          <h3>Install the skill</h3>
+          <p>Katib ships two ways. Clone the repo and run the bundled installer, or install via npm if you prefer a one-liner.</p>
+<pre class="code"><span class="comment"># Option A — installer</span>
+git clone https://github.com/jneaimi/katib.git
+cd katib &amp;&amp; bash install.sh
+
+<span class="comment"># Option B — npm</span>
+npm i -g @jasemal/katib &amp;&amp; katib install</pre>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Configure output &amp; identity</h3>
+          <p>Copy the example config and tell Katib where to put generated documents. The <code>memory.location</code> key is where <code>reflect.py</code> reads its logs from.</p>
+<pre class="code"><span class="comment"># ~/.config/katib/config.yaml</span>
+output:
+  destination: vault
+  vault_path: ~/vault/content/katib
+
+memory:
+  location: ~/.local/share/katib/memory
+
+identity:
+  author_name: "Jasem Al Neaimi"
+  company: "TridenITS"</pre>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-body">
+          <h3>Render the hello-world</h3>
+          <p>Render a business-proposal one-pager. On first run <code>uv</code> resolves Katib's PEP-723 deps automatically.</p>
+<pre class="code">uv run scripts/build.py one-pager \
+  --lang en --title "Katib works" \
+  --purpose "First render"</pre>
+          <p>You should see <code>&check; business-proposal/one-pager.en &middot; 1 page</code>. The output folder contains the PDF, the rendered source HTML, a <code>manifest.md</code>, a token snapshot, and an Obsidian-compatible <code>.katib/run.json</code>.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout callout-tip">
+      <span class="callout-label">Tip</span>
+      <p>Set <code>KATIB_OUTPUT_ROOT=/tmp/scratch</code> before a render to send output to a scratch path &mdash; handy when iterating on templates.</p>
+    </div>
+  </section>
+
+  <!-- Module 2 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 2 &middot; Taxonomy</div>
+      <h2>The ten domains</h2>
+      <p class="module-intro">Every document you'll ever build with Katib routes into one of ten domains. Each domain carries its own palette, typographic discipline, page-count guardrails, and reference-code prefixes.</p>
+    </div>
+
+    <!-- Domain taxonomy diagram -->
+    <figure class="diagram">
+      <svg viewBox="0 0 520 300" width="520" height="300" xmlns="http://www.w3.org/2000/svg">
+        <!-- Centre node -->
+        <rect x="220" y="130" width="80" height="40" rx="4" fill="{{ colors.accent or '#F59E0B' }}" />
+        <text x="260" y="154" text-anchor="middle" font-family="Newsreader, Georgia, serif" font-size="12" font-weight="600" fill="#18181B">Katib</text>
+
+        <!-- 10 spokes -->
+        <g font-family="Newsreader, Georgia, serif" font-size="9" fill="#3F3F46">
+          <!-- business-proposal -->
+          <line x1="220" y1="140" x2="90" y2="30" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="10" y="18" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="80" y="34" text-anchor="middle" font-weight="600" fill="#1B2A4A">business-proposal</text>
+
+          <!-- tutorial -->
+          <line x1="220" y1="145" x2="90" y2="85" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="10" y="72" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="80" y="88" text-anchor="middle" font-weight="600" fill="#0B6659">tutorial</text>
+
+          <!-- report -->
+          <line x1="220" y1="150" x2="90" y2="140" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="10" y="128" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="80" y="144" text-anchor="middle" font-weight="600" fill="#2E3A4B">report</text>
+
+          <!-- formal -->
+          <line x1="220" y1="155" x2="90" y2="195" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="10" y="183" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="80" y="199" text-anchor="middle" font-weight="600" fill="#0B3D66">formal</text>
+
+          <!-- personal -->
+          <line x1="220" y1="160" x2="90" y2="250" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="10" y="238" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="80" y="254" text-anchor="middle" font-weight="600" fill="#1E3A8A">personal</text>
+
+          <!-- academic -->
+          <line x1="300" y1="140" x2="430" y2="30" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="370" y="18" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="440" y="34" text-anchor="middle" font-weight="600" fill="#7E1D4A">academic</text>
+
+          <!-- financial -->
+          <line x1="300" y1="145" x2="430" y2="85" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="370" y="72" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="440" y="88" text-anchor="middle" font-weight="600" fill="#0F5F4E">financial</text>
+
+          <!-- editorial -->
+          <line x1="300" y1="150" x2="430" y2="140" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="370" y="128" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="440" y="144" text-anchor="middle" font-weight="600" fill="#B91C1C">editorial</text>
+
+          <!-- marketing-print -->
+          <line x1="300" y1="155" x2="430" y2="195" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="370" y="183" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="440" y="199" text-anchor="middle" font-weight="600" fill="#EA580C">marketing-print</text>
+
+          <!-- legal -->
+          <line x1="300" y1="160" x2="430" y2="250" stroke="#A1A1AA" stroke-width="0.5"/>
+          <rect x="370" y="238" width="140" height="24" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.5"/>
+          <text x="440" y="254" text-anchor="middle" font-weight="600" fill="#1E3A5F">legal</text>
+        </g>
+      </svg>
+      <figcaption>Ten domains, each with its own palette, typography, and page-count guardrails.</figcaption>
+    </figure>
+
+    <h3>Quick-pick table</h3>
+    <table class="domain-table">
+      <thead>
+        <tr><th>User signal</th><th>Domain</th><th>Doc types</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Commercial offer, SOW</td><td><code>business-proposal</code></td><td>proposal, one-pager, letter</td></tr>
+        <tr><td>How-to, onboarding, handoff</td><td><code>tutorial</code></td><td>how-to, cheatsheet, tutorial, onboarding, handoff</td></tr>
+        <tr><td>Research, audit, annual</td><td><code>report</code></td><td>research, progress, annual, audit</td></tr>
+        <tr><td>NOC, authority, circular</td><td><code>formal</code></td><td>noc, government-letter, circular, authority-letter</td></tr>
+        <tr><td>CV, cover letter, bio</td><td><code>personal</code></td><td>cv, cover-letter, bio</td></tr>
+        <tr><td>Syllabus, assignment, research proposal</td><td><code>academic</code></td><td>syllabus, assignment-brief, lecture-notes, research-proposal</td></tr>
+        <tr><td>Invoice, quote, statement</td><td><code>financial</code></td><td>invoice, quote, statement, financial-summary</td></tr>
+        <tr><td>White paper, article, op-ed</td><td><code>editorial</code></td><td>white-paper, article, op-ed, case-study</td></tr>
+        <tr><td>Sell sheet, pitch deck</td><td><code>marketing-print</code></td><td>sell-sheet, product-brief, capability-statement, slide-deck</td></tr>
+        <tr><td>Agreement, MOU, NDA</td><td><code>legal</code></td><td>service-agreement, mou, nda, engagement-letter</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <span class="callout-label">How routing works</span>
+      <p>When you say <em>&ldquo;make me a proposal&rdquo;</em>, Katib matches the keyword to <code>business-proposal</code>. Unknown doc types route to the closest match and get logged to <code>domain-requests.jsonl</code> so <code>reflect.py</code> can flag candidates for new domains later.</p>
+    </div>
+  </section>
+
+  <!-- Module 3 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 3 &middot; Identity</div>
+      <h2>Brand profiles &mdash; make it look like you</h2>
+      <p class="module-intro">Every Katib render respects a four-layer cascade: domain tokens &rarr; brand profile &rarr; CLI flags &rarr; inline overrides. A brand profile is a single YAML file that swaps colours, fonts, author name, and logo without touching any template.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Write a brand profile YAML at <code>~/.katib/brands/&lt;name&gt;.yaml</code>.</li>
+        <li>Pass <code>--brand &lt;name&gt;</code> to any render.</li>
+        <li>Understand what falls back to the domain default when the brand omits a field.</li>
+      </ul>
+    </div>
+
+    <h3>The Jasem brand, as an example</h3>
+    <p>This document itself is rendered with the <code>jasem</code> brand &mdash; Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
+
+    <!-- Palette swatches -->
+    <div class="palette-row">
+      <figure class="swatch">
+        <span class="chip" style="background: #F59E0B;"></span>
+        <span class="label">accent</span>
+        <span class="hex">#F59E0B</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FB923C;"></span>
+        <span class="label">accent_2</span>
+        <span class="hex">#FB923C</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #18181B;"></span>
+        <span class="label">text</span>
+        <span class="hex">#18181B</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FAFAFA; border: 0.5pt solid #E4E4E7;"></span>
+        <span class="label">page_bg</span>
+        <span class="hex">#FAFAFA</span>
+      </figure>
+      <figure class="swatch">
+        <span class="chip" style="background: #FEF3C7;"></span>
+        <span class="label">tag_bg</span>
+        <span class="hex">#FEF3C7</span>
+      </figure>
+    </div>
+
+    <h3>The YAML</h3>
+<pre class="code"><span class="comment"># ~/.katib/brands/jasem.yaml</span>
+name: Jasem Al Neaimi
+name_ar: جاسم النعيمي
+
+identity:
+  author_name: Jasem Al Neaimi
+  email: jasem@jneaimi.com
+
+colors:
+  accent:            "#F59E0B"   <span class="comment"># amber</span>
+  accent_secondary:  "#FB923C"   <span class="comment"># orange</span>
+  page_bg:           "#FAFAFA"
+  text:              "#18181B"
+
+fonts:
+  en:
+    primary: "Newsreader"
+    fallback: "Georgia, 'Times New Roman', serif"
+  ar:
+    primary: "Cairo"
+    fallback: "Amiri, 'Traditional Arabic', serif"
+
+logo:
+  primary: logos/jasem.svg
+  max_height_mm: 14</pre>
+
+    <h3>Using it</h3>
+<pre class="code">uv run scripts/build.py proposal \
+  --domain business-proposal --lang en \
+  --brand jasem --with-cover \
+  --title "Observability SOW"</pre>
+
+    <div class="do-dont">
+      <div class="do">
+        <span class="label">Do</span>
+        Omit fields you want to inherit from the domain default &mdash; partial brands are fine.
+      </div>
+      <div class="dont">
+        <span class="label">Don't</span>
+        Hardcode brand colours in templates. Use <code>var(--accent)</code> so brand swaps work.
+      </div>
+    </div>
+  </section>
+
+  <!-- Module 4 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 4 &middot; Composition</div>
+      <h2>Covers, layouts, diagrams, screenshots</h2>
+      <p class="module-intro">Katib ships three cover engines, two interior layouts, print-native inline SVG diagrams, and a full screenshot pipeline for tutorials. This module is the composition cheatsheet.</p>
+    </div>
+
+    <h3>Cover styles</h3>
+    <dl class="kv">
+      <dt>minimalist-typographic</dt><dd>Free, deterministic, CSS-only. Editorial domains, formal letters, personal docs.</dd>
+      <dt>neural-cartography</dt><dd>Gemini Nano Banana 2. ~$0.12/cover. Institutional weight &mdash; proposals, formal.</dd>
+      <dt>friendly-illustration</dt><dd>Gemini Nano Banana 2. ~$0.12/cover. Warm &amp; approachable &mdash; tutorials (the one on this document's cover).</dd>
+    </dl>
+
+    <h3>Screenshot pipeline</h3>
+    <figure class="diagram">
+      <svg viewBox="0 0 520 110" width="520" height="110" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent or '#F59E0B' }}"/>
+          </marker>
+        </defs>
+
+        <g font-family="Newsreader, Georgia, serif" font-size="11" fill="#18181B">
+          <rect x="10"  y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="65" y="52" text-anchor="middle" font-weight="600">shot.py</text>
+          <text x="65" y="68" text-anchor="middle" font-size="8" fill="#3F3F46">Playwright capture</text>
+
+          <line x1="124" y1="55" x2="150" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr)"/>
+
+          <rect x="155" y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="210" y="52" text-anchor="middle" font-weight="600">annotate.py</text>
+          <text x="210" y="68" text-anchor="middle" font-size="8" fill="#3F3F46">arrows, labels, blur</text>
+
+          <line x1="269" y1="55" x2="295" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr)"/>
+
+          <rect x="300" y="30" width="110" height="50" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="355" y="52" text-anchor="middle" font-weight="600">frame.py</text>
+          <text x="355" y="68" text-anchor="middle" font-size="8" fill="#3F3F46">browser chrome</text>
+
+          <line x1="414" y1="55" x2="440" y2="55" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr)"/>
+
+          <rect x="445" y="30" width="60" height="50" rx="4" fill="{{ colors.accent or '#F59E0B' }}" stroke="none"/>
+          <text x="475" y="52" text-anchor="middle" font-weight="600" fill="#18181B">PDF</text>
+          <text x="475" y="68" text-anchor="middle" font-size="8" fill="#18181B">WeasyPrint</text>
+        </g>
+      </svg>
+      <figcaption>shot &rarr; annotate &rarr; frame &rarr; embedded in template via auto-discovery.</figcaption>
+    </figure>
+
+    <h3>Inline diagrams</h3>
+    <p>Diagrams are inline SVG embedded directly in the template. WeasyPrint renders SVG natively, so they stay crisp at any print DPI, text is selectable, and colours can pick up the active brand via <code>{{ '{{ colors.accent }}' }}</code> interpolation. <em>Every diagram in this very document is authored this way.</em></p>
+
+    <div class="callout callout-info">
+      <span class="callout-label">When to use what</span>
+      <p>Inline SVG for architecture, data-flows, and charts &mdash; print-grade. <code>/diagram</code> skill (Excalidraw) for expressive or hand-sketched content, but those rasterise for print. PNG screenshots go through the <code>shot &rarr; annotate &rarr; frame</code> pipeline.</p>
+    </div>
+  </section>
+
+  <!-- Module 5 -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 5 &middot; Self-improvement</div>
+      <h2>Reflect &mdash; let Katib learn from you</h2>
+      <p class="module-intro">Every successful render appends one line to <code>runs.jsonl</code>. Every correction you log writes to <code>feedback.jsonl</code>. Doc types that don't fit land in <code>domain-requests.jsonl</code>. <code>reflect.py</code> reads all three and surfaces actionable proposals &mdash; read-only by design.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Understand the three passive-capture logs.</li>
+        <li>Run <code>reflect.py</code> with time windows and domain filters.</li>
+        <li>Know when the ≥3&times; threshold triggers each proposal type.</li>
+      </ul>
+    </div>
+
+    <!-- Reflect data flow -->
+    <figure class="diagram">
+      <svg viewBox="0 0 520 220" width="520" height="220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent or '#F59E0B' }}"/>
+          </marker>
+        </defs>
+
+        <g font-family="Newsreader, Georgia, serif" font-size="10" fill="#18181B">
+          <!-- build.py -->
+          <rect x="10" y="90" width="100" height="40" rx="4" fill="{{ colors.accent_2 or '#FB923C' }}"/>
+          <text x="60" y="108" text-anchor="middle" font-weight="600" fill="#18181B">build.py</text>
+          <text x="60" y="122" text-anchor="middle" font-size="8" fill="#18181B">render PDF</text>
+
+          <!-- three logs -->
+          <rect x="180" y="12" width="140" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="250" y="28" text-anchor="middle" font-family="monospace" font-size="9">runs.jsonl</text>
+          <text x="250" y="40" text-anchor="middle" font-size="7" fill="#3F3F46">one line per render</text>
+
+          <rect x="180" y="94" width="140" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="250" y="110" text-anchor="middle" font-family="monospace" font-size="9">feedback.jsonl</text>
+          <text x="250" y="122" text-anchor="middle" font-size="7" fill="#3F3F46">user corrections</text>
+
+          <rect x="180" y="176" width="140" height="34" rx="3" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.75"/>
+          <text x="250" y="192" text-anchor="middle" font-family="monospace" font-size="9">domain-requests.jsonl</text>
+          <text x="250" y="204" text-anchor="middle" font-size="7" fill="#3F3F46">routing mismatches</text>
+
+          <!-- arrows from build to logs -->
+          <line x1="114" y1="105" x2="180" y2="30"  stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr2)"/>
+          <line x1="114" y1="110" x2="180" y2="110" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr2)"/>
+          <line x1="114" y1="115" x2="180" y2="190" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="1" marker-end="url(#arr2)"/>
+
+          <!-- reflect.py -->
+          <rect x="380" y="90" width="120" height="40" rx="4" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <text x="440" y="108" text-anchor="middle" font-weight="600" fill="#18181B">reflect.py</text>
+          <text x="440" y="122" text-anchor="middle" font-size="8" fill="#18181B">cluster + propose</text>
+
+          <!-- arrows from logs to reflect -->
+          <line x1="324" y1="30"  x2="380" y2="102" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arr2)"/>
+          <line x1="324" y1="110" x2="380" y2="110" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arr2)"/>
+          <line x1="324" y1="190" x2="380" y2="118" stroke="#A1A1AA" stroke-width="0.75" marker-end="url(#arr2)"/>
+
+          <!-- labels -->
+          <text x="60"  y="85"  text-anchor="middle" font-size="7" fill="#71717A">every successful render</text>
+          <text x="440" y="85"  text-anchor="middle" font-size="7" fill="#71717A">read-only analysis</text>
+          <text x="250" y="228" text-anchor="middle" font-size="7" fill="#71717A">~/.local/share/katib/memory/</text>
+        </g>
+      </svg>
+      <figcaption>Passive capture &rarr; reflect proposes &mdash; never applies. Apply manually after review.</figcaption>
+    </figure>
+
+    <h3>The three proposal types</h3>
+    <p>Each fires only when a pattern recurs <strong>≥3 times</strong> inside the active time window (default 30 days). The chart below shows why the bar matters: below three, noise; at three, signal.</p>
+
+    <!-- Threshold bar chart -->
+    <figure class="diagram">
+      <svg viewBox="0 0 520 180" width="520" height="180" xmlns="http://www.w3.org/2000/svg">
+        <g font-family="Newsreader, Georgia, serif" font-size="9" fill="#18181B">
+          <!-- Axes -->
+          <line x1="60" y1="20" x2="60" y2="140" stroke="#A1A1AA" stroke-width="0.75"/>
+          <line x1="60" y1="140" x2="500" y2="140" stroke="#A1A1AA" stroke-width="0.75"/>
+
+          <!-- Y axis labels -->
+          <text x="54" y="144" text-anchor="end" font-size="8" fill="#71717A">0</text>
+          <text x="54" y="104" text-anchor="end" font-size="8" fill="#71717A">1</text>
+          <text x="54" y="64"  text-anchor="end" font-size="8" fill="#71717A">2</text>
+          <text x="54" y="24"  text-anchor="end" font-size="8" fill="#71717A">≥3</text>
+
+          <!-- Threshold line -->
+          <line x1="60" y1="24" x2="500" y2="24" stroke="{{ colors.accent or '#F59E0B' }}" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <text x="495" y="20" text-anchor="end" font-size="7" font-style="italic" fill="{{ colors.accent or '#F59E0B' }}">proposal threshold</text>
+
+          <!-- Bars — 1×: noise -->
+          <rect x="90"  y="100" width="60" height="40" fill="#E4E4E7"/>
+          <text x="120" y="156" text-anchor="middle" font-size="9">1 correction</text>
+          <text x="120" y="168" text-anchor="middle" font-size="7" fill="#71717A">noise — ignore</text>
+
+          <!-- Bars — 2×: still noise -->
+          <rect x="180" y="60"  width="60" height="80" fill="#E4E4E7"/>
+          <text x="210" y="156" text-anchor="middle" font-size="9">2 corrections</text>
+          <text x="210" y="168" text-anchor="middle" font-size="7" fill="#71717A">still noise</text>
+
+          <!-- Bars — 3×: signal -->
+          <rect x="270" y="24"  width="60" height="116" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <text x="300" y="156" text-anchor="middle" font-size="9" font-weight="600">3 corrections</text>
+          <text x="300" y="168" text-anchor="middle" font-size="7" fill="#71717A">signal — propose</text>
+
+          <!-- Bars — 5×: strong signal -->
+          <rect x="360" y="24"  width="60" height="116" fill="{{ colors.accent or '#F59E0B' }}"/>
+          <rect x="360" y="4"   width="60" height="20"  fill="{{ colors.accent_2 or '#FB923C' }}"/>
+          <text x="390" y="156" text-anchor="middle" font-size="9" font-weight="600">5+</text>
+          <text x="390" y="168" text-anchor="middle" font-size="7" fill="#71717A">act now</text>
+        </g>
+      </svg>
+      <figcaption>The ≥3&times; rule keeps proposals out of noise territory. Tune with <code>--since Nd</code> to widen the window.</figcaption>
+    </figure>
+
+    <h3>Proposal types</h3>
+    <dl class="kv">
+      <dt>string-swap</dt><dd>Same <code>before</code>→<code>after</code> correction repeats in one domain/lang. Audit templates + <code>references/writing.&lt;lang&gt;.md</code>.</dd>
+      <dt>new-domain-candidate</dt><dd>Repeated requests routed to the same closest-match domain. Consider a new doc_type or a new domain.</dd>
+      <dt>unused-doc-type</dt><dd>A doc_type in <code>styles.json</code> that rendered zero times in the window. Candidate for deprecation &mdash; <em>confirm before removing.</em></dd>
+    </dl>
+
+    <h3>Typical session</h3>
+<pre class="code">uv run scripts/reflect.py                       <span class="comment"># last 30 days</span>
+uv run scripts/reflect.py --since 7d             <span class="comment"># narrow</span>
+uv run scripts/reflect.py --domain tutorial      <span class="comment"># filter</span>
+uv run scripts/reflect.py --propose              <span class="comment"># write Markdown proposal file</span>
+uv run scripts/reflect.py --json                 <span class="comment"># for scripting</span></pre>
+
+    <div class="marker">
+      reflect.py is read-only by design. It does not edit templates, tokens, or references. You apply changes manually after reviewing the proposal &mdash; that's what keeps the skill from drifting on weak signal.
+    </div>
+  </section>
+
+  <!-- Module 6 / Appendix -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 6 &middot; Appendix</div>
+      <h2>Command cheatsheet</h2>
+      <p class="module-intro">Everything Katib ships as a CLI, in one place.</p>
+    </div>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <h4>Render a doc</h4>
+        <p><code>build.py &lt;doc-type&gt; --domain &lt;d&gt; --lang &lt;l&gt; --brand &lt;name&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Render + cover</h4>
+        <p>Add <code>--with-cover --cover &lt;style&gt;</code>. Requires <code>GEMINI_API_KEY</code>.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>Co-locate EN+AR</h4>
+        <p>Pass the same <code>--slug</code> to both renders.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>Verify an output</h4>
+        <p><code>build.py --verify &lt;folder&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Lint templates</h4>
+        <p><code>build.py --check</code> &mdash; fast, no render.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>List brands</h4>
+        <p><code>build.py --list-brands</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Generate cover</h4>
+        <p><code>cover.py --domain &lt;d&gt; --style &lt;s&gt; --out &lt;path&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Screenshot</h4>
+        <p><code>shot.py web &lt;url&gt; --out &lt;path&gt;</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Annotate</h4>
+        <p><code>annotate.py &lt;png&gt; --arrow x,y --label "..."</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Frame</h4>
+        <p><code>frame.py &lt;png&gt; --style browser-safari</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Reflect</h4>
+        <p><code>reflect.py [--since Nd] [--domain &lt;d&gt;] [--propose] [--json]</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Tests</h4>
+        <p><code>test-all.sh</code> &bull; <code>test-tutorial.sh</code> &bull; <code>test-brand.sh</code></p>
+      </div>
+    </div>
+
+    <h3>Environment variables</h3>
+    <dl class="kv">
+      <dt>KATIB_OUTPUT_ROOT</dt><dd>Override output root &mdash; useful for scratch renders.</dd>
+      <dt>KATIB_SLUG_OVERRIDE</dt><dd>Force a specific slug for the next render (or use <code>--slug</code>).</dd>
+      <dt>KATIB_IMAGE_MODEL</dt><dd>Override Gemini cover model (default <code>nano-banana-2</code>).</dd>
+      <dt>KATIB_CACHE_DIR</dt><dd>Screenshot cache directory.</dd>
+      <dt>KATIB_DEBUG=1</dt><dd>Verbose build output.</dd>
+      <dt>GEMINI_API_KEY</dt><dd>Required for image-based covers.</dd>
+    </dl>
+
+    <h3>File layout you should know</h3>
+    <dl class="kv">
+      <dt>domains/&lt;d&gt;/</dt><dd><code>tokens.json</code> + <code>styles.json</code> + <code>templates/*.{en,ar}.html</code>.</dd>
+      <dt>styles/layouts/</dt><dd>Shared CSS (<code>classic</code>, <code>workbook</code>, <code>cheatsheet</code>).</dd>
+      <dt>brands/</dt><dd>Shipped brand profiles. User profiles live at <code>~/.katib/brands/</code>.</dd>
+      <dt>scripts/</dt><dd><code>build.py</code>, <code>cover.py</code>, <code>shot.py</code>, <code>annotate.py</code>, <code>frame.py</code>, <code>reflect.py</code>, <code>memory.py</code>.</dd>
+      <dt>references/</dt><dd>Design, writing, production, diagrams, screenshots guides &mdash; loaded per spec tier.</dd>
+    </dl>
+  </section>
+
+  <h2>Summary</h2>
+  <p>You now have the full loop: install, route to a domain, pick a doc type, apply a brand, embed diagrams and screenshots, and let <code>reflect.py</code> surface patterns as you accumulate usage. Katib is deliberately opinionated &mdash; that's what makes the output printable without you thinking about design decisions on every render.</p>
+
+  <h2>What's next</h2>
+  <ul>
+    <li>Render a real deliverable &mdash; your first client proposal, or a tutorial you've been putting off.</li>
+    <li>Write a second brand profile for a client and hand them ready-to-print drafts.</li>
+    <li>After ten or twenty renders, run <code>reflect.py</code> and see which patterns surface &mdash; that's how Katib learns what <em>you</em> need.</li>
+  </ul>
+
+</body>
+</html>
