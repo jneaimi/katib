@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  Case Study  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .masthead {
+    padding-bottom: 12pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .masthead .kicker {
+    font-size: 9pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .masthead .client-tag {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  h1 {
+    font-size: 30pt;
+    line-height: 1.15;
+    margin: 0 0 10pt 0;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .deck {
+    font-size: 13pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 20pt;
+    max-width: 150mm;
+  }
+
+  /* Fact box */
+  .fact-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 0.5pt solid var(--border);
+    margin-bottom: 22pt;
+  }
+
+  .fact-box .cell {
+    padding: 10pt 12pt;
+    border-right: 0.5pt solid var(--border);
+  }
+
+  .fact-box .cell:last-child { border-right: 0; }
+
+  .fact-box .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 3pt;
+  }
+
+  .fact-box .value {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Result hero */
+  .result-hero {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 22pt 24pt;
+    margin-bottom: 22pt;
+    text-align: center;
+  }
+
+  .result-hero .label {
+    font-size: 9pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 6pt;
+    font-weight: 600;
+  }
+
+  .result-hero .figure {
+    font-size: 42pt;
+    font-weight: 500;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .result-hero .caption {
+    font-size: 11pt;
+    opacity: 0.9;
+    margin-top: 6pt;
+    font-style: italic;
+  }
+
+  h2 {
+    font-size: 16pt;
+    color: var(--text);
+    margin: 22pt 0 8pt 0;
+    font-weight: 500;
+    border-bottom: 0.5pt solid var(--border);
+    padding-bottom: 3pt;
+    page-break-after: avoid;
+  }
+
+  h2 .section-num {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 10pt;
+  }
+
+  h3 {
+    font-size: 11pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 14pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 8pt 0; }
+
+  ul, ol { margin: 8pt 0; padding-left: 22pt; }
+  li { margin-bottom: 4pt; }
+
+  /* Metrics row — supporting metrics */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10pt;
+    margin: 14pt 0;
+  }
+
+  .metric-card {
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+    padding: 12pt 14pt;
+    text-align: center;
+  }
+
+  .metric-card .label {
+    font-size: 8.5pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  .metric-card .value {
+    font-size: 22pt;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .metric-card .delta {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-top: 3pt;
+  }
+
+  /* Testimonial */
+  .testimonial {
+    border-top: 0.5pt solid var(--accent);
+    border-bottom: 0.5pt solid var(--accent);
+    padding: 16pt 20pt;
+    margin: 20pt 0;
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--text);
+    font-style: italic;
+    text-align: center;
+  }
+
+  .testimonial .attribution {
+    display: block;
+    font-size: 9.5pt;
+    font-style: normal;
+    color: var(--text-tertiary);
+    margin-top: 10pt;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Timeline */
+  .timeline {
+    margin: 14pt 0;
+  }
+
+  .timeline .phase {
+    padding: 10pt 0 10pt 20pt;
+    border-left: 2pt solid var(--accent);
+    margin-bottom: 8pt;
+    position: relative;
+  }
+
+  .timeline .phase::before {
+    content: "";
+    position: absolute;
+    left: -5pt;
+    top: 12pt;
+    width: 8pt;
+    height: 8pt;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .timeline .phase .phase-label {
+    font-size: 8.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .timeline .phase .phase-title { font-weight: 700; font-size: 11pt; margin-bottom: 2pt; }
+  .timeline .phase .phase-body { font-size: 10pt; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Case Study · [Industry / Domain]</div>
+  <div class="client-tag">Client · [Client name or anonymised label]</div>
+</header>
+
+<h1>[Outcome-led Title — lead with the result, not the activity]</h1>
+<div class="deck">[One-sentence summary. What changed for the client, in under 20 words.]</div>
+
+<!-- ===== Fact box ===== -->
+<section class="fact-box">
+  <div class="cell">
+    <div class="label">Industry</div>
+    <div class="value">[Retail / Finance / Health]</div>
+  </div>
+  <div class="cell">
+    <div class="label">Size</div>
+    <div class="value">[N employees]</div>
+  </div>
+  <div class="cell">
+    <div class="label">Region</div>
+    <div class="value">[UAE / GCC]</div>
+  </div>
+  <div class="cell">
+    <div class="label">Engagement</div>
+    <div class="value">[N months]</div>
+  </div>
+</section>
+
+<!-- ===== Result hero ===== -->
+<section class="result-hero">
+  <div class="label">Headline Result</div>
+  <div class="figure">+42%</div>
+  <div class="caption">[One-line phrasing of the metric: "increase in X over Y months"]</div>
+</section>
+
+<!-- ===== Body ===== -->
+<section>
+  <h2><span class="section-num">1</span>Challenge</h2>
+
+  <h3>What they faced</h3>
+  <p>[Open with the client's situation. Specific — how it felt on the ground, not an abstract problem statement. Who was affected, what was failing, what was the cost of inaction.]</p>
+
+  <h3>Why it mattered</h3>
+  <ul>
+    <li>[Stake 1 — financial, operational, or strategic.]</li>
+    <li>[Stake 2.]</li>
+    <li>[Stake 3.]</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="section-num">2</span>Approach</h2>
+  <p>[How the engagement was framed. Name the method, the team composition, the key decision that shaped the work. Avoid jargon — a reader from outside the client's industry should follow.]</p>
+
+  <div class="timeline">
+    <div class="phase">
+      <div class="phase-label">Phase 1 · Discovery · Weeks 1–3</div>
+      <div class="phase-title">[Phase 1 title]</div>
+      <div class="phase-body">[What was done in this phase. Two to three sentences.]</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Phase 2 · Design · Weeks 4–7</div>
+      <div class="phase-title">[Phase 2 title]</div>
+      <div class="phase-body">[What was done.]</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">Phase 3 · Rollout · Weeks 8–14</div>
+      <div class="phase-title">[Phase 3 title]</div>
+      <div class="phase-body">[What was done.]</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">3</span>Results</h2>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="label">Primary metric</div>
+      <div class="value">+42%</div>
+      <div class="delta">over 6 months</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Secondary</div>
+      <div class="value">−28%</div>
+      <div class="delta">operational cost</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">Payback</div>
+      <div class="value">4.2×</div>
+      <div class="delta">ROI within year one</div>
+    </div>
+  </div>
+
+  <p>[Context the numbers. How were they measured? Over what period? What is the comparison baseline? Without this paragraph, the numbers look decorative — with it, they hold up to scrutiny.]</p>
+</section>
+
+<div class="testimonial">
+  "[A quote from the client — specific, unguarded, ideally with a number or concrete outcome in it.]"
+  <span class="attribution">[Name · Title · Client organisation]</span>
+</div>
+
+<section>
+  <h2><span class="section-num">4</span>What We Learned</h2>
+  <p>[One or two paragraphs. The insight that generalises beyond this engagement — the part another reader can carry into their own situation. Avoid "every project is unique" non-insights.]</p>
+
+  <h3>For other teams considering this approach</h3>
+  <ol>
+    <li>[Lesson 1 — actionable, specific.]</li>
+    <li>[Lesson 2.]</li>
+    <li>[Lesson 3.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="section-num">5</span>What's Next</h2>
+  <p>[One paragraph. Phase 2 of the engagement, a broader rollout, or the question the client is now asking that the first engagement surfaced.]</p>
+</section>
+
+</body>
+</html>

@@ -33,11 +33,11 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "CV / resume / cover letter / bio / سيرة ذاتية / خطاب تغطية / نبذة" | `personal` | Navy `#1E3A8A` sidebar on warm paper, Inter/Cairo sans-serif |
 | "syllabus / assignment / lecture notes / research proposal / خطة مقرر / واجب / محاضرة / مقترح بحثي" | `academic` | Burgundy `#7E1D4A` + sage on cream, Newsreader/Amiri serif |
 | "invoice / tax invoice / quote / quotation / statement / financial summary / فاتورة / فاتورة ضريبية / عرض سعر / كشف حساب / ملخّص مالي" | `financial` | Emerald `#0F5F4E` + slate on warm ivory, Inter/Cairo sans |
-| *(v0.7)* white paper, article, thought leadership | `editorial` | *(deferred)* |
+| "white paper / article / op-ed / opinion / thought leadership / case study / ورقة بيضاء / مقال / رأي / دراسة حالة" | `editorial` | Magazine red `#B91C1C` + ink on warm newsprint, Newsreader/Amiri serif |
 | *(v0.8)* sell-sheet, product-brief, slide-deck (print PDF) | `marketing-print` | *(deferred)* |
 | *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
 
-Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0.
+Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0, editorial live as of v0.7.0.
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -52,6 +52,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `personal` | `cv`, `cover-letter`, `bio` |
 | `academic` | `syllabus`, `assignment-brief`, `lecture-notes`, `research-proposal` |
 | `financial` | `invoice`, `quote`, `statement`, `financial-summary` |
+| `editorial` | `white-paper`, `article`, `op-ed`, `case-study` |
+
+### Editorial doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `white-paper` | Title page + executive summary + drop-capped body with pull quotes + data tables + footnotes + author bio | 10–25 | `WP-*` | Research-grade thought leadership, funder-facing analysis |
+| `article` | Magazine masthead + deck + byline + drop-cap body + blockquote + pull-quote + mini-headings + byline footer | 3–8 | `ART-*` | Long-form magazine piece or blog essay |
+| `op-ed` | Centred kicker + bold title + deck + byline + drop-cap body with one pull-line + disclaimer | 1–3 | `OP-*` | Opinion piece, position column, editorial commentary |
+| `case-study` | Kicker + outcome title + fact-box (industry/size/region) + result hero + challenge/approach/results/lessons/next | 3–8 | `CASE-*` | Client success story, engagement narrative |
 
 ### Financial doc-type picker
 

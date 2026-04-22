@@ -169,6 +169,18 @@ Banned phrases that signal LLM output:
 - **Round intentionally.** For summaries, one decimal place is usually enough. For invoices and statements, two decimal places always — tax authorities and reconciliation systems demand it.
 - **Zero-rated vs exempt are different.** A zero-rated item (e.g., international transport, exported services) shows 0% VAT but still appears in VAT returns. An exempt item doesn't. Most UAE B2B invoices don't encounter exempts — when you do, label them so the client's accountant knows.
 
+### Editorial (White-paper, Article, Op-ed, Case-study)
+
+- **Lead with the reader, not the topic.** Editorial documents compete for attention. The first 30 words decide whether someone keeps reading. Open with a scene, an anecdote, a striking number, or a claim — never with "In today's fast-paced world…" or any corporate preamble.
+- **White papers commit to a thesis.** A paper that merely surveys a field is a report, not a white paper. Name your thesis in the executive summary, defend it across the body, and acknowledge its limits. Readers trust writers who stake out a position.
+- **Articles earn quotes, not decorate with them.** A quote earns its place when it voices something you *cannot* say yourself — a primary source, a lived experience, an expert's precise formulation. Paraphraseable quotes add nothing.
+- **Op-eds are opinion, not analysis.** Show your reasoning, but commit to a view. Hedge-language ("it could be argued that…") signals lack of conviction. Pick a position, steel-man the opposition, and defend the position anyway.
+- **Case studies lead with outcome, not activity.** "We redesigned their onboarding" is weak. "Onboarding time dropped from 6 weeks to 4, saving AED 340K annually" is strong. The fact-box and result-hero are read before the prose — make them earn their space.
+- **Drop caps are an editorial gesture, not a typo.** The large first letter signals "long-form, read slowly." Use them on white paper, article, op-ed; skip on case study (where the fact-box opens instead).
+- **Pull quotes are editing, not decoration.** Choose one memorable line per section and float it. The reader scanning the page should be able to reconstruct the article's argument from pull quotes alone.
+- **Footnotes carry weight in white papers, not op-eds.** White papers cite sources rigorously — readers check footnotes. Op-eds embed sources in running prose; a bristling footnote column reads as over-armouring.
+- **Steel-man the opposition.** Articles and op-eds that only present supporting evidence feel propagandistic. Readers trust writers who engage the strongest counter-argument, not the weakest.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

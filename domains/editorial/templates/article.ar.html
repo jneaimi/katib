@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 12pt;
+    line-height: 1.95;
+    color: var(--text);
+  }
+
+  .masthead {
+    padding-bottom: 10pt;
+    border-bottom: 0.5pt solid var(--border);
+    margin-bottom: 16pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .masthead .category {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .masthead .date {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  h1 {
+    font-size: 30pt;
+    line-height: 1.3;
+    margin: 10pt 0 12pt 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .deck {
+    font-size: 14pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 18pt;
+    padding-bottom: 12pt;
+    border-bottom: 0.5pt solid var(--border);
+    max-width: 150mm;
+  }
+
+  .byline { font-size: 10.5pt; color: var(--text); margin-bottom: 18pt; }
+  .byline .author { font-weight: 700; color: var(--accent); }
+
+  /* Rising cap (WeasyPrint-safe — no float) */
+  .body-start::first-letter {
+    font-size: 26pt;
+    line-height: 1;
+    color: var(--drop-cap-color);
+    font-weight: 700;
+    padding-left: 2pt;
+  }
+
+  p { margin: 8pt 0; }
+
+  h2 {
+    font-size: 16pt;
+    color: var(--text);
+    margin: 22pt 0 8pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2::before {
+    content: "§";
+    color: var(--accent);
+    margin-left: 8pt;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--accent);
+    margin: 16pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  ul, ol { margin: 8pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 4pt; }
+
+  .pull-quote {
+    font-size: 18pt;
+    line-height: 1.6;
+    color: var(--accent);
+    margin: 18pt 0;
+    padding: 10pt 24pt;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  blockquote {
+    border-right: 3pt solid var(--accent);
+    padding: 8pt 16pt;
+    margin: 14pt 0;
+    font-size: 11.5pt;
+    color: var(--text-secondary);
+  }
+
+  blockquote .attribution {
+    display: block;
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    margin-top: 6pt;
+  }
+
+  blockquote .attribution::before { content: "— "; }
+
+  .footnote-ref {
+    vertical-align: super;
+    font-size: 8pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .footnotes {
+    margin-top: 24pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 9.5pt;
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .footnotes ol { padding-right: 18pt; padding-left: 0; }
+  .footnotes li { margin-bottom: 3pt; }
+
+  .byline-footer {
+    margin-top: 24pt;
+    padding: 12pt 14pt;
+    background: var(--table-row-alt);
+    font-size: 10.5pt;
+    line-height: 1.7;
+    border-right: 3pt solid var(--accent);
+  }
+
+  .byline-footer strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="category">[القسم / الموضوع]</div>
+  <div class="date">{{ date_display }}</div>
+</header>
+
+<h1>[عنوان المقال — جملة تعد القارئ بشيء محدّد]</h1>
+
+<div class="deck">[السطر التعريفي — جملة واحدة تختزل زاوية المقال وتوسّع العنوان. القرّاء يتصفّحون هذا السطر لتقرير المتابعة.]</div>
+
+<div class="byline">بقلم <span class="author">{{ author_name }}</span>{% if brand.identity.legal_name %} · {{ brand.identity.legal_name }}{% endif %}</div>
+
+<section>
+  <p class="body-start">[الافتتاحية. ابدأ بصورة محدّدة أو مشهد أو حكاية أو إحصائية صادمة — لا ادّعاء مجرّد. الثلاثون كلمة الأولى تحدّد استمرار القارئ. اجعل كلّ كلمة تعمل.]</p>
+
+  <p>[الفقرة الثانية — فقرة الجوز (the nut graf). أخبر القارئ لماذا يهمّ هذا وإلى أين يتّجه المقال. جملتان أو ثلاث.]</p>
+
+  <p>[ابنِ السياق. أرِ القارئ المشهد الذي تتحرّك فيه القصّة. المحدّد يتفوّق على العامّ.]</p>
+</section>
+
+<section>
+  <h2>[عنوان القسم الأول — تأطير حركة أو سؤال أو ادّعاء]</h2>
+  <p>[طوّر الخيط الرئيسي الأول. استخدم أمثلة محدّدة. فضّل «أن تُري» على «أن تشرح».]</p>
+
+  <blockquote>
+    [اقتباس من شخص حقيقي أو وثيقة أو مصدر أوّلي. جملة إلى ثلاث. تجنّب الاقتباسات التي لا تفعل سوى إعادة صياغة ما كان بوسعك قوله — الاقتباسات تستحقّ مكانها بصوت لا تملكه أنت.]
+    <span class="attribution">[الاسم، المسمّى، الجهة]</span>
+  </blockquote>
+
+  <p>[ردّ على الاقتباس أو وضعه في سياق. لا تُسقطه وتمضِ — اشتغل به.]</p>
+</section>
+
+<div class="pull-quote">
+  «[جملة مكثّفة لا تُنسى، تختزل بصيرة المقال — يُفضَّل ما قد يُعيد القارئ نشره.]»
+</div>
+
+<section>
+  <h2>[عنوان القسم الثاني]</h2>
+  <p>[دليل جديد، التواء، أو نقطة مضادّة. المقالات التي لا تفعل سوى تأييد الأطروحة الافتتاحية مسطّحة — أضف تعقيداً هنا.<span class="footnote-ref">١</span>]</p>
+
+  <h3>[عنوان صغير — اختياري]</h3>
+  <p>[مقطع أكثر كثافة عند الحاجة. العناوين الصغيرة مفيدة حين يطول المقال أو تستدعي البنية إشارات.]</p>
+
+  <p>[عُد إلى الخيط الرئيسي حتى لا يفقد القارئ الحجّة الكبرى.]</p>
+</section>
+
+<section>
+  <h2>[القسم الثالث — تعقيد أو تبعة]</h2>
+  <p>[ما الذي يتغيّر إن قبل القارئ حجّة المقال؟ ما تبعاتها على قراراته أو عمله أو رؤيته؟]</p>
+
+  <ul>
+    <li>[تبعة ١ — محدّدة.]</li>
+    <li>[تبعة ٢.]</li>
+    <li>[تبعة ٣.]</li>
+  </ul>
+</section>
+
+<section>
+  <h2>[القسم الختامي]</h2>
+  <p>[عُد إلى الصورة أو الملاحظة الافتتاحية. القرّاء يتذكّرون المقالات التي تُغلق الحلقة.]</p>
+
+  <p>[الفقرة الأخيرة. فكرة أو سؤال أو استفزاز يبقى في الذهن. تجنّب التلخيص — ثِق بأنّ القارئ قد واكب.]</p>
+</section>
+
+<section class="footnotes">
+  <ol>
+    <li>[استشهاد المصدر أو نصّ الحاشية.]</li>
+  </ol>
+</section>
+
+<div class="byline-footer">
+  <strong>{{ author_name }}</strong> — [جملة أو جملتان: الدور، التركيز، العمل السابق ذو الصلة، والتواصل اختيارياً]. {% if brand.identity.email %}للتواصل: <span style="direction: ltr; unicode-bidi: embed">{{ brand.identity.email }}</span>.{% endif %}
+</div>
+
+</body>
+</html>

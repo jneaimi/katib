@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  White Paper  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* Title page */
+  .title-page {
+    height: 247mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .eyebrow-block {
+    margin-top: 40mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 8pt;
+    display: inline-block;
+  }
+
+  .title-page h1 {
+    font-size: 36pt;
+    line-height: 1.15;
+    color: var(--text);
+    margin: 0 0 12pt 0;
+    font-weight: 500;
+    max-width: 160mm;
+  }
+
+  .title-page .subtitle {
+    font-size: 14pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    font-style: italic;
+    max-width: 150mm;
+    margin-top: 10pt;
+  }
+
+  .title-page .byline-block {
+    padding-top: 18pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .byline {
+    font-size: 11pt;
+    color: var(--text);
+    margin-bottom: 4pt;
+  }
+
+  .title-page .byline .author { font-weight: 600; }
+
+  .title-page .date {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  /* Abstract */
+  .abstract {
+    background: var(--table-row-alt);
+    padding: 16pt 20pt;
+    margin: 0 0 22pt 0;
+    border-left: 3pt solid var(--accent);
+    font-size: 11pt;
+    line-height: 1.65;
+  }
+
+  .abstract .label {
+    font-size: 8.5pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .abstract .lead { font-style: italic; color: var(--text-secondary); }
+
+  /* Body */
+  h2 {
+    font-size: 18pt;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 26pt 0 10pt 0;
+    font-weight: 500;
+    page-break-after: avoid;
+  }
+
+  h2 .section-num {
+    color: var(--accent);
+    font-weight: 500;
+    margin-right: 10pt;
+  }
+
+  h3 {
+    font-size: 13pt;
+    color: var(--text);
+    margin: 16pt 0 6pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 8pt 0; }
+
+  /* Rising cap on first paragraph of body (WeasyPrint-safe — no float) */
+  .body-start::first-letter {
+    font-size: 28pt;
+    line-height: 1;
+    color: var(--drop-cap-color);
+    font-weight: 500;
+    padding-right: 2pt;
+  }
+
+  ul, ol { margin: 8pt 0; padding-left: 22pt; }
+  li { margin-bottom: 4pt; }
+
+  /* Pull quote */
+  .pull-quote {
+    font-size: 17pt;
+    line-height: 1.35;
+    color: var(--text);
+    font-style: italic;
+    border-top: 0.5pt solid var(--accent);
+    border-bottom: 0.5pt solid var(--accent);
+    padding: 14pt 0;
+    margin: 18pt 0;
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .pull-quote .attribution {
+    display: block;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-style: normal;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 8pt;
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 12pt 16pt;
+    margin: 16pt 0;
+    font-size: 10.5pt;
+    line-height: 1.6;
+  }
+
+  .callout .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--callout-border);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  /* Data table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12pt 0;
+    font-size: 10pt;
+  }
+
+  .data-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 500;
+    font-size: 9.5pt;
+  }
+
+  .data-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .data-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .data-table tbody tr:nth-child(even) td { background: var(--table-row-alt); }
+
+  /* Footnotes */
+  .footnote-ref {
+    vertical-align: super;
+    font-size: 7.5pt;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .footnotes {
+    margin-top: 30pt;
+    padding-top: 14pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 9pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+
+  .footnotes ol { padding-left: 18pt; }
+  .footnotes li { margin-bottom: 4pt; }
+
+  /* About */
+  .about-author {
+    margin-top: 30pt;
+    padding: 16pt 18pt;
+    border: 0.5pt solid var(--border);
+    background: var(--page-bg);
+    font-size: 10pt;
+    line-height: 1.6;
+  }
+
+  .about-author h4 {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .about-author .author-name { font-weight: 700; font-size: 11pt; margin-bottom: 2pt; }
+  </style>
+</head>
+<body>
+
+<!-- ===== Title page ===== -->
+<div class="title-page">
+  <div class="eyebrow-block">
+    <div class="eyebrow">White Paper · [Topic Category]</div>
+    <h1>[Primary Title — a claim or tension the paper resolves]</h1>
+    <div class="subtitle">[Subtitle that narrows scope or names the argument. One sentence, 10–14 words.]</div>
+  </div>
+
+  <div class="byline-block">
+    <div class="byline">By <span class="author">{{ author_name }}</span>{% if brand.identity.legal_name %}, {{ brand.identity.legal_name }}{% endif %}</div>
+    <div class="date">{{ date_display }}</div>
+  </div>
+</div>
+
+<!-- ===== Abstract ===== -->
+<section class="abstract">
+  <div class="label">Executive Summary</div>
+  <p class="lead">[The paper's thesis in one sentence. If the reader only reads this line, what must they know?]</p>
+  <p>[Four to six sentences. State the problem, the evidence base, the counter-argument you dismiss, the recommendation, and who should act. Avoid academic hedge language — this is the single paragraph busy decision-makers will read.]</p>
+</section>
+
+<!-- ===== Body ===== -->
+<section>
+  <h2><span class="section-num">1</span>Introduction</h2>
+  <p class="body-start">[The opening paragraph. Lead with a specific observation, scene, or number — not a generic market framing. Drop the reader into the situation the paper addresses. Three to five sentences.]</p>
+
+  <p>[Second paragraph. Narrow from the opening to the precise question this paper answers. State the question plainly.]</p>
+
+  <div class="callout">
+    <div class="label">Key question</div>
+    [State the research question in one sentence, italicised if helpful. The rest of the paper is the answer.]
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">2</span>The State of the Problem</h2>
+  <p>[Establish what is known. Cite three or four sources that represent the current consensus.<span class="footnote-ref">1</span> This section is the baseline against which your argument will move.]</p>
+
+  <h3>2.1 · [Sub-theme]</h3>
+  <p>[Evidence paragraph. Name specific figures, studies, or cases. Avoid "many experts believe" — name the expert.]</p>
+
+  <h3>2.2 · [Sub-theme]</h3>
+  <p>[Second evidence paragraph.]</p>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Indicator</th>
+        <th class="num">2020</th>
+        <th class="num">2022</th>
+        <th class="num">2024</th>
+        <th class="num">2026</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>[Metric 1]</td><td class="num">1,200</td><td class="num">1,580</td><td class="num">2,100</td><td class="num">2,600</td></tr>
+      <tr><td>[Metric 2]</td><td class="num">28%</td><td class="num">34%</td><td class="num">41%</td><td class="num">49%</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="section-num">3</span>The Argument</h2>
+
+  <div class="pull-quote">
+    "[A single compressed sentence that captures the paper's central argument. Memorable, quotable, strong.]"
+    <span class="attribution">The central claim of this paper</span>
+  </div>
+
+  <p>[Develop the argument in structured paragraphs. Each paragraph should add a distinct piece of the case, not restate the thesis in new words.]</p>
+
+  <p>[Second paragraph of the argument.<span class="footnote-ref">2</span> Lean on specific evidence from Section 2.]</p>
+</section>
+
+<section>
+  <h2><span class="section-num">4</span>Counterarguments &amp; Limits</h2>
+  <p>[Name the strongest objection to your thesis. Steel-man it in two or three sentences before responding. Readers trust writers who engage the opposition seriously.]</p>
+
+  <h3>Where this framing does not apply</h3>
+  <ul>
+    <li>[Boundary condition 1 — context in which the argument breaks down.]</li>
+    <li>[Boundary condition 2.]</li>
+    <li>[Boundary condition 3.]</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="section-num">5</span>Implications &amp; Recommendations</h2>
+  <p>[Open with what changes if the argument is right.]</p>
+
+  <h3>For [stakeholder group 1]</h3>
+  <ol>
+    <li>[Concrete recommendation. Actionable this quarter, not generic.]</li>
+    <li>[Second recommendation.]</li>
+  </ol>
+
+  <h3>For [stakeholder group 2]</h3>
+  <ol>
+    <li>[Recommendation tailored to this audience.]</li>
+    <li>[Second recommendation.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="section-num">6</span>Conclusion</h2>
+  <p>[Restate — in fresh words — the single most important takeaway. Do not introduce new evidence here. Two paragraphs maximum.]</p>
+
+  <p>[Close with a forward-looking sentence: what to watch, what the author plans to examine next, or what the reader should do within the next month.]</p>
+</section>
+
+<!-- ===== Footnotes ===== -->
+<section class="footnotes">
+  <ol>
+    <li>[Author, <em>Title</em>, Publisher (YYYY), p. xx.]</li>
+    <li>[Author, "Article Title," <em>Journal</em> Vol(Issue), YYYY, pp. xx–yy.]</li>
+  </ol>
+</section>
+
+<!-- ===== About author ===== -->
+<div class="about-author">
+  <h4>About the Author</h4>
+  <div class="author-name">{{ author_name }}</div>
+  <p>[One to three sentences. Role, relevant expertise, and the prior work that qualifies this paper. Keep it factual — let the paper speak for craft.]</p>
+  <p style="margin-top: 6pt; font-size: 9pt; color: var(--text-tertiary);">
+    {% if brand.identity.email %}Contact: {{ brand.identity.email }}{% endif %}
+    {% if brand.identity.legal_name %} · {{ brand.identity.legal_name }}{% endif %}
+  </p>
+</div>
+
+</body>
+</html>

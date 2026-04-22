@@ -3,6 +3,28 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.7.0] — 2026-04-22
+
+### Added
+- **New domain: `editorial`.** Long-form thought leadership. Four bilingual doc types:
+  - `white-paper` — dedicated title page + executive-summary block + drop-capped body + pull quotes + data tables + footnotes + author bio. Covers allowed (minimalist + neural-cartography). 10–25 pp.
+  - `article` — magazine masthead + deck + byline + rising-cap body + blockquote with attribution + section § glyphs + mini-headings + byline footer. 3–8 pp.
+  - `op-ed` — centred kicker + bold title + italicised deck + byline with role + indented-paragraph body + single pull-line + disclaimer. 1–3 pp.
+  - `case-study` — kicker + outcome-led title + fact-box (industry/size/region/engagement) + result hero (+42%) + challenge / approach / results metrics / testimonial / lessons / next. 3–8 pp.
+- Magazine-red accent `#B91C1C` + ink on warm newsprint `#FAFAF5`. Newsreader serif (EN) + Amiri (AR) with generous leading for long-form reading.
+- **Editorial primitives:** rising cap (`::first-letter` styled but WeasyPrint-safe — no `float`), center-aligned pull quotes bracketed by thin accent rules, left-ruled blockquotes with attribution, § section glyphs on article headings, result-hero stripe on case-study.
+- **Indented paragraphs on op-ed** — traditional editorial typography with second-and-later paragraphs indented (`p + p { text-indent: 14pt }`).
+- **Timeline + metric-card primitives on case-study** — reusable phase rail with dot markers, 3-up metric cards with tabular-nums.
+- SKILL.md router: "white paper / article / op-ed / opinion / thought leadership / case study / ورقة بيضاء / مقال / رأي / دراسة حالة" → `editorial` domain. Doc-type picker table added.
+- `references/writing.{en,ar}.md`: editorial section covering lead-with-the-reader discipline, white-paper thesis commitment, earned-quote rule, op-ed opinion-vs-analysis line, case-study outcome-over-activity rule, drop-caps as editorial gesture, pull-quote-as-editing, footnote weight discipline, steel-man the opposition.
+- Reference-code formats: `WP-{YYYY}-{NNN}`, `ART-{YYYY}-{NNN}`, `OP-{YYYY}-{NNN}`, `CASE-{YYYY}-{NNN}`.
+
+### Changed
+- Roadmap renumbered: `editorial` is now **live** (was v0.7 deferred).
+
+### Fixed
+- Editorial drop caps avoid `::first-letter { float }` due to a WeasyPrint `BlockReplacedBox` assertion. Rising-cap styling is used instead — larger first letter, no float, no layout crash.
+
 ## [0.6.0] — 2026-04-22
 
 ### Added
@@ -185,3 +207,4 @@ packaged with an installer.
 [0.4.0]: https://github.com/jneaimi/katib/releases/tag/v0.4.0
 [0.5.0]: https://github.com/jneaimi/katib/releases/tag/v0.5.0
 [0.6.0]: https://github.com/jneaimi/katib/releases/tag/v0.6.0
+[0.7.0]: https://github.com/jneaimi/katib/releases/tag/v0.7.0

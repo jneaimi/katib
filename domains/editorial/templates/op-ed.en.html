@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm 28mm;
+    @bottom-center {
+      content: "{{ company }}  |  Op-Ed  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11.5pt;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 22pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9pt;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .masthead .date {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-top: 6pt;
+    letter-spacing: 0.05em;
+  }
+
+  h1 {
+    font-size: 28pt;
+    line-height: 1.2;
+    margin: 0 auto 12pt auto;
+    font-weight: 500;
+    color: var(--text);
+    max-width: 145mm;
+  }
+
+  .deck {
+    font-size: 13pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin: 0 auto 20pt auto;
+    max-width: 130mm;
+    text-align: center;
+  }
+
+  .byline {
+    text-align: center;
+    font-size: 10.5pt;
+    color: var(--text);
+    margin-bottom: 22pt;
+  }
+
+  .byline .author { font-weight: 700; color: var(--accent); }
+  .byline .role {
+    display: block;
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+    margin-top: 2pt;
+    text-transform: uppercase;
+  }
+
+  /* Rising cap (WeasyPrint-safe — no float) */
+  .body-start::first-letter {
+    font-size: 28pt;
+    line-height: 1;
+    color: var(--drop-cap-color);
+    font-weight: 500;
+    padding-right: 2pt;
+  }
+
+  p { margin: 10pt 0; }
+
+  p + p { text-indent: 14pt; }
+  p.body-start + p { text-indent: 14pt; }
+
+  blockquote {
+    border-left: 3pt solid var(--accent);
+    padding: 8pt 16pt;
+    margin: 14pt 0;
+    font-size: 11pt;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  blockquote p { text-indent: 0 !important; }
+
+  .pull-line {
+    font-size: 17pt;
+    line-height: 1.35;
+    color: var(--accent);
+    font-style: italic;
+    text-align: center;
+    padding: 14pt 20pt;
+    margin: 18pt 0;
+    border-top: 0.5pt solid var(--accent);
+    border-bottom: 0.5pt solid var(--accent);
+  }
+
+  .signature {
+    margin-top: 26pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 10pt;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .signature strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Opinion · [Topic]</div>
+  <h1>[The Title — should state your position, not just the topic]</h1>
+  <div class="deck">[The deck — sharpen the title with a single clarifying clause. Keep it under 20 words.]</div>
+  <div class="date">{{ date_display }}</div>
+</header>
+
+<div class="byline">
+  By <span class="author">{{ author_name }}</span>
+  <span class="role">[Role · Affiliation]</span>
+</div>
+
+<section>
+  <p class="body-start">[Open with the claim, an anecdote, or a provocation — not a softening preamble. Op-eds are 800–1,200 words of opinion; waste no sentence on throat-clearing. Say what you think, immediately.]</p>
+
+  <p>[Second paragraph: narrow the claim. Why does this matter now? What triggered the piece? Three to four sentences.]</p>
+
+  <p>[Build the first piece of the argument with specifics. Name the law, the figure, the report, the person — avoid vague aggregate nouns like "many" or "some."]</p>
+</section>
+
+<div class="pull-line">
+  "[A compressed one-line statement of your position — the tweet-length version of the argument.]"
+</div>
+
+<section>
+  <p>[Introduce the strongest opposing view. Frame it fairly — steel-man it. Readers trust op-eds that take the opposition seriously.]</p>
+
+  <p>[Respond to the opposing view. One or two paragraphs. Show why the argument still holds when the objection is granted. This is where op-eds earn reader trust or lose it.]</p>
+
+  <blockquote>
+    [An optional block quote — from a source that supports or sharpens your argument.]
+  </blockquote>
+
+  <p>[Develop the consequence. If readers accept your position, what must change? What is at stake if nothing changes?]</p>
+</section>
+
+<section>
+  <p>[Closing paragraph — return to the image, claim, or question that opened the piece. Give the reader something memorable to carry.]</p>
+
+  <p>[Final sentence. A provocation, a call, or a compressed restatement. Op-eds are remembered for their last line as much as their first — make it work.]</p>
+</section>
+
+<div class="signature">
+  <strong>{{ author_name }}</strong> — [Role, one-line context for why this author is writing on this topic]. {% if brand.identity.email %}Reach out at {{ brand.identity.email }}.{% endif %}
+  The opinions expressed here are the author's own and do not necessarily represent those of {% if brand.identity.legal_name %}{{ brand.identity.legal_name }}{% else %}any institution{% endif %}.
+</div>
+
+</body>
+</html>

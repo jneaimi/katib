@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm 25mm;
+    @bottom-center {
+      content: "{{ company }}  |  دراسة حالة  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11.5pt;
+    line-height: 1.95;
+    color: var(--text);
+  }
+
+  .masthead {
+    padding-bottom: 12pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .masthead .kicker {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .masthead .client-tag {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+  }
+
+  h1 {
+    font-size: 28pt;
+    line-height: 1.3;
+    margin: 0 0 10pt 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .deck {
+    font-size: 13pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 20pt;
+    max-width: 150mm;
+  }
+
+  .fact-box {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 0.5pt solid var(--border);
+    margin-bottom: 22pt;
+  }
+
+  .fact-box .cell {
+    padding: 10pt 12pt;
+    border-left: 0.5pt solid var(--border);
+  }
+
+  .fact-box .cell:last-child { border-left: 0; }
+
+  .fact-box .label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .fact-box .value { font-size: 11pt; font-weight: 700; color: var(--text); }
+
+  .result-hero {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 22pt 24pt;
+    margin-bottom: 22pt;
+    text-align: center;
+  }
+
+  .result-hero .label {
+    font-size: 9.5pt;
+    opacity: 0.85;
+    margin-bottom: 6pt;
+    font-weight: 700;
+  }
+
+  .result-hero .figure {
+    font-size: 42pt;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .result-hero .caption {
+    font-size: 11.5pt;
+    opacity: 0.9;
+    margin-top: 6pt;
+  }
+
+  h2 {
+    font-size: 16pt;
+    color: var(--text);
+    margin: 22pt 0 8pt 0;
+    font-weight: 700;
+    border-bottom: 0.5pt solid var(--border);
+    padding-bottom: 3pt;
+    page-break-after: avoid;
+  }
+
+  h2 .section-num {
+    color: var(--accent);
+    font-weight: 700;
+    margin-left: 10pt;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--accent);
+    margin: 14pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 8pt 0; }
+
+  ul, ol { margin: 8pt 0; padding-right: 22pt; padding-left: 0; }
+  li { margin-bottom: 4pt; }
+
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10pt;
+    margin: 14pt 0;
+  }
+
+  .metric-card {
+    border: 0.5pt solid var(--border);
+    border-top: 3pt solid var(--accent);
+    padding: 12pt 14pt;
+    text-align: center;
+  }
+
+  .metric-card .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+
+  .metric-card .value {
+    font-size: 22pt;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .metric-card .delta {
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+    margin-top: 3pt;
+  }
+
+  .testimonial {
+    border-top: 0.5pt solid var(--accent);
+    border-bottom: 0.5pt solid var(--accent);
+    padding: 16pt 20pt;
+    margin: 20pt 0;
+    font-size: 13pt;
+    line-height: 1.65;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .testimonial .attribution {
+    display: block;
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    margin-top: 10pt;
+  }
+
+  .timeline { margin: 14pt 0; }
+
+  .timeline .phase {
+    padding: 10pt 20pt 10pt 0;
+    border-right: 2pt solid var(--accent);
+    margin-bottom: 8pt;
+    position: relative;
+  }
+
+  .timeline .phase::before {
+    content: "";
+    position: absolute;
+    right: -5pt;
+    top: 12pt;
+    width: 8pt;
+    height: 8pt;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .timeline .phase .phase-label {
+    font-size: 9pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .timeline .phase .phase-title { font-weight: 700; font-size: 11pt; margin-bottom: 2pt; }
+  .timeline .phase .phase-body { font-size: 10.5pt; color: var(--text-secondary); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">دراسة حالة · [القطاع / المجال]</div>
+  <div class="client-tag">العميل · [الاسم أو تسمية مجهولة]</div>
+</header>
+
+<h1>[عنوان تقوده النتيجة — ابدأ بالأثر لا بالنشاط]</h1>
+<div class="deck">[ملخّص في جملة واحدة. ما الذي تغيّر للعميل بأقلّ من ٢٠ كلمة.]</div>
+
+<section class="fact-box">
+  <div class="cell">
+    <div class="label">القطاع</div>
+    <div class="value">[تجزئة / مال / صحّة]</div>
+  </div>
+  <div class="cell">
+    <div class="label">الحجم</div>
+    <div class="value">[N موظّف]</div>
+  </div>
+  <div class="cell">
+    <div class="label">المنطقة</div>
+    <div class="value">[الإمارات / الخليج]</div>
+  </div>
+  <div class="cell">
+    <div class="label">مدّة المشاركة</div>
+    <div class="value">[N شهراً]</div>
+  </div>
+</section>
+
+<section class="result-hero">
+  <div class="label">النتيجة العنوان</div>
+  <div class="figure">+42%</div>
+  <div class="caption">[صياغة سطر واحد للمقياس: «زيادة في X خلال Y شهراً»]</div>
+</section>
+
+<section>
+  <h2><span class="section-num">١</span>التحدّي</h2>
+
+  <h3>ما الذي واجهوه</h3>
+  <p>[افتتح بوضع العميل. محدّد — كيف كان الحال على الأرض، لا كبيان مشكلة مجرّد. مَن تأثّر، وما الذي كان يفشل، وما كلفة اللّاتحرّك.]</p>
+
+  <h3>لماذا كان مهمّاً</h3>
+  <ul>
+    <li>[المحكّ ١ — مالي، تشغيلي، أو استراتيجي.]</li>
+    <li>[المحكّ ٢.]</li>
+    <li>[المحكّ ٣.]</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="section-num">٢</span>المنهج</h2>
+  <p>[كيف أُطِّرت المشاركة. سمِّ الطريقة، وتشكيل الفريق، والقرار المفصلي الذي شكّل العمل. تجنّب المصطلحات المتخصّصة — القارئ من خارج قطاع العميل ينبغي أن يتابع.]</p>
+
+  <div class="timeline">
+    <div class="phase">
+      <div class="phase-label">المرحلة ١ · اكتشاف · الأسابيع ١–٣</div>
+      <div class="phase-title">[عنوان المرحلة ١]</div>
+      <div class="phase-body">[ما الذي أُنجز. جملتان إلى ثلاث.]</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">المرحلة ٢ · تصميم · الأسابيع ٤–٧</div>
+      <div class="phase-title">[عنوان المرحلة ٢]</div>
+      <div class="phase-body">[ما الذي أُنجز.]</div>
+    </div>
+    <div class="phase">
+      <div class="phase-label">المرحلة ٣ · إطلاق · الأسابيع ٨–١٤</div>
+      <div class="phase-title">[عنوان المرحلة ٣]</div>
+      <div class="phase-body">[ما الذي أُنجز.]</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="section-num">٣</span>النتائج</h2>
+
+  <div class="metrics-row">
+    <div class="metric-card">
+      <div class="label">المقياس الرئيسي</div>
+      <div class="value">+42%</div>
+      <div class="delta">خلال ٦ أشهر</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">ثانوي</div>
+      <div class="value">−28%</div>
+      <div class="delta">في التكلفة التشغيلية</div>
+    </div>
+    <div class="metric-card">
+      <div class="label">استرداد</div>
+      <div class="value">4.2×</div>
+      <div class="delta">عائد خلال السنة الأولى</div>
+    </div>
+  </div>
+
+  <p>[سياق الأرقام. كيف قيست؟ على أيّ فترة؟ ما خطّ الأساس للمقارنة؟ بدون هذه الفقرة تبدو الأرقام زخرفيّة — مع الفقرة تصمد للتمحيص.]</p>
+</section>
+
+<div class="testimonial">
+  «[اقتباس من العميل — محدّد، طبيعي، يفضّل أن يتضمّن رقماً أو نتيجة ملموسة.]»
+  <span class="attribution">[الاسم · المسمّى · جهة العميل]</span>
+</div>
+
+<section>
+  <h2><span class="section-num">٤</span>ما تعلّمناه</h2>
+  <p>[فقرة أو فقرتان. البصيرة التي تُعمَّم خارج هذه المشاركة — الجزء الذي يمكن لقارئ آخر أن يحمله إلى موقفه. تجنّب لا-بصائر كـ «كلّ مشروع فريد».]</p>
+
+  <h3>للفرق التي تفكّر في هذا النهج</h3>
+  <ol>
+    <li>[درس ١ — قابل للتطبيق، محدّد.]</li>
+    <li>[درس ٢.]</li>
+    <li>[درس ٣.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="section-num">٥</span>ما التالي</h2>
+  <p>[فقرة واحدة. المرحلة الثانية من المشاركة، أو نشر أوسع، أو السؤال الذي طرحه العميل بعد المشاركة الأولى.]</p>
+</section>
+
+</body>
+</html>

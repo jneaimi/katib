@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm 28mm;
+    @bottom-center {
+      content: "{{ company }}  |  رأي  |  " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 12pt;
+    line-height: 2;
+    color: var(--text);
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 14pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 22pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .masthead .date {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    margin-top: 6pt;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  h1 {
+    font-size: 26pt;
+    line-height: 1.3;
+    margin: 0 auto 12pt auto;
+    font-weight: 700;
+    color: var(--text);
+    max-width: 145mm;
+  }
+
+  .deck {
+    font-size: 13pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0 auto 20pt auto;
+    max-width: 130mm;
+    text-align: center;
+  }
+
+  .byline {
+    text-align: center;
+    font-size: 10.5pt;
+    color: var(--text);
+    margin-bottom: 22pt;
+  }
+
+  .byline .author { font-weight: 700; color: var(--accent); }
+  .byline .role {
+    display: block;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-top: 2pt;
+  }
+
+  /* Rising cap (WeasyPrint-safe — no float) */
+  .body-start::first-letter {
+    font-size: 28pt;
+    line-height: 1;
+    color: var(--drop-cap-color);
+    font-weight: 700;
+    padding-left: 2pt;
+  }
+
+  p { margin: 10pt 0; }
+
+  p + p { text-indent: 14pt; }
+  p.body-start + p { text-indent: 14pt; }
+
+  blockquote {
+    border-right: 3pt solid var(--accent);
+    padding: 8pt 16pt;
+    margin: 14pt 0;
+    font-size: 11.5pt;
+    color: var(--text-secondary);
+  }
+
+  blockquote p { text-indent: 0 !important; }
+
+  .pull-line {
+    font-size: 17pt;
+    line-height: 1.6;
+    color: var(--accent);
+    text-align: center;
+    padding: 14pt 20pt;
+    margin: 18pt 0;
+    border-top: 0.5pt solid var(--accent);
+    border-bottom: 0.5pt solid var(--accent);
+  }
+
+  .signature {
+    margin-top: 26pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  .signature strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">رأي · [الموضوع]</div>
+  <h1>[العنوان — يُفصح عن موقفك، لا عن الموضوع وحده]</h1>
+  <div class="deck">[السطر التعريفي — يشحذ العنوان بعبارة مُوضِّحة واحدة. دون ٢٠ كلمة.]</div>
+  <div class="date">{{ date_display }}</div>
+</header>
+
+<div class="byline">
+  بقلم <span class="author">{{ author_name }}</span>
+  <span class="role">[الدور · الجهة]</span>
+</div>
+
+<section>
+  <p class="body-start">[افتتح بالادّعاء، أو حكاية، أو استفزاز — لا بتمهيد مُليّن. مقالات الرأي ٨٠٠–١٢٠٠ كلمة من الموقف؛ لا تُهدر جملة في التحضيرات. قُل رأيك فوراً.]</p>
+
+  <p>[الفقرة الثانية: ضيّق الادّعاء. لماذا يهمّ هذا الآن؟ ما الذي حرّك المقال؟ ثلاث إلى أربع جمل.]</p>
+
+  <p>[ابنِ القطعة الأولى من الحجّة بالمحدّدات. سمِّ القانون، الرقم، التقرير، الشخص — تجنّب الأسماء الجمعية الفضفاضة كـ «كثيرون» أو «البعض».]</p>
+</section>
+
+<div class="pull-line">
+  «[جملة مكثّفة واحدة توجز موقفك — النسخة المقتضبة من الحجّة.]»
+</div>
+
+<section>
+  <p>[قدّم الرأي المعارض الأقوى. أطّره بإنصاف — اصنع له أمتن صياغة ممكنة. القرّاء يثقون بمقالات الرأي التي تتعامل مع الطرف المقابل بجدّية.]</p>
+
+  <p>[ردّ على الرأي المعارض. فقرة أو فقرتان. أرِ القارئ لماذا تظلّ الحجّة صالحة حتى مع التسليم بالاعتراض. هنا تكسب مقالات الرأي ثقة القارئ أو تخسرها.]</p>
+
+  <blockquote>
+    [اقتباس اختياري — من مصدر يدعم حجّتك أو يشحذها.]
+  </blockquote>
+
+  <p>[طوّر التبعة. إن قبل القارئ موقفك، ما الذي يجب أن يتغيّر؟ ما المحكّ إن لم يتغيّر شيء؟]</p>
+</section>
+
+<section>
+  <p>[الفقرة الختامية — عُد إلى الصورة أو الادّعاء أو السؤال الذي افتتح المقال. أعطِ القارئ شيئاً يحمله.]</p>
+
+  <p>[الجملة الأخيرة. استفزاز، أو نداء، أو إعادة صياغة مكثّفة. مقالات الرأي تُتذكَّر بآخر جملة بقدر ما تُتذكَّر بأوّلها — اجعلها تعمل.]</p>
+</section>
+
+<div class="signature">
+  <strong>{{ author_name }}</strong> — [الدور، وسياق سطر واحد يبيّن لماذا يكتب هذا المؤلف في هذا الموضوع]. {% if brand.identity.email %}للتواصل: <span style="direction: ltr; unicode-bidi: embed">{{ brand.identity.email }}</span>.{% endif %}
+  الآراء الواردة هنا تعبّر عن رأي الكاتب ولا تعبّر بالضرورة عن رأي {% if brand.identity.legal_name %}{{ brand.identity.legal_name }}{% else %}أيّ جهة{% endif %}.
+</div>
+
+</body>
+</html>

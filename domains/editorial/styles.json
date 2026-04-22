@@ -1,0 +1,44 @@
+{
+  "domain": "editorial",
+  "covers_allowed": [
+    "minimalist-typographic",
+    "neural-cartography"
+  ],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": "minimalist-typographic",
+    "layout": "classic"
+  },
+  "doc_types": {
+    "white-paper": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 40,
+      "target_pages": [10, 25],
+      "sections_required": ["cover", "body"]
+    },
+    "article": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 10,
+      "target_pages": [3, 8],
+      "sections_required": ["body"]
+    },
+    "op-ed": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 4,
+      "target_pages": [1, 3],
+      "sections_required": ["body"]
+    },
+    "case-study": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 12,
+      "target_pages": [3, 8],
+      "sections_required": ["body"]
+    }
+  }
+}
