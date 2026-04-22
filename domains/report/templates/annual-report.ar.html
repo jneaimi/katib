@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  التقرير السنوي  |  صفحة " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+  @page :first { @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); }
+  .brand-letterhead { display: block; max-width: 60mm; margin-bottom: 14pt; }
+
+  .title-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .year-mark {
+    margin-top: 30mm;
+    font-size: 88pt;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 0.9;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .title-page .doc-title {
+    font-size: 28pt;
+    color: var(--text);
+    margin-top: 10pt;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 14pt;
+    color: var(--text-secondary);
+    margin-top: 10pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18pt;
+  }
+
+  .title-page .meta-item .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 12pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .toc { page-break-after: always; }
+  .toc h2 { font-size: 20pt; color: var(--accent); margin-top: 0; margin-bottom: 24pt; }
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 12pt;
+  }
+  .toc-list .number { color: var(--accent); font-weight: 600; margin-left: 10pt; min-width: 20pt; }
+
+  section.body-section { margin-bottom: 22pt; }
+  section.body-section h2 {
+    padding-right: 10pt;
+    padding-left: 0;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    font-size: 17pt;
+    margin-top: 18pt;
+  }
+
+  .lead-paragraph {
+    font-size: 12pt;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12pt;
+    margin: 14pt 0;
+  }
+
+  .highlight {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--light-gray, #F1F5F4);
+  }
+
+  .highlight .big {
+    font-size: 24pt;
+    color: var(--accent);
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 4pt;
+    direction: ltr;
+    unicode-bidi: embed;
+    text-align: right;
+  }
+
+  .highlight .descr {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .financial-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11pt;
+    margin: 14pt 0;
+  }
+
+  .financial-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .financial-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 7pt 10pt;
+    text-align: right;
+  }
+
+  .financial-table td.num {
+    text-align: left;
+    direction: ltr;
+    unicode-bidi: embed;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .financial-table tr.total td {
+    border-top: 1pt solid var(--accent);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .letter {
+    padding: 18pt 22pt;
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--accent);
+    border-left: none;
+    margin: 10pt 0;
+    font-size: 12pt;
+    line-height: 1.9;
+  }
+
+  .letter .signature {
+    margin-top: 18pt;
+    color: var(--text-secondary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== صفحة العنوان ===== -->
+  <section class="title-page">
+    <div>
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="year-mark">{{ today[:4] }}</div>
+      <div class="doc-title">{{ title }}</div>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item"><div class="label">السنة المالية</div><div class="value">{{ today[:4] }}</div></div>
+      <div class="meta-item"><div class="label">تاريخ النشر</div><div class="value">{{ today }}</div></div>
+      <div class="meta-item"><div class="label">الجهة</div><div class="value">{{ company }}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== جدول المحتويات ===== -->
+  <section class="toc">
+    <h2>المحتويات</h2>
+    <ol class="toc-list">
+      <li><span class="number">١</span><span>كلمة رئيس مجلس الإدارة</span><span>٣</span></li>
+      <li><span class="number">٢</span><span>نظرة عامّة على السنة</span><span>٥</span></li>
+      <li><span class="number">٣</span><span>مراجعة الأداء</span><span>٨</span></li>
+      <li><span class="number">٤</span><span>قطاعات الأعمال</span><span>١٢</span></li>
+      <li><span class="number">٥</span><span>الملخّص المالي</span><span>١٨</span></li>
+      <li><span class="number">٦</span><span>التوقّعات المستقبلية</span><span>٢٥</span></li>
+      <li><span class="number">٧</span><span>الحوكمة</span><span>٢٧</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== ١ · كلمة رئيس مجلس الإدارة ===== -->
+  <section class="body-section">
+    <h2>١ · كلمة رئيس مجلس الإدارة</h2>
+    <div class="letter">
+      <p>[حضرات المساهمين / أصحاب المصلحة،]</p>
+      <p>
+        [الفقرة الافتتاحية: السنة في جملة واحدة. ما الذي سعت إليه المؤسسة؟ وما الذي تحقّق؟]
+      </p>
+      <p>
+        [أبرز التطوّرات: اتجاه سوقي واحد، محور داخلي واحد، حدث خارجي واحد شكّل ملامح السنة.]
+      </p>
+      <p>
+        [نظرة إلى المستقبل: التزام واحد للسنة القادمة.]
+      </p>
+      <div class="signature">[الاسم]<br>[المسمّى الوظيفي]</div>
+    </div>
+  </section>
+
+  <!-- ===== ٢ · نظرة عامّة على السنة ===== -->
+  <section class="body-section">
+    <h2>٢ · نظرة عامّة على السنة</h2>
+    <p class="lead-paragraph">[فقرة سردية واحدة تلخّص السنة.]</p>
+    <div class="highlights">
+      <div class="highlight">
+        <div class="big">+١٨٪</div>
+        <div class="descr">نموّ الإيرادات على أساس سنوي</div>
+      </div>
+      <div class="highlight">
+        <div class="big">٢٬٤٠٠</div>
+        <div class="descr">عميل مخدوم عبر جميع القطاعات</div>
+      </div>
+      <div class="highlight">
+        <div class="big">١٢</div>
+        <div class="descr">سوقاً جديدة تم دخولها</div>
+      </div>
+      <div class="highlight">
+        <div class="big">٩٨٪</div>
+        <div class="descr">معدّل احتفاظ العملاء</div>
+      </div>
+      <div class="highlight">
+        <div class="big">٣٤٠</div>
+        <div class="descr">عضو فريق في نهاية السنة</div>
+      </div>
+      <div class="highlight">
+        <div class="big">٤٢ م د.إ</div>
+        <div class="descr">إجمالي الاستثمار في البحث والتطوير</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ٥ · الملخّص المالي ===== -->
+  <section class="body-section">
+    <h2>٥ · الملخّص المالي</h2>
+    <p>[فقرة سردية: مقارنة على أساس سنوي والمحرّكات الرئيسية.]</p>
+    <table class="financial-table">
+      <thead>
+        <tr><th>البند</th><th class="num">٢٠٢٥</th><th class="num">٢٠٢٤</th><th class="num">التغيّر</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>الإيرادات</td><td class="num">142,500</td><td class="num">120,800</td><td class="num">+18.0%</td></tr>
+        <tr><td>إجمالي الربح</td><td class="num">68,200</td><td class="num">57,100</td><td class="num">+19.4%</td></tr>
+        <tr><td>المصروفات التشغيلية</td><td class="num">41,300</td><td class="num">38,900</td><td class="num">+6.2%</td></tr>
+        <tr><td>صافي الدخل</td><td class="num">26,900</td><td class="num">18,200</td><td class="num">+47.8%</td></tr>
+        <tr class="total"><td>الأرباح قبل الفوائد والضرائب والإهلاك</td><td class="num">34,100</td><td class="num">23,700</td><td class="num">+43.9%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 9pt; color: var(--text-tertiary);">جميع الأرقام بآلاف الدراهم الإماراتية، مُدقَّقة.</p>
+  </section>
+
+  <!-- ===== ٦ · التوقّعات المستقبلية ===== -->
+  <section class="body-section">
+    <h2>٦ · التوقّعات المستقبلية</h2>
+    <p>[بيان استشرافي: أولويات السنة القادمة، الفرص الجوهرية، والمخاطر المعلومة.]</p>
+  </section>
+
+</body>
+</html>

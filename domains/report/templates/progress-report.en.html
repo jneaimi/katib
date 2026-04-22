@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+  @page :first { @top-right { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead { display: block; max-width: 55mm; margin-bottom: 14pt; }
+
+  .report-header {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 14pt;
+    margin-bottom: 22pt;
+  }
+
+  .report-header .eyebrow {
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 6pt;
+  }
+
+  .report-header h1 {
+    font-size: 26pt;
+    line-height: 1.15;
+    color: var(--accent);
+    margin: 0 0 8pt 0;
+  }
+
+  .report-header .subtitle {
+    font-size: 12pt;
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12pt;
+    margin-top: 14pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .meta-row .item .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 2pt;
+  }
+
+  .meta-row .item .value {
+    font-size: 10pt;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  section.body-section { margin-bottom: 20pt; }
+
+  section.body-section h2 {
+    padding-left: 10pt;
+    border-left: 2.5pt solid var(--accent);
+    font-size: 15pt;
+    margin-top: 14pt;
+  }
+
+  /* KPI cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    margin: 10pt 0 16pt 0;
+  }
+
+  .kpi-card {
+    border: 0.5pt solid var(--border);
+    background: var(--light-gray, #F1F5F4);
+    padding: 10pt 12pt;
+  }
+
+  .kpi-card .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4pt;
+  }
+
+  .kpi-card .value {
+    font-size: 18pt;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.1;
+  }
+
+  .kpi-card .trend {
+    font-size: 8.5pt;
+    margin-top: 3pt;
+    color: var(--text-secondary);
+  }
+
+  .kpi-card.trend-up .trend { color: #047857; }
+  .kpi-card.trend-down .trend { color: #B91C1C; }
+
+  /* Milestones */
+  .milestone-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 10pt 0;
+  }
+
+  .milestone-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .milestone-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+  }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2pt 8pt;
+    font-size: 8pt;
+    font-weight: 600;
+    border-radius: 2pt;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .status-pill.done { background: #D1FAE5; color: #065F46; }
+  .status-pill.in-progress { background: #FEF3C7; color: #92400E; }
+  .status-pill.blocked { background: #FEE2E2; color: #991B1B; }
+  .status-pill.planned { background: var(--tag-bg); color: var(--tag-fg); }
+
+  /* Risk callout */
+  .risks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .risk {
+    border-left: 3pt solid var(--callout-border);
+    padding: 8pt 12pt;
+    background: var(--callout-bg);
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+
+  .risk .title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 3pt;
+  }
+
+  .risk .severity { font-size: 8pt; color: var(--text-tertiary); }
+  </style>
+</head>
+<body>
+
+  <div class="report-header">
+    {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <div class="eyebrow">Progress Report</div>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+    <div class="meta-row">
+      <div class="item"><div class="label">Reference</div><div class="value">{{ reference_code }}</div></div>
+      <div class="item"><div class="label">Period</div><div class="value">[Q1 2026]</div></div>
+      <div class="item"><div class="label">Issued</div><div class="value">{{ today }}</div></div>
+      <div class="item"><div class="label">Author</div><div class="value">{{ author_name }}</div></div>
+    </div>
+  </div>
+
+  <!-- ===== 1. Executive Summary ===== -->
+  <section class="body-section">
+    <h2>Executive Summary</h2>
+    <p>
+      [One paragraph: where we are versus plan. Key wins of the period, one or two headwinds,
+      and the top priority for the next reporting cycle.]
+    </p>
+  </section>
+
+  <!-- ===== 2. Key Indicators ===== -->
+  <section class="body-section">
+    <h2>Key Indicators</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card trend-up">
+        <div class="label">Metric A</div>
+        <div class="value">87%</div>
+        <div class="trend">▲ 4 pts vs prev. period</div>
+      </div>
+      <div class="kpi-card trend-up">
+        <div class="label">Metric B</div>
+        <div class="value">1,240</div>
+        <div class="trend">▲ 12% vs prev.</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">Metric C</div>
+        <div class="value">3.2 d</div>
+        <div class="trend">— flat vs prev.</div>
+      </div>
+      <div class="kpi-card trend-down">
+        <div class="label">Metric D</div>
+        <div class="value">18</div>
+        <div class="trend">▼ 2 vs prev.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3. Milestones ===== -->
+  <section class="body-section">
+    <h2>Milestones</h2>
+    <table class="milestone-table">
+      <thead>
+        <tr><th>Milestone</th><th>Owner</th><th>Due</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Phase 1 — Discovery</td><td>[Name]</td><td>2026-02-15</td><td><span class="status-pill done">Done</span></td></tr>
+        <tr><td>Phase 2 — Implementation</td><td>[Name]</td><td>2026-04-30</td><td><span class="status-pill in-progress">In progress</span></td></tr>
+        <tr><td>Phase 3 — Rollout</td><td>[Name]</td><td>2026-06-15</td><td><span class="status-pill planned">Planned</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 4. Risks & Issues ===== -->
+  <section class="body-section">
+    <h2>Risks &amp; Issues</h2>
+    <div class="risks-grid">
+      <div class="risk">
+        <div class="title">[Risk title]</div>
+        <p style="margin: 0;">[One-line description of the risk and its impact.]</p>
+        <div class="severity">Severity: medium · Owner: [Name]</div>
+      </div>
+      <div class="risk">
+        <div class="title">[Issue title]</div>
+        <p style="margin: 0;">[One-line description and mitigation in progress.]</p>
+        <div class="severity">Severity: low · Owner: [Name]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. Next Period ===== -->
+  <section class="body-section">
+    <h2>Next Period — Priorities</h2>
+    <ol>
+      <li>[Priority 1 — why and by whom]</li>
+      <li>[Priority 2]</li>
+      <li>[Priority 3]</li>
+    </ol>
+  </section>
+
+</body>
+</html>

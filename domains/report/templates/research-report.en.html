@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Page " counter(page) " of " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead {
+    display: block;
+    max-width: 60mm;
+    margin-bottom: 14pt;
+  }
+
+  /* Title page */
+  .title-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-left: 10pt;
+    border-left: 4pt solid var(--accent);
+    margin-top: 40mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 9pt;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1.doc-title {
+    font-size: 34pt;
+    line-height: 1.15;
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 13pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-top: 14pt;
+    max-width: 150mm;
+    font-style: italic;
+  }
+
+  .title-page .meta-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18pt 40pt;
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .meta-item .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 11pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* TOC */
+  .toc { page-break-after: always; }
+
+  .toc h2 {
+    font-size: 18pt;
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 24pt;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 11pt;
+  }
+
+  .toc-list .number {
+    color: var(--accent);
+    font-weight: 600;
+    margin-right: 10pt;
+    min-width: 20pt;
+  }
+
+  /* Body sections */
+  section.body-section { margin-bottom: 22pt; }
+
+  section.body-section h2 {
+    padding-left: 10pt;
+    border-left: 2.5pt solid var(--accent);
+    font-size: 16pt;
+    margin-top: 18pt;
+  }
+
+  .lead-paragraph {
+    font-size: 11pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  /* Data tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14pt 0;
+    font-size: 9.5pt;
+  }
+
+  .data-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .data-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .data-table tbody tr:nth-child(even) td {
+    background: var(--table-row-alt);
+  }
+
+  .data-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Callouts */
+  .callout {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--callout-border);
+    padding: 12pt 16pt;
+    margin: 14pt 0;
+    font-size: 10pt;
+    line-height: 1.55;
+  }
+
+  .callout .label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--callout-border);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  /* Figure block */
+  .figure {
+    margin: 18pt 0;
+    padding: 14pt;
+    background: var(--light-gray, #F1F5F4);
+    border: 0.5pt solid var(--border);
+  }
+
+  .figure .caption {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-top: 8pt;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* References */
+  .references ol {
+    padding-left: 24pt;
+    font-size: 9.5pt;
+    line-height: 1.6;
+  }
+
+  .references li {
+    margin-bottom: 6pt;
+    color: var(--text-secondary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Title page ===== -->
+  <section class="title-page">
+    <div class="brand-bar">
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="eyebrow">Research Report</div>
+      <h1 class="doc-title">{{ title }}</h1>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item"><div class="label">Reference</div><div class="value">{{ reference_code }}</div></div>
+      <div class="meta-item"><div class="label">Issued</div><div class="value">{{ today }}</div></div>
+      <div class="meta-item"><div class="label">Author</div><div class="value">{{ author_name }}</div></div>
+      <div class="meta-item"><div class="label">Published by</div><div class="value">{{ company }}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== Table of contents ===== -->
+  <section class="toc">
+    <h2>Contents</h2>
+    <ol class="toc-list">
+      <li><span class="number">1</span><span>Abstract</span><span>3</span></li>
+      <li><span class="number">2</span><span>Introduction</span><span>4</span></li>
+      <li><span class="number">3</span><span>Methodology</span><span>5</span></li>
+      <li><span class="number">4</span><span>Findings</span><span>7</span></li>
+      <li><span class="number">5</span><span>Discussion</span><span>11</span></li>
+      <li><span class="number">6</span><span>Conclusion</span><span>14</span></li>
+      <li><span class="number">7</span><span>References</span><span>15</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== 1. Abstract ===== -->
+  <section class="body-section">
+    <h2>1 · Abstract</h2>
+    <p class="lead-paragraph">
+      This study examines [topic] across [scope / population], drawing on [data sources] collected between [date range].
+      Findings reveal three primary patterns: [finding 1], [finding 2], and [finding 3]. Implications are discussed
+      for [audience / policy area / practice].
+    </p>
+  </section>
+
+  <!-- ===== 2. Introduction ===== -->
+  <section class="body-section">
+    <h2>2 · Introduction</h2>
+    <p>
+      [Establish the research question. What gap in knowledge does this study address? Why now?]
+    </p>
+    <p>
+      [Situate the work: prior literature, key debates, unanswered questions. Cite 3–5 foundational sources.]
+    </p>
+    <div class="callout">
+      <div class="label">Research Question</div>
+      How does [X] affect [Y] under conditions of [Z]?
+    </div>
+  </section>
+
+  <!-- ===== 3. Methodology ===== -->
+  <section class="body-section">
+    <h2>3 · Methodology</h2>
+    <p>
+      [Research design: qualitative / quantitative / mixed. Sample size, selection criteria, data collection window.]
+    </p>
+    <table class="data-table">
+      <thead>
+        <tr><th>Dimension</th><th>Approach</th><th>Sample</th><th>Instrument</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Quantitative</td><td>Survey</td><td class="num">n = 240</td><td>Online questionnaire (20 items)</td></tr>
+        <tr><td>Qualitative</td><td>Interviews</td><td class="num">n = 18</td><td>Semi-structured, 45–60 min</td></tr>
+        <tr><td>Document</td><td>Archival review</td><td class="num">42 sources</td><td>Policy papers + annual reports</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== 4. Findings ===== -->
+  <section class="body-section">
+    <h2>4 · Findings</h2>
+    <h3>4.1 Primary trend</h3>
+    <p>[Describe the dominant pattern observed. Anchor with one or two representative data points.]</p>
+    <h3>4.2 Secondary patterns</h3>
+    <p>[Describe sub-patterns, outliers, and cohort differences. Use tables or figures as needed.]</p>
+    <div class="figure">
+      <div class="caption">Figure 1 — [Descriptive caption for the chart or diagram].</div>
+    </div>
+  </section>
+
+  <!-- ===== 5. Discussion ===== -->
+  <section class="body-section">
+    <h2>5 · Discussion</h2>
+    <p>[Interpret findings relative to the literature. What is confirmed, extended, or challenged?]</p>
+    <p>[Limitations: sample constraints, instrument gaps, temporal scope.]</p>
+  </section>
+
+  <!-- ===== 6. Conclusion ===== -->
+  <section class="body-section">
+    <h2>6 · Conclusion</h2>
+    <p>[Synthesis: the one-paragraph answer to the research question.]</p>
+    <p>[Implications for practice / policy / future research.]</p>
+  </section>
+
+  <!-- ===== 7. References ===== -->
+  <section class="body-section references">
+    <h2>7 · References</h2>
+    <ol>
+      <li>Author, A. (Year). <em>Title of work</em>. Publisher.</li>
+      <li>Author, B. (Year). Title of article. <em>Journal Name</em>, Vol(Issue), pp–pp.</li>
+    </ol>
+  </section>
+
+</body>
+</html>

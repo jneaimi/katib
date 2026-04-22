@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}  |  سرّي";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+  @page :first { @top-left { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); }
+  .brand-letterhead { display: block; max-width: 60mm; margin-bottom: 14pt; }
+
+  .title-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-right: 10pt;
+    border-right: 4pt solid var(--accent);
+    border-left: none;
+    padding-left: 0;
+    margin-top: 40mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1.doc-title {
+    font-size: 32pt;
+    line-height: 1.3;
+    color: var(--accent);
+    margin: 0;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 14pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 14pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18pt 40pt;
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .meta-item .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 12pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .confidential-stamp {
+    position: absolute;
+    top: 30mm;
+    left: 22mm;
+    padding: 4pt 10pt;
+    border: 1.5pt solid #B91C1C;
+    color: #B91C1C;
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  .toc { page-break-after: always; }
+  .toc h2 { font-size: 20pt; color: var(--accent); margin-top: 0; margin-bottom: 24pt; }
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 12pt;
+  }
+  .toc-list .number { color: var(--accent); font-weight: 600; margin-left: 10pt; min-width: 20pt; }
+
+  section.body-section { margin-bottom: 22pt; }
+  section.body-section h2 {
+    padding-right: 10pt;
+    padding-left: 0;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    font-size: 17pt;
+    margin-top: 18pt;
+  }
+
+  .lead-paragraph {
+    font-size: 12pt;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  .severity-matrix {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14pt 0;
+    font-size: 11pt;
+  }
+
+  .severity-matrix th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .severity-matrix td {
+    border: 0.5pt solid var(--border);
+    padding: 10pt;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  .severity-matrix td.row-label {
+    background: var(--light-gray, #F1F5F4);
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .sev-critical { background: #FEE2E2; color: #991B1B; }
+  .sev-high { background: #FEF3C7; color: #92400E; }
+  .sev-medium { background: #E0F2FE; color: #075985; }
+  .sev-low { background: #D1FAE5; color: #065F46; }
+
+  .findings-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin: 14pt 0;
+  }
+
+  .findings-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .findings-table td {
+    border: 0.5pt solid var(--border);
+    padding: 8pt 10pt;
+    text-align: right;
+    vertical-align: top;
+  }
+
+  .findings-table td.id {
+    font-family: monospace;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .severity-pill {
+    display: inline-block;
+    padding: 2pt 8pt;
+    font-size: 9pt;
+    font-weight: 700;
+    border-radius: 2pt;
+  }
+
+  .finding {
+    border: 0.5pt solid var(--border);
+    border-right: 3pt solid var(--accent);
+    border-left: none;
+    padding: 14pt 18pt;
+    margin: 14pt 0;
+  }
+
+  .finding .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8pt;
+    padding-bottom: 8pt;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .finding .header .title {
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .finding .field {
+    margin-bottom: 6pt;
+    font-size: 11pt;
+    line-height: 1.7;
+  }
+
+  .finding .field .label {
+    display: inline-block;
+    min-width: 90pt;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    font-size: 9pt;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== صفحة العنوان ===== -->
+  <section class="title-page">
+    <div class="confidential-stamp">سرّي</div>
+    <div class="brand-bar">
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="eyebrow">تقرير تدقيق</div>
+      <h1 class="doc-title">{{ title }}</h1>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item"><div class="label">المرجع</div><div class="value">{{ reference_code }}</div></div>
+      <div class="meta-item"><div class="label">تاريخ الإصدار</div><div class="value">{{ today }}</div></div>
+      <div class="meta-item"><div class="label">المدقّق</div><div class="value">{{ author_name }}</div></div>
+      <div class="meta-item"><div class="label">الجهة المدقَّقة</div><div class="value">{{ company }}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== المحتويات ===== -->
+  <section class="toc">
+    <h2>المحتويات</h2>
+    <ol class="toc-list">
+      <li><span class="number">١</span><span>الملخّص التنفيذي</span><span>٣</span></li>
+      <li><span class="number">٢</span><span>النطاق والمنهجية</span><span>٥</span></li>
+      <li><span class="number">٣</span><span>مصفوفة الخطورة</span><span>٧</span></li>
+      <li><span class="number">٤</span><span>الملاحظات التفصيلية</span><span>٩</span></li>
+      <li><span class="number">٥</span><span>التوصيات</span><span>١٨</span></li>
+      <li><span class="number">٦</span><span>خطّة المعالجة</span><span>٢٢</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== ١ · الملخّص التنفيذي ===== -->
+  <section class="body-section">
+    <h2>١ · الملخّص التنفيذي</h2>
+    <p class="lead-paragraph">
+      فحص هذا التدقيق [مجال المراجعة] خلال [النافذة الزمنية]. حدّدت المراجعة
+      [عدد] ملاحظة إجمالاً: [س حرجة]، [ص عالية]، [ع متوسّطة]، و[و منخفضة]. ترتبط أكبر
+      التعرّضات الجوهرية بـ [المحور الرئيسي].
+    </p>
+  </section>
+
+  <!-- ===== ٢ · النطاق والمنهجية ===== -->
+  <section class="body-section">
+    <h2>٢ · النطاق والمنهجية</h2>
+    <p>
+      أُجري التدقيق بين [تاريخ البداية] و[تاريخ النهاية] بواسطة [فريق التدقيق].
+      شمل النطاق [الأنظمة / العمليات / الضوابط المراجَعة].
+    </p>
+    <p>جمعت المنهجية بين:</p>
+    <ul>
+      <li>[مراجعة وثائقية — السياسات، الإجراءات، السجلّات]</li>
+      <li>[مقابلات — ن من الموظّفين عبر م من الفرق]</li>
+      <li>[اختبار تقني — مجموعة الأدوات، نسبة التغطية]</li>
+      <li>[اختبار الضوابط — حجم العيّنة، تصميم الاختبار]</li>
+    </ul>
+  </section>
+
+  <!-- ===== ٣ · مصفوفة الخطورة ===== -->
+  <section class="body-section">
+    <h2>٣ · مصفوفة الخطورة</h2>
+    <p>تصنيف الملاحظات حسب الاحتمالية × الأثر.</p>
+    <table class="severity-matrix">
+      <thead>
+        <tr>
+          <th></th>
+          <th>أثر منخفض</th>
+          <th>أثر متوسّط</th>
+          <th>أثر عالٍ</th>
+          <th>أثر حرج</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="row-label">احتمالية عالية</td>
+          <td class="sev-medium">متوسّطة</td>
+          <td class="sev-high">عالية</td>
+          <td class="sev-critical">حرجة</td>
+          <td class="sev-critical">حرجة</td>
+        </tr>
+        <tr>
+          <td class="row-label">احتمالية متوسّطة</td>
+          <td class="sev-low">منخفضة</td>
+          <td class="sev-medium">متوسّطة</td>
+          <td class="sev-high">عالية</td>
+          <td class="sev-critical">حرجة</td>
+        </tr>
+        <tr>
+          <td class="row-label">احتمالية منخفضة</td>
+          <td class="sev-low">منخفضة</td>
+          <td class="sev-low">منخفضة</td>
+          <td class="sev-medium">متوسّطة</td>
+          <td class="sev-high">عالية</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== ٤ · الملاحظات التفصيلية ===== -->
+  <section class="body-section">
+    <h2>٤ · الملاحظات التفصيلية</h2>
+
+    <table class="findings-table">
+      <thead>
+        <tr><th>الرقم</th><th>الملاحظة</th><th>الخطورة</th><th>الجهة المسؤولة</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="id">AUD-001</td>
+          <td>[وصف موجز للملاحظة]</td>
+          <td><span class="severity-pill sev-critical">حرجة</span></td>
+          <td>[الفريق / الدور]</td>
+        </tr>
+        <tr>
+          <td class="id">AUD-002</td>
+          <td>[وصف موجز للملاحظة]</td>
+          <td><span class="severity-pill sev-high">عالية</span></td>
+          <td>[الفريق / الدور]</td>
+        </tr>
+        <tr>
+          <td class="id">AUD-003</td>
+          <td>[وصف موجز للملاحظة]</td>
+          <td><span class="severity-pill sev-medium">متوسّطة</span></td>
+          <td>[الفريق / الدور]</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="finding">
+      <div class="header">
+        <div class="title">AUD-001 · [عنوان الملاحظة]</div>
+        <span class="severity-pill sev-critical">حرجة</span>
+      </div>
+      <div class="field"><span class="label">الملاحظة</span>[ما تم اكتشافه — واقعي، جملة أو جملتان.]</div>
+      <div class="field"><span class="label">الخطر</span>[التبعات التجارية أو التنظيمية في حال عدم المعالجة.]</div>
+      <div class="field"><span class="label">الدليل</span>[سجلّ، لقطة شاشة، نتيجة اختبار، مرجع مقابلة.]</div>
+      <div class="field"><span class="label">التوصية</span>[إجراء تصحيحي محدّد.]</div>
+    </div>
+  </section>
+
+  <!-- ===== ٥ · التوصيات ===== -->
+  <section class="body-section">
+    <h2>٥ · التوصيات</h2>
+    <p>[توصيات موضوعية مجمّعة حسب المجال — يجب أن تعود كلّ منها إلى ملاحظة أو أكثر.]</p>
+    <ol>
+      <li><strong>[المحور]:</strong> [توصية، تعالج الملاحظتين AUD-001 وAUD-003]</li>
+      <li><strong>[المحور]:</strong> [توصية، تعالج الملاحظة AUD-002]</li>
+    </ol>
+  </section>
+
+  <!-- ===== ٦ · خطّة المعالجة ===== -->
+  <section class="body-section">
+    <h2>٦ · خطّة المعالجة</h2>
+    <table class="findings-table">
+      <thead>
+        <tr><th>الملاحظة</th><th>الإجراء</th><th>المسؤول</th><th>الموعد المستهدف</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="id">AUD-001</td><td>[الإجراء]</td><td>[المسؤول]</td><td>[التاريخ]</td></tr>
+        <tr><td class="id">AUD-002</td><td>[الإجراء]</td><td>[المسؤول]</td><td>[التاريخ]</td></tr>
+        <tr><td class="id">AUD-003</td><td>[الإجراء]</td><td>[المسؤول]</td><td>[التاريخ]</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

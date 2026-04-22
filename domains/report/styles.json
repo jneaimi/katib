@@ -1,0 +1,44 @@
+{
+  "domain": "report",
+  "covers_allowed": [
+    "minimalist-typographic",
+    "neural-cartography"
+  ],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": "minimalist-typographic",
+    "layout": "classic"
+  },
+  "doc_types": {
+    "research-report": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 50,
+      "target_pages": [10, 30],
+      "sections_required": ["cover", "toc", "body"]
+    },
+    "progress-report": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 25,
+      "target_pages": [5, 15],
+      "sections_required": ["body"]
+    },
+    "annual-report": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 80,
+      "target_pages": [20, 60],
+      "sections_required": ["cover", "toc", "body"]
+    },
+    "audit-report": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 40,
+      "target_pages": [10, 25],
+      "sections_required": ["cover", "toc", "body"]
+    }
+  }
+}

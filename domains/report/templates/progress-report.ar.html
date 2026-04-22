@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+  @page :first { @top-left { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead { display: block; max-width: 55mm; margin-bottom: 14pt; }
+
+  .report-header {
+    border-bottom: 2pt solid var(--accent);
+    padding-bottom: 14pt;
+    margin-bottom: 22pt;
+  }
+
+  .report-header .eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 6pt;
+  }
+
+  .report-header h1 {
+    font-size: 26pt;
+    line-height: 1.3;
+    color: var(--accent);
+    margin: 0 0 8pt 0;
+  }
+
+  .report-header .subtitle {
+    font-size: 13pt;
+    color: var(--text-secondary);
+  }
+
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12pt;
+    margin-top: 14pt;
+    padding-top: 10pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .meta-row .item .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 2pt;
+  }
+
+  .meta-row .item .value {
+    font-size: 11pt;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  section.body-section { margin-bottom: 20pt; }
+
+  section.body-section h2 {
+    padding-right: 10pt;
+    padding-left: 0;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    font-size: 16pt;
+    margin-top: 14pt;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10pt;
+    margin: 10pt 0 16pt 0;
+  }
+
+  .kpi-card {
+    border: 0.5pt solid var(--border);
+    background: var(--light-gray, #F1F5F4);
+    padding: 10pt 12pt;
+  }
+
+  .kpi-card .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 4pt;
+  }
+
+  .kpi-card .value {
+    font-size: 18pt;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1.1;
+    direction: ltr;
+    unicode-bidi: embed;
+    text-align: right;
+  }
+
+  .kpi-card .trend {
+    font-size: 9pt;
+    margin-top: 3pt;
+    color: var(--text-secondary);
+  }
+
+  .kpi-card.trend-up .trend { color: #047857; }
+  .kpi-card.trend-down .trend { color: #B91C1C; }
+
+  .milestone-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5pt;
+    margin: 10pt 0;
+  }
+
+  .milestone-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .milestone-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    text-align: right;
+  }
+
+  .status-pill {
+    display: inline-block;
+    padding: 2pt 8pt;
+    font-size: 9pt;
+    font-weight: 600;
+    border-radius: 2pt;
+  }
+
+  .status-pill.done { background: #D1FAE5; color: #065F46; }
+  .status-pill.in-progress { background: #FEF3C7; color: #92400E; }
+  .status-pill.blocked { background: #FEE2E2; color: #991B1B; }
+  .status-pill.planned { background: var(--tag-bg); color: var(--tag-fg); }
+
+  .risks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10pt;
+    margin: 10pt 0;
+  }
+
+  .risk {
+    border-right: 3pt solid var(--callout-border);
+    border-left: none;
+    padding: 8pt 12pt;
+    background: var(--callout-bg);
+    font-size: 11pt;
+    line-height: 1.7;
+  }
+
+  .risk .title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 3pt;
+  }
+
+  .risk .severity { font-size: 9pt; color: var(--text-tertiary); }
+  </style>
+</head>
+<body>
+
+  <div class="report-header">
+    {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+    <div class="eyebrow">تقرير سير العمل</div>
+    <h1>{{ title }}</h1>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+    <div class="meta-row">
+      <div class="item"><div class="label">المرجع</div><div class="value">{{ reference_code }}</div></div>
+      <div class="item"><div class="label">الفترة</div><div class="value">[الربع الأول ٢٠٢٦]</div></div>
+      <div class="item"><div class="label">تاريخ الإصدار</div><div class="value">{{ today }}</div></div>
+      <div class="item"><div class="label">المُعِدّ</div><div class="value">{{ author_name }}</div></div>
+    </div>
+  </div>
+
+  <!-- ===== الملخّص التنفيذي ===== -->
+  <section class="body-section">
+    <h2>الملخّص التنفيذي</h2>
+    <p>
+      [فقرة واحدة: أين نحن مقارنةً بالخطة. أبرز إنجازات الفترة، تحدّيان على الأكثر،
+      والأولوية القصوى للفترة القادمة.]
+    </p>
+  </section>
+
+  <!-- ===== المؤشّرات الرئيسية ===== -->
+  <section class="body-section">
+    <h2>المؤشّرات الرئيسية</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card trend-up">
+        <div class="label">المؤشّر أ</div>
+        <div class="value">٨٧٪</div>
+        <div class="trend">▲ ٤ نقاط عن الفترة السابقة</div>
+      </div>
+      <div class="kpi-card trend-up">
+        <div class="label">المؤشّر ب</div>
+        <div class="value">١٬٢٤٠</div>
+        <div class="trend">▲ ١٢٪ عن السابقة</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">المؤشّر ج</div>
+        <div class="value">٣٫٢ يوم</div>
+        <div class="trend">— بلا تغيير</div>
+      </div>
+      <div class="kpi-card trend-down">
+        <div class="label">المؤشّر د</div>
+        <div class="value">١٨</div>
+        <div class="trend">▼ ٢ عن السابقة</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== المعالم ===== -->
+  <section class="body-section">
+    <h2>المعالم</h2>
+    <table class="milestone-table">
+      <thead>
+        <tr><th>المعلم</th><th>المسؤول</th><th>تاريخ الاستحقاق</th><th>الحالة</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>المرحلة الأولى — الاستكشاف</td><td>[الاسم]</td><td>٢٠٢٦-٠٢-١٥</td><td><span class="status-pill done">منجَز</span></td></tr>
+        <tr><td>المرحلة الثانية — التنفيذ</td><td>[الاسم]</td><td>٢٠٢٦-٠٤-٣٠</td><td><span class="status-pill in-progress">قيد التنفيذ</span></td></tr>
+        <tr><td>المرحلة الثالثة — الإطلاق</td><td>[الاسم]</td><td>٢٠٢٦-٠٦-١٥</td><td><span class="status-pill planned">مُخطَّط</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== المخاطر والمشكلات ===== -->
+  <section class="body-section">
+    <h2>المخاطر والمشكلات</h2>
+    <div class="risks-grid">
+      <div class="risk">
+        <div class="title">[عنوان الخطر]</div>
+        <p style="margin: 0;">[وصف في سطر واحد للخطر وأثره.]</p>
+        <div class="severity">الخطورة: متوسطة · المسؤول: [الاسم]</div>
+      </div>
+      <div class="risk">
+        <div class="title">[عنوان المشكلة]</div>
+        <p style="margin: 0;">[وصف في سطر واحد والإجراء التخفيفي الجاري.]</p>
+        <div class="severity">الخطورة: منخفضة · المسؤول: [الاسم]</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== الفترة القادمة — الأولويات ===== -->
+  <section class="body-section">
+    <h2>الفترة القادمة — الأولويات</h2>
+    <ol>
+      <li>[الأولوية الأولى — لماذا ومن المسؤول]</li>
+      <li>[الأولوية الثانية]</li>
+      <li>[الأولوية الثالثة]</li>
+    </ol>
+  </section>
+
+</body>
+</html>

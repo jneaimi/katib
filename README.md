@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet |
+| **Domains** | `business-proposal`, `tutorial`, `report` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -154,14 +154,20 @@ Each doc type ships as EN + AR peer templates at
 | | `tutorial` | 5–15 | `TUT-*` | Multi-module learning path |
 | | `onboarding` | 10–25 | `ON-*` | New-hire or new-role orientation |
 | | `handoff` | 3–12 | `HT-*-###` | Transferring ownership, runbook |
+| `report` | `research-report` | 10–30 | `RPT-R-*` | Original research or analysis with methodology + findings |
+| | `progress-report` | 5–15 | `RPT-P-*` | Periodic status update — KPIs, milestones, risks |
+| | `annual-report` | 20–60 | `RPT-A-*` | Year-end institutional review |
+| | `audit-report` | 10–25 | `RPT-AU-*` | Compliance, security, or process audit |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-Planned future domains — `formal` (government letters), `personal` (CVs,
-cover letters), `marketing-pitch`, `editorial` — are listed in the
-[Roadmap](#roadmap) and deferred in v0.1.
+Planned future domains — `formal` (NOCs, government letters), `personal`
+(CVs, cover letters, bios), `academic` (syllabi, lecture notes),
+`financial` (invoices), `editorial` (white papers), `marketing-print`
+(sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) — are
+listed in the [Roadmap](#roadmap) and deferred in v0.2.
 
 ---
 

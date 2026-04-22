@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  Annual Report  |  Page " counter(page);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+  @page :first { @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); }
+  .brand-letterhead { display: block; max-width: 60mm; margin-bottom: 14pt; }
+
+  .title-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .year-mark {
+    margin-top: 30mm;
+    font-size: 88pt;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+
+  .title-page .doc-title {
+    font-size: 28pt;
+    color: var(--text);
+    margin-top: 10pt;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 13pt;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 10pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18pt;
+  }
+
+  .title-page .meta-item .label {
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 11pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .toc { page-break-after: always; }
+  .toc h2 { font-size: 18pt; color: var(--accent); margin-top: 0; margin-bottom: 24pt; }
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 11pt;
+  }
+  .toc-list .number { color: var(--accent); font-weight: 600; margin-right: 10pt; min-width: 20pt; }
+
+  section.body-section { margin-bottom: 22pt; }
+  section.body-section h2 {
+    padding-left: 10pt;
+    border-left: 2.5pt solid var(--accent);
+    font-size: 16pt;
+    margin-top: 18pt;
+  }
+
+  .lead-paragraph {
+    font-size: 11pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  /* Highlights grid */
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12pt;
+    margin: 14pt 0;
+  }
+
+  .highlight {
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--light-gray, #F1F5F4);
+  }
+
+  .highlight .big {
+    font-size: 24pt;
+    color: var(--accent);
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 4pt;
+  }
+
+  .highlight .descr {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  /* Financial summary table */
+  .financial-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 14pt 0;
+  }
+
+  .financial-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .financial-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 7pt 10pt;
+    vertical-align: top;
+  }
+
+  .financial-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .financial-table tr.total td {
+    border-top: 1pt solid var(--accent);
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .letter {
+    padding: 18pt 22pt;
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--accent);
+    margin: 10pt 0;
+    font-size: 11pt;
+    line-height: 1.7;
+  }
+
+  .letter .signature {
+    margin-top: 18pt;
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Title page ===== -->
+  <section class="title-page">
+    <div>
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="year-mark">{{ today[:4] }}</div>
+      <div class="doc-title">{{ title }}</div>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item"><div class="label">Reporting Year</div><div class="value">{{ today[:4] }}</div></div>
+      <div class="meta-item"><div class="label">Published</div><div class="value">{{ today }}</div></div>
+      <div class="meta-item"><div class="label">Organization</div><div class="value">{{ company }}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== Table of contents ===== -->
+  <section class="toc">
+    <h2>Contents</h2>
+    <ol class="toc-list">
+      <li><span class="number">1</span><span>Chairman's Letter</span><span>3</span></li>
+      <li><span class="number">2</span><span>Year at a Glance</span><span>5</span></li>
+      <li><span class="number">3</span><span>Performance Review</span><span>8</span></li>
+      <li><span class="number">4</span><span>Business Segments</span><span>12</span></li>
+      <li><span class="number">5</span><span>Financial Summary</span><span>18</span></li>
+      <li><span class="number">6</span><span>Outlook</span><span>25</span></li>
+      <li><span class="number">7</span><span>Governance</span><span>27</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== 1. Chairman's Letter ===== -->
+  <section class="body-section">
+    <h2>1 · Chairman's Letter</h2>
+    <div class="letter">
+      <p>[Dear Shareholders / Stakeholders,]</p>
+      <p>
+        [Opening paragraph: the year in one sentence. What did the organization set out to do, and what did it achieve?]
+      </p>
+      <p>
+        [Key developments: one market trend, one internal pivot, one external event that shaped the year.]
+      </p>
+      <p>
+        [Looking ahead: the one commitment for the coming year.]
+      </p>
+      <div class="signature">[Chairman / CEO Name]<br>[Title]</div>
+    </div>
+  </section>
+
+  <!-- ===== 2. Year at a Glance ===== -->
+  <section class="body-section">
+    <h2>2 · Year at a Glance</h2>
+    <p class="lead-paragraph">[One-paragraph narrative summary of the year.]</p>
+    <div class="highlights">
+      <div class="highlight">
+        <div class="big">+18%</div>
+        <div class="descr">Revenue growth year-over-year</div>
+      </div>
+      <div class="highlight">
+        <div class="big">2,400</div>
+        <div class="descr">Customers served across all segments</div>
+      </div>
+      <div class="highlight">
+        <div class="big">12</div>
+        <div class="descr">New markets entered</div>
+      </div>
+      <div class="highlight">
+        <div class="big">98%</div>
+        <div class="descr">Customer retention rate</div>
+      </div>
+      <div class="highlight">
+        <div class="big">340</div>
+        <div class="descr">Team members at year-end</div>
+      </div>
+      <div class="highlight">
+        <div class="big">AED 42M</div>
+        <div class="descr">Total investment in R&amp;D</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 5. Financial Summary ===== -->
+  <section class="body-section">
+    <h2>5 · Financial Summary</h2>
+    <p>[Narrative: year-over-year comparison and principal drivers.]</p>
+    <table class="financial-table">
+      <thead>
+        <tr><th>Line Item</th><th class="num">FY 2025</th><th class="num">FY 2024</th><th class="num">Δ YoY</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Revenue</td><td class="num">142,500</td><td class="num">120,800</td><td class="num">+18.0%</td></tr>
+        <tr><td>Gross Profit</td><td class="num">68,200</td><td class="num">57,100</td><td class="num">+19.4%</td></tr>
+        <tr><td>Operating Expenses</td><td class="num">41,300</td><td class="num">38,900</td><td class="num">+6.2%</td></tr>
+        <tr><td>Net Income</td><td class="num">26,900</td><td class="num">18,200</td><td class="num">+47.8%</td></tr>
+        <tr class="total"><td>EBITDA</td><td class="num">34,100</td><td class="num">23,700</td><td class="num">+43.9%</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size: 8.5pt; color: var(--text-tertiary);">All figures in AED thousands, audited.</p>
+  </section>
+
+  <!-- ===== 6. Outlook ===== -->
+  <section class="body-section">
+    <h2>6 · Outlook</h2>
+    <p>[Forward-looking statement: priorities for the coming year, material opportunities, and known risks.]</p>
+  </section>
+
+</body>
+</html>

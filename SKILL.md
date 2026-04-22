@@ -28,10 +28,14 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 |---|---|---|
 | "proposal / SOW / commercial offer / عرض تجاري" | `business-proposal` | Navy `#1B2A4A` + Gold `#C5A44E`, Arial |
 | "how-to / tutorial / onboarding / handoff / cheatsheet / دليل / شرح" | `tutorial` | Teal/slate on warm off-white, mono for code |
-| *(v0.1)* formal letter, government, compliance | `formal` | *(deferred)* |
-| *(v0.1)* CV, cover letter, personal | `personal` | *(deferred)* |
-| *(v0.2)* marketing, launch, pitch | `marketing-pitch` | *(deferred)* |
-| *(v0.2)* article, white paper, thought leadership | `editorial` | *(deferred)* |
+| "report / research / annual / audit / progress / تقرير / دراسة / تدقيق" | `report` | Slate `#2E3A4B` + teal accent, Newsreader serif |
+| *(v0.3)* formal letter, government, compliance, NOC | `formal` | *(deferred)* |
+| *(v0.4)* CV, cover letter, bio | `personal` | *(deferred)* |
+| *(v0.5)* syllabus, assignment brief, lecture notes | `academic` | *(deferred)* |
+| *(v0.6)* invoice, financial summary | `financial` | *(deferred)* |
+| *(v0.7)* white paper, article, thought leadership | `editorial` | *(deferred)* |
+| *(v0.8)* sell-sheet, product-brief, capability-statement, slide-deck | `marketing-print` | *(deferred)* |
+| *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -41,6 +45,16 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 |---|---|
 | `business-proposal` | `proposal`, `one-pager`, `letter` |
 | `tutorial` | `how-to`, `cheatsheet`, `tutorial`, `onboarding`, `handoff` |
+| `report` | `research-report`, `progress-report`, `annual-report`, `audit-report` |
+
+### Report doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `research-report` | Abstract + methodology + findings + discussion | 10–30 | `RPT-R-*` | Original research or analysis |
+| `progress-report` | KPI cards + milestones + risks + next period | 5–15 | `RPT-P-*` | Periodic status update |
+| `annual-report` | Letter + highlights + financials + outlook | 20–60 | `RPT-A-*` | Year-end institutional review |
+| `audit-report` | Scope + severity matrix + findings + remediation | 10–25 | `RPT-AU-*` | Compliance, security, or process audit |
 
 ### Tutorial doc-type picker
 

@@ -114,6 +114,17 @@ Banned phrases that signal LLM output:
 - Screenshots follow the step they illustrate, not before
 - Use callouts for: prerequisites (before the steps), warnings (inline), pro-tips (inline), troubleshooting (end)
 
+### Report (Research, Progress, Annual, Audit)
+
+- **Informational register**, not persuasive. A report documents findings; a proposal sells them.
+- Third person by default. "The audit team found" — not "we found". Exception: chairman's letter in annual reports is first-person.
+- Every numeric claim ties to a source: footnote, table row, or appendix reference. No free-floating figures.
+- **Tables for comparisons**, not prose. If the reader needs to compare three or more things, don't bury it in paragraphs.
+- Executive summary is the report in 150 words. Treat it as the only thing a busy reader will see.
+- Findings in audit reports are **observation → risk → evidence → recommendation** in that order. Never mix.
+- Avoid recommending action verbs in research reports ("organizations should…"); reserve recommendations for audit and progress types.
+- Arabic peers: keep tables LTR-numeric where numbers appear (use `direction: ltr` on `.num` cells). Don't translate acronyms like `AUD-001` — keep Latin for traceability.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

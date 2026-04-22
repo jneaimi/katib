@@ -157,7 +157,7 @@ Replace with specific numbers, names, or outcomes.
 
 - Open: `السلام عليكم ورحمة الله وبركاته، وبعد،`
 - Use Arabic-Indic numerals in body (`٢٦`), Western in tables (for column alignment)
-- Reference codes stay in Latin (`PROP-2026-001`)
+- Reference codes stay in Latin (`TITS-TP-2026-001`)
 - Close: `تفضلوا بقبول فائق الاحترام والتقدير.`
 
 ### Tutorial / How-to (AR)
@@ -173,6 +173,17 @@ Replace with specific numbers, names, or outcomes.
 - Body: 2-3 paragraphs, one idea each
 - Use `ب/ف` for transitions, not `ثم` repeated
 - Close with specific next step: date, action, or reference
+
+### Report (research / progress / annual / audit — AR)
+
+- **صيغة معلوماتية**، ليست إقناعية. التقرير يوثّق الاكتشافات؛ العرض يبيعها.
+- استخدم الصيغة الموضوعية: `وجد فريق التدقيق` لا `وجدنا`. الاستثناء: كلمة رئيس المجلس في التقرير السنوي بصيغة المتكلّم.
+- كل رقم يستند إلى مصدر: حاشية، صف جدول، أو مرجع ملحق. لا أرقام طليقة.
+- **الجداول للمقارنات**، لا السرد. إن احتاج القارئ مقارنة ثلاث عناصر فأكثر، لا تدفنها في فقرات.
+- الملخّص التنفيذي = التقرير في ١٥٠ كلمة. عامله كأنّه الشيء الوحيد الذي سيقرأه صاحب القرار.
+- ملاحظات التدقيق تُرتَّب: **الملاحظة ← الخطر ← الدليل ← التوصية**. لا تخلط.
+- احتفظ بالأرقام المرجعية بالأحرف اللاتينية (`AUD-001`) — لا تترجمها، فالتتبّع عبر اللغتين يعتمد عليها.
+- الأرقام داخل الجداول تستحق `direction: ltr` على خلية `.num` لقراءة سليمة يميناً إلى يساراً للرقم نفسه.
 
 ## Anti-slop scoring (AR)
 

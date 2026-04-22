@@ -3,6 +3,27 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-04-22
+
+### Added
+- **New domain: `report`.** Long-form structured documents with four doc types:
+  - `research-report` — abstract + methodology + findings + discussion + conclusion + references (10–30 pp)
+  - `progress-report` — KPI cards + milestones + risks + next-period priorities (5–15 pp)
+  - `annual-report` — chairman's letter + highlights + financial summary + outlook (20–60 pp)
+  - `audit-report` — scope + severity matrix + detailed findings + recommendations + remediation plan (10–25 pp)
+- Data-forward palette: slate `#2E3A4B` + teal accent `#0F766E` on warm off-white, Newsreader serif for EN and Amiri for AR. Distinct from business-proposal's navy+gold.
+- **Bilingual RTL tables** with numeric cells forced LTR (`direction: ltr` on `.num`) so figures read correctly inside Arabic tables.
+- **Severity matrix** (audit-report) — color-coded likelihood × impact grid, works in both EN and AR.
+- **KPI cards with trend colors** (progress-report) — green/red/neutral trend badges.
+- **Big-year title page** (annual-report) — 88pt year mark dominates the cover page.
+- **Confidential stamp** (audit-report) — red-outlined corner stamp on the title page.
+- SKILL.md router now recognizes "report / research / annual / audit / progress / تقرير / دراسة / تدقيق" and routes to the new domain.
+- `references/writing.{en,ar}.md` gain a report-specific section on informational register, third-person voice, and finding structure (observation → risk → evidence → recommendation).
+- Reference-code formats: `RPT-R-{YYYY}-{NNN}`, `RPT-P-{YYYY}-{NNN}`, `RPT-A-{YYYY}`, `RPT-AU-{YYYY}-{NNN}`.
+
+### Changed
+- Deferred-domain roadmap in SKILL.md renumbered: `formal` → v0.3, `personal` → v0.4, `academic` → v0.5 (new), `financial` → v0.6 (new), `editorial` → v0.7, `marketing-print` → v0.8 (renamed from marketing-pitch, slide-decks added as print-PDF), `legal` → v0.9 (new).
+
 ## [0.1.2] — 2026-04-22
 
 ### Changed
@@ -85,3 +106,4 @@ packaged with an installer.
 [0.1.0]: https://github.com/jneaimi/katib/releases/tag/v0.1.0
 [0.1.1]: https://github.com/jneaimi/katib/releases/tag/v0.1.1
 [0.1.2]: https://github.com/jneaimi/katib/releases/tag/v0.1.2
+[0.2.0]: https://github.com/jneaimi/katib/releases/tag/v0.2.0

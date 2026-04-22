@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 22mm;
+    @bottom-center {
+      content: "{{ company }}  |  صفحة " counter(page) " من " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+      font-weight: 500;
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body { font-family: var(--font-primary); }
+
+  .brand-letterhead {
+    display: block;
+    max-width: 60mm;
+    margin-bottom: 14pt;
+  }
+
+  /* Title page (mirrored for RTL) */
+  .title-page {
+    height: 253mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    page-break-after: always;
+  }
+
+  .title-page .brand-bar {
+    padding-right: 10pt;
+    border-right: 4pt solid var(--accent);
+    border-left: none;
+    padding-left: 0;
+    margin-top: 40mm;
+  }
+
+  .title-page .eyebrow {
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--accent-2);
+    margin-bottom: 12pt;
+  }
+
+  .title-page h1.doc-title {
+    font-size: 34pt;
+    line-height: 1.3;
+    font-weight: 500;
+    color: var(--accent);
+    margin: 0;
+    max-width: 160mm;
+  }
+
+  .title-page .doc-subtitle {
+    font-size: 14pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 14pt;
+    max-width: 150mm;
+  }
+
+  .title-page .meta-block {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18pt 40pt;
+    padding-top: 20pt;
+    border-top: 0.5pt solid var(--border);
+  }
+
+  .title-page .meta-item .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+  }
+
+  .title-page .meta-item .value {
+    font-size: 12pt;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* TOC */
+  .toc { page-break-after: always; }
+
+  .toc h2 {
+    font-size: 20pt;
+    color: var(--accent);
+    margin-top: 0;
+    margin-bottom: 24pt;
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .toc-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8pt 0;
+    border-bottom: 0.5pt dashed var(--border);
+    font-size: 12pt;
+  }
+
+  .toc-list .number {
+    color: var(--accent);
+    font-weight: 600;
+    margin-left: 10pt;
+    min-width: 20pt;
+  }
+
+  /* Body sections */
+  section.body-section { margin-bottom: 22pt; }
+
+  section.body-section h2 {
+    padding-right: 10pt;
+    padding-left: 0;
+    border-right: 2.5pt solid var(--accent);
+    border-left: none;
+    font-size: 17pt;
+    margin-top: 18pt;
+  }
+
+  .lead-paragraph {
+    font-size: 12pt;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 14pt;
+  }
+
+  /* Data tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14pt 0;
+    font-size: 10.5pt;
+  }
+
+  .data-table th {
+    background: var(--table-header-bg);
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: right;
+    font-weight: 500;
+  }
+
+  .data-table td {
+    border: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+    text-align: right;
+  }
+
+  .data-table tbody tr:nth-child(even) td {
+    background: var(--table-row-alt);
+  }
+
+  .data-table td.num {
+    text-align: left;
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  /* Callouts (mirrored) */
+  .callout {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--callout-border);
+    border-left: none;
+    padding: 12pt 16pt;
+    margin: 14pt 0;
+    font-size: 11pt;
+    line-height: 1.8;
+  }
+
+  .callout .label {
+    font-size: 9pt;
+    color: var(--callout-border);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  .figure {
+    margin: 18pt 0;
+    padding: 14pt;
+    background: var(--light-gray, #F1F5F4);
+    border: 0.5pt solid var(--border);
+  }
+
+  .figure .caption {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+    margin-top: 8pt;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .references ol {
+    padding-right: 24pt;
+    padding-left: 0;
+    font-size: 10.5pt;
+    line-height: 1.8;
+  }
+
+  .references li {
+    margin-bottom: 6pt;
+    color: var(--text-secondary);
+  }
+  </style>
+</head>
+<body>
+
+  <!-- ===== صفحة العنوان ===== -->
+  <section class="title-page">
+    <div class="brand-bar">
+      {% if brand.logo.primary %}<img class="brand-letterhead" src="{{ brand.logo.primary }}" alt="{{ brand.name }}" style="max-height: {{ brand.logo.max_height_mm }}mm;">{% endif %}
+      <div class="eyebrow">تقرير بحثي</div>
+      <h1 class="doc-title">{{ title }}</h1>
+      {% if subtitle %}<div class="doc-subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+
+    <div class="meta-block">
+      <div class="meta-item"><div class="label">المرجع</div><div class="value">{{ reference_code }}</div></div>
+      <div class="meta-item"><div class="label">تاريخ الإصدار</div><div class="value">{{ today }}</div></div>
+      <div class="meta-item"><div class="label">المؤلف</div><div class="value">{{ author_name }}</div></div>
+      <div class="meta-item"><div class="label">الجهة الناشرة</div><div class="value">{{ company }}</div></div>
+    </div>
+  </section>
+
+  <!-- ===== جدول المحتويات ===== -->
+  <section class="toc">
+    <h2>المحتويات</h2>
+    <ol class="toc-list">
+      <li><span class="number">١</span><span>الملخّص</span><span>٣</span></li>
+      <li><span class="number">٢</span><span>المقدّمة</span><span>٤</span></li>
+      <li><span class="number">٣</span><span>المنهجية</span><span>٥</span></li>
+      <li><span class="number">٤</span><span>النتائج</span><span>٧</span></li>
+      <li><span class="number">٥</span><span>المناقشة</span><span>١١</span></li>
+      <li><span class="number">٦</span><span>الخاتمة</span><span>١٤</span></li>
+      <li><span class="number">٧</span><span>المراجع</span><span>١٥</span></li>
+    </ol>
+  </section>
+
+  <!-- ===== ١ · الملخّص ===== -->
+  <section class="body-section">
+    <h2>١ · الملخّص</h2>
+    <p class="lead-paragraph">
+      تتناول هذه الدراسة [الموضوع] عبر [النطاق / العيّنة]، اعتماداً على [مصادر البيانات] التي جُمعت بين [الفترة الزمنية].
+      تكشف النتائج عن ثلاثة أنماط رئيسية: [النمط الأول]، و[النمط الثاني]، و[النمط الثالث]. وتُناقَش التداعيات بالنسبة إلى
+      [الجمهور / السياسة / التطبيق].
+    </p>
+  </section>
+
+  <!-- ===== ٢ · المقدّمة ===== -->
+  <section class="body-section">
+    <h2>٢ · المقدّمة</h2>
+    <p>
+      [حدِّد سؤال البحث. ما الفجوة المعرفية التي تعالجها هذه الدراسة؟ ولماذا الآن؟]
+    </p>
+    <p>
+      [ضع العمل في سياقه: الأدبيات السابقة، النقاشات المحورية، الأسئلة غير المجاب عنها. استشهد بثلاثة إلى خمسة مصادر مؤسِّسة.]
+    </p>
+    <div class="callout">
+      <div class="label">سؤال البحث</div>
+      كيف يؤثّر [س] على [ص] في ظلّ ظروف [ع]؟
+    </div>
+  </section>
+
+  <!-- ===== ٣ · المنهجية ===== -->
+  <section class="body-section">
+    <h2>٣ · المنهجية</h2>
+    <p>
+      [تصميم البحث: نوعي / كمّي / مختلط. حجم العيّنة، معايير الاختيار، نافذة جمع البيانات.]
+    </p>
+    <table class="data-table">
+      <thead>
+        <tr><th>البُعد</th><th>الأسلوب</th><th>العيّنة</th><th>الأداة</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>كمّي</td><td>استبانة</td><td class="num">n = 240</td><td>استبانة إلكترونية (٢٠ عنصراً)</td></tr>
+        <tr><td>نوعي</td><td>مقابلات</td><td class="num">n = 18</td><td>شبه منظّمة، ٤٥–٦٠ دقيقة</td></tr>
+        <tr><td>وثائقي</td><td>مراجعة أرشيفية</td><td class="num">٤٢ مصدراً</td><td>أوراق سياسات + تقارير سنوية</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== ٤ · النتائج ===== -->
+  <section class="body-section">
+    <h2>٤ · النتائج</h2>
+    <h3>٤·١ النمط الأساسي</h3>
+    <p>[صف النمط السائد الذي لوحظ. ارسِّخه بنقطة بيانات أو نقطتين تمثيليتين.]</p>
+    <h3>٤·٢ الأنماط الثانوية</h3>
+    <p>[صف الأنماط الفرعية، والاستثناءات، والاختلافات بين المجموعات. استخدم الجداول أو الأشكال عند الحاجة.]</p>
+    <div class="figure">
+      <div class="caption">الشكل ١ — [عنوان توضيحي للرسم البياني أو المخطط].</div>
+    </div>
+  </section>
+
+  <!-- ===== ٥ · المناقشة ===== -->
+  <section class="body-section">
+    <h2>٥ · المناقشة</h2>
+    <p>[فسِّر النتائج في ضوء الأدبيات. ماذا تأكّد، وماذا امتدّ، وماذا تحدّى؟]</p>
+    <p>[القيود: حدود العيّنة، ثغرات الأداة، النطاق الزمني.]</p>
+  </section>
+
+  <!-- ===== ٦ · الخاتمة ===== -->
+  <section class="body-section">
+    <h2>٦ · الخاتمة</h2>
+    <p>[الخلاصة: الفقرة الواحدة التي تُجيب عن سؤال البحث.]</p>
+    <p>[التداعيات للتطبيق / السياسة / البحث المستقبلي.]</p>
+  </section>
+
+  <!-- ===== ٧ · المراجع ===== -->
+  <section class="body-section references">
+    <h2>٧ · المراجع</h2>
+    <ol>
+      <li>المؤلف، أ. (السنة). <em>عنوان العمل</em>. الناشر.</li>
+      <li>المؤلف، ب. (السنة). عنوان المقال. <em>اسم المجلّة</em>، المجلّد(العدد)، الصفحات.</li>
+    </ol>
+  </section>
+
+</body>
+</html>
