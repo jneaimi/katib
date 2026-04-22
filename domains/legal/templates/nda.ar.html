@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center { content: "اتفاقية عدم إفصاح  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-left { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-left { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 11.5pt; line-height: 1.9; color: var(--text); }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 { font-size: 20pt; line-height: 1.35; margin: 0 0 6pt 0; font-weight: 700; }
+  .masthead .subtitle { font-size: 11.5pt; color: var(--text-secondary); margin-bottom: 4pt; }
+  .masthead .ref-line { font-size: 10pt; color: var(--text-tertiary); }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9.5pt;
+    line-height: 1.65;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label { font-size: 9pt; font-weight: 700; margin-bottom: 3pt; }
+
+  .type-selector {
+    display: inline-block;
+    padding: 4pt 10pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: 9.5pt;
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .parties-inline {
+    background: var(--callout-bg);
+    padding: 12pt 16pt;
+    border-right: 3pt solid var(--accent);
+    margin-bottom: 14pt;
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  .parties-inline strong { color: var(--accent); }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num { display: inline-block; min-width: 26pt; font-weight: 700; }
+
+  p { margin: 6pt 0; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-right: 32pt;
+    margin-bottom: 8pt;
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 26pt;
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .defined-term { font-weight: 700; color: var(--accent); }
+
+  .signature-page { margin-top: 24pt; padding-top: 14pt; border-top: 2pt solid var(--accent); }
+
+  .signature-page h2 { text-align: center; font-size: 12pt; border: 0; }
+
+  .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-top: 14pt; }
+
+  .signatory-block { border-top: 1pt solid var(--border-strong); padding-top: 14pt; }
+
+  .signatory-block .party-label { font-size: 9pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt; }
+
+  .signatory-block .party-name { font-size: 11pt; font-weight: 700; margin-bottom: 14pt; }
+
+  .signatory-block .field { margin-bottom: 10pt; }
+
+  .signatory-block .field .label { font-size: 9pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+
+  .signatory-block .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">اتفاقية عدم إفصاح</div>
+  <h1>اتفاقية السرّية وعدم الإفصاح</h1>
+  <div class="subtitle">[حماية المعلومات السرّية المتبادَلة بين الطرفَين]</div>
+  <div class="ref-line">المرجع: <span style="direction: ltr; unicode-bidi: embed">{{ reference_code }}</span> · بتاريخ {{ date_display }}</div>
+</header>
+
+<div class="disclaimer">
+  <div class="label">ملاحظة على النموذج</div>
+  هذا نموذج «كاتب» لاتفاقية عدم إفصاح متبادلة بين طرفَين تجاريّين في الإمارات. للاتفاقيات أحادية الاتّجاه
+  (يُفصح طرف واحد فقط)، احذف البنود المتبادلة. يُنصح بمراجعة النسخة النهائية مع مستشار قانوني قبل التوقيع.
+</div>
+
+<span class="type-selector">النوع: اتفاقية عدم إفصاح متبادَلة</span>
+
+<div class="parties-inline">
+  أُبرمت اتفاقية عدم الإفصاح هذه («<span class="defined-term">الاتفاقية</span>») بتاريخ {{ date_display }} بين:
+  <br /><br />
+  <strong>الطرف الأول:</strong> {{ brand.identity.legal_name if brand.identity.legal_name else '[اسم الطرف الأول القانوني]' }}،
+  [رقم الرخصة]، ومقرّه المسجّل [العنوان، المدينة، الإمارة، الإمارات]؛
+  <br /><br />
+  <strong>الطرف الثاني:</strong> [اسم الطرف الثاني القانوني]، [رقم الرخصة]، ومقرّه المسجّل [العنوان، المدينة، الإمارة، الإمارات].
+  <br /><br />
+  يُشار إلى كلّ منهما بـ «<span class="defined-term">الطرف</span>» ومجتمعَين بـ «<span class="defined-term">الطرفَين</span>».
+</div>
+
+<section>
+  <h2><span class="num">١.</span>الغرض</h2>
+  <p>يعتزم الطرفان تبادل معلومات سرّية معيّنة بسبب [وصف الغرض — مثل تقييم علاقة أعمال محتملة، أو مشروع مشترك،
+  أو استثمار، أو تكامل منتج، أو تكليف خدمة] («<span class="defined-term">الغرض</span>»).</p>
+</section>
+
+<section>
+  <h2><span class="num">٢.</span>تعريف المعلومات السرّية</h2>
+  <ol class="clauses">
+    <li>تعني «<span class="defined-term">المعلومات السرّية</span>» أيّ معلومات يُفصح عنها طرف («<span class="defined-term">الطرف المُفصِح</span>») للآخر («<span class="defined-term">الطرف المُتلقّي</span>») بسبب الغرض، سواء شفهياً أو خطّياً أو إلكترونياً أو بأيّ وسيلة، وسواء كانت موسومة بالسرّية أم لا.</li>
+    <li>تشمل المعلومات السرّية، دون حصر: خطط العمل، والمعلومات المالية، وقوائم العملاء، والبيانات التقنية، والشفرة البرمجية، والتصاميم، والأسرار التجارية، والخبرات، وأيّ معلومات يُفترض بشخص معقول أن يفهم سرّيتها في ظروف الإفصاح.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٣.</span>التزامات الطرف المُتلقّي</h2>
+  <p>يلتزم الطرف المُتلقّي بما يلي:</p>
+  <ol class="clauses">
+    <li>الحفاظ على السرّية التامّة للمعلومات السرّية، وحمايتها بالدرجة نفسها من العناية التي يبذلها في حماية معلوماته السرّية الخاصّة، وبما لا يقلّ عن العناية المعقولة.</li>
+    <li>استخدام المعلومات السرّية حصراً للغرض وليس لأيّ سبب آخر.</li>
+    <li>عدم الإفصاح عن المعلومات السرّية لأيّ طرف ثالث دون موافقة خطّية مسبقة من الطرف المُفصِح، باستثناء الموظّفين أو المستشارين أو المتعاقدين الذين (أ) يحتاجون المعلومة للغرض، و(ب) مُلزَمون بالتزامات سرّية لا تقلّ تقييداً عن هذه الاتفاقية.</li>
+    <li>عدم نسخ المعلومات السرّية أو إجراء هندسة عكسية لها أو استغلالها بخلاف ما هو ضروري بشكل صارم للغرض.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٤.</span>الاستثناءات</h2>
+  <p>لا تنطبق التزامات البند ٣ على المعلومات التي:</p>
+  <ol class="clauses">
+    <li>أصبحت أو صارت علنية دون خطأ من الطرف المُتلقّي؛</li>
+    <li>كانت معروفة للطرف المُتلقّي بطريقة مشروعة قبل الإفصاح دون التزام بالسرّية؛</li>
+    <li>طوّرها الطرف المُتلقّي باستقلالية دون الرجوع إلى المعلومات السرّية؛ أو</li>
+    <li>يُطلب الإفصاح عنها بمقتضى قانون أو لائحة أو أمر محكمة، شرط أن يُخطر الطرف المُتلقّي الطرف المُفصِح فوراً خطّياً ويتعاون مع أيّ جهد لتقييد الإفصاح.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٥.</span>المدّة</h2>
+  <ol class="clauses">
+    <li>تسري هذه الاتفاقية من {{ date_display }} وتستمرّ لمدّة [سنتَين (٢)] من ذلك التاريخ.</li>
+    <li>تستمرّ التزامات السرّية لمدّة [خمس (٥) سنوات] بعد إنهاء أو انقضاء هذه الاتفاقية، أياً كان السبب.</li>
+    <li>بالنسبة للمعلومات التي تشكّل أسراراً تجارية وفق القانون المنطبق، تستمرّ الالتزامات طالما ظلّت المعلومة سرّاً تجارياً.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٦.</span>إعادة المواد أو إتلافها</h2>
+  <p>بناءً على طلب خطّي من الطرف المُفصِح، أو عند انتهاء الاتفاقية، يُعيد الطرف المُتلقّي فوراً كلّ المعلومات السرّية
+  التي بحوزته أو يُتلفها، مع أيّ نسخ، ويُثبت ذلك خطّياً، مع السماح بالاحتفاظ بنسخة أرشيفية واحدة لأغراض الامتثال فحسب.</p>
+</section>
+
+<section>
+  <h2><span class="num">٧.</span>عدم منح ترخيص</h2>
+  <p>لا يمنح أيّ شيء في هذه الاتفاقية الطرف المُتلقّي أيّ ترخيص أو حقّ، صريح أو ضمني، في أيّ ملكية فكرية أو سرّ تجاري
+  أو معلومات سرّية للطرف المُفصِح، باستثناء حقّ الاستخدام المحدود المنصوص عليه في البند ٣.</p>
+</section>
+
+<section>
+  <h2><span class="num">٨.</span>سبل العلاج</h2>
+  <ol class="clauses">
+    <li>يُقرّ الطرفان بأنّ الإخلال بهذه الاتفاقية قد يسبّب ضرراً لا يمكن جبره بالتعويض المالي وحده.</li>
+    <li>لذا، يحقّ للطرف المُفصِح طلب الأوامر الوقائية والتنفيذ العيني وأيّ سبل علاج عدلية أخرى، إضافةً إلى التعويض، دون حاجة لإيداع كفالة.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٩.</span>القانون الحاكم والنزاعات</h2>
+  <ol class="clauses">
+    <li>تخضع هذه الاتفاقية لقوانين دولة الإمارات العربية المتّحدة، كما هي مُطبَّقة في إمارة [الإمارة].</li>
+    <li>تُحال النزاعات إلى الاختصاص الحصري لمحاكم [الإمارة] / [محاكم مركز دبي المالي العالمي] / [تحكيم مركز دبي للتحكيم الدولي ومقرّه دبي].</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">١٠.</span>أحكام عامّة</h2>
+  <ol class="clauses">
+    <li>تشكّل هذه الاتفاقية كامل الاتفاق بين الطرفَين بشأن الموضوع وتَحلّ محلّ كلّ المناقشات السابقة.</li>
+    <li>لا يسري أيّ تعديل ما لم يكن خطّياً ومُوقَّعاً من الطرفَين.</li>
+    <li>إن حُكم ببطلان أيّ حكم، تستمرّ باقي الأحكام سارية كاملةً.</li>
+    <li>يجوز تنفيذ هذه الاتفاقية في نسخ متعدّدة، كلّ منها أصل.</li>
+  </ol>
+</section>
+
+<div class="signature-page">
+  <h2>التوقيع والنفاذ</h2>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الأول</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[الطرف الأول]' }}</div>
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الثاني</div>
+      <div class="party-name">[الطرف الثاني]</div>
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

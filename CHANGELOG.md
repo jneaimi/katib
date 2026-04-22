@@ -3,6 +3,27 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.9.0] — 2026-04-22
+
+### Added
+- **New domain: `legal` — the final planned domain.** Contract-grade bilingual templates for UAE commercial instruments. Four doc types:
+  - `service-agreement` — full commercial services contract with 12 clauses (parties, recitals with WHEREAS/IT IS AGREED, definitions, scope, fees + UAE VAT, term/termination, IP with Background/Foreground split, warranties, confidentiality, liability cap, force majeure, governing law, general provisions), and a dedicated execution page with witness slot. 5–12 pp.
+  - `mou` — memorandum of understanding with explicit binding/non-binding clause flags (binding: confidentiality, governing law, costs; non-binding: the rest). Parties, background, purpose, scope, responsibilities, term, signatures. 2–5 pp.
+  - `nda` — mutual NDA (one-way variant ready by removing reciprocal phrasing). Inline parties block, purpose, definition, obligations, exceptions, 2/5-year term (general/trade-secret), return-of-materials, remedies (injunctive relief), governing law. 2–4 pp.
+  - `engagement-letter` — professional-services engagement for consultants/advisors. Letterhead + recipient block + subject box + scope box + fee table (fixed vs T&M) + timeline + liability cap + closing + Client-acceptance box with signature fields. 2–4 pp.
+- Classic legal palette: navy `#1E3A5F` on white, Newsreader (EN) + Amiri (AR) serif. Conservative, enforceable, scannable.
+- **Auto-numbered nested clauses** via CSS counter (`ol.clauses` primitive) — parties reference clauses by number during negotiation; inserting a clause renumbers automatically.
+- **Defined-term capitalisation pattern:** `"Services"`, `"Confidential Information"`, `"Effective Date"` — capitalised and styled with `.defined-term` class.
+- **Recitals block** with stylised `WHEREAS` / `حيث إنّ` clauses and a framed "Now, therefore" / «عليه، وبناءً على...» operative transition to signal the commercial-to-legal pivot.
+- **Signature grid with witness slot** on service-agreement; 2-column acceptance on engagement-letter.
+- **Template-notice disclaimer strip** on every legal doc — amber tinted — directing parties to counsel before execution. Not removable; only editable.
+- SKILL.md router: "service agreement / MOU / NDA / non-disclosure / engagement letter / اتفاقية خدمات / مذكّرة تفاهم / عدم إفصاح / خطاب تعاقد" → `legal` domain. Doc-type picker table added.
+- `references/writing.{en,ar}.md`: legal section covering the templates-are-not-advice top rule, defined-terms capitalisation discipline, nested-clause numbering, governing-law-is-non-negotiable, WHEREAS semantic weight, MOU binding-vs-non-binding signalling, page-break-before signature blocks, mutual-vs-one-way NDA discipline, numbers-and-words double-writing for fees/terms, Arabic legal phrasing conventions.
+- Reference-code formats: `SA-{YYYY}-{NNN}`, `MOU-{YYYY}-{NNN}`, `NDA-{YYYY}-{NNN}`, `EL-{YYYY}-{NNN}`.
+
+### Changed
+- Roadmap complete: **all 9 planned domains are live.** `business-proposal` (v0.1.0), `tutorial` (v0.1.0), `report` (v0.2.0), `formal` (v0.3.0), `personal` (v0.4.0), `academic` (v0.5.0), `financial` (v0.6.0), `editorial` (v0.7.0), `marketing-print` (v0.8.0), `legal` (v0.9.0). **9 domains · 33 doc types · 66 bilingual templates.**
+
 ## [0.8.0] — 2026-04-22
 
 ### Added
@@ -229,3 +250,4 @@ packaged with an installer.
 [0.6.0]: https://github.com/jneaimi/katib/releases/tag/v0.6.0
 [0.7.0]: https://github.com/jneaimi/katib/releases/tag/v0.7.0
 [0.8.0]: https://github.com/jneaimi/katib/releases/tag/v0.8.0
+[0.9.0]: https://github.com/jneaimi/katib/releases/tag/v0.9.0

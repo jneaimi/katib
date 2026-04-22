@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center { content: "MOU  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-right { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-right { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 10.5pt; line-height: 1.6; color: var(--text); }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 {
+    font-size: 22pt;
+    margin: 0 0 6pt 0;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .masthead .subtitle {
+    font-size: 12pt;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 4pt;
+  }
+
+  .masthead .ref-line { font-size: 10pt; color: var(--text-tertiary); }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .non-binding {
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--accent);
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .parties-block { margin: 12pt 0; }
+
+  .party {
+    padding: 10pt 14pt;
+    border-left: 3pt solid var(--accent);
+    background: var(--callout-bg);
+    margin-bottom: 8pt;
+  }
+
+  .party .label { font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 3pt; }
+  .party .name { font-size: 11.5pt; font-weight: 700; color: var(--text); margin-bottom: 2pt; }
+  .party .detail { font-size: 10pt; line-height: 1.5; color: var(--text-secondary); }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num {
+    display: inline-block;
+    min-width: 26pt;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-left: 32pt;
+    margin-bottom: 8pt;
+    font-size: 10.5pt;
+    line-height: 1.6;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .signature-page {
+    margin-top: 24pt;
+    padding-top: 14pt;
+    border-top: 2pt solid var(--accent);
+  }
+
+  .signature-page h2 {
+    text-align: center;
+    font-size: 12pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 0;
+  }
+
+  .signature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    margin-top: 14pt;
+  }
+
+  .signatory-block {
+    border-top: 1pt solid var(--border-strong);
+    padding-top: 14pt;
+  }
+
+  .signatory-block .party-label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .signatory-block .party-name { font-size: 11pt; font-weight: 700; margin-bottom: 14pt; }
+  .signatory-block .field { margin-bottom: 10pt; }
+  .signatory-block .field .label { font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+  .signatory-block .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Memorandum of Understanding</div>
+  <h1>MOU · [Short Purpose Title]</h1>
+  <div class="subtitle">[Non-binding statement of intent between two parties]</div>
+  <div class="ref-line">Reference: {{ reference_code }}  ·  Dated {{ date_display }}</div>
+</header>
+
+<div class="disclaimer">
+  <div class="label">Template Notice</div>
+  This is a Katib template for a Memorandum of Understanding (MOU) between two parties. It is drafted as
+  a primarily non-binding instrument. Specific clauses (confidentiality, exclusivity, governing law) may be
+  drafted as binding. Have the final instrument reviewed by counsel before execution.
+</div>
+
+<section>
+  <h2><span class="num">1.</span>The Parties</h2>
+  <p>This Memorandum of Understanding (the "<strong>MOU</strong>") is entered into on {{ date_display }} between:</p>
+
+  <div class="parties-block">
+    <div class="party">
+      <div class="label">Party A</div>
+      <div class="name">{{ brand.identity.legal_name if brand.identity.legal_name else '[Party A Legal Name]' }}</div>
+      <div class="detail">[Licence No.] · [Address, City, Emirate]</div>
+    </div>
+    <div class="party">
+      <div class="label">Party B</div>
+      <div class="name">[Party B Legal Name]</div>
+      <div class="detail">[Licence No.] · [Address, City, Emirate]</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2.</span>Background</h2>
+  <p>[Two or three sentences. Describe the context in which the parties are meeting: what each party does, what
+  common interest or opportunity has emerged, and what question this MOU intends to answer.]</p>
+</section>
+
+<section>
+  <h2><span class="num">3.</span>Purpose</h2>
+  <p>The Parties enter into this MOU for the following purpose:</p>
+  <ol class="clauses">
+    <li>To explore a potential [collaboration / partnership / joint venture / commercial arrangement] concerning [subject matter].</li>
+    <li>To establish a framework for discussion, evaluation, and due diligence prior to any binding agreement.</li>
+    <li>To define the respective areas of responsibility and contribution each Party proposes to bring.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">4.</span>Scope of Cooperation</h2>
+  <ol class="clauses">
+    <li>The Parties shall collaborate on [specific activities, workstreams, or deliverables] during the exploratory period.</li>
+    <li>Each Party shall appoint a primary point of contact responsible for coordination.</li>
+    <li>Meetings, information exchange, and site visits shall be arranged as the Parties deem appropriate.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">5.</span>Responsibilities</h2>
+
+  <p><strong>Party A shall:</strong></p>
+  <ol class="clauses">
+    <li>[Specific contribution or commitment.]</li>
+    <li>[Specific contribution.]</li>
+    <li>[Specific contribution.]</li>
+  </ol>
+
+  <p><strong>Party B shall:</strong></p>
+  <ol class="clauses">
+    <li>[Specific contribution.]</li>
+    <li>[Specific contribution.]</li>
+    <li>[Specific contribution.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">6.</span>Non-Binding Nature</h2>
+  <div class="non-binding">
+    The Parties acknowledge and agree that, except for Clauses 7 (Confidentiality), 9 (Governing Law), and
+    10 (Costs), this MOU is <strong>non-binding</strong> and does not create any legal or equitable obligations
+    on either Party. Any binding commitments require a separate written agreement executed by authorised
+    representatives of both Parties.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">7.</span>Confidentiality <em style="font-size: 9pt; color: var(--text-tertiary);">(binding)</em></h2>
+  <ol class="clauses">
+    <li>Any non-public information exchanged between the Parties in connection with this MOU shall be treated as confidential.</li>
+    <li>Neither Party shall disclose such information to any third party without the prior written consent of the disclosing Party.</li>
+    <li>The confidentiality obligations in this Clause survive the termination of this MOU for a period of two (2) years.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">8.</span>Term and Termination</h2>
+  <ol class="clauses">
+    <li>This MOU is effective from {{ date_display }} and continues for [six (6) months] unless extended by mutual written agreement.</li>
+    <li>Either Party may terminate this MOU at any time by giving [14] days' written notice to the other.</li>
+    <li>Termination shall not affect the binding clauses (Confidentiality, Governing Law, Costs), which survive.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">9.</span>Governing Law <em style="font-size: 9pt; color: var(--text-tertiary);">(binding)</em></h2>
+  <ol class="clauses">
+    <li>This MOU and any dispute arising from its binding clauses shall be governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate].</li>
+    <li>Disputes shall be resolved through good-faith negotiation. Failing resolution, they shall be referred to the courts of [Emirate] / [DIFC Courts] / [DIAC arbitration].</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">10.</span>Costs <em style="font-size: 9pt; color: var(--text-tertiary);">(binding)</em></h2>
+  <p>Each Party shall bear its own costs incurred in connection with this MOU, including legal fees, due-diligence costs, and travel, unless otherwise agreed in writing.</p>
+</section>
+
+<!-- ===== Signatures ===== -->
+<div class="signature-page">
+  <h2>Execution</h2>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">For Party A</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[Party A]' }}</div>
+      <div class="field"><div class="label">Name</div><div class="line"></div></div>
+      <div class="field"><div class="label">Title</div><div class="line"></div></div>
+      <div class="field"><div class="label">Signature</div><div class="line"></div></div>
+      <div class="field"><div class="label">Date</div><div class="line"></div></div>
+    </div>
+    <div class="signatory-block">
+      <div class="party-label">For Party B</div>
+      <div class="party-name">[Party B]</div>
+      <div class="field"><div class="label">Name</div><div class="line"></div></div>
+      <div class="field"><div class="label">Title</div><div class="line"></div></div>
+      <div class="field"><div class="label">Signature</div><div class="line"></div></div>
+      <div class="field"><div class="label">Date</div><div class="line"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

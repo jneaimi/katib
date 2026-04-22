@@ -1,0 +1,41 @@
+{
+  "domain": "legal",
+  "covers_allowed": [],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": null,
+    "layout": "classic"
+  },
+  "doc_types": {
+    "service-agreement": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 20,
+      "target_pages": [5, 12],
+      "sections_required": ["body"]
+    },
+    "mou": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 8,
+      "target_pages": [2, 5],
+      "sections_required": ["body"]
+    },
+    "nda": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 6,
+      "target_pages": [2, 4],
+      "sections_required": ["body"]
+    },
+    "engagement-letter": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 6,
+      "target_pages": [2, 4],
+      "sections_required": ["body"]
+    }
+  }
+}

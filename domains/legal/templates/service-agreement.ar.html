@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center {
+      content: "اتفاقية خدمات  ·  " counter(page) " / " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-left {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-left { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11.5pt;
+    line-height: 1.9;
+    color: var(--text);
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 {
+    font-size: 22pt;
+    line-height: 1.35;
+    margin: 0 0 6pt 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .masthead .ref-line {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+  }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9.5pt;
+    line-height: 1.65;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label {
+    font-size: 9pt;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .party {
+    padding: 12pt 14pt;
+    border-right: 3pt solid var(--accent);
+    background: var(--callout-bg);
+    margin-bottom: 10pt;
+  }
+
+  .party .label {
+    font-size: 9pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .party .name { font-size: 12pt; font-weight: 700; color: var(--text); margin-bottom: 3pt; }
+
+  .party .detail { font-size: 10.5pt; line-height: 1.7; color: var(--text-secondary); }
+
+  .party .role-tag {
+    display: inline-block;
+    margin-top: 4pt;
+    padding: 1pt 8pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: 9pt;
+    font-weight: 700;
+  }
+
+  .recitals {
+    margin: 16pt 0;
+    padding: 12pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--table-row-alt);
+  }
+
+  .recitals h3 {
+    font-size: 10.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 10pt 0;
+  }
+
+  .recitals p { margin: 6pt 0; font-size: 10.5pt; }
+
+  .recitals .clause {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .operative-clause {
+    font-weight: 700;
+    color: var(--accent);
+    margin: 14pt 0 8pt 0;
+    font-size: 10.5pt;
+    text-align: center;
+    padding: 6pt;
+    border-top: 1pt solid var(--accent);
+    border-bottom: 1pt solid var(--accent);
+  }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num {
+    display: inline-block;
+    min-width: 26pt;
+    font-weight: 700;
+  }
+
+  h3 { font-size: 11pt; color: var(--text); margin: 10pt 0 4pt 0; font-weight: 700; }
+
+  p { margin: 6pt 0; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-right: 32pt;
+    margin-bottom: 8pt;
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 26pt;
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .defined-term { font-weight: 700; color: var(--accent); }
+
+  .definitions {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 10.5pt;
+  }
+
+  .definitions td {
+    padding: 6pt 10pt;
+    vertical-align: top;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .definitions td.term { width: 110pt; font-weight: 700; color: var(--accent); }
+
+  .signature-page {
+    margin-top: 28pt;
+    padding-top: 14pt;
+    border-top: 2pt solid var(--accent);
+  }
+
+  .signature-page h2 {
+    text-align: center;
+    font-size: 12pt;
+    border: 0;
+    margin-bottom: 16pt;
+  }
+
+  .signature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    margin-top: 14pt;
+  }
+
+  .signatory-block {
+    border-top: 1pt solid var(--border-strong);
+    padding-top: 14pt;
+  }
+
+  .signatory-block .party-label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .signatory-block .party-name { font-size: 11pt; font-weight: 700; margin-bottom: 14pt; }
+
+  .signatory-block .field { margin-bottom: 10pt; }
+
+  .signatory-block .field .label { font-size: 9pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+
+  .signatory-block .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+
+  .witness-block {
+    margin-top: 18pt;
+    padding: 10pt 14pt;
+    border: 0.5pt dashed var(--border-strong);
+    font-size: 10pt;
+    color: var(--text-secondary);
+  }
+
+  .witness-block .label {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">وثيقة قانونية</div>
+  <h1>اتفاقية خدمات</h1>
+  <div class="ref-line">المرجع: <span style="direction: ltr; unicode-bidi: embed">{{ reference_code }}</span> · بتاريخ {{ date_display }}</div>
+</header>
+
+<div class="disclaimer">
+  <div class="label">ملاحظة على النموذج</div>
+  هذا نموذج «كاتب» لاتفاقية خدمات بين طرفين تجاريّين في سياق الإمارات. ليس استشارة قانونية.
+  على الأطراف مراجعة الأداة لدى مستشار قانوني مؤهّل وتكييفها حسب التكليف، وتنظيم القطاع،
+  والقانون الحاكم للمنطقة الحرّة أو البرّ الرئيس. احذف هذا الشريط قبل التنفيذ.
+</div>
+
+<section>
+  <h2><span class="num">١.</span>الأطراف</h2>
+
+  <p>أُبرمت هذه الاتفاقية («<span class="defined-term">الاتفاقية</span>») ودخلت حيّز التنفيذ في {{ date_display }}
+  («<span class="defined-term">تاريخ النفاذ</span>») بين:</p>
+
+  <div class="parties-block">
+    <div class="party">
+      <div class="label">الطرف الأول</div>
+      <div class="name">{{ brand.identity.legal_name if brand.identity.legal_name else '[اسم المزوّد القانوني ذ.م.م / FZ-LLC]' }}</div>
+      <div class="detail">[رقم الرخصة] · [العنوان المسجّل]<br />[المدينة، الإمارة، الإمارات]</div>
+      <span class="role-tag">مزوّد الخدمة</span>
+    </div>
+    <div class="party">
+      <div class="label">الطرف الثاني</div>
+      <div class="name">[اسم العميل القانوني ذ.م.م]</div>
+      <div class="detail">[العنوان المسجّل]<br />[المدينة، الإمارة، الإمارات]</div>
+      <span class="role-tag">العميل</span>
+    </div>
+  </div>
+
+  <p>يُشار إلى كلّ من الطرف الأول والطرف الثاني منفرداً بـ «<span class="defined-term">الطرف</span>»
+  ومجتمعَين بـ «<span class="defined-term">الطرفَين</span>».</p>
+</section>
+
+<div class="recitals">
+  <h3>تمهيد</h3>
+  <p><span class="clause">حيث إنّ</span> مزوّد الخدمة يعمل في مجال [وصف الخدمات / القطاع]؛</p>
+  <p><span class="clause">وحيث إنّ</span> العميل يرغب في التعاقد مع مزوّد الخدمة لأداء خدمات مبيّنة في الملحق ١ («الخدمات»)؛</p>
+  <p><span class="clause">وحيث إنّ</span> مزوّد الخدمة أقرّ بأنّه يملك المهارات والخبرة والموارد اللازمة لأداء الخدمات؛</p>
+  <div class="operative-clause">عليه، وبناءً على التعهّدات المتبادلة أدناه، اتّفق الطرفان على ما يلي:</div>
+</div>
+
+<section>
+  <h2><span class="num">٢.</span>التعريفات</h2>
+  <p>يكون للمصطلحات التالية، أينما وردت في هذه الاتفاقية، المعاني المبيّنة أدناه:</p>
+  <table class="definitions">
+    <tbody>
+      <tr><td class="term">«الخدمات»</td><td>الخدمات التي يقدّمها مزوّد الخدمة للعميل كما هي مفصّلة في الملحق ١.</td></tr>
+      <tr><td class="term">«الأتعاب»</td><td>المبالغ المستحقّة على العميل لمزوّد الخدمة كما هي مبيّنة في الملحق ٢.</td></tr>
+      <tr><td class="term">«المُخرَجات»</td><td>أيّ تقرير أو وثيقة أو بيانات أو برمجيات أو أيّ منتج عمل يصدر خلال تقديم الخدمات.</td></tr>
+      <tr><td class="term">«المعلومات السرّية»</td><td>كما هي مُعرَّفة في البند ٨.</td></tr>
+      <tr><td class="term">«المدّة»</td><td>الفترة التي تكون فيها الاتفاقية سارية كما هي مبيّنة في البند ٥.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">٣.</span>نطاق الخدمات</h2>
+  <ol class="clauses">
+    <li>يؤدّي مزوّد الخدمة الخدمات الموصوفة في الملحق ١ وفق المعايير والجداول الزمنية والمواصفات المذكورة فيه.</li>
+    <li>يتطلّب أيّ تعديل في نطاق الخدمات أمر تغيير خطيّاً مُوقَّعاً من ممثّلَين مفوَّضَين عن الطرفَين. ولا يلتزم أيّ طرف بأيّ تعديل شفهي.</li>
+    <li>يؤدّي مزوّد الخدمة الخدمات بقدر معقول من المهارة والعناية والاجتهاد، وفق المعايير المتّبعة في الإمارات.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٤.</span>الأتعاب والسداد</h2>
+  <ol class="clauses">
+    <li>مقابل الخدمات، يدفع العميل الأتعاب المبيّنة في الملحق ٢.</li>
+    <li>جميع الأتعاب غير شاملة ضريبة القيمة المضافة الإماراتية («الضريبة»)، وتُضاف عند انطباقها بالمعدّل السائد.</li>
+    <li>تُستحقّ الفواتير خلال ثلاثين (٣٠) يوماً تقويمياً من إصدارها. تُستوفى عن المتأخّرات فائدة شهرية قدرها واحد ونصف بالمئة (١٫٥٪) أو الحدّ الأقصى الذي يسمح به القانون الإماراتي، أيّهما أقلّ.</li>
+    <li>يردّ العميل لمزوّد الخدمة المصاريف المعتمدة مسبقاً والمتكبّدة في أداء الخدمات، مقابل الإيصالات الأصلية.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٥.</span>المدّة والإنهاء</h2>
+  <ol class="clauses">
+    <li>تبدأ هذه الاتفاقية من تاريخ النفاذ وتستمرّ لمدّة أوّلية قدرها [N] شهراً («<span class="defined-term">المدّة الأوّلية</span>»)، ما لم تنتهِ مسبقاً وفقاً لهذا البند ٥.</li>
+    <li>لأيّ طرف إنهاء هذه الاتفاقية بإشعار خطّي مدّته [٣٠] يوماً إلى الطرف الآخر.</li>
+    <li>لأيّ طرف إنهاء الاتفاقية فوراً بإشعار خطّي إذا ارتكب الطرف الآخر إخلالاً جوهرياً لم يُعالج خلال أربعة عشر (١٤) يوماً من استلامه إشعاراً خطّياً يحدّد الإخلال.</li>
+    <li>لا يؤثّر الإنهاء في أيّ حقوق أو التزامات أو مسؤوليات لأيّ من الطرفَين تراكمت قبل تاريخ نفاذ الإنهاء.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٦.</span>الملكية الفكرية</h2>
+  <ol class="clauses">
+    <li>يحتفظ كلّ طرف بكلّ حقوق الملكية الفكرية التي كان يمتلكها قبل تاريخ النفاذ («<span class="defined-term">الملكية الأساسية</span>»).</li>
+    <li>شرط سداد كامل الأتعاب، تؤول إلى العميل حقوق الملكية الفكرية في المُخرَجات المُنشأة خصّيصاً له بموجب هذه الاتفاقية («<span class="defined-term">الملكية الناشئة</span>») عند التسليم.</li>
+    <li>يمنح مزوّد الخدمة للعميل ترخيصاً دائماً، غير حصري، مجّانياً، لاستخدام أيّ ملكية أساسية مُضمَّنة في المُخرَجات إلى الحدّ اللازم لاستفادة العميل الكاملة من الخدمات.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٧.</span>الإقرارات والضمانات</h2>
+  <ol class="clauses">
+    <li>يُقرّ مزوّد الخدمة بأنّ الخدمات ستُؤدَّى بواسطة كوادر يملكون المؤهّلات والخبرة اللازمة.</li>
+    <li>يُقرّ العميل بأنّ له الصلاحية لإبرام هذه الاتفاقية وأداء التزاماته بموجبها.</li>
+    <li>باستثناء ما نُصّ عليه صراحةً في هذه الاتفاقية، لا يُقدَّم أيّ ضمانات أخرى صريحة أو ضمنية من أيّ طرف.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٨.</span>السرّية</h2>
+  <ol class="clauses">
+    <li>تعني «<span class="defined-term">المعلومات السرّية</span>» أيّ معلومات غير عامّة، سواء كانت تجارية أو تقنية أو مالية أو تشغيلية، يُفصح عنها طرف («الطرف المُفصِح») للآخر («الطرف المُتلقّي») بسبب هذه الاتفاقية.</li>
+    <li>يلتزم الطرف المُتلقّي بـ (أ) الحفاظ على السرّية التامّة للمعلومات السرّية، (ب) استخدامها حصراً لأغراض هذه الاتفاقية، (ج) عدم الإفصاح عنها لأيّ طرف ثالث دون موافقة خطّية مسبقة من الطرف المُفصِح.</li>
+    <li>تستمرّ التزامات السرّية في هذا البند لمدّة ثلاث (٣) سنوات بعد إنهاء الاتفاقية.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٩.</span>حدود المسؤولية</h2>
+  <ol class="clauses">
+    <li>لا يكون أيّ طرف مسؤولاً عن الأضرار غير المباشرة أو العارضة أو التبعية أو العقابية، بما في ذلك خسارة الأرباح أو الإيرادات أو السمعة.</li>
+    <li>لا تتجاوز المسؤولية الإجمالية لمزوّد الخدمة بموجب هذه الاتفاقية مجموع الأتعاب التي سدّدها العميل خلال الاثني عشر (١٢) شهراً السابقة للحادثة التي أدّت إلى المطالبة.</li>
+    <li>لا يحدّ هذا البند ٩ من المسؤولية عن (أ) الإهمال الجسيم، (ب) سوء السلوك المتعمّد، (ج) أيّ مسؤولية لا يجوز تحديدها بموجب القانون الإماراتي.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">١٠.</span>القوّة القاهرة</h2>
+  <ol class="clauses">
+    <li>لا يكون أيّ طرف مسؤولاً عن أيّ إخفاق أو تأخّر في الأداء يسبّبه حدث خارج عن سيطرته المعقولة، بما في ذلك القضاء والقدر، والحرب، والإرهاب، والإجراءات الحكومية، والانهيار الواسع للبنية التحتية.</li>
+    <li>يُخطر الطرف المتأثّر الطرف الآخر فوراً ويبذل جهوداً معقولة لاستئناف الأداء.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">١١.</span>القانون الحاكم وتسوية النزاعات</h2>
+  <ol class="clauses">
+    <li>تخضع هذه الاتفاقية لقوانين دولة الإمارات العربية المتّحدة وتُفسَّر وفقها، كما هي مُطبَّقة في إمارة [الإمارة].</li>
+    <li>يسعى الطرفان أوّلاً إلى تسوية أيّ نزاع ينشأ من هذه الاتفاقية عبر التفاوض بحسن نيّة خلال ثلاثين (٣٠) يوماً.</li>
+    <li>في حال تعذّر التسوية، يُحال النزاع إلى الاختصاص الحصري لمحاكم [الإمارة] / [محاكم مركز دبي المالي العالمي] / [التحكيم وفق قواعد مركز دبي للتحكيم الدولي ومقرّه دبي]. [اختر خياراً واحداً واحذف الآخرَين.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">١٢.</span>أحكام عامّة</h2>
+  <ol class="clauses">
+    <li><strong>الإشعارات.</strong> تُوجَّه جميع الإشعارات بموجب هذه الاتفاقية خطّياً وتُسلَّم باليد أو بالبريد السريع أو البريد الإلكتروني على العناوين المبيّنة في البند ١.</li>
+    <li><strong>التنازل.</strong> لا يحقّ لأيّ طرف التنازل عن هذه الاتفاقية دون موافقة خطّية مسبقة من الطرف الآخر، باستثناء التنازل إلى شركة تابعة.</li>
+    <li><strong>الانفصالية.</strong> إن حُكم ببطلان أيّ حكم، تستمرّ باقي الأحكام سارية كاملةً.</li>
+    <li><strong>كامل الاتفاقية.</strong> تشكّل هذه الاتفاقية، مع ملاحقها، كامل الاتفاق بين الطرفَين وتَحلّ محلّ كلّ التفاهمات السابقة.</li>
+    <li><strong>النسخ.</strong> يجوز تنفيذ هذه الاتفاقية في نسخ متعدّدة، كلّ منها أصل.</li>
+  </ol>
+</section>
+
+<div class="signature-page">
+  <h2>التوقيع والنفاذ</h2>
+
+  <p style="text-align: center; font-size: 10.5pt; color: var(--text-secondary); margin-bottom: 20pt;">
+  وشهادةً على ما تقدّم، وقّع الطرفان هذه الاتفاقية في التاريخ المذكور أعلاه.</p>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الأول · مزوّد الخدمة</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[اسم المزوّد القانوني]' }}</div>
+
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الثاني · العميل</div>
+      <div class="party-name">[اسم العميل القانوني]</div>
+
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+  </div>
+
+  <div class="witness-block">
+    <div class="label">الشاهد (اختياري)</div>
+    <p style="margin: 0;">وُقّعت بحضور: [اسم الشاهد · رقم جواز السفر / الهوية الإماراتية · التوقيع · التاريخ]</p>
+  </div>
+</div>
+
+</body>
+</html>

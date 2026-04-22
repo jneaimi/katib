@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center { content: "مذكّرة تفاهم  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-left { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-left { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 11.5pt; line-height: 1.9; color: var(--text); }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9.5pt;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 { font-size: 22pt; line-height: 1.35; margin: 0 0 6pt 0; font-weight: 700; color: var(--text); }
+  .masthead .subtitle { font-size: 12pt; color: var(--text-secondary); margin-bottom: 4pt; }
+  .masthead .ref-line { font-size: 10pt; color: var(--text-tertiary); }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9.5pt;
+    line-height: 1.65;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label { font-size: 9pt; font-weight: 700; margin-bottom: 3pt; }
+
+  .non-binding {
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--accent);
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    font-size: 10.5pt;
+  }
+
+  .party {
+    padding: 10pt 14pt;
+    border-right: 3pt solid var(--accent);
+    background: var(--callout-bg);
+    margin-bottom: 8pt;
+  }
+
+  .party .label { font-size: 9pt; color: var(--accent); font-weight: 700; margin-bottom: 3pt; }
+  .party .name { font-size: 11.5pt; font-weight: 700; color: var(--text); margin-bottom: 2pt; }
+  .party .detail { font-size: 10.5pt; line-height: 1.65; color: var(--text-secondary); }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num { display: inline-block; min-width: 26pt; font-weight: 700; }
+
+  p { margin: 6pt 0; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-right: 32pt;
+    margin-bottom: 8pt;
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 26pt;
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .signature-page { margin-top: 24pt; padding-top: 14pt; border-top: 2pt solid var(--accent); }
+
+  .signature-page h2 { text-align: center; font-size: 12pt; border: 0; }
+
+  .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-top: 14pt; }
+
+  .signatory-block { border-top: 1pt solid var(--border-strong); padding-top: 14pt; }
+
+  .signatory-block .party-label { font-size: 9pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt; }
+
+  .signatory-block .party-name { font-size: 11pt; font-weight: 700; margin-bottom: 14pt; }
+
+  .signatory-block .field { margin-bottom: 10pt; }
+
+  .signatory-block .field .label { font-size: 9pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+
+  .signatory-block .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">مذكّرة تفاهم</div>
+  <h1>مذكّرة تفاهم · [عنوان الغرض]</h1>
+  <div class="subtitle">[بيان نوايا غير مُلزم بين طرفَين]</div>
+  <div class="ref-line">المرجع: <span style="direction: ltr; unicode-bidi: embed">{{ reference_code }}</span> · بتاريخ {{ date_display }}</div>
+</header>
+
+<div class="disclaimer">
+  <div class="label">ملاحظة على النموذج</div>
+  هذا نموذج «كاتب» لمذكّرة تفاهم بين طرفَين، مُعدّ بصفة أساسية كأداة غير مُلزِمة. قد تُصاغ بنود بعينها
+  (السرّية، الحصرية، القانون الحاكم) بصفة مُلزِمة. على الأطراف عرض النسخة النهائية على مستشار قانوني قبل التوقيع.
+</div>
+
+<section>
+  <h2><span class="num">١.</span>الأطراف</h2>
+  <p>أُبرمت مذكّرة التفاهم هذه («<strong>المذكّرة</strong>») بتاريخ {{ date_display }} بين:</p>
+
+  <div class="party">
+    <div class="label">الطرف الأول</div>
+    <div class="name">{{ brand.identity.legal_name if brand.identity.legal_name else '[اسم الطرف الأول القانوني]' }}</div>
+    <div class="detail">[رقم الرخصة] · [العنوان، المدينة، الإمارة]</div>
+  </div>
+  <div class="party">
+    <div class="label">الطرف الثاني</div>
+    <div class="name">[اسم الطرف الثاني القانوني]</div>
+    <div class="detail">[رقم الرخصة] · [العنوان، المدينة، الإمارة]</div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">٢.</span>الخلفية</h2>
+  <p>[فقرتان أو ثلاث. اذكر السياق الذي يلتقي فيه الطرفان: ما يقوم به كلّ طرف، والاهتمام المشترك أو الفرصة التي
+  برزت، والسؤال الذي تسعى هذه المذكّرة إلى الإجابة عنه.]</p>
+</section>
+
+<section>
+  <h2><span class="num">٣.</span>الغرض</h2>
+  <p>يدخل الطرفان في هذه المذكّرة لتحقيق الأغراض التالية:</p>
+  <ol class="clauses">
+    <li>استكشاف [تعاون / شراكة / مشروع مشترك / ترتيب تجاري] محتمل بشأن [الموضوع].</li>
+    <li>إرساء إطار للمناقشة والتقييم والعناية الواجبة قبل إبرام أيّ اتفاقية مُلزِمة.</li>
+    <li>تحديد مجالات المسؤولية والمساهمة التي يقترح كلّ طرف تقديمها.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٤.</span>نطاق التعاون</h2>
+  <ol class="clauses">
+    <li>يتعاون الطرفان على [أنشطة أو محاور عمل أو مُخرَجات محدّدة] خلال فترة الاستكشاف.</li>
+    <li>يعيّن كلّ طرف جهة اتّصال رئيسية مسؤولة عن التنسيق.</li>
+    <li>تُنظَّم الاجتماعات وتبادل المعلومات والزيارات الميدانية كما يراه الطرفان مناسباً.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٥.</span>المسؤوليات</h2>
+
+  <p><strong>يلتزم الطرف الأول بـ:</strong></p>
+  <ol class="clauses">
+    <li>[مساهمة أو التزام محدّد.]</li>
+    <li>[مساهمة محدّدة.]</li>
+    <li>[مساهمة محدّدة.]</li>
+  </ol>
+
+  <p><strong>يلتزم الطرف الثاني بـ:</strong></p>
+  <ol class="clauses">
+    <li>[مساهمة محدّدة.]</li>
+    <li>[مساهمة محدّدة.]</li>
+    <li>[مساهمة محدّدة.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٦.</span>الطبيعة غير المُلزِمة</h2>
+  <div class="non-binding">
+    يُقرّ الطرفان ويُوافقان على أنّه، فيما عدا البنود ٧ (السرّية) و٩ (القانون الحاكم) و١٠ (النفقات)،
+    فإنّ هذه المذكّرة <strong>غير مُلزِمة</strong> ولا تُنشئ أيّ التزامات قانونية أو عدلية على أيّ من الطرفَين.
+    تتطلّب أيّ التزامات مُلزِمة اتفاقية خطّية منفصلة يوقّعها ممثّلون مفوَّضون عن الطرفَين.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">٧.</span>السرّية <em style="font-size: 9.5pt; color: var(--text-tertiary);">(مُلزِم)</em></h2>
+  <ol class="clauses">
+    <li>أيّ معلومات غير عامّة يتبادلها الطرفان بسبب هذه المذكّرة تُعامَل بوصفها سرّية.</li>
+    <li>لا يُفصح أيّ طرف عن هذه المعلومات لأيّ طرف ثالث دون موافقة خطّية مسبقة من الطرف المُفصِح.</li>
+    <li>تستمرّ التزامات السرّية في هذا البند لمدّة سنتَين (٢) بعد انتهاء المذكّرة.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٨.</span>المدّة والإنهاء</h2>
+  <ol class="clauses">
+    <li>تسري هذه المذكّرة من {{ date_display }} وتستمرّ لـ [ستّة (٦) أشهر] ما لم تُمدَّد باتفاق خطّي متبادل.</li>
+    <li>لأيّ طرف إنهاء هذه المذكّرة في أيّ وقت بإشعار خطّي مدّته [١٤] يوماً إلى الطرف الآخر.</li>
+    <li>لا يؤثّر الإنهاء في البنود المُلزِمة (السرّية، القانون الحاكم، النفقات) التي تستمرّ سارية.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٩.</span>القانون الحاكم <em style="font-size: 9.5pt; color: var(--text-tertiary);">(مُلزِم)</em></h2>
+  <ol class="clauses">
+    <li>تخضع هذه المذكّرة وأيّ نزاع ينشأ من بنودها المُلزِمة لقوانين دولة الإمارات العربية المتّحدة، كما هي مُطبَّقة في إمارة [الإمارة].</li>
+    <li>تُحلّ النزاعات عبر التفاوض بحسن نيّة. في حال تعذّر التسوية، تُحال إلى محاكم [الإمارة] / [محاكم مركز دبي المالي العالمي] / [تحكيم مركز دبي للتحكيم الدولي].</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">١٠.</span>النفقات <em style="font-size: 9.5pt; color: var(--text-tertiary);">(مُلزِم)</em></h2>
+  <p>يتحمّل كلّ طرف نفقاته المتكبّدة بسبب هذه المذكّرة، بما في ذلك الأتعاب القانونية ونفقات العناية الواجبة والسفر، ما لم يُتّفق خطّياً على خلاف ذلك.</p>
+</section>
+
+<div class="signature-page">
+  <h2>التوقيع والنفاذ</h2>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الأول</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[الطرف الأول]' }}</div>
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+    <div class="signatory-block">
+      <div class="party-label">عن الطرف الثاني</div>
+      <div class="party-name">[الطرف الثاني]</div>
+      <div class="field"><div class="label">الاسم</div><div class="line"></div></div>
+      <div class="field"><div class="label">المسمّى</div><div class="line"></div></div>
+      <div class="field"><div class="label">التوقيع</div><div class="line"></div></div>
+      <div class="field"><div class="label">التاريخ</div><div class="line"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center { content: "NDA  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-right { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-right { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 10.5pt; line-height: 1.6; color: var(--text); }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 { font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; }
+  .masthead .subtitle { font-size: 11.5pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt; }
+  .masthead .ref-line { font-size: 10pt; color: var(--text-tertiary); }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .type-selector {
+    display: inline-block;
+    padding: 4pt 10pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 12pt;
+  }
+
+  .parties-inline {
+    background: var(--callout-bg);
+    padding: 12pt 16pt;
+    border-left: 3pt solid var(--accent);
+    margin-bottom: 14pt;
+    font-size: 10.5pt;
+    line-height: 1.6;
+  }
+
+  .parties-inline strong { color: var(--accent); }
+
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num { display: inline-block; min-width: 26pt; font-weight: 700; }
+
+  p { margin: 6pt 0; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-left: 32pt;
+    margin-bottom: 8pt;
+    font-size: 10.5pt;
+    line-height: 1.6;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .defined-term { font-weight: 700; color: var(--accent); }
+
+  .signature-page {
+    margin-top: 24pt;
+    padding-top: 14pt;
+    border-top: 2pt solid var(--accent);
+  }
+
+  .signature-page h2 {
+    text-align: center;
+    font-size: 12pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 0;
+  }
+
+  .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20pt; margin-top: 14pt; }
+
+  .signatory-block { border-top: 1pt solid var(--border-strong); padding-top: 14pt; }
+
+  .signatory-block .party-label { font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt; }
+  .signatory-block .party-name { font-size: 11pt; font-weight: 700; margin-bottom: 14pt; }
+  .signatory-block .field { margin-bottom: 10pt; }
+  .signatory-block .field .label { font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+  .signatory-block .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Non-Disclosure Agreement</div>
+  <h1>Confidentiality &amp; Non-Disclosure Agreement</h1>
+  <div class="subtitle">[Protecting confidential information exchanged between parties]</div>
+  <div class="ref-line">Reference: {{ reference_code }}  ·  Dated {{ date_display }}</div>
+</header>
+
+<div class="disclaimer">
+  <div class="label">Template Notice</div>
+  This is a Katib template for a mutual NDA between two commercial parties in the UAE. For one-way NDAs
+  (only one party discloses), remove the reciprocal clauses. Have the instrument reviewed by counsel and
+  adjusted for the specific transaction before execution.
+</div>
+
+<span class="type-selector">Type: Mutual NDA</span>
+
+<div class="parties-inline">
+  This Non-Disclosure Agreement (the "<span class="defined-term">NDA</span>") is entered into on {{ date_display }}
+  between:
+  <br /><br />
+  <strong>Party A:</strong> {{ brand.identity.legal_name if brand.identity.legal_name else '[Party A Legal Name]' }},
+  [Licence No.], with registered office at [address, City, Emirate, UAE]; and
+  <br /><br />
+  <strong>Party B:</strong> [Party B Legal Name], [Licence No.], with registered office at [address, City, Emirate, UAE].
+  <br /><br />
+  Each a "<span class="defined-term">Party</span>" and collectively the "<span class="defined-term">Parties</span>".
+</div>
+
+<section>
+  <h2><span class="num">1.</span>Purpose</h2>
+  <p>The Parties intend to exchange certain confidential information in connection with [describe the purpose —
+  e.g., evaluating a potential business relationship, joint venture, investment, product integration, or service
+  engagement] (the "<span class="defined-term">Purpose</span>").</p>
+</section>
+
+<section>
+  <h2><span class="num">2.</span>Definition of Confidential Information</h2>
+  <ol class="clauses">
+    <li>"<span class="defined-term">Confidential Information</span>" means any information disclosed by a Party (the "<span class="defined-term">Disclosing Party</span>") to the other (the "<span class="defined-term">Receiving Party</span>") in connection with the Purpose, whether orally, in writing, electronically, or by any other means, and whether or not marked as confidential.</li>
+    <li>Confidential Information includes, without limitation, business plans, financial information, customer lists, technical data, source code, designs, trade secrets, know-how, and any information that a reasonable person would understand to be confidential given the circumstances of disclosure.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">3.</span>Obligations of the Receiving Party</h2>
+  <p>The Receiving Party shall:</p>
+  <ol class="clauses">
+    <li>Hold the Confidential Information in strict confidence and protect it with the same degree of care as it uses for its own confidential information, and in no event less than reasonable care.</li>
+    <li>Use the Confidential Information solely for the Purpose and for no other reason.</li>
+    <li>Not disclose the Confidential Information to any third party without the prior written consent of the Disclosing Party, except to employees, advisors, or contractors who (a) need to know the information for the Purpose, and (b) are bound by confidentiality obligations no less restrictive than those in this NDA.</li>
+    <li>Not copy, reverse-engineer, or otherwise exploit the Confidential Information except as strictly necessary for the Purpose.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">4.</span>Exceptions</h2>
+  <p>The obligations in Clause 3 do not apply to information that:</p>
+  <ol class="clauses">
+    <li>Is or becomes public through no fault of the Receiving Party;</li>
+    <li>Was lawfully known to the Receiving Party prior to disclosure without a duty of confidentiality;</li>
+    <li>Is independently developed by the Receiving Party without reference to the Confidential Information; or</li>
+    <li>Is required to be disclosed by law, regulation, or court order, provided the Receiving Party gives the Disclosing Party prompt written notice and cooperates with any effort to limit the disclosure.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">5.</span>Term</h2>
+  <ol class="clauses">
+    <li>This NDA is effective from {{ date_display }} and continues for [two (2) years] from that date.</li>
+    <li>The confidentiality obligations survive for [five (5) years] after the termination or expiration of this NDA, regardless of its cause.</li>
+    <li>For information constituting trade secrets under applicable law, the obligations continue for as long as the information remains a trade secret.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">6.</span>Return or Destruction of Materials</h2>
+  <p>Upon written request by the Disclosing Party, or upon termination of this NDA, the Receiving Party shall promptly
+  return or destroy all Confidential Information in its possession, together with any copies, and certify such
+  return or destruction in writing, subject to reasonable retention of one archival copy solely for compliance
+  purposes.</p>
+</section>
+
+<section>
+  <h2><span class="num">7.</span>No Licence</h2>
+  <p>Nothing in this NDA grants the Receiving Party any licence or right, express or implied, to any intellectual
+  property, trade secret, or confidential information of the Disclosing Party, except for the limited use right
+  specified in Clause 3.</p>
+</section>
+
+<section>
+  <h2><span class="num">8.</span>Remedies</h2>
+  <ol class="clauses">
+    <li>The Parties acknowledge that a breach of this NDA may cause irreparable harm for which monetary damages would be inadequate.</li>
+    <li>Accordingly, the Disclosing Party is entitled to seek injunctive relief, specific performance, and any other equitable remedies, in addition to damages, without the need to post a bond.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">9.</span>Governing Law and Disputes</h2>
+  <ol class="clauses">
+    <li>This NDA is governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate].</li>
+    <li>Disputes shall be submitted to the exclusive jurisdiction of the courts of [Emirate] / [DIFC Courts] / [DIAC arbitration seated in Dubai].</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">10.</span>General</h2>
+  <ol class="clauses">
+    <li>This NDA constitutes the entire agreement between the Parties with respect to the subject matter and supersedes all prior discussions.</li>
+    <li>No amendment is effective unless in writing and signed by both Parties.</li>
+    <li>If any provision is held invalid, the remaining provisions continue in full force.</li>
+    <li>This NDA may be executed in counterparts, each of which is an original.</li>
+  </ol>
+</section>
+
+<div class="signature-page">
+  <h2>Execution</h2>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">For Party A</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[Party A]' }}</div>
+      <div class="field"><div class="label">Name</div><div class="line"></div></div>
+      <div class="field"><div class="label">Title</div><div class="line"></div></div>
+      <div class="field"><div class="label">Signature</div><div class="line"></div></div>
+      <div class="field"><div class="label">Date</div><div class="line"></div></div>
+    </div>
+    <div class="signatory-block">
+      <div class="party-label">For Party B</div>
+      <div class="party-name">[Party B]</div>
+      <div class="field"><div class="label">Name</div><div class="line"></div></div>
+      <div class="field"><div class="label">Title</div><div class="line"></div></div>
+      <div class="field"><div class="label">Signature</div><div class="line"></div></div>
+      <div class="field"><div class="label">Date</div><div class="line"></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

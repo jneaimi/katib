@@ -35,9 +35,9 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "invoice / tax invoice / quote / quotation / statement / financial summary / فاتورة / فاتورة ضريبية / عرض سعر / كشف حساب / ملخّص مالي" | `financial` | Emerald `#0F5F4E` + slate on warm ivory, Inter/Cairo sans |
 | "white paper / article / op-ed / opinion / thought leadership / case study / ورقة بيضاء / مقال / رأي / دراسة حالة" | `editorial` | Magazine red `#B91C1C` + ink on warm newsprint, Newsreader/Amiri serif |
 | "sell sheet / product brief / capability statement / slide deck / pitch deck / ورقة بيع / موجز منتج / بيان قدرات / عرض تقديمي" | `marketing-print` | Orange `#EA580C` + ink on white, Inter/Cairo sans |
-| *(v0.9)* service-agreement, MOU, NDA | `legal` | *(deferred)* |
+| "service agreement / MOU / memorandum of understanding / NDA / non-disclosure / engagement letter / اتفاقية خدمات / مذكّرة تفاهم / عدم إفصاح / خطاب تعاقد" | `legal` | Navy `#1E3A5F` + ink on white, Newsreader/Amiri serif |
 
-Formal live as of v0.3.0, personal live as of v0.4.0, academic live as of v0.5.0, financial live as of v0.6.0, editorial live as of v0.7.0, marketing-print live as of v0.8.0.
+All planned domains are live. Formal (v0.3.0), personal (v0.4.0), academic (v0.5.0), financial (v0.6.0), editorial (v0.7.0), marketing-print (v0.8.0), legal (v0.9.0).
 
 Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-requests.jsonl`.
 
@@ -54,6 +54,18 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `financial` | `invoice`, `quote`, `statement`, `financial-summary` |
 | `editorial` | `white-paper`, `article`, `op-ed`, `case-study` |
 | `marketing-print` | `sell-sheet`, `product-brief`, `capability-statement`, `slide-deck` |
+| `legal` | `service-agreement`, `mou`, `nda`, `engagement-letter` |
+
+### Legal doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `service-agreement` | Parties + recitals + 12 clauses (definitions, scope, fees, term, IP, warranties, confidentiality, liability, force majeure, governing law, general) + signature page with witness slot | 5–12 | `SA-*` | Full commercial services contract |
+| `mou` | Parties + background + purpose + scope + responsibilities + **non-binding** clause + binding sub-clauses (confidentiality, governing law, costs) + signatures | 2–5 | `MOU-*` | Pre-contract statement of intent |
+| `nda` | Inline parties block + purpose + definition + obligations + exceptions + term + return-of-materials + remedies + governing law + signatures. Mutual and one-way variants | 2–4 | `NDA-*` | Confidentiality before disclosure |
+| `engagement-letter` | Letterhead + recipient block + subject box + scope + fee table + timeline + liability + closing + Client-acceptance box | 2–4 | `EL-*` | Professional-services engagement (consulting, advisory) |
+
+**All legal templates include a standard template-notice disclaimer strip.** Templates, not legal advice — have counsel review before execution.
 
 ### Marketing-print doc-type picker
 

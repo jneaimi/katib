@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal`, `academic`, `financial`, `editorial`, `marketing-print` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio · syllabus, assignment-brief, lecture-notes, research-proposal · invoice, quote, statement, financial-summary · white-paper, article, op-ed, case-study · sell-sheet, product-brief, capability-statement, slide-deck |
+| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal`, `academic`, `financial`, `editorial`, `marketing-print`, `legal` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio · syllabus, assignment-brief, lecture-notes, research-proposal · invoice, quote, statement, financial-summary · white-paper, article, op-ed, case-study · sell-sheet, product-brief, capability-statement, slide-deck · service-agreement, MOU, NDA, engagement-letter |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -181,13 +181,18 @@ Each doc type ships as EN + AR peer templates at
 | | `product-brief` | 2–4 | `PB-*` | Problem/solution + benefits + specs + pricing tiers |
 | | `capability-statement` | 1–2 | `CAP-*` | Facts + competencies + past-performance + contact strip |
 | | `slide-deck` | 8–25 | `DECK-*` | Landscape A4 pitch deck: title + sections + bullets + CTA |
+| `legal` | `service-agreement` | 5–12 | `SA-*` | Full services contract: recitals + 12 clauses + execution page |
+| | `mou` | 2–5 | `MOU-*` | Memorandum of understanding with binding/non-binding flags |
+| | `nda` | 2–4 | `NDA-*` | Mutual NDA (one-way variant ready) with remedies + governing law |
+| | `engagement-letter` | 2–4 | `EL-*` | Letterhead + scope + fee table + acceptance box |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-The last planned domain — `legal` (contracts, NDAs) — is listed in the
-[Roadmap](#roadmap) and deferred past v0.8.
+**All planned domains are now live as of v0.9.0** — 10 domains, 33 doc types,
+66 bilingual templates. Legal templates carry a mandatory disclaimer strip;
+they are templates, not legal advice.
 
 ---
 

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm;
+    @bottom-center {
+      content: "Service Agreement  ·  " counter(page) " / " counter(pages);
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+    @top-right {
+      content: "{{ reference_code }}";
+      font-size: 8pt;
+      color: var(--text-tertiary);
+    }
+  }
+
+  @page :first {
+    @top-right { content: none; }
+    @bottom-center { content: none; }
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .masthead {
+    text-align: center;
+    padding-bottom: 16pt;
+    border-bottom: 2pt solid var(--accent);
+    margin-bottom: 18pt;
+  }
+
+  .masthead .kicker {
+    font-size: 9pt;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 10pt;
+  }
+
+  .masthead h1 {
+    font-size: 22pt;
+    line-height: 1.2;
+    margin: 0 0 6pt 0;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .masthead .ref-line {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+  }
+
+  /* Disclaimer strip */
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  /* Parties block */
+  .parties-block {
+    margin: 14pt 0;
+  }
+
+  .party {
+    padding: 12pt 14pt;
+    border-left: 3pt solid var(--accent);
+    background: var(--callout-bg);
+    margin-bottom: 10pt;
+  }
+
+  .party .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .party .name {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 3pt;
+  }
+
+  .party .detail {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .party .role-tag {
+    display: inline-block;
+    margin-top: 4pt;
+    padding: 1pt 8pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-size: 8.5pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Recitals */
+  .recitals {
+    margin: 16pt 0;
+    padding: 12pt 16pt;
+    border: 0.5pt solid var(--border);
+    background: var(--table-row-alt);
+  }
+
+  .recitals h3 {
+    font-size: 10pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 10pt 0;
+  }
+
+  .recitals p {
+    margin: 6pt 0;
+    font-size: 10pt;
+  }
+
+  .recitals .clause {
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .operative-clause {
+    font-weight: 700;
+    color: var(--accent);
+    margin: 14pt 0 8pt 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 10pt;
+    text-align: center;
+    padding: 6pt;
+    border-top: 1pt solid var(--accent);
+    border-bottom: 1pt solid var(--accent);
+  }
+
+  /* Clauses */
+  h2 {
+    font-size: 13pt;
+    color: var(--accent);
+    margin: 18pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num {
+    display: inline-block;
+    min-width: 26pt;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 11pt;
+    color: var(--text);
+    margin: 10pt 0 4pt 0;
+    font-weight: 700;
+  }
+
+  p { margin: 6pt 0; }
+
+  /* Sub-clauses with auto-numbering */
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-left: 0;
+    margin: 6pt 0 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-left: 32pt;
+    margin-bottom: 8pt;
+    font-size: 10.5pt;
+    line-height: 1.6;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .defined-term {
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Definitions table */
+  .definitions {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8pt 0;
+    font-size: 10pt;
+  }
+
+  .definitions td {
+    padding: 6pt 10pt;
+    vertical-align: top;
+    border-bottom: 0.5pt solid var(--border);
+  }
+
+  .definitions td.term {
+    width: 110pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Signature block */
+  .signature-page {
+    margin-top: 28pt;
+    padding-top: 14pt;
+    border-top: 2pt solid var(--accent);
+    page-break-before: auto;
+  }
+
+  .signature-page h2 {
+    text-align: center;
+    font-size: 12pt;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 0;
+    margin-bottom: 16pt;
+  }
+
+  .signature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+    margin-top: 14pt;
+  }
+
+  .signatory-block {
+    border-top: 1pt solid var(--border-strong);
+    padding-top: 14pt;
+  }
+
+  .signatory-block .party-label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+  }
+
+  .signatory-block .party-name {
+    font-size: 11pt;
+    font-weight: 700;
+    margin-bottom: 14pt;
+  }
+
+  .signatory-block .field {
+    margin-bottom: 10pt;
+  }
+
+  .signatory-block .field .label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-bottom: 2pt;
+    letter-spacing: 0.03em;
+  }
+
+  .signatory-block .field .line {
+    border-bottom: 0.5pt solid var(--text);
+    height: 18pt;
+  }
+
+  .signatory-block .field.signed .value {
+    font-size: 10pt;
+    padding-top: 3pt;
+  }
+
+  .witness-block {
+    margin-top: 18pt;
+    padding: 10pt 14pt;
+    border: 0.5pt dashed var(--border-strong);
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+  }
+
+  .witness-block .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 4pt;
+  }
+  </style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="kicker">Legal Instrument</div>
+  <h1>Service Agreement</h1>
+  <div class="ref-line">Reference: {{ reference_code }}  ·  Dated {{ date_display }}</div>
+</header>
+
+<!-- ===== Disclaimer ===== -->
+<div class="disclaimer">
+  <div class="label">Template Notice</div>
+  This is a Katib template for a Service Agreement between two commercial parties in the UAE context.
+  It is not legal advice. Parties must have the instrument reviewed by qualified counsel and tailored to the
+  specific engagement, industry regulation, and free-zone or onshore governing law that applies. Remove this
+  strip before execution.
+</div>
+
+<!-- ===== Parties ===== -->
+<section>
+  <h2><span class="num">1.</span>The Parties</h2>
+
+  <p>This Service Agreement (the "<span class="defined-term">Agreement</span>") is made and entered into on
+  {{ date_display }} (the "<span class="defined-term">Effective Date</span>") between:</p>
+
+  <div class="parties-block">
+    <div class="party">
+      <div class="label">Party A</div>
+      <div class="name">{{ brand.identity.legal_name if brand.identity.legal_name else '[Provider Legal Name FZ-LLC / LLC]' }}</div>
+      <div class="detail">[Licence No.] · [Registered address]<br />[City, Emirate, UAE]</div>
+      <span class="role-tag">Service Provider</span>
+    </div>
+    <div class="party">
+      <div class="label">Party B</div>
+      <div class="name">[Client Legal Name LLC]</div>
+      <div class="detail">[Registered address]<br />[City, Emirate, UAE]</div>
+      <span class="role-tag">Client</span>
+    </div>
+  </div>
+
+  <p>Each of Party A and Party B may be referred to individually as a "<span class="defined-term">Party</span>"
+  and collectively as the "<span class="defined-term">Parties</span>".</p>
+</section>
+
+<!-- ===== Recitals ===== -->
+<div class="recitals">
+  <h3>Recitals</h3>
+  <p><span class="clause">WHEREAS</span> the Service Provider is engaged in the business of [describe services / industry];</p>
+  <p><span class="clause">WHEREAS</span> the Client wishes to engage the Service Provider to perform certain services described in Schedule 1 (the "Services");</p>
+  <p><span class="clause">WHEREAS</span> the Service Provider has represented that it possesses the requisite skills, experience, and resources to deliver the Services;</p>
+  <div class="operative-clause">Now, therefore, in consideration of the mutual covenants below, the Parties agree as follows:</div>
+</div>
+
+<!-- ===== Clauses ===== -->
+<section>
+  <h2><span class="num">2.</span>Definitions</h2>
+  <p>In this Agreement, the following terms have the meanings set out below:</p>
+  <table class="definitions">
+    <tbody>
+      <tr><td class="term">"Services"</td><td>The services to be provided by the Service Provider to the Client as detailed in Schedule 1.</td></tr>
+      <tr><td class="term">"Fees"</td><td>The amounts payable by the Client to the Service Provider as set out in Schedule 2.</td></tr>
+      <tr><td class="term">"Deliverables"</td><td>Any report, document, data, software, or other work product produced in the course of the Services.</td></tr>
+      <tr><td class="term">"Confidential Information"</td><td>As defined in Clause 8.</td></tr>
+      <tr><td class="term">"Term"</td><td>The period during which this Agreement is in force, as set out in Clause 5.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="num">3.</span>Scope of Services</h2>
+  <ol class="clauses">
+    <li>The Service Provider shall perform the Services described in Schedule 1 in accordance with the standards, timelines, and specifications stated therein.</li>
+    <li>Any variation to the scope of Services requires a written change order executed by authorised representatives of both Parties. No oral variation shall bind either Party.</li>
+    <li>The Service Provider shall perform the Services with reasonable skill, care, and diligence, in accordance with industry standards applicable in the United Arab Emirates.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">4.</span>Fees and Payment</h2>
+  <ol class="clauses">
+    <li>In consideration of the Services, the Client shall pay the Fees set out in Schedule 2.</li>
+    <li>All Fees are exclusive of UAE Value Added Tax ("VAT"), which shall be added where applicable at the prevailing rate.</li>
+    <li>Invoices are due within thirty (30) calendar days of issuance. Overdue amounts shall accrue interest at one and one-half percent (1.5%) per month or the maximum rate permitted by UAE law, whichever is lower.</li>
+    <li>The Client shall reimburse the Service Provider for pre-approved expenses incurred in the performance of the Services, against original receipts.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">5.</span>Term and Termination</h2>
+  <ol class="clauses">
+    <li>This Agreement commences on the Effective Date and continues for an initial term of [N] months (the "<span class="defined-term">Initial Term</span>"), unless earlier terminated under this Clause 5.</li>
+    <li>Either Party may terminate this Agreement by serving [30] days' written notice to the other Party.</li>
+    <li>Either Party may terminate this Agreement immediately by written notice if the other Party commits a material breach that is not remedied within fourteen (14) days of receipt of written notice specifying the breach.</li>
+    <li>Termination shall not affect any rights, obligations, or liabilities of either Party that have accrued prior to the effective date of termination.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">6.</span>Intellectual Property</h2>
+  <ol class="clauses">
+    <li>Each Party retains all Intellectual Property Rights it owned prior to the Effective Date ("<span class="defined-term">Background IP</span>").</li>
+    <li>Subject to payment of all Fees, Intellectual Property Rights in Deliverables created specifically for the Client under this Agreement ("<span class="defined-term">Foreground IP</span>") shall vest in the Client upon delivery.</li>
+    <li>The Service Provider grants the Client a perpetual, non-exclusive, royalty-free licence to use any Background IP embedded in the Deliverables to the extent necessary for the Client to receive the full benefit of the Services.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">7.</span>Warranties</h2>
+  <ol class="clauses">
+    <li>The Service Provider warrants that the Services shall be performed by personnel with the requisite qualifications and experience.</li>
+    <li>The Client warrants that it has the authority to enter into this Agreement and to perform its obligations hereunder.</li>
+    <li>Except as expressly set out in this Agreement, no other warranties, express or implied, are given by either Party.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">8.</span>Confidentiality</h2>
+  <ol class="clauses">
+    <li>"<span class="defined-term">Confidential Information</span>" means any non-public information, whether commercial, technical, financial, or operational, disclosed by one Party (the "Disclosing Party") to the other (the "Receiving Party") in connection with this Agreement.</li>
+    <li>The Receiving Party shall (a) keep the Confidential Information strictly confidential; (b) use it solely for the purposes of this Agreement; and (c) not disclose it to any third party without the prior written consent of the Disclosing Party.</li>
+    <li>The confidentiality obligations in this Clause shall survive termination of this Agreement for a period of three (3) years.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">9.</span>Limitation of Liability</h2>
+  <ol class="clauses">
+    <li>Neither Party shall be liable for indirect, incidental, consequential, or punitive damages, including loss of profit, loss of revenue, or loss of goodwill.</li>
+    <li>The Service Provider's total aggregate liability under this Agreement shall not exceed the total Fees paid by the Client during the twelve (12) months preceding the event giving rise to the claim.</li>
+    <li>Nothing in this Clause 9 limits liability for (a) gross negligence; (b) wilful misconduct; or (c) any liability that cannot be lawfully limited under UAE law.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">10.</span>Force Majeure</h2>
+  <ol class="clauses">
+    <li>Neither Party shall be liable for any failure or delay in performance caused by events beyond its reasonable control, including but not limited to acts of God, war, terrorism, governmental action, or widespread infrastructure failure.</li>
+    <li>The affected Party shall notify the other Party promptly and use reasonable efforts to resume performance.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">11.</span>Governing Law and Disputes</h2>
+  <ol class="clauses">
+    <li>This Agreement shall be governed by and construed in accordance with the laws of the United Arab Emirates, as applied in the Emirate of [Emirate].</li>
+    <li>The Parties shall first attempt to resolve any dispute arising from this Agreement through good-faith negotiation within thirty (30) days.</li>
+    <li>Failing such resolution, the dispute shall be submitted to the exclusive jurisdiction of the courts of [Emirate] / [DIFC Courts] / [arbitration under the DIAC Rules seated in Dubai]. [Select one option and remove the others.]</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">12.</span>General Provisions</h2>
+  <ol class="clauses">
+    <li><strong>Notices.</strong> All notices under this Agreement shall be in writing and delivered by hand, courier, or email to the addresses set out in Clause 1.</li>
+    <li><strong>Assignment.</strong> Neither Party may assign this Agreement without the prior written consent of the other, except to an affiliate.</li>
+    <li><strong>Severability.</strong> If any provision is held invalid, the remaining provisions shall continue in full force.</li>
+    <li><strong>Entire Agreement.</strong> This Agreement, together with its Schedules, constitutes the entire agreement between the Parties and supersedes all prior understandings.</li>
+    <li><strong>Counterparts.</strong> This Agreement may be executed in counterparts, each of which is an original.</li>
+  </ol>
+</section>
+
+<!-- ===== Signatures ===== -->
+<div class="signature-page">
+  <h2>Execution</h2>
+
+  <p style="text-align: center; font-size: 10pt; color: var(--text-secondary); margin-bottom: 20pt;">
+  <em>In witness whereof, the Parties have executed this Agreement on the date first written above.</em></p>
+
+  <div class="signature-grid">
+    <div class="signatory-block">
+      <div class="party-label">For Party A · Service Provider</div>
+      <div class="party-name">{{ brand.identity.legal_name if brand.identity.legal_name else '[Provider Legal Name]' }}</div>
+
+      <div class="field">
+        <div class="label">Name</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Title</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Signature</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Date</div>
+        <div class="line"></div>
+      </div>
+    </div>
+
+    <div class="signatory-block">
+      <div class="party-label">For Party B · Client</div>
+      <div class="party-name">[Client Legal Name]</div>
+
+      <div class="field">
+        <div class="label">Name</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Title</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Signature</div>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <div class="label">Date</div>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="witness-block">
+    <div class="label">Witness (optional)</div>
+    <p style="margin: 0;">Signed in the presence of: [Witness Name · Passport / Emirates ID · Signature · Date]</p>
+  </div>
+</div>
+
+</body>
+</html>

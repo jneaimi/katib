@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm 28mm;
+    @bottom-center { content: "Engagement Letter  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-right { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-right { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 10.5pt; line-height: 1.7; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 1.5pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 20pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .letterhead .brand {
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .letterhead .detail {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    line-height: 1.5;
+    text-align: right;
+  }
+
+  .ref-line {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    margin-bottom: 16pt;
+  }
+
+  .ref-line .ref {
+    font-family: 'Courier New', monospace;
+    background: var(--callout-bg);
+    padding: 1pt 6pt;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .recipient-block {
+    margin-bottom: 22pt;
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  .recipient-block .to-label {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 4pt;
+  }
+
+  .recipient-block .name { font-weight: 700; color: var(--text); font-size: 11pt; }
+
+  .subject {
+    margin: 20pt 0;
+    padding: 10pt 14pt;
+    background: var(--callout-bg);
+    border-left: 3pt solid var(--accent);
+  }
+
+  .subject .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .subject .value {
+    font-size: 12pt;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3pt;
+  }
+
+  .greeting { margin: 14pt 0; font-size: 11pt; }
+
+  p { margin: 8pt 0; }
+
+  h2 {
+    font-size: 12pt;
+    color: var(--accent);
+    margin: 16pt 0 6pt 0;
+    font-weight: 700;
+    page-break-after: avoid;
+  }
+
+  h2 .num { display: inline-block; min-width: 22pt; font-weight: 700; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-left: 28pt;
+    margin-bottom: 6pt;
+    font-size: 10.5pt;
+    line-height: 1.65;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 22pt;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .scope-box {
+    background: var(--table-row-alt);
+    border: 0.5pt solid var(--border);
+    padding: 12pt 16pt;
+    margin: 12pt 0;
+  }
+
+  .scope-box h3 {
+    font-size: 10pt;
+    color: var(--accent);
+    margin: 0 0 6pt 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .scope-box p { margin: 4pt 0; font-size: 10pt; }
+  .scope-box ul { margin: 4pt 0; padding-left: 22pt; font-size: 10pt; }
+  .scope-box ul li { margin-bottom: 3pt; }
+
+  .fee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10pt;
+  }
+
+  .fee-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .fee-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .fee-table td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .sign-block {
+    margin-top: 24pt;
+    padding-top: 14pt;
+    border-top: 1pt solid var(--border);
+  }
+
+  .sign-block .closing { font-size: 11pt; margin-bottom: 28pt; }
+
+  .sign-block .author-name { font-weight: 700; font-size: 11pt; margin-bottom: 2pt; }
+  .sign-block .author-title { font-size: 10pt; color: var(--text-secondary); margin-bottom: 2pt; }
+  .sign-block .author-firm { font-size: 10pt; color: var(--text-tertiary); }
+
+  .acceptance {
+    margin-top: 22pt;
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--accent);
+    background: var(--callout-bg);
+  }
+
+  .acceptance h3 {
+    font-size: 10pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6pt 0;
+  }
+
+  .acceptance p { font-size: 10pt; margin: 4pt 0 10pt 0; }
+
+  .acceptance-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+    margin-top: 6pt;
+  }
+
+  .acceptance-fields .field {
+    font-size: 9.5pt;
+  }
+
+  .acceptance-fields .field .label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-bottom: 2pt;
+  }
+
+  .acceptance-fields .field .line {
+    border-bottom: 0.5pt solid var(--text);
+    height: 18pt;
+  }
+  </style>
+</head>
+<body>
+
+<header class="letterhead">
+  <div class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <div class="detail">
+    [Street address]<br />
+    [City, Emirate, UAE]<br />
+    {{ brand.identity.email if brand.identity.email else '[partner@example.ae]' }}
+  </div>
+</header>
+
+<div class="ref-line">Ref: <span class="ref">{{ reference_code }}</span>  ·  Date: {{ date_display }}</div>
+
+<div class="disclaimer">
+  <div class="label">Template Notice</div>
+  This is a Katib template for a professional services engagement letter. It is intended for consulting,
+  advisory, or professional-services engagements in the UAE. Tailor the scope, fees, and terms to the
+  specific engagement, and have it reviewed by counsel for regulated sectors (audit, legal, medical).
+</div>
+
+<div class="recipient-block">
+  <div class="to-label">To</div>
+  <div class="name">[Client Contact Name]</div>
+  [Title]<br />
+  [Client Legal Name]<br />
+  [Address, City, Emirate]
+</div>
+
+<div class="subject">
+  <div class="label">Subject</div>
+  <div class="value">Engagement Letter — [Short description of services]</div>
+</div>
+
+<div class="greeting">Dear [Client Contact Name],</div>
+
+<p>Thank you for selecting {{ brand.identity.legal_name if brand.identity.legal_name else company }} for the
+assignment described below. This letter sets out the terms on which we will perform the services. If these
+terms are acceptable, please sign and return a copy.</p>
+
+<section>
+  <h2><span class="num">1.</span>Scope</h2>
+  <div class="scope-box">
+    <h3>Services</h3>
+    <p>We will perform the following services:</p>
+    <ul>
+      <li>[Service 1 — concrete, outcome-bearing.]</li>
+      <li>[Service 2.]</li>
+      <li>[Service 3.]</li>
+      <li>[Service 4.]</li>
+    </ul>
+    <p style="margin-top: 8pt; font-size: 9.5pt; color: var(--text-tertiary);">
+    Anything outside this scope is a change order, subject to separate fees and timeline.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2.</span>Fees and Payment</h2>
+  <table class="fee-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th class="num" style="width: 90pt">Fee (AED)</th>
+        <th style="width: 100pt">Basis</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>[Phase 1 / Fixed fee]</td><td class="num">15,000</td><td>Fixed</td></tr>
+      <tr><td>[Phase 2]</td><td class="num">25,000</td><td>Fixed</td></tr>
+      <tr><td>[Ongoing support]</td><td class="num">800 / hr</td><td>Time &amp; materials</td></tr>
+    </tbody>
+  </table>
+  <ol class="clauses">
+    <li>Fees are exclusive of UAE VAT, which will be added at the prevailing rate.</li>
+    <li>We will invoice on [monthly / milestone] basis; payment due within 30 days of invoice.</li>
+    <li>Out-of-pocket expenses (pre-approved travel, third-party fees) will be billed at cost.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">3.</span>Timeline</h2>
+  <p>We anticipate commencing within [5 business days] of your acceptance and completing the engagement within
+  [N weeks / months], subject to timely provision of information and access by your team.</p>
+</section>
+
+<section>
+  <h2><span class="num">4.</span>Confidentiality</h2>
+  <p>Information you share with us in the course of the engagement will be treated as confidential and used only
+  for the purposes of this engagement. We will protect such information with the same care we apply to our own
+  confidential information.</p>
+</section>
+
+<section>
+  <h2><span class="num">5.</span>Termination</h2>
+  <p>Either party may terminate this engagement by giving fourteen (14) days' written notice. You will be invoiced
+  for services performed and expenses incurred up to the termination date.</p>
+</section>
+
+<section>
+  <h2><span class="num">6.</span>Limitation of Liability</h2>
+  <p>Our total aggregate liability in connection with this engagement is limited to the fees paid by you over the
+  twelve (12) months preceding the event giving rise to the claim. We accept no liability for indirect, incidental,
+  or consequential loss.</p>
+</section>
+
+<section>
+  <h2><span class="num">7.</span>Governing Law</h2>
+  <p>This engagement is governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate].
+  Disputes will be referred to the courts of [Emirate] / [DIFC Courts] / [arbitration under DIAC Rules].</p>
+</section>
+
+<!-- ===== Closing ===== -->
+<div class="sign-block">
+  <div class="closing">We look forward to working with you.</div>
+  <div class="author-name">{{ author_name }}</div>
+  <div class="author-title">[Partner / Director]</div>
+  <div class="author-firm">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+</div>
+
+<div class="acceptance">
+  <h3>Acceptance</h3>
+  <p>By signing below, the Client accepts the terms set out in this engagement letter.</p>
+  <div class="acceptance-fields">
+    <div class="field">
+      <div class="label">Name &amp; Title</div>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <div class="label">Signature &amp; Date</div>
+      <div class="line"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

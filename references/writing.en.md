@@ -193,6 +193,19 @@ Banned phrases that signal LLM output:
 - **Testimonials need specifics or they're filler.** "Great team to work with" adds nothing. "Cut our reporting cycle from a week to a day" is worth the column inches. If the quote could apply to any competitor, cut it.
 - **Arabic slide-decks mirror everything.** Landscape A4 stays landscape, but section dividers flip (chapter number to the left, text to the right), phone numbers and emails go LTR inside RTL slides, page-counter stays Latin.
 
+### Legal (Service-agreement, MOU, NDA, Engagement-letter)
+
+- **Templates are not legal advice.** The non-negotiable top rule. Every legal artifact Katib produces carries a disclaimer strip directing parties to qualified counsel. Do not strip the disclaimer; adjust its wording only.
+- **Define terms once; capitalise forever.** A term introduced in quotes with capitalisation ("Services", "Confidential Information", "Effective Date") is a defined term. Use the exact capitalised form everywhere else in the document. Mixed case — "services" later — signals sloppy drafting and opens interpretation disputes.
+- **Clause numbering is sequential and nested.** `1.`, `1.1`, `1.2.1`. Parties reference clauses by number during negotiation; renumbering after an edit is a discipline, not an inconvenience. Katib's `ol.clauses` primitive auto-numbers — let it do the work.
+- **Every agreement names a governing law and a forum.** Omitting this is a common mistake that throws disputes into jurisdictional limbo. UAE agreements typically pick: (1) courts of the emirate, (2) DIFC or ADGM Courts (English-law common-law forums), or (3) DIAC arbitration seated in Dubai. Pick one, delete the alternatives.
+- **"WHEREAS" is not decoration.** Recitals frame the commercial context — the "Now, therefore" clause transitions from context to operative terms. Courts read recitals for interpretation when clauses are ambiguous. Write them as short, declarative sentences — not stories.
+- **MOUs must signal binding versus non-binding clauses clearly.** Parties often treat the whole MOU as non-binding except for three: confidentiality, governing law, and costs. Flag each binding clause inline — Katib's MOU template uses `(binding)` annotations next to those headings.
+- **Signature blocks earn the page break.** Never split a signature block across pages. Use `page-break-before` when necessary. Both parties sign on the same sheet or on counterpart sheets — never a lone signature on an orphan page.
+- **Mutual vs one-way NDAs.** Mutual NDAs use "the Parties", "each Party", "the Receiving Party" and "the Disclosing Party" as interchangeable roles. One-way NDAs name one party as Discloser and one as Recipient; remove the reciprocal phrasing. Choose up front; do not mix.
+- **Fees and caps use numbers AND words.** "one hundred twenty thousand (120,000)" survives OCR errors, faxes, and photocopied documents. The same applies to term lengths: "thirty (30) days".
+- **Arabic legal phrasing has conventions.** `حيث إنّ` (WHEREAS) opens recitals. `عليه، وبناءً على التعهّدات المتبادلة` (Now, therefore, in consideration of the mutual covenants) bridges to operative clauses. `يُقرّ الطرفان` (the Parties acknowledge) opens formal declarations. Use the full legal Arabic — خطاب تعاقد — not colloquial phrasing.
+
 ## Distillation workflow (when given raw material)
 
 When the user hands over meeting notes, brain dump, or existing doc in a different format:

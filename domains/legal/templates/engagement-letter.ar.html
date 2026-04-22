@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 25mm 28mm;
+    @bottom-center { content: "خطاب التعاقد  ·  " counter(page) " / " counter(pages); font-size: 8pt; color: var(--text-tertiary); }
+    @top-left { content: "{{ reference_code }}"; font-size: 8pt; color: var(--text-tertiary); }
+  }
+
+  @page :first { @top-left { content: none; } @bottom-center { content: none; } }
+
+  body { font-family: var(--font-primary); font-size: 11.5pt; line-height: 1.9; color: var(--text); }
+
+  .letterhead {
+    border-bottom: 1.5pt solid var(--accent);
+    padding-bottom: 12pt;
+    margin-bottom: 20pt;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .letterhead .brand { font-size: 14pt; font-weight: 700; color: var(--accent); }
+
+  .letterhead .detail {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.65;
+    text-align: left;
+  }
+
+  .letterhead .detail .email { direction: ltr; unicode-bidi: embed; display: block; }
+
+  .ref-line { font-size: 10pt; color: var(--text-secondary); margin-bottom: 16pt; }
+
+  .ref-line .ref {
+    font-family: 'Courier New', monospace;
+    background: var(--callout-bg);
+    padding: 1pt 6pt;
+    color: var(--accent);
+    font-weight: 700;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .recipient-block { margin-bottom: 22pt; font-size: 11pt; line-height: 1.7; }
+
+  .recipient-block .to-label { font-size: 9.5pt; color: var(--text-tertiary); font-weight: 700; margin-bottom: 4pt; }
+
+  .recipient-block .name { font-weight: 700; color: var(--text); font-size: 11.5pt; }
+
+  .subject {
+    margin: 20pt 0;
+    padding: 10pt 14pt;
+    background: var(--callout-bg);
+    border-right: 3pt solid var(--accent);
+  }
+
+  .subject .label { font-size: 9pt; color: var(--accent); font-weight: 700; margin-bottom: 3pt; }
+  .subject .value { font-size: 12pt; font-weight: 700; color: var(--text); }
+
+  .disclaimer {
+    background: var(--disclaimer-bg);
+    border: 0.5pt solid var(--disclaimer-border);
+    padding: 10pt 14pt;
+    margin-bottom: 18pt;
+    font-size: 9.5pt;
+    line-height: 1.65;
+    color: var(--disclaimer-fg);
+  }
+
+  .disclaimer .label { font-size: 9pt; font-weight: 700; margin-bottom: 3pt; }
+
+  .greeting { margin: 14pt 0; font-size: 11.5pt; }
+
+  p { margin: 8pt 0; }
+
+  h2 { font-size: 12pt; color: var(--accent); margin: 16pt 0 6pt 0; font-weight: 700; page-break-after: avoid; }
+
+  h2 .num { display: inline-block; min-width: 22pt; font-weight: 700; }
+
+  ol.clauses {
+    counter-reset: subclause;
+    list-style: none;
+    padding-right: 0;
+    padding-left: 0;
+    margin: 6pt 0;
+  }
+
+  ol.clauses > li {
+    counter-increment: subclause;
+    position: relative;
+    padding-right: 28pt;
+    margin-bottom: 6pt;
+    font-size: 11pt;
+    line-height: 1.85;
+  }
+
+  ol.clauses > li::before {
+    content: counter(subclause, decimal) ".";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 22pt;
+    text-align: right;
+    font-weight: 700;
+    color: var(--accent);
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .scope-box {
+    background: var(--table-row-alt);
+    border: 0.5pt solid var(--border);
+    padding: 12pt 16pt;
+    margin: 12pt 0;
+  }
+
+  .scope-box h3 { font-size: 10.5pt; color: var(--accent); margin: 0 0 6pt 0; font-weight: 700; }
+
+  .scope-box p { margin: 4pt 0; font-size: 10.5pt; }
+  .scope-box ul { margin: 4pt 0; padding-right: 22pt; padding-left: 0; font-size: 10.5pt; }
+  .scope-box ul li { margin-bottom: 3pt; }
+
+  .fee-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 10.5pt;
+  }
+
+  .fee-table th {
+    background: var(--accent);
+    color: var(--accent-on);
+    padding: 6pt 10pt;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .fee-table td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+  }
+
+  .fee-table td.num { text-align: left; font-variant-numeric: tabular-nums; font-weight: 700; direction: ltr; unicode-bidi: embed; }
+
+  .sign-block { margin-top: 24pt; padding-top: 14pt; border-top: 1pt solid var(--border); }
+
+  .sign-block .closing { font-size: 11.5pt; margin-bottom: 28pt; }
+
+  .sign-block .author-name { font-weight: 700; font-size: 11.5pt; margin-bottom: 2pt; }
+  .sign-block .author-title { font-size: 10.5pt; color: var(--text-secondary); margin-bottom: 2pt; }
+  .sign-block .author-firm { font-size: 10.5pt; color: var(--text-tertiary); }
+
+  .acceptance {
+    margin-top: 22pt;
+    padding: 14pt 16pt;
+    border: 0.5pt solid var(--accent);
+    background: var(--callout-bg);
+  }
+
+  .acceptance h3 { font-size: 10.5pt; color: var(--accent); font-weight: 700; margin: 0 0 6pt 0; }
+
+  .acceptance p { font-size: 10.5pt; margin: 4pt 0 10pt 0; }
+
+  .acceptance-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt;
+    margin-top: 6pt;
+  }
+
+  .acceptance-fields .field { font-size: 10pt; }
+
+  .acceptance-fields .field .label { font-size: 9pt; color: var(--text-tertiary); margin-bottom: 2pt; }
+
+  .acceptance-fields .field .line { border-bottom: 0.5pt solid var(--text); height: 18pt; }
+  </style>
+</head>
+<body>
+
+<header class="letterhead">
+  <div class="brand">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+  <div class="detail">
+    [العنوان]<br />
+    [المدينة، الإمارة، الإمارات]<br />
+    <span class="email">{{ brand.identity.email if brand.identity.email else '[partner@example.ae]' }}</span>
+  </div>
+</header>
+
+<div class="ref-line">المرجع: <span class="ref">{{ reference_code }}</span> · التاريخ: {{ date_display }}</div>
+
+<div class="disclaimer">
+  <div class="label">ملاحظة على النموذج</div>
+  هذا نموذج «كاتب» لخطاب تعاقد خدمات مهنية. مُصمَّم لتكاليف الاستشارات والتدريب وخدمات المهن الحرّة في الإمارات.
+  كيّف النطاق والأتعاب والشروط حسب التكليف، وللقطاعات المنظَّمة (تدقيق، قانون، طبّ) اعرضه على مستشار قانوني.
+</div>
+
+<div class="recipient-block">
+  <div class="to-label">إلى</div>
+  <div class="name">[اسم جهة الاتّصال لدى العميل]</div>
+  [المسمّى]<br />
+  [اسم العميل القانوني]<br />
+  [العنوان، المدينة، الإمارة]
+</div>
+
+<div class="subject">
+  <div class="label">الموضوع</div>
+  <div class="value">خطاب تعاقد — [وصف موجز للخدمات]</div>
+</div>
+
+<div class="greeting">عزيزي/عزيزتي [اسم جهة الاتّصال]،</div>
+
+<p>شكراً لاختياركم {{ brand.identity.legal_name if brand.identity.legal_name else company }} للمهمّة الموصوفة أدناه.
+يُحدّد هذا الخطاب الشروط التي سنؤدّي بها الخدمات. إن كانت الشروط مقبولة، يُرجى التوقيع وإعادة نسخة.</p>
+
+<section>
+  <h2><span class="num">١.</span>النطاق</h2>
+  <div class="scope-box">
+    <h3>الخدمات</h3>
+    <p>سنؤدّي الخدمات التالية:</p>
+    <ul>
+      <li>[الخدمة ١ — ملموسة ومرتبطة بنتيجة.]</li>
+      <li>[الخدمة ٢.]</li>
+      <li>[الخدمة ٣.]</li>
+      <li>[الخدمة ٤.]</li>
+    </ul>
+    <p style="margin-top: 8pt; font-size: 10pt; color: var(--text-tertiary);">
+    أيّ شيء خارج هذا النطاق يُعدّ أمر تغيير خاضعاً لأتعاب وجدول زمني مستقلَّين.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">٢.</span>الأتعاب والسداد</h2>
+  <table class="fee-table">
+    <thead>
+      <tr>
+        <th>البند</th>
+        <th class="num" style="width: 90pt">الأتعاب (AED)</th>
+        <th style="width: 120pt">الأساس</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>[المرحلة ١ / أتعاب ثابتة]</td><td class="num">15,000</td><td>ثابت</td></tr>
+      <tr><td>[المرحلة ٢]</td><td class="num">25,000</td><td>ثابت</td></tr>
+      <tr><td>[دعم مستمرّ]</td><td class="num">800 / ساعة</td><td>وقت ومواد</td></tr>
+    </tbody>
+  </table>
+  <ol class="clauses">
+    <li>الأتعاب غير شاملة ضريبة القيمة المضافة الإماراتية، وتُضاف بالمعدّل السائد.</li>
+    <li>سنُصدر فواتير على أساس [شهري / حسب المراحل]؛ تُستحقّ خلال ٣٠ يوماً من تاريخ الفاتورة.</li>
+    <li>تُفوتَر المصاريف الخارجية (السفر المعتمد مسبقاً، رسوم جهات خارجية) بالتكلفة.</li>
+  </ol>
+</section>
+
+<section>
+  <h2><span class="num">٣.</span>الجدول الزمني</h2>
+  <p>نتوقّع البدء خلال [٥ أيام عمل] من قبولكم، وإنجاز التكليف خلال [N أسابيع / أشهر]، رهناً بتوفّر المعلومات والوصول
+  من قِبل فريقكم في الوقت المناسب.</p>
+</section>
+
+<section>
+  <h2><span class="num">٤.</span>السرّية</h2>
+  <p>تُعامَل المعلومات التي تشاركونها معنا خلال التكليف بوصفها سرّية، ولا تُستخدم إلا لأغراض هذا التكليف. سنحميها
+  بالعناية نفسها التي نُطبّقها على معلوماتنا السرّية.</p>
+</section>
+
+<section>
+  <h2><span class="num">٥.</span>الإنهاء</h2>
+  <p>لأيّ طرف إنهاء هذا التكليف بإشعار خطّي مدّته أربعة عشر (١٤) يوماً. تُفوتَرون على الخدمات المُؤدّاة والمصاريف
+  المتكبّدة حتى تاريخ الإنهاء.</p>
+</section>
+
+<section>
+  <h2><span class="num">٦.</span>حدود المسؤولية</h2>
+  <p>تقتصر مسؤوليتنا الإجمالية المتعلّقة بهذا التكليف على الأتعاب المسدّدة من قِبلكم خلال الاثني عشر (١٢) شهراً السابقة
+  للحادثة التي أدّت إلى المطالبة. لا نقبل أيّ مسؤولية عن الخسائر غير المباشرة أو العارضة أو التبعية.</p>
+</section>
+
+<section>
+  <h2><span class="num">٧.</span>القانون الحاكم</h2>
+  <p>يخضع هذا التكليف لقوانين دولة الإمارات العربية المتّحدة، كما هي مُطبَّقة في إمارة [الإمارة]. تُحال النزاعات إلى
+  محاكم [الإمارة] / [محاكم مركز دبي المالي العالمي] / [تحكيم وفق قواعد مركز دبي للتحكيم الدولي].</p>
+</section>
+
+<div class="sign-block">
+  <div class="closing">نتطلّع إلى العمل معكم.</div>
+  <div class="author-name">{{ author_name }}</div>
+  <div class="author-title">[الشريك / المدير]</div>
+  <div class="author-firm">{{ brand.identity.legal_name if brand.identity.legal_name else company }}</div>
+</div>
+
+<div class="acceptance">
+  <h3>القبول</h3>
+  <p>بتوقيعكم أدناه، يقبل العميل الشروط المبيّنة في هذا الخطاب.</p>
+  <div class="acceptance-fields">
+    <div class="field">
+      <div class="label">الاسم والمسمّى</div>
+      <div class="line"></div>
+    </div>
+    <div class="field">
+      <div class="label">التوقيع والتاريخ</div>
+      <div class="line"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
