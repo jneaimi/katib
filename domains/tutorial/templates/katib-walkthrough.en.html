@@ -418,7 +418,7 @@ identity:
 
     <div class="callout callout-tip">
       <span class="callout-label">Tip</span>
-      <p>Set <code>KATIB_OUTPUT_ROOT=/tmp/scratch</code> before a render to send output to a scratch path &mdash; handy when iterating on templates.</p>
+      <p>Set <code>KATIB_OUTPUT_ROOT=/tmp/scratch</code> before a render to send output to a scratch path &mdash; handy when iterating on templates. For real client work, pass <code>--project &lt;client-slug&gt;</code> so output lands under <code>projects/&lt;slug&gt;/outputs/</code> and inherits client-specific governance. Full story in Module 6.</p>
     </div>
   </section>
 
@@ -806,10 +806,77 @@ uv run scripts/reflect.py --json                 <span class="comment"># for scr
     </div>
   </section>
 
-  <!-- Module 6 / Appendix -->
+  <!-- Module 6 -->
   <section class="module">
     <div class="module-head">
-      <div class="eyebrow">Module 6 &middot; Appendix</div>
+      <div class="eyebrow">Module 6 &middot; Vault integration</div>
+      <h2>Governed by design</h2>
+      <p class="module-intro">Katib is a vault-API-first client. Every render validates against the target zone's governance before a single page of PDF is produced, and writes through Soul Hub so the vault stays consistent across projects. You don't opt in to this &mdash; it's how the skill works out of the box.</p>
+    </div>
+
+    <div class="objectives">
+      <span class="label">Module objectives</span>
+      <ul>
+        <li>Know where your output lands based on <code>--project</code>.</li>
+        <li>Choose the right <code>KATIB_VAULT_MODE</code> for interactive work, CI, and offline tests.</li>
+        <li>Read Katib's exit codes and act on each one.</li>
+        <li>Use the five vault-admin scripts &mdash; audit, migrate, recover, reconcile, repair.</li>
+      </ul>
+    </div>
+
+    <h3>Project routing</h3>
+    <p>Every render routes to one of two destinations based on the <code>--project &lt;slug&gt;</code> flag. The default is <code>katib</code> (the skill's own zone); anything else routes to its own project folder.</p>
+
+    <dl class="kv">
+      <dt>--project katib (default)</dt><dd><code>~/vault/content/katib/&lt;domain&gt;/&lt;slug&gt;/</code> &mdash; governed by <code>content/katib/CLAUDE.md</code>. Use for skill-internal samples and self-documentation like this walkthrough.</dd>
+      <dt>--project &lt;any other slug&gt;</dt><dd><code>~/vault/projects/&lt;slug&gt;/outputs/&lt;domain&gt;/&lt;slug&gt;/</code> &mdash; governed by <code>projects/CLAUDE.md</code> and any <code>projects/&lt;slug&gt;/CLAUDE.md</code> override. Use for real client work.</dd>
+    </dl>
+
+    <h3>The mode matrix</h3>
+    <p>Set <code>KATIB_VAULT_MODE</code> to choose how writes reach the vault. The default covers daily interactive use; two narrower modes exist for CI and offline testing.</p>
+
+    <dl class="kv">
+      <dt>api (default)</dt><dd>POST the manifest to Soul Hub. If Soul Hub is unreachable, fall back to a direct filesystem write tagged <code>katib-fallback</code> so reconciliation can replay the write later. Best for interactive work.</dd>
+      <dt>strict</dt><dd>API only &mdash; any network failure raises <code>VaultNetworkError</code> and exits with a non-zero code. Use in CI where silent fallback would hide a real configuration problem.</dd>
+      <dt>fs</dt><dd>Skip the API entirely; write directly to disk via atomic temp-file-then-replace. Pre-render governance check is skipped by design. Use for render-only harnesses that need to stay offline.</dd>
+    </dl>
+
+    <h3>Pre-render governance</h3>
+    <p>Before any PDF is rendered, Katib fetches the target zone's governance via <code>GET /api/vault/zones/&lt;path&gt;</code> and validates the proposed manifest against the contract: allowed types, required fields, naming pattern, tag shape. If the zone would reject the write, the build exits 4 with a readable error &mdash; no PDF render, no orphan folder.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-label">Why this matters</span>
+      <p>Rendering a 12-page proposal only to discover the target zone disallows <code>type: output</code> is exactly the waste this check prevents. Disable it with <code>--no-strict-governance</code> when developing against a zone whose <code>CLAUDE.md</code> you know is stale.</p>
+    </div>
+
+    <h3>The five vault-admin scripts</h3>
+    <dl class="kv">
+      <dt>audit_vault.py</dt><dd>Read-only walker. Reports governance drift across every Katib manifest in the vault. Text summary by default, <code>--json</code> for tooling, <code>--report</code> for a Markdown note, <code>--summary</code> for a one-line CI gate (exit 1 if any manifest has an error).</dd>
+      <dt>migrate_vault.py</dt><dd>Proposes and (with <code>--execute</code>) applies retroactive fixes &mdash; rebuilds tags, updates <code>katib_version</code>, relocates folders to match current routing. Dry-run by default. Writes via filesystem with atomic temp-file-then-replace.</dd>
+      <dt>recover_vault.py</dt><dd>Disaster-recovery tool. Finds folders with <code>.katib/run.json</code> but no <code>manifest.md</code>, reconstructs the manifest from the run log + HTML source. Idempotent on a healthy vault.</dd>
+      <dt>reconcile_fallbacks.py</dt><dd>Walks the vault for manifests tagged <code>katib-fallback</code> and re-POSTs each through Soul Hub, stripping the tag on success. Run this when Soul Hub has been unreachable during a batch render.</dd>
+      <dt>repair_manifest_links.py</dt><dd>Sweeps every manifest body for stale rebuild paths (left behind by folder relocations) and every <code>content/index.md</code> wikilink that points at a moved folder. Idempotent.</dd>
+    </dl>
+
+    <h3>Exit-code contract</h3>
+    <dl class="kv">
+      <dt>0</dt><dd>Success &mdash; manifest written via API or FS.</dd>
+      <dt>1</dt><dd>Generic render failure (template missing, bad input).</dd>
+      <dt>2</dt><dd>Verification failure (placeholder text, font issue, page overflow at verify time).</dd>
+      <dt>3</dt><dd>Page-limit exceeded (hard limit from <code>styles.json</code>).</dd>
+      <dt>4</dt><dd>Governance rejection &mdash; pre-render check failed or API returned 4xx. Fix the manifest or the zone's <code>CLAUDE.md</code>.</dd>
+      <dt>5</dt><dd>Network failure in <code>strict</code> mode, or HTTP 409 conflict. Retry or resolve manually.</dd>
+    </dl>
+
+    <div class="marker">
+      Running CI? Pair <code>KATIB_VAULT_MODE=strict</code> with <code>audit_vault.py --summary</code> after every build. Strict mode catches configuration drift at write time; the summary audit catches drift that accumulates across runs.
+    </div>
+  </section>
+
+  <!-- Module 7 / Appendix -->
+  <section class="module">
+    <div class="module-head">
+      <div class="eyebrow">Module 7 &middot; Appendix</div>
       <h2>Command cheatsheet</h2>
       <p class="module-intro">Everything Katib ships as a CLI, in one place.</p>
     </div>
@@ -860,14 +927,50 @@ uv run scripts/reflect.py --json                 <span class="comment"># for scr
         <p><code>reflect.py [--since Nd] [--domain &lt;d&gt;] [--propose] [--json]</code></p>
       </div>
       <div class="cheat-card">
-        <h4>Tests</h4>
-        <p><code>test-all.sh</code> &bull; <code>test-tutorial.sh</code> &bull; <code>test-brand.sh</code></p>
+        <h4>Log feedback</h4>
+        <p><code>feedback.py add --before ... --after ... --domain ... --lang ...</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Audit vault</h4>
+        <p><code>audit_vault.py [--summary | --verbose | --json | --report]</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Migrate vault</h4>
+        <p><code>migrate_vault.py [--execute [--yes]]</code> &mdash; dry-run default.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>Recover vault</h4>
+        <p><code>recover_vault.py [--execute]</code> &mdash; rebuild orphaned manifests.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>Reconcile fallbacks</h4>
+        <p><code>reconcile_fallbacks.py [--execute [--yes]]</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Repair links</h4>
+        <p><code>repair_manifest_links.py [--execute [--yes]]</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Add a domain</h4>
+        <p><code>add_domain.py &lt;name&gt; --doc-types ...</code></p>
+      </div>
+      <div class="cheat-card">
+        <h4>Install fonts</h4>
+        <p><code>install_fonts.py</code> &mdash; fetch the seven OFL fonts Katib depends on.</p>
+      </div>
+      <div class="cheat-card">
+        <h4>Test suite (12)</h4>
+        <p><code>test-all</code> &bull; <code>test-tutorial</code> &bull; <code>test-brand</code> &bull; <code>test-alt-bundles</code> &bull; <code>test-images</code> &bull; <code>test-feedback</code> &bull; <code>test-add-domain</code> &bull; <code>test-vault-client</code> &bull; <code>test-strict-governance</code> &bull; <code>test-meta-validator</code> &bull; <code>test-migration</code> &bull; <code>test-install-fonts</code></p>
       </div>
     </div>
 
     <h3>Environment variables</h3>
     <dl class="kv">
       <dt>KATIB_OUTPUT_ROOT</dt><dd>Override output root &mdash; useful for scratch renders.</dd>
+      <dt>KATIB_VAULT_ROOT</dt><dd>Override vault root (default: <code>$HOME/vault</code>). Used by all admin scripts.</dd>
+      <dt>KATIB_VAULT_MODE</dt><dd><code>api</code> (default) &bull; <code>strict</code> (CI) &bull; <code>fs</code> (offline).</dd>
+      <dt>KATIB_VAULT_TIMEOUT</dt><dd>HTTP timeout in seconds for vault API calls (default 10).</dd>
+      <dt>SOUL_HUB_URL</dt><dd>Base URL for the vault API (default <code>http://localhost:2400</code>).</dd>
       <dt>KATIB_SLUG_OVERRIDE</dt><dd>Force a specific slug for the next render (or use <code>--slug</code>).</dd>
       <dt>KATIB_IMAGE_MODEL</dt><dd>Override Gemini cover model (default <code>nano-banana-2</code>).</dd>
       <dt>KATIB_CACHE_DIR</dt><dd>Screenshot cache directory.</dd>
