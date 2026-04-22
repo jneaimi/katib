@@ -66,11 +66,22 @@ echo "✓ ALL 6 RENDERS COMPLETE"
 echo "=============================================="
 echo ""
 echo "Output folders:"
-ls -1d ~/vault/content/katib/business-proposal/2026-04-21-*/ 2>/dev/null | tail -10
+# Phase 2 routing sends --project ils-offers to projects/ils-offers/outputs/ —
+# which is where this test's renders land. Verify folders in that tree.
+TODAY=$(date -u +%Y-%m-%d)
+OUTPUT_GLOB="$HOME/vault/projects/$PROJECT/outputs/business-proposal/$TODAY-*/"
+ls -1d $OUTPUT_GLOB 2>/dev/null | tail -10
 
 echo ""
 echo "▶ Step 3: Verify each generation folder"
-for folder in ~/vault/content/katib/business-proposal/2026-04-21-*/; do
+shopt -s nullglob
+FOLDERS=($OUTPUT_GLOB)
+shopt -u nullglob
+if [ ${#FOLDERS[@]} -eq 0 ]; then
+  echo "✗ no output folders matched $OUTPUT_GLOB"
+  exit 1
+fi
+for folder in "${FOLDERS[@]}"; do
   uv run scripts/build.py --verify "$folder" || exit 1
 done
 

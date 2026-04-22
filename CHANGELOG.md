@@ -3,6 +3,108 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.17.0] — 2026-04-22 — Phase 4 of vault-integration migration (audit + migration + recovery)
+
+Fourth of five phases (ADR §20). Retroactively cleans the 78 legacy
+Katib manifests in the vault so they match the v0.14.0+ contract and
+live in the right zone. Also ships an incident-recovery tool because
+the first attempt at the migration shipped a date-serialisation bug
+that orphaned 77 manifests — recovering them produced a dedicated
+script that now guards against re-occurrence.
+
+### Added
+- **`scripts/audit_vault.py`** — read-only walker. Scans every Katib
+  manifest under `content/katib/` and `projects/*/outputs/`, validates
+  against meta_validator + zone governance, reports drift. Outputs:
+  text summary (default), `--verbose` per-manifest breakdown, `--json`
+  for tooling, or `--report` for a markdown note in `vault/knowledge/`.
+- **`scripts/migrate_vault.py`** — proposes and (with `--execute`)
+  applies fixes:
+  - Rebuilds `tags` to the clean `[katib, <project>, auto-generated]`
+    shape, stripping domain/doc_type/language pollution
+  - Updates `katib_version` to current, `source_agent` to
+    `katib-migration-v0.17.0`, preserves original as `source_agent_original`
+  - Adds `migrated_at` audit stamp
+  - Relocates folders where `project` ≠ `katib` but location is under
+    `content/katib/` → `projects/<slug>/outputs/<domain>/<slug>/`
+  - `--dry-run` is default; `--execute` requires typing `yes` (or `--yes`)
+  - `--report` writes the plan as markdown to the vault
+  - Writes via filesystem (not the API) — avoids date-serialisation and
+    duplicate-content-detector issues that blocked the first attempt
+- **`scripts/recover_vault.py`** — disaster-recovery tool. Finds
+  folders with `.katib/run.json` but no `manifest.md`, reconstructs the
+  manifest from surviving run-log + HTML source (extracts title from
+  `<h1>` or `<title>`). Applies the v0.17.0 contract while rebuilding.
+  Idempotent on a healthy vault. Saved the current vault after the
+  migration incident (77 manifests rebuilt in one run).
+- **`scripts/test-migration.sh`** — 11-assertion harness covering the
+  full audit → dry-run → execute → re-audit flow on a scratch vault.
+  Also exercises `recover_vault` against a simulated incident.
+
+### Changed
+- **`migrate_vault.execute_plan()` rewritten** after the incident.
+  The first implementation POSTed to the API for the manifest write
+  and deleted the old file before confirmation — a pyyaml-parsed
+  `datetime.date` crashed `json.dumps` and left 77 manifests unreachable.
+  New implementation:
+  - Writes via FS using atomic temp-file + `Path.replace` (no
+    delete-before-write)
+  - Coerces all date/datetime scalars to ISO strings before emit
+  - Uses the Katib-standard inline-list YAML writer for tag consistency
+  - Idempotent: re-runs are safe
+- **`vault/content/katib/`** — migrated: 58 manifests in-place rewritten,
+  21 relocated to `projects/<slug>/outputs/`. Final audit: 79/79 clean,
+  0 errors, 0 warnings.
+- **`test-all.sh` and `test-tutorial.sh` path globs** updated to match
+  Phase 2's project-routing. Tests now look at
+  `projects/<slug>/outputs/<domain>/<today>-*/` instead of the legacy
+  `content/katib/<domain>/2026-04-21-*/`. Use `nullglob` + date-aware
+  glob construction so they survive future date changes.
+- **8 duplicate legacy folders** cleaned up manually before migration:
+  when Phase 2 test renders landed in `projects/<slug>/outputs/`, the
+  pre-Phase-2 counterparts stayed in `content/katib/` as duplicates.
+  Deleted those; nothing important lost.
+- **4 manifests with `project: Test`** renamed to `project: test`
+  before migration so the new zone follows kebab-case convention.
+
+### Docs / infrastructure
+- Skill + dev-repo `pyproject.toml` and `package.json` bumped to 0.17.0.
+- ADR §20 Phase 4 marked ✓ DONE with a detailed outcome paragraph
+  including the incident post-mortem.
+- Two vault reports produced:
+  `vault/knowledge/katib-audit-2026-04-22.md`,
+  `vault/knowledge/katib-migration-plan-2026-04-22.md`.
+
+### Tests
+- `test-migration.sh`: 11/11 pass (audit → dry-run → execute →
+  re-audit → recovery idempotent → recovery-after-incident).
+- Regression: all 10 prior harnesses green — `test-meta-validator` (11),
+  `test-all` (fixed globs, 6 renders), `test-tutorial` (fixed globs,
+  10 renders + merge), `test-alt-bundles` (18), `test-brand` (70+
+  assertions), `test-images` (8 goldens), `test-feedback` (8),
+  `test-add-domain` (11), `test-vault-client` (16),
+  `test-strict-governance` (12). `test-install-fonts` (live network, 8).
+- Post-migration vault audit: **79/79 clean, 0 errors, 0 warnings**.
+
+### Incident post-mortem (see `migrate_vault.execute_plan()` docstring)
+The first run of `--execute` on the live vault failed catastrophically
+on two separate issues:
+
+1. **pyyaml date parsing**: `created: 2026-04-21` came back as
+   `datetime.date` which `json.dumps` cannot serialise. The manifest
+   POST body threw, but the script had already deleted the old
+   manifest to make room for the POST — leaving 77 folders with no
+   `manifest.md`.
+2. **Soul Hub duplicate-content detector**: even for manifests that
+   parsed, 5 rewrite-in-place writes tripped the 90% similarity
+   check because proposal/letter/one-pager of the same deliverable
+   share boilerplate.
+
+`recover_vault.py` reconstructed all 77 from `.katib/run.json` +
+HTML source in ~1 second. `migrate_vault.py` was then rewritten to
+(a) coerce dates to strings, (b) write via FS instead of API, and
+(c) use atomic temp-file-then-replace instead of delete-then-write.
+
 ## [0.16.0] — 2026-04-22 — Phase 3 of vault-integration migration
 
 Third of five phases (ADR §20). Adds **pre-render governance checking**:

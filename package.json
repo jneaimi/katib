@@ -1,6 +1,6 @@
 {
   "name": "@jasemal/katib",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Bilingual (EN + AR) print-grade PDF document generation — a Claude Code skill. Proposals, tutorials, reports, formal letters, CVs + cover letters, brand profiles, inline SVG diagrams.",
   "bin": {
     "katib": "bin/katib.js"

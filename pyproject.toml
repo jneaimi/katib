@@ -1,6 +1,6 @@
 [project]
 name = "katib"
-version = "0.16.0"
+version = "0.17.0"
 description = "Katib — bilingual (EN + AR) document-generation skill for Claude Code"
 requires-python = ">=3.10"
 dependencies = [

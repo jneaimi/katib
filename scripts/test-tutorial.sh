@@ -76,17 +76,27 @@ echo "✓ ALL 10 RENDERS COMPLETE"
 echo "=============================================="
 echo ""
 echo "Output folders:"
-ls -1d ~/vault/content/katib/tutorial/*tut-test-*/ 2>/dev/null
+# Phase 2 routing: --project katib-tutorial-tests lands outputs in
+# projects/katib-tutorial-tests/outputs/tutorial/, not content/katib/tutorial/.
+TUTORIAL_GLOB="$HOME/vault/projects/katib-tutorial-tests/outputs/tutorial/*tut-test-*/"
+ls -1d $TUTORIAL_GLOB 2>/dev/null
 
 echo ""
 echo "▶ Step 3: Verify each generation folder"
-for folder in ~/vault/content/katib/tutorial/*tut-test-*/; do
+shopt -s nullglob
+FOLDERS=($TUTORIAL_GLOB)
+shopt -u nullglob
+if [ ${#FOLDERS[@]} -eq 0 ]; then
+  echo "✗ no output folders matched $TUTORIAL_GLOB"
+  exit 1
+fi
+for folder in "${FOLDERS[@]}"; do
   uv run scripts/build.py --verify "$folder" || exit 1
 done
 
 echo ""
 echo "▶ Step 4: Verify EN+AR manifest merge"
-for folder in ~/vault/content/katib/tutorial/*tut-test-*/; do
+for folder in "${FOLDERS[@]}"; do
   manifest="$folder/manifest.md"
   if ! grep -q "languages: \[en, ar\]" "$manifest"; then
     echo "✗ merge failed in $manifest"
