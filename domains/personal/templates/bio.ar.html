@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page { size: A4; margin: 25mm; }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11.5pt;
+    line-height: 1.95;
+    color: var(--text);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 40mm 1fr;
+    gap: 20pt;
+    padding-bottom: 18pt;
+    border-bottom: 1.5pt solid var(--accent);
+    margin-bottom: 22pt;
+    align-items: center;
+  }
+
+  .hero .photo {
+    width: 40mm;
+    height: 40mm;
+    border-radius: 50%;
+    background: var(--tag-bg);
+    overflow: hidden;
+  }
+
+  .hero .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero .name-block .name {
+    font-size: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.3;
+    margin-bottom: 4pt;
+  }
+
+  .hero .name-block .headline {
+    font-size: 13pt;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+
+  .hero .name-block .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero .name-block .tag-list li {
+    display: inline-block;
+    padding: 2pt 8pt;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    border-radius: 2pt;
+    font-size: 9.5pt;
+    font-weight: 600;
+    margin: 0 0 3pt 4pt;
+  }
+
+  .bio-section { margin-bottom: 20pt; }
+
+  .bio-section h2 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 8pt 0;
+  }
+
+  .bio-section p {
+    margin: 0 0 10pt 0;
+    text-align: justify;
+    line-height: 2.0;
+  }
+
+  .variants {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+  }
+
+  .variants .variant {
+    padding: 14pt 16pt;
+    background: #F9FAFB;
+    border-right: 3pt solid var(--accent-2);
+    border-left: none;
+  }
+
+  .variants .variant .label {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6pt;
+  }
+
+  .variants .variant p {
+    margin: 0;
+    font-size: 10.5pt;
+    line-height: 1.85;
+    color: var(--text-secondary);
+  }
+
+  .contact-footer {
+    margin-top: 24pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+    display: flex;
+    gap: 20pt;
+    font-size: 10pt;
+    color: var(--text-tertiary);
+  }
+
+  .contact-footer .label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-left: 4pt;
+  }
+
+  .contact-footer .value {
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="photo">
+      <!-- موضع الصورة — صورة شخصية مربّعة تعمل بشكل أفضل. -->
+    </div>
+    <div class="name-block">
+      <div class="name">{{ author_name }}</div>
+      <div class="headline">[عنوان مهني — مثال: مهندس ذكاء اصطناعي · مستشار ثنائي اللغة · الخليج]</div>
+      <ul class="tag-list">
+        <li>[تخصّص ١]</li>
+        <li>[تخصّص ٢]</li>
+        <li>[تخصّص ٣]</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bio-section">
+    <h2>نبذة</h2>
+    <p>
+      [نبذة طويلة — من ٣ إلى ٥ جمل. ابدأ بما تفعله ولأيّ جمهور، ثم الإنجاز الموقَّع بدليل، ثم ما يميّزك أو قصّة بدايتك.
+      اكتبها بضمير المتكلّم للموقع الشخصي، وبضمير الغائب لبرامج المؤتمرات وصفحات الفعاليات.]
+    </p>
+    <p>
+      [فقرة ثانية عند الحاجة — التركيز الحالي، المشاريع الجارية، أو ما تستكشفه الآن.]
+    </p>
+  </div>
+
+  <div class="bio-section">
+    <h2>صيغ بديلة</h2>
+    <div class="variants">
+      <div class="variant">
+        <div class="label">قصيرة — جملة واحدة</div>
+        <p>[نبذة في سطر واحد لحسابات التواصل أو توقيعات البريد. مثال: «مهندس ذكاء اصطناعي يبني أنظمة نماذج لغوية ثنائية اللغة للمؤسسات الخليجية».]</p>
+      </div>
+      <div class="variant">
+        <div class="label">متوسّطة — جملتان أو ثلاث</div>
+        <p>[بطول برامج المؤتمرات. ماذا تفعل + المؤهّل الموقَّع + التركيز الحالي.]</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-footer">
+    <div><span class="label">الموقع:</span><span class="value">[website.com]</span></div>
+    <div><span class="label">البريد:</span><span class="value">{{ brand.identity.email if brand.identity.email else '[email@example.com]' }}</span></div>
+    <div><span class="label">لينكدإن:</span><span class="value">[linkedin.com/in/handle]</span></div>
+  </div>
+
+</body>
+</html>

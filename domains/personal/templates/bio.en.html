@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page { size: A4; margin: 25mm; }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: 40mm 1fr;
+    gap: 20pt;
+    padding-bottom: 18pt;
+    border-bottom: 1.5pt solid var(--accent);
+    margin-bottom: 22pt;
+    align-items: center;
+  }
+
+  .hero .photo {
+    width: 40mm;
+    height: 40mm;
+    border-radius: 50%;
+    background: var(--tag-bg);
+    overflow: hidden;
+  }
+
+  .hero .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero .name-block .name {
+    font-size: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    margin-bottom: 4pt;
+    letter-spacing: -0.01em;
+  }
+
+  .hero .name-block .headline {
+    font-size: 12pt;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 6pt;
+  }
+
+  .hero .name-block .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .hero .name-block .tag-list li {
+    display: inline-block;
+    padding: 2pt 8pt;
+    background: var(--tag-bg);
+    color: var(--tag-fg);
+    border-radius: 2pt;
+    font-size: 8.5pt;
+    font-weight: 600;
+    margin: 0 4pt 3pt 0;
+  }
+
+  .bio-section {
+    margin-bottom: 20pt;
+  }
+
+  .bio-section h2 {
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 8pt 0;
+  }
+
+  .bio-section p {
+    margin: 0 0 10pt 0;
+    text-align: justify;
+    line-height: 1.75;
+  }
+
+  .variants {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20pt;
+  }
+
+  .variants .variant {
+    padding: 14pt 16pt;
+    background: #F9FAFB;
+    border-left: 3pt solid var(--accent-2);
+  }
+
+  .variants .variant .label {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6pt;
+  }
+
+  .variants .variant p {
+    margin: 0;
+    font-size: 10pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .contact-footer {
+    margin-top: 24pt;
+    padding-top: 12pt;
+    border-top: 0.5pt solid var(--border);
+    display: flex;
+    gap: 20pt;
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+  }
+
+  .contact-footer .label {
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-right: 4pt;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="photo">
+      <!-- Photo slot — square portrait works best. -->
+    </div>
+    <div class="name-block">
+      <div class="name">{{ author_name }}</div>
+      <div class="headline">[Professional headline — e.g., AI Engineer · Bilingual Consultant · GCC]</div>
+      <ul class="tag-list">
+        <li>[Specialty 1]</li>
+        <li>[Specialty 2]</li>
+        <li>[Specialty 3]</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bio-section">
+    <h2>About</h2>
+    <p>
+      [Long-form bio — 3 to 5 sentences. Start with what you do and for whom, then the signature
+      accomplishment with proof, then the differentiator or origin story. Write in first person
+      if the bio is for a personal website; third person if for a conference program or event page.]
+    </p>
+    <p>
+      [Second paragraph if needed — recent focus, current projects, or what you're exploring.]
+    </p>
+  </div>
+
+  <div class="bio-section">
+    <h2>Variants</h2>
+    <div class="variants">
+      <div class="variant">
+        <div class="label">Short — 1 sentence</div>
+        <p>[One-line bio for social media handles or email signatures. Example: "AI engineer building bilingual LLM systems for GCC enterprises."]</p>
+      </div>
+      <div class="variant">
+        <div class="label">Medium — 2–3 sentences</div>
+        <p>[Conference-program length. What you do + signature credential + current focus.]</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-footer">
+    <div><span class="label">Web:</span>[website.com]</div>
+    <div><span class="label">Email:</span>{{ brand.identity.email if brand.identity.email else '[email@example.com]' }}</div>
+    <div><span class="label">LinkedIn:</span>[linkedin.com/in/handle]</div>
+  </div>
+
+</body>
+</html>

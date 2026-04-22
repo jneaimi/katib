@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}" dir="{{ direction }}">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <style>
+  {{ tokens_css | safe }}
+  {{ layout_css | safe }}
+
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.75;
+    color: var(--text);
+    margin: 0;
+  }
+
+  .cv-grid {
+    display: grid;
+    grid-template-columns: 1fr 70mm;
+    min-height: 297mm;
+  }
+
+  /* In RTL the sidebar is visually on the right — since grid flips in RTL
+     we keep document order (main, sidebar) and let CSS grid do the work. */
+
+  .sidebar {
+    background: var(--sidebar-bg);
+    color: var(--sidebar-fg);
+    padding: 20mm 14mm 15mm 14mm;
+  }
+
+  .sidebar .photo {
+    width: 42mm;
+    height: 42mm;
+    border-radius: 50%;
+    background: var(--sidebar-muted);
+    margin: 0 auto 16pt auto;
+    overflow: hidden;
+    border: 3pt solid var(--sidebar-muted);
+  }
+
+  .sidebar .photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sidebar .name-block {
+    text-align: center;
+    margin-bottom: 20pt;
+  }
+
+  .sidebar .name {
+    font-size: 19pt;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 3pt;
+  }
+
+  .sidebar .headline {
+    font-size: 11pt;
+    font-weight: 400;
+    color: var(--sidebar-muted);
+    line-height: 1.5;
+  }
+
+  .sidebar section { margin-bottom: 16pt; }
+
+  .sidebar h3 {
+    font-size: 10pt;
+    font-weight: 700;
+    border-bottom: 0.5pt solid var(--sidebar-muted);
+    padding-bottom: 4pt;
+    margin: 0 0 8pt 0;
+  }
+
+  .sidebar .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sidebar .contact-list li {
+    font-size: 10pt;
+    margin-bottom: 6pt;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .sidebar .contact-list .label {
+    font-size: 8.5pt;
+    color: var(--sidebar-muted);
+    display: block;
+    margin-bottom: 1pt;
+  }
+
+  .sidebar .contact-list .value-ltr {
+    direction: ltr;
+    unicode-bidi: embed;
+    text-align: right;
+    display: block;
+  }
+
+  .sidebar .skill-list,
+  .sidebar .tag-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 10pt;
+  }
+
+  .sidebar .skill-list li { margin-bottom: 6pt; }
+
+  .sidebar .skill-list .name {
+    display: block;
+    font-size: 10pt;
+    font-weight: 500;
+    margin-bottom: 3pt;
+  }
+
+  .sidebar .skill-list .level {
+    display: block;
+    height: 3pt;
+    background: var(--level-empty);
+    border-radius: 2pt;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Level bars mirror in RTL: filled portion starts from the right */
+  .sidebar .skill-list .level::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background: var(--sidebar-fg);
+    border-radius: 2pt;
+  }
+
+  .sidebar .skill-list .level.l5::after { width: 100%; }
+  .sidebar .skill-list .level.l4::after { width: 80%; }
+  .sidebar .skill-list .level.l3::after { width: 60%; }
+  .sidebar .skill-list .level.l2::after { width: 40%; }
+
+  .sidebar .tag-list li {
+    display: inline-block;
+    padding: 2pt 7pt;
+    background: var(--sidebar-muted);
+    color: var(--sidebar-bg);
+    border-radius: 2pt;
+    font-size: 9pt;
+    font-weight: 600;
+    margin: 0 0 3pt 3pt;
+  }
+
+  /* ===== Main ===== */
+  .main {
+    padding: 20mm 16mm 15mm 16mm;
+  }
+
+  .main section { margin-bottom: 14pt; }
+
+  .main h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--accent);
+    border-bottom: 1.5pt solid var(--accent);
+    padding-bottom: 3pt;
+    margin: 0 0 10pt 0;
+  }
+
+  .summary {
+    font-size: 10.5pt;
+    line-height: 1.9;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .entry {
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .entry .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2pt;
+  }
+
+  .entry .role {
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .entry .dates {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+
+  .entry .employer {
+    font-size: 10pt;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 5pt;
+  }
+
+  .entry .employer .location {
+    color: var(--text-tertiary);
+    font-weight: 400;
+    margin-right: 6pt;
+  }
+
+  .entry ul { margin: 0; padding-right: 14pt; padding-left: 0; }
+  .entry li { margin-bottom: 3pt; font-size: 10pt; line-height: 1.7; }
+
+  .edu-entry { margin-bottom: 10pt; }
+  .edu-entry .degree { font-size: 10.5pt; font-weight: 700; }
+  .edu-entry .institution { font-size: 10pt; color: var(--accent); font-weight: 600; }
+  .edu-entry .meta {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    margin-top: 1pt;
+  }
+  </style>
+</head>
+<body>
+
+<div class="cv-grid">
+
+  <!-- ===== Main (right column visually for LTR, left for RTL — but because grid uses source order in WeasyPrint, we keep physical columns) ===== -->
+  <main class="main">
+
+    <section>
+      <h2>نبذة</h2>
+      <p class="summary">
+        [جملتان أو ثلاث: ابدأ بسنوات الخبرة والمجال، ثم نقطة قوّة موقّعة بدليل، ثم التمييز الرئيسي.
+        مثال: «مهندس ذكاء اصطناعي بخبرة ٨ سنوات في بناء أنظمة نماذج لغوية للمؤسسات الخليجية.
+        أطلقتُ وكلاء دعم عملاء ثنائيي اللغة يعالجون ١٢ ألف طلب شهرياً بدقّة ٩٤٪ في أوّل ردّ. عربي-إنجليزي بطلاقة».]
+      </p>
+    </section>
+
+    <section>
+      <h2>الخبرة العملية</h2>
+
+      <div class="entry">
+        <div class="header">
+          <div class="role">[أحدث مسمّى وظيفي]</div>
+          <div class="dates">[YYYY-MM — الحاضر]</div>
+        </div>
+        <div class="employer">[اسم الشركة]<span class="location">· [المدينة، الإمارات]</span></div>
+        <ul>
+          <li>[إنجاز مقترن برقم: فعل + مفعول + قياس. «بنيتُ وكيلاً خفّض زمن التأهيل من ٦ أسابيع إلى ٤».]</li>
+          <li>[إنجاز ثانٍ ببعد مختلف — نطاق / كلفة / جودة]</li>
+          <li>[ملاحظة قيادة أو نطاق — حجم الفريق، الميزانية، مستوى أصحاب المصلحة]</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="header">
+          <div class="role">[المسمّى السابق]</div>
+          <div class="dates">[YYYY-MM — YYYY-MM]</div>
+        </div>
+        <div class="employer">[اسم الشركة]<span class="location">· [المدينة]</span></div>
+        <ul>
+          <li>[إنجاز مع نتيجة]</li>
+          <li>[إنجاز مع نتيجة]</li>
+        </ul>
+      </div>
+
+      <div class="entry">
+        <div class="header">
+          <div class="role">[المسمّى الأسبق]</div>
+          <div class="dates">[YYYY-MM — YYYY-MM]</div>
+        </div>
+        <div class="employer">[اسم الشركة]<span class="location">· [المدينة]</span></div>
+        <ul>
+          <li>[إنجاز مع نتيجة]</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>التعليم</h2>
+      <div class="edu-entry">
+        <div class="degree">[الدرجة — مثال: ماجستير في علوم الحاسوب]</div>
+        <div class="institution">[اسم الجامعة]</div>
+        <div class="meta">[المدينة، الدولة] · [YYYY – YYYY] · [التقدير / عنوان الرسالة]</div>
+      </div>
+      <div class="edu-entry">
+        <div class="degree">[البكالوريوس — مثال: بكالوريوس في تقنية المعلومات]</div>
+        <div class="institution">[اسم الجامعة]</div>
+        <div class="meta">[المدينة، الدولة] · [YYYY – YYYY]</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>مشاريع مختارة</h2>
+      <div class="entry">
+        <div class="header">
+          <div class="role">[اسم المشروع]</div>
+          <div class="dates">[YYYY]</div>
+        </div>
+        <ul>
+          <li>[نتيجة في جملة واحدة. رابط أو اسم الشركة إن وُجد.]</li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="photo">
+      <!-- موضع الصورة: ضع هنا صورة شخصية بأبعاد ٥×٥ سم إن رغبت. -->
+    </div>
+
+    <div class="name-block">
+      <div class="name">{{ author_name }}</div>
+      <div class="headline">[عنوان مهني — مثال: مهندس ذكاء اصطناعي أوّل · الخليج]</div>
+    </div>
+
+    <section>
+      <h3>التواصل</h3>
+      <ul class="contact-list">
+        <li><span class="label">البريد الإلكتروني</span><span class="value-ltr">{{ brand.identity.email if brand.identity.email else '[email@example.com]' }}</span></li>
+        <li><span class="label">الهاتف</span><span class="value-ltr">{{ brand.identity.phone if brand.identity.phone else '[+971 50 000 0000]' }}</span></li>
+        <li><span class="label">الموقع</span>[المدينة، الإمارات]</li>
+        <li><span class="label">الموقع الإلكتروني</span><span class="value-ltr">[website.com]</span></li>
+        <li><span class="label">لينكدإن</span><span class="value-ltr">[linkedin.com/in/handle]</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>المعلومات الشخصية</h3>
+      <ul class="contact-list">
+        <li><span class="label">الجنسية</span>[الجنسية]</li>
+        <li><span class="label">حالة الإقامة</span>[إقامة عمل / إقامة شخصية / مواطن]</li>
+        <li><span class="label">تاريخ الميلاد</span><span class="value-ltr">[YYYY-MM-DD]</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>اللغات</h3>
+      <ul class="skill-list">
+        <li><span class="name">العربية</span><span class="level l5"></span></li>
+        <li><span class="name">الإنجليزية</span><span class="level l5"></span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>المهارات الأساسية</h3>
+      <ul class="skill-list">
+        <li><span class="name">[المهارة ١]</span><span class="level l5"></span></li>
+        <li><span class="name">[المهارة ٢]</span><span class="level l4"></span></li>
+        <li><span class="name">[المهارة ٣]</span><span class="level l4"></span></li>
+        <li><span class="name">[المهارة ٤]</span><span class="level l3"></span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>الأدوات</h3>
+      <ul class="tag-list">
+        <li>[أداة ١]</li>
+        <li>[أداة ٢]</li>
+        <li>[أداة ٣]</li>
+        <li>[أداة ٤]</li>
+      </ul>
+    </section>
+  </aside>
+
+</div>
+
+</body>
+</html>

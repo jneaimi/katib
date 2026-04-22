@@ -1,0 +1,34 @@
+{
+  "domain": "personal",
+  "covers_allowed": [],
+  "layouts_allowed": [
+    "classic"
+  ],
+  "defaults": {
+    "cover": null,
+    "layout": "classic"
+  },
+  "doc_types": {
+    "cv": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 2,
+      "target_pages": [1, 2],
+      "sections_required": ["body"]
+    },
+    "cover-letter": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 1,
+      "target_pages": [1, 1],
+      "sections_required": ["body"]
+    },
+    "bio": {
+      "formats": ["pdf"],
+      "default_format": "pdf",
+      "page_limit": 1,
+      "target_pages": [1, 1],
+      "sections_required": ["body"]
+    }
+  }
+}

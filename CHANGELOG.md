@@ -3,6 +3,23 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] — 2026-04-22
+
+### Added
+- **New domain: `personal`.** Career documents for GCC job seekers. Three bilingual doc types:
+  - `cv` — two-column layout (navy sidebar + main) with pre-structured GCC-aware fields: photo slot, nationality, visa status, date of birth, languages with proficiency bars, core skills with level bars, tools tags. Main column covers summary, experience (role + dates + employer + achievements), education, and selected projects. 1–2 pp.
+  - `cover-letter` — personal masthead, date, recipient block, subject line, three-paragraph body, signature, enclosure note. 1 page.
+  - `bio` — hero row (photo + name + headline + specialty tags) plus long-form About plus Short/Medium variants side-by-side plus contact footer. 1 page.
+- Clean recruiter-friendly palette: navy `#1E3A8A` sidebar on warm `#FDFCF8` paper. Inter (EN) + Cairo (AR) sans-serif.
+- Skill level bars: 5-tier system (`l2` through `l5`) rendered as horizontal fills; mirror correctly in AR (fill starts from the right).
+- LTR-embedded contact values (email, phone, LinkedIn handles, dates) inside RTL Arabic CV cells.
+- SKILL.md router: "CV / resume / cover letter / bio / سيرة ذاتية / خطاب تغطية / نبذة" → `personal` domain. Doc-type picker table added.
+- `references/writing.{en,ar}.md`: personal-domain section covering STAR/CAR bullet structure, verb-first openings, numeric achievements, GCC CV fields (photo, nationality, visa), and three-variant bios.
+- Reference-code formats: `CV-{YYYY}`, `CL-{YYYY}-{NNN}`, `BIO-{YYYY}`.
+
+### Changed
+- Roadmap renumbered: `personal` is now **live** (was v0.4 deferred).
+
 ## [0.3.0] — 2026-04-22
 
 ### Added
@@ -126,3 +143,4 @@ packaged with an installer.
 [0.1.2]: https://github.com/jneaimi/katib/releases/tag/v0.1.2
 [0.2.0]: https://github.com/jneaimi/katib/releases/tag/v0.2.0
 [0.3.0]: https://github.com/jneaimi/katib/releases/tag/v0.3.0
+[0.4.0]: https://github.com/jneaimi/katib/releases/tag/v0.4.0

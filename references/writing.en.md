@@ -114,6 +114,16 @@ Banned phrases that signal LLM output:
 - Screenshots follow the step they illustrate, not before
 - Use callouts for: prerequisites (before the steps), warnings (inline), pro-tips (inline), troubleshooting (end)
 
+### Personal (CV, cover-letter, bio)
+
+- **CV bullets use STAR/CAR structure.** Situation/Context → Action → Result with a number. "Built agent" is weak. "Built bilingual support agent that cut handle time 38% across 12K monthly tickets" is strong.
+- **Verbs lead.** Every experience bullet starts with a verb. No "Was responsible for" — say "Owned" or "Led."
+- **Numbers > adjectives.** "Significantly improved" is filler. "Reduced 6-week onboarding to 4 weeks" is real.
+- **One line per achievement.** If it wraps to three lines, cut words — not content.
+- **Cover letters ≤ 3 paragraphs.** Recruiter scan time is under 90 seconds.
+- **GCC CV fields** that generic tools skip: nationality, visa status, date of birth, languages with proficiency. Include the photo slot — it's conventional in the region, not optional.
+- **Bio variants matter.** Ship three lengths (1-sentence, 2–3 sentence, full paragraph) in the same doc — speakers and conference programs ask for each.
+
 ### Formal (NOC, government-letter, circular, authority-letter)
 
 - **Third person** throughout the body. "The company confirms" — not "We confirm". Signature block is the place for individuals.

@@ -22,8 +22,8 @@ Invoked with `/katib` inside any Claude Code conversation.
 
 | | |
 |---|---|
-| **Domains** | `business-proposal`, `tutorial`, `report`, `formal` |
-| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter |
+| **Domains** | `business-proposal`, `tutorial`, `report`, `formal`, `personal` |
+| **Doc types** | Proposal, one-pager, letter · how-to, onboarding, tutorial, handoff, cheatsheet · research-report, progress-report, annual-report, audit-report · NOC, government-letter, circular, authority-letter · CV, cover-letter, bio |
 | **Languages** | English (LTR) and Arabic (RTL, MSA + خليجي) as peer templates — not machine translation |
 | **Output** | Print-grade PDF via WeasyPrint |
 | **Covers** | Minimalist CSS (no API key), Gemini neural-cartography, Gemini friendly-illustration |
@@ -162,16 +162,18 @@ Each doc type ships as EN + AR peer templates at
 | | `government-letter` | 1–2 | `GOV-*` | Submissions to ministries, authorities, regulators |
 | | `circular` | 1–2 | `CIR-*` | Internal company-wide announcements |
 | | `authority-letter` | 1 | `AUTH-*` | Delegation of a specific act (not full POA) |
+| `personal` | `cv` | 1–2 | `CV-*` | Two-column CV with GCC fields (nationality, visa, photo, languages) |
+| | `cover-letter` | 1 | `CL-*` | Three-paragraph role application with masthead |
+| | `bio` | 1 | `BIO-*` | Speaker bio with short/medium/long variants |
 
 Going over a doc type's `page_limit` fails the build (exit 3). Going below the
 `target_pages` floor prints a warning but still ships. Both come from
 `domains/<domain>/styles.json`.
 
-Planned future domains — `personal` (CVs, cover letters, bios),
-`academic` (syllabi, lecture notes), `financial` (invoices),
-`editorial` (white papers), `marketing-print` (sell-sheets, slide
-decks as PDF), `legal` (contracts, NDAs) — are listed in the
-[Roadmap](#roadmap) and deferred in v0.3.
+Planned future domains — `academic` (syllabi, lecture notes),
+`financial` (invoices), `editorial` (white papers), `marketing-print`
+(sell-sheets, slide decks as PDF), `legal` (contracts, NDAs) — are
+listed in the [Roadmap](#roadmap) and deferred in v0.4.
 
 ---
 

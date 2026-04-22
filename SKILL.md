@@ -30,6 +30,7 @@ When ambiguous (e.g. one-word "proposal"), ask a one-liner rather than guess.
 | "how-to / tutorial / onboarding / handoff / cheatsheet / دليل / شرح" | `tutorial` | Teal/slate on warm off-white, mono for code |
 | "report / research / annual / audit / progress / تقرير / دراسة / تدقيق" | `report` | Slate `#2E3A4B` + teal accent, Newsreader serif |
 | "NOC / formal / government / ministry / circular / authority / خطاب رسمي / شهادة عدم ممانعة / تعميم / تفويض" | `formal` | Institutional navy `#0B3D66` on off-white, Georgia/Amiri serif |
+| "CV / resume / cover letter / bio / سيرة ذاتية / خطاب تغطية / نبذة" | `personal` | Navy `#1E3A8A` sidebar on warm paper, Inter/Cairo sans-serif |
 | *(v0.4)* CV, cover letter, bio | `personal` | *(deferred)* |
 | *(v0.5)* syllabus, assignment brief, lecture notes | `academic` | *(deferred)* |
 | *(v0.6)* invoice, financial summary | `financial` | *(deferred)* |
@@ -49,6 +50,15 @@ Unknown domain → route to closest, flag as mismatch in `.katib-memory/domain-r
 | `tutorial` | `how-to`, `cheatsheet`, `tutorial`, `onboarding`, `handoff` |
 | `report` | `research-report`, `progress-report`, `annual-report`, `audit-report` |
 | `formal` | `noc`, `government-letter`, `circular`, `authority-letter` |
+| `personal` | `cv`, `cover-letter`, `bio` |
+
+### Personal doc-type picker
+
+| Doc type | Shape | Target pages | RC prefix | When |
+|---|---|---|---|---|
+| `cv` | Two-column (navy sidebar + main) — contact, skills, languages, experience, education, projects | 1–2 | `CV-*` | Job application or professional profile |
+| `cover-letter` | Masthead + date + recipient + subject + 3 paragraphs + signature | 1 | `CL-*` | Specific role application, tied to CV |
+| `bio` | Hero (photo + name + tags) + long-form + short/medium variants + contact footer | 1 | `BIO-*` | Speaker intro, conference program, personal website, media kit |
 
 ### Formal doc-type picker
 
