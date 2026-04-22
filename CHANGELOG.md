@@ -3,6 +3,75 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.19.0] — 2026-04-22 — Self-sustained Arabic quality (anti-slop + fact-integrity + content lint)
+
+Prompted by a concrete failure: a rendered Arabic article in this session
+included a fabricated Bruce Schneier quote and two untranslated English
+abbreviations that Katib's `writing.ar.md` wouldn't have caught because the
+catalog was a "condensed snapshot" pointing back at `/arabic`. This release
+makes Katib self-sufficient for Arabic writing quality — no external skill
+dependency, mandatory gates, and a mechanical linter for CI.
+
+### Added
+- **`scripts/content_lint.py`** — static catch for mechanical anti-slop
+  violations. Auto-detects language from filename or character content.
+  Catches banned openers (§1), emphasis crutches (§2), jargon inflation (§3),
+  vague declaratives (§7), meta-commentary (§6c), untranslated English
+  abbreviations, unqualified ambiguous tech terms (وكيل without الذكي),
+  and واو-chain runaways (3+ conjunctions per sentence). Word-boundary-aware
+  so "API" doesn't false-positive inside `GEMINI_API_KEY`. Output modes:
+  default text, `--json` for tooling. Exit 1 on errors.
+- **Fact-integrity section** in `references/writing.ar.md` — explicit rules
+  against fabricated quotes, unverified stats, invented institutional
+  attributions. Includes a verification-tiers table and a pre-commit grep
+  protocol for blockquotes and numeric claims.
+- **Quality-gate workflow** in `writing.ar.md` — four-sub-step protocol:
+  pre-write (read doc-type rules), while writing (apply grammar + qualify
+  terms + translate abbrevs + no fabrication), post-write 5-dimension
+  score (threshold 35/50), fact-integrity sweep.
+- **SKILL.md Step 6.5 · Quality gate** — new mandatory step in the render
+  workflow. Explicit pointer to `writing.{lang}.md` as the complete contract
+  for quality. Notes the automation via `content_lint.py`.
+
+### Changed
+- **`references/writing.ar.md` is now self-contained.** Previously a
+  "condensed snapshot" that deferred to `/arabic`'s `anti-slop.md`,
+  `brand-voice.md`, and `writing-examples.md`. Now contains the full
+  8-section anti-slop catalog (throat-clearing openers, emphasis crutches,
+  jargon inflation, structural anti-patterns with sub-rules, rhythm rules,
+  trust-the-reader, vague declaratives, 5 full before/after examples)
+  inlined verbatim from upstream. Size: 295 → ~680 lines.
+- **"Translate abbreviations on first mention" rule clarified** — explicit
+  list of common offenders (B2B, CEO, CTO, DevSecOps, MFA, 2FA, SSO, OAuth,
+  PDPL, GDPR, SOC 2, CI/CD, MCP, etc.) to remove any "assumed well-known"
+  loophole. Content lint's abbreviation list matches.
+
+### Why
+Concrete failures that prompted this:
+- **Fabricated quote** — a blockquote attributed to "Bruce Schneier, RSA 2023"
+  that was generated rather than sourced. Would have ended up in the user's
+  vault under their byline. Caught only by the user's audit.
+- **Untranslated B2B + DevSecOps** — rule #3 in core rules says "Translate
+  every English abbreviation on first mention," but these slipped through
+  because the author skipped the quality gate (the gate existed in upstream
+  `/arabic` but Katib's version lacked the teeth to make it mandatory).
+- **Condensed-snapshot dependency** — `writing.ar.md` pointed back at the
+  upstream `/arabic` skill for the full catalog. That's a fine documentation
+  pattern for small patterns but creates a drift risk: if someone renders
+  Arabic without loading `/arabic` (which is Katib's stated mode of operation —
+  "self-sustained"), the full rules aren't available.
+
+All three are fixed by this release.
+
+### Verification
+- `content_lint.py` on the v0.18.2 walkthrough: 0 errors, 6 warnings (all
+  واو-chain style suggestions — legitimate stylistic choices).
+- `content_lint.py` on the better-auth article from this session:
+  **2 errors caught** — exactly B2B and DevSecOps, as identified in the
+  audit. This was the baseline test.
+- `content_lint.py` on a synthetic slop sample: 4 errors + 2 warnings
+  — every category fires correctly.
+
 ## [0.18.2] — 2026-04-22 — Fix stale rebuild paths + broken index wikilinks
 
 Bug caught post-migration when reviewing the vault through Soul Hub's

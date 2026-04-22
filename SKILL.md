@@ -203,6 +203,31 @@ Example gap-check:
 | 4 metric cards | "8 years", "50-person team" | 2 more quantifiable results |
 | 3-5 core projects | 2 mentioned | at least 1 more with outcome |
 
+## Step 6.5 · Quality gate (mandatory for every render)
+
+Katib is self-sustained on writing quality. Before rendering any content —
+especially Arabic — apply the gate defined in `references/writing.{lang}.md`.
+
+**For Arabic content**, the full anti-slop catalog, MSA grammar checklist,
+semantic precision rules, and fact-integrity protocol live in
+`references/writing.ar.md`. Do not skip this step even when the `/arabic`
+skill isn't invoked — Katib does not depend on `/arabic` for quality.
+
+The four-sub-step gate:
+
+1. **Pre-write** — read the doc-type notes section for the target domain (all doc types have conventions), confirm audience register, plan external sources before writing.
+2. **While writing** — lead with the specific, apply MSA grammar checklist, qualify ambiguous tech terms, translate every English abbreviation on first mention, never fabricate quotes/stats.
+3. **Post-write 5-dimension score** — rate the draft on Directness / Rhythm / Trust / Authenticity / Density (1–10 each). Total must be **≥ 35/50** or revise.
+4. **Fact-integrity sweep** — grep for blockquotes and numeric claims; confirm every source. If any can't be sourced, delete the blockquote or rephrase as an unsourced claim.
+
+For English content the equivalent gate lives in `references/writing.en.md`.
+
+**Automation:** `python3 scripts/content_lint.py <html-or-md-file>` runs a
+static check for banned openers, emphasis crutches, untranslated abbreviations,
+and false-agency patterns. It's not a replacement for the 5-dimension score
+(that requires judgement), but it catches mechanical violations before render.
+Exit 1 on violations.
+
 ## Step 7 · Build & verify
 
 ```bash
