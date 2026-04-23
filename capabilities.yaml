@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T07:39:19+00:00'
+generated_at: '2026-04-23T10:31:13+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -157,6 +157,65 @@ recipes:
     - tutorial-step
     - tutorial-step
     - summary
+  phase-2-day6-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 2 Day 6 — chart-donut + chart-bar + chart-sparkline, all inline-svg driven by tokens.charts.palette.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 2
+    - 4
+    page_limit: 5
+    when: Smoke render for the three chart sections. Exercises compose()'s automatic palette + lang injection.
+    keywords:
+    - phase-2
+    - showcase
+    - charts
+    - donut
+    - bar
+    - sparkline
+    sections_shape:
+    - front-matter
+    - chart-donut
+    - chart-bar
+    - chart-sparkline
+    - summary
+  tutorial:
+    namespace: katib
+    version: 1.0.0
+    description: Bloom's AI Collaboration Framework — production tutorial recipe. First real-content v2
+      recipe; ports the v1 framework-guide output that triggered the ADR.
+    languages:
+    - en
+    target_pages:
+    - 8
+    - 14
+    page_limit: 16
+    when: Use as the canonical tutorial/framework-guide reference. Demonstrates cover + objectives + 8
+      modules with rich body (tables, inline SVG, pull-quotes, callouts) + summary + whats-next + reference-strip
+      end-to-end through v2.
+    keywords:
+    - tutorial
+    - framework-guide
+    - bloom
+    - ai-collaboration
+    - production
+    sections_shape:
+    - cover-page
+    - objectives-box
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - summary
+    - whats-next
+    - reference-strip
 components:
   callout:
     namespace: katib
@@ -253,6 +312,43 @@ components:
     - outline
     description: Inline badge/chip label — short noun, tonal background.
     used_in_recipes: 1
+  chart-bar:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Horizontal bar chart. Bars grow from the language-origin side. Factual, inline-svg only.
+    used_in_recipes: 1
+  chart-donut:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - with-legend
+    - centered-stat
+    description: Proportional breakdown chart. Data is always inline-svg — factual, deterministic, brand-palette-driven.
+    used_in_recipes: 1
+  chart-sparkline:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - with-delta-badge
+    description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological
+      convention). Inline-svg only.
+    used_in_recipes: 1
   front-matter:
     namespace: katib
     tier: section
@@ -263,19 +359,21 @@ components:
     variants: []
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
-    used_in_recipes: 4
+    used_in_recipes: 5
   module:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.2.0
     languages:
     - en
     - ar
     variants:
     - plain
     - numbered
-    description: Repeating body unit — optional numbered eyebrow, heading, intro, and freeform body content.
-    used_in_recipes: 1
+    description: Repeating body unit — optional numbered eyebrow, heading, intro, and body content. `body`
+      is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts)
+      for recipe-supplied content.
+    used_in_recipes: 2
   objectives-box:
     namespace: katib
     tier: section
@@ -287,7 +385,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 2
+    used_in_recipes: 3
   reference-strip:
     namespace: katib
     tier: section
@@ -299,7 +397,7 @@ components:
     - flat
     - tagged
     description: Compact list of further-reading references or source citations.
-    used_in_recipes: 1
+    used_in_recipes: 2
   summary:
     namespace: katib
     tier: section
@@ -309,7 +407,7 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 3
+    used_in_recipes: 5
   tutorial-step:
     namespace: katib
     tier: section
@@ -346,7 +444,7 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
-    used_in_recipes: 2
+    used_in_recipes: 3
   cover-page:
     namespace: katib
     tier: cover
@@ -360,4 +458,4 @@ components:
     - neural-cartography
     description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background
       (user-file/url full-bleed), neural-cartography (Gemini-generated).
-    used_in_recipes: 2
+    used_in_recipes: 3
