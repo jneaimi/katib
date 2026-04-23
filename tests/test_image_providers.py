@@ -74,6 +74,7 @@ def test_inline_svg_donut_renders(providers, cache_dir):
             "source": "inline-svg",
             "type": "donut",
             "data": [{"label": "a", "value": 30}, {"label": "b", "value": 70}],
+            "colors": ["#111", "#222"],
             "title": "test",
         },
         cache_dir,
@@ -91,6 +92,7 @@ def test_inline_svg_deterministic(providers, cache_dir):
         "source": "inline-svg",
         "type": "donut",
         "data": [{"label": "a", "value": 30}, {"label": "b", "value": 70}],
+        "colors": ["#111", "#222"],
     }
     r1 = resolve_image(spec, cache_dir, providers)
     r2 = resolve_image(spec, cache_dir, providers)

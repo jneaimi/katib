@@ -1,0 +1,81 @@
+name: phase-2-day6-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 2 Day 6 — chart-donut + chart-bar + chart-sparkline, all inline-svg driven by tokens.charts.palette.
+languages: [en, ar]
+target_pages: [2, 4]
+page_limit: 5
+when: Smoke render for the three chart sections. Exercises compose()'s automatic palette + lang injection.
+keywords: [phase-2, showcase, charts, donut, bar, sparkline]
+sections:
+  - component: front-matter
+    inputs:
+      eyebrow: "Day 6"
+      title: "Chart sections"
+      subtitle: "chart-donut + chart-bar + chart-sparkline — inline-SVG, token-driven palette, RTL-aware."
+      author: "Katib v2 engineering"
+      date: "2026-04-23"
+
+  - component: chart-donut
+    inputs:
+      eyebrow: "Channel mix"
+      heading: "Signal sources"
+      body: "Share of findings by platform, last 30 days. Colors flow from charts.palette in tokens."
+      chart:
+        source: inline-svg
+        type: donut
+        data:
+          - {label: "LinkedIn", value: 420}
+          - {label: "Reddit", value: 280}
+          - {label: "Twitter", value: 140}
+          - {label: "News", value: 90}
+          - {label: "Forums", value: 55}
+        size: 200
+      alt_text: "Donut chart: LinkedIn 420, Reddit 280, Twitter 140, News 90, Forums 55."
+      caption: "Source: internal signal DB, 30-day window."
+
+  - component: chart-bar
+    inputs:
+      eyebrow: "Revenue"
+      heading: "Revenue by channel — FY2025"
+      body: "Horizontal bars grow from the language-origin side. AR render mirrors the axis automatically."
+      chart:
+        source: inline-svg
+        type: bar
+        data:
+          - {label: "Product", value: 3200}
+          - {label: "Services", value: 1800}
+          - {label: "Partnerships", value: 750}
+          - {label: "Sponsorship", value: 420}
+        width: 560
+        bar_height: 22
+        label_gutter: 140
+      alt_text: "Bar chart: Product 3200, Services 1800, Partnerships 750, Sponsorship 420."
+      caption: "Figures in AED thousands."
+
+  - component: chart-sparkline
+    variant: with-delta-badge
+    inputs:
+      eyebrow: "Growth"
+      heading: "Monthly active users"
+      stat: "4,820"
+      stat_delta: "+12.4% MoM"
+      body: "Trendline flows left-to-right in both EN and AR. Only labels flip; chronology never does."
+      chart:
+        source: inline-svg
+        type: sparkline
+        data: [1820, 1950, 2100, 2240, 2580, 2900, 3210, 3450, 3820, 4120, 4510, 4820]
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        width: 560
+        height: 64
+      alt_text: "Monthly active users, Jan-Dec 2025: trending from 1,820 to 4,820."
+      caption: "MAU via internal analytics."
+
+  - component: summary
+    inputs:
+      heading: "Day 6 recap"
+      items:
+        - "chart-donut — proportional breakdown, legend + sr-only table"
+        - "chart-bar — horizontal bars, axis flips for AR, negatives rejected"
+        - "chart-sparkline — trendline always LTR (chronological), optional stat + delta badge"
+        - "All three draw colors from tokens.charts.palette — brands override by replacing the array"

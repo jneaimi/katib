@@ -1,0 +1,35 @@
+name: chart-bar
+tier: section
+version: 0.1.0
+namespace: katib
+description: Horizontal bar chart. Bars grow from the language-origin side. Factual, inline-svg only.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - body:
+        type: string
+        required: false
+    - chart:
+        type: image
+        required: true
+        sources_accepted: [inline-svg]
+    - alt_text:
+        type: string
+        required: true
+        description: Text alternative for the chart.
+    - caption:
+        type: string
+        required: false
+variants:
+  - default
+page_behavior:
+  break_inside: avoid
