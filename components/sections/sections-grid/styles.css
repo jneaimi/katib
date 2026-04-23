@@ -1,0 +1,93 @@
+.katib-sections-grid {
+    margin: 1.2em 0;
+    color: var(--text);
+}
+
+.katib-sections-grid__eyebrow {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-sections-grid__heading {
+    font-family: var(--font-display, inherit);
+    font-size: 12pt;
+    font-weight: 700;
+    margin: 0.2em 0 0.8em 0;
+    color: var(--text);
+}
+
+.katib-sections-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14pt 20pt;
+    margin: 0;
+}
+
+.katib-sections-grid__grid--cols-3 { grid-template-columns: repeat(3, 1fr); }
+.katib-sections-grid__grid--cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+.katib-sections-grid__card {
+    page-break-inside: avoid;
+}
+
+.katib-sections-grid__card-eyebrow {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+}
+
+.katib-sections-grid__card-title {
+    font-family: var(--font-display, inherit);
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 6pt 0;
+    line-height: 1.25;
+}
+
+.katib-sections-grid__card-body {
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+    margin: 0;
+}
+
+.katib-sections-grid__card-body > p:first-child { margin-top: 0; }
+.katib-sections-grid__card-body > p:last-child { margin-bottom: 0; }
+
+/* Dense — cheatsheet-style: 2-col with tighter gap + smaller card typography,
+   accommodates 6+ cards per page */
+.katib-sections-grid--dense .katib-sections-grid__grid {
+    gap: 10pt 14pt;
+}
+
+.katib-sections-grid--dense .katib-sections-grid__card-title {
+    font-size: 10pt;
+    margin-bottom: 4pt;
+}
+
+.katib-sections-grid--dense .katib-sections-grid__card-body {
+    font-size: 9pt;
+    line-height: 1.45;
+}
+
+/* Bordered — each card gets a thin border. For contact-card grids and
+   metadata-card layouts where visual separation matters. */
+.katib-sections-grid--bordered .katib-sections-grid__card {
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 10pt 12pt;
+}
+
+.katib-sections-grid--bordered .katib-sections-grid__card-title {
+    font-size: 10.5pt;
+    color: var(--text);
+    margin-bottom: 3pt;
+}

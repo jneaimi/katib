@@ -26,18 +26,135 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **24 components** (unchanged count through Day 10;
+Engine state: **25 components** (+1 sections-grid Day 11;
 multi-party-signature-block added Day 7, kv-list at 0.2.0,
 signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**12 recipes** (6 production: tutorial + business-proposal-letter +
+**13 recipes** (7 production: tutorial + business-proposal-letter +
 personal-cover-letter + formal-noc + tutorial-how-to +
-**tutorial-handoff**; 6 dev showcases). 6 core library modules,
-5 CLIs, 4 memory streams, 4 image providers, 0 external skill
-dependencies.
+tutorial-handoff + **tutorial-cheatsheet**; 6 dev showcases).
+6 core library modules, 5 CLIs, 4 memory streams, 4 image
+providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 6 production
-recipes; Phase 3 ports 9 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 7 production
+recipes; Phase 3 ports 8 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 11 — `sections-grid` component + `tutorial/cheatsheet` recipe ship)
+
+Fourth "component infra + recipe same-day" combo (after Days 1+2 kv-list
+and letterhead, Day 5 masthead-personal + callout, Day 7 kv-list 0.2.0 +
+multi-party-signature-block). Breaks the zero-new-component streak at 5
+— but **intentionally**, because sections-grid has 3 verified Phase-3
+dependents (cheatsheet, one-pager, possibly handoff retrofit) which
+passed the auto-graduation threshold for the first time in Phase 3.
+
+- **`components/sections/sections-grid/`** (new) — section-tier component
+  for titled-card grids. Supports 2/3/4 column layouts via explicit
+  `columns` input (avoids WeasyPrint's lack of `auto-fit` support).
+  Cards accept `title` (required) + optional `body` (plain text) or
+  `raw_body` (trusted HTML); optional per-card `eyebrow` for role-style
+  labels (contact-card role). Variants: `default` (loose gap),
+  `dense` (tight gap + smaller typography for cheatsheet),
+  `bordered` (each card gets 0.5pt border + padding for contact-card
+  visual separation). Token contract: `text, text_tertiary, accent,
+  border` (no speculative tokens — lint-clean on first pass). No
+  WeasyPrint warnings; no RTL-specific CSS needed (grid layout works
+  across directions without physical-property overrides).
+
+- **`recipes/tutorial-cheatsheet.yaml`** (new) — 3-section recipe:
+  1. `module` with eyebrow="Cheatsheet" + title + intro — compact
+     header (second no-cover module-with-eyebrow header after Day 10's
+     handoff)
+  2. `sections-grid` dense variant — **first production consumer**.
+     6 cards in 2-col grid: Quick actions, Navigation, Vault, Terminal,
+     Common flags, Troubleshooting. Each card uses `raw_body` with
+     inline-styled `<dl>`/`<ul>` content for keyboard shortcuts +
+     commands + troubleshooting notes. Demonstrates sections-grid's
+     "card as container for arbitrary structured content" design.
+  3. `module` raw_body — inline-styled footer strip (ref + date with
+     top border, monospace, muted text)
+  Content adapted from `v1-reference/domains/tutorial/templates/
+  cheatsheet.en.html`. Placeholder-style tool name preserved.
+- **Rendered output: 1 page, 0 WeasyPrint warnings.** Cheatsheet fits
+  on a single A4 at v2 defaults — matches v1 design intent.
+  `target_pages: [1, 2]`, `page_limit: 2`.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 sections-grid component-requests logged** (cheatsheet, one-pager,
+  handoff-retrofit). **3 cheatsheet recipe-requests logged**
+  (katib-recipe-cheatsheet, git-shortcuts-cheatsheet,
+  vim-commands-cheatsheet).
+- **Audit + capabilities:** component + recipe register entries +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 11)
+
+- **`tests/test_sections_grid.py`** (new, 14 tests): schema-loads,
+  variants-declared (dense + bordered), items-required, token-contract
+  (text/accent/border referenced), renders-EN, renders-AR (dir=rtl),
+  renders-to-pdf, dense-variant-class-emitted, bordered-variant-class-
+  emitted, default-variant-class-when-unset, column-count-emitted
+  (2/3/4), default-columns-is-2, raw-body-takes-precedence-over-body,
+  optional-eyebrow-and-heading-and-card-eyebrow (regression guard for
+  opt-in behaviour), page-break-inside-avoid-styles-present.
+- **`tests/test_tutorial_cheatsheet.py`** (new, 16 tests): schema-
+  loads, en-only, page-targets [1, 2], has-no-cover-page,
+  three-section-ordering, first-sections-grid-consumer (regression
+  guard for dense variant + columns=2 + 6 cards with correct titles),
+  module-header-uses-eyebrow-pattern, validates-clean,
+  validates-strict-clean, renders-EN (2 component marker classes +
+  negative cover assertion), pdf-within-target-pages,
+  six-cards-rendered (regression guard for `<article>` count),
+  renders-all-v1-content (18 distinct phrases spanning 6 cards),
+  in-capabilities, audit-entry-exists.
+- **Regression sweep:** 660/660 passing (was 630, +14 sections-grid
+  +16 cheatsheet tests). Zero WeasyPrint warnings across all 16
+  render paths.
+
+### Architecture decisions (Phase 3 Day 11)
+
+1. **sections-grid is the first Phase-3 component built to
+   *auto-graduate*.** Prior Phase-3 components (kv-list Day 1,
+   letterhead Day 2, masthead-personal Day 5, multi-party-
+   signature-block Day 7) were built with --force + justification
+   because request logging was either stale or below threshold.
+   Day 11 logged 3 real requests tied to verified v1 templates
+   (cheatsheet, one-pager, handoff retrofit) *before* scaffolding.
+   The graduation threshold (3) passed cleanly; no --force needed.
+   This is the request-driven graduation flow working as designed.
+2. **Explicit `columns` input over `auto-fit`.** WeasyPrint doesn't
+   support `grid-template-columns: repeat(auto-fit, ...)` (codified
+   Day 7 after the multi-party-signature-block warning). sections-grid
+   requires consumers to declare column count up-front (2, 3, or 4).
+   This is a small UX tax but a reliability win — no silent layout
+   breakage under WeasyPrint.
+3. **`raw_body` takes precedence over `body` in cards, matching
+   module's convention.** Cheatsheet's cards need complex HTML (dl
+   for kv shortcuts, ul with kbd chips for commands, div with strong
+   + code for troubleshooting). Simple text cards (one-pager bodies)
+   use `body`. The precedence rule (raw_body wins when both set)
+   avoids ambiguity.
+4. **Cheatsheet uses heavy inline styling inside raw_body cards.**
+   Every card has inline-styled `<dl>`/`<ul>`/`<div>` with font-mono
+   keyboard shortcut styling, tag-bg chips, accent labels. This is
+   *inside-card* inline styling — distinct from recipe-level inline
+   styling. sections-grid provides the card skeleton; the card
+   *content* is consumer territory. If multiple recipes end up with
+   the same kv-shortcut + kbd-chip styling, a `shortcut-list`
+   primitive becomes the next candidate for graduation.
+5. **No-cover compact-header pattern now has 2 consumers** (handoff
+   Day 10, cheatsheet Day 11). Template convention codifying: working
+   docs and reference docs don't need covers; use `module` with
+   `eyebrow: "[Document type]"` + `title` + `intro` as a compact
+   opener. Matches v1 design intent for both document types.
+6. **AR variant deferred (sixth recipe in a row).** Consistent since
+   Day 4.
+7. **One-pager queued for Day 12.** sections-grid's second consumer.
+   `metrics-grid` is the only verified-new component needed for
+   one-pager (4-metric row with big accent number + small label).
+   Day 12 will be another infra+recipe combo if metrics-grid has ≥3
+   verified dependents; otherwise inline-style the metrics and ship
+   one-pager as pure composition (hybrid approach to evaluate on
+   Day 12 planning).
 
 ### Added (Phase 3 Day 10 — `tutorial/handoff` recipe ships)
 

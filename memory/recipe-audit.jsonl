@@ -15,3 +15,5 @@
 {"recipe": "tutorial-how-to", "namespace": "katib", "action": "register", "at": "2026-04-23T18:35:33+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "tutorial-handoff", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T18:52:31+00:00", "from_graduation": null, "force_justification": "Day 10 Phase-3 — tutorial/handoff composition recipe", "note": "Scaffolded by katib recipe new"}
 {"recipe": "tutorial-handoff", "namespace": "katib", "action": "register", "at": "2026-04-23T18:53:55+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "tutorial-cheatsheet", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T19:09:53+00:00", "from_graduation": null, "force_justification": "Day 11 Phase-3 — tutorial/cheatsheet composition recipe (sections-grid first production consumer)", "note": "Scaffolded by katib recipe new"}
+{"recipe": "tutorial-cheatsheet", "namespace": "katib", "action": "register", "at": "2026-04-23T19:10:40+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

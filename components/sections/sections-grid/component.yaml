@@ -1,0 +1,32 @@
+name: sections-grid
+tier: section
+version: 0.1.0
+namespace: katib
+description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager 2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Optional grid-level eyebrow label above the heading.
+    - heading:
+        type: string
+        required: false
+        description: Optional h2/h3 heading above the grid. Many grids (cheatsheet, one-pager) have no grid-level heading; cards carry the structure.
+    - columns:
+        type: int
+        required: false
+        description: "Column count — 2 (default), 3, or 4. Cheatsheet: 2. One-pager sections: 2. Metric rows: 4."
+    - items:
+        type: array
+        required: true
+        description: "Array of card objects. Each card: {title (required), body (optional plain text), raw_body (optional trusted HTML — takes precedence over body)}. Cards also accept optional {eyebrow} for role-style labels (e.g. contact card role)."
+variants:
+  - dense
+  - bordered
+page_behavior:
+  break_inside: avoid
