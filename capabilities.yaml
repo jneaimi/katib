@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T21:29:47+00:00'
+generated_at: '2026-04-23T21:46:18+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -179,6 +179,40 @@ recipes:
     - data-table
     - financial-summary
     - callout
+    - sections-grid
+    - module
+  financial-quote:
+    namespace: katib
+    version: 0.1.0
+    description: UAE commercial quotation — letterhead commercial + meta strip + Prepared-For callout
+      + numbered Scope/Pricing/Acceptance + line-items table + compact totals + 2x2 terms grid + signature
+      block. Zero new components. First production consumer of financial-summary compact variant (24-hour
+      ship from Day-15 default). Closes the financial domain with financial-invoice.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: UAE-compliant commercial quotation with scope, pricing, VAT, validity window, payment schedule,
+      and acceptance sign-row. Pairs with financial/invoice — quote → acceptance → invoice is the commercial
+      flow. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - financial
+    - quote
+    - quotation
+    - commercial
+    - pricing
+    - vat
+    - uae
+    sections_shape:
+    - letterhead
+    - kv-list
+    - callout
+    - module
+    - module
+    - data-table
+    - financial-summary
     - sections-grid
     - module
   formal-noc:
@@ -540,7 +574,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 8
+    used_in_recipes: 9
   data-table:
     namespace: katib
     tier: primitive
@@ -555,7 +589,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 3
+    used_in_recipes: 4
   eyebrow:
     namespace: katib
     tier: primitive
@@ -694,7 +728,7 @@ components:
       side; one emphasized Total row with accent background. Container is flex-end positioned (70mm wide)
       so it naturally aligns to the trailing edge of the page. Optional currency code shown alongside
       totals. Used by financial/invoice and financial/quote.
-    used_in_recipes: 1
+    used_in_recipes: 2
   front-matter:
     namespace: katib
     tier: section
@@ -720,7 +754,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 3
+    used_in_recipes: 4
   letterhead:
     namespace: katib
     tier: section
@@ -734,7 +768,7 @@ components:
     description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
-    used_in_recipes: 3
+    used_in_recipes: 4
   masthead-personal:
     namespace: katib
     tier: section
@@ -761,7 +795,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 12
+    used_in_recipes: 13
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -813,7 +847,7 @@ components:
     description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
-    used_in_recipes: 3
+    used_in_recipes: 4
   summary:
     namespace: katib
     tier: section
