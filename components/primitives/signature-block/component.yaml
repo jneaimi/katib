@@ -1,8 +1,8 @@
 name: signature-block
 tier: primitive
-version: 0.1.0
+version: 0.2.0
 namespace: katib
-description: Signed-by / date / name block for formal documents, contracts, letters.
+description: Named-party block for formal documents — renders signatories (closing signature blocks) or addressees (recipient blocks) depending on variant. Supports name + title + organization + location + date + label.
 languages: [en, ar]
 requires:
   tokens: [text, text_secondary, border_strong]
@@ -11,11 +11,19 @@ accepts:
     - name:
         type: string
         required: true
-        description: Signatory's full name.
+        description: Full name of the signatory or addressee.
     - title:
         type: string
         required: false
         description: Job title or role.
+    - organization:
+        type: string
+        required: false
+        description: Company or organization — rendered below the title. Added in 0.2.0 for addressee/recipient use.
+    - location:
+        type: string
+        required: false
+        description: City / country line — rendered below organization. Added in 0.2.0 for addressee/recipient use.
     - date:
         type: string
         required: false
@@ -23,9 +31,10 @@ accepts:
     - label:
         type: string
         required: false
-        description: Prefix label — defaults to "Signed" (EN) / "التوقيع" (AR).
+        description: Prefix label — defaults to "Signed" (EN) / "التوقيع" (AR). Not rendered for `line-over` or `recipient` variants.
 variants:
   - line-over
   - label-prefix
+  - recipient
 page_behavior:
   break_inside: avoid
