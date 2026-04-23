@@ -1,0 +1,152 @@
+# capabilities.yaml — AUTO-GENERATED from components/ + recipes/.
+# Do not hand-edit. Regenerate with:
+#     uv run scripts/generate_capabilities.py
+
+generated_at: '2026-04-23T05:39:25+00:00'
+schema_version: 1
+governance:
+  adding_component:
+    forbidden:
+    - Hand-edit the components/ directory without an audit entry
+    - Hand-edit capabilities.yaml (regenerated from source)
+    required_sequence:
+    - 'katib component new <name>    # scaffolder (Phase 2+)'
+    - Fill in HTML variants + styles + README
+    - katib component validate <name>
+    - katib component test <name>
+    - katib component register <name>
+  adding_recipe:
+    forbidden:
+    - Hand-edit recipes/ without an audit entry
+    - Hand-edit capabilities.yaml
+    required_sequence:
+    - 'katib recipe new <name>       # scaffolder (Phase 2+)'
+    - Fill in sections + metadata
+    - katib recipe validate <name>
+    - katib recipe register <name>
+recipes:
+  phase-1-trivial:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 1 smoke recipe — exercises every primitive except figure-with-caption.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 1
+    - 1
+    page_limit: 2
+    when: Day-6 golden target. Proves the composer renders every Phase 1 primitive end-to-end.
+    keywords:
+    - phase-1
+    - smoke
+    - primitives
+    sections_shape:
+    - eyebrow
+    - rule
+    - eyebrow
+    - callout
+    - step-circle
+    - step-circle
+    - step-circle
+    - rule
+    - tag
+    - tag
+    - pull-quote
+    - signature-block
+components:
+  callout:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Boxed message with left accent border and tinted background.
+    used_in_recipes: 1
+  eyebrow:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - muted
+    - accent
+    description: Small preheader label above a title or section heading.
+    used_in_recipes: 1
+  figure-with-caption:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - full-width
+    - inset
+    description: Image with optional caption below — core visual primitive.
+    used_in_recipes: 0
+  pull-quote:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - rule-leading
+    - large-quote
+    description: Emphasized blockquote — larger text with accent rule and optional attribution.
+    used_in_recipes: 1
+  rule:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - hairline
+    - strong
+    - double
+    description: Horizontal divider between content blocks.
+    used_in_recipes: 1
+  signature-block:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - line-over
+    - label-prefix
+    description: Signed-by / date / name block for formal documents, contracts, letters.
+    used_in_recipes: 1
+  step-circle:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - solid
+    - outline
+    description: Numbered circle marker for sequenced steps in a procedure.
+    used_in_recipes: 1
+  tag:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - filled
+    - outline
+    description: Inline badge/chip label — short noun, tonal background.
+    used_in_recipes: 1

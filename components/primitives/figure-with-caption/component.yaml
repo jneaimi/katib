@@ -1,0 +1,28 @@
+name: figure-with-caption
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Image with optional caption below — core visual primitive.
+languages: [en, ar]
+requires:
+  tokens: [border, text_tertiary]
+accepts:
+  inputs:
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: The image to embed. Provider-resolved at render time.
+    - caption:
+        type: string
+        required: false
+        description: Caption text, rendered below the image in muted type.
+    - alt_text:
+        type: string
+        required: true
+        description: Accessibility alt text — described to screen readers.
+variants:
+  - full-width
+  - inset
+page_behavior:
+  break_inside: avoid

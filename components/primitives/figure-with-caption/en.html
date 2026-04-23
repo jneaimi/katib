@@ -1,0 +1,6 @@
+<figure class="katib-figure katib-figure--{{ variant or 'full-width' }}" lang="en">
+    <img class="katib-figure__img" src="{{ input.image.resolved_path or input.image }}" alt="{{ input.alt_text }}">
+{%- if input.caption %}
+    <figcaption class="katib-figure__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+</figure>

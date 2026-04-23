@@ -1,0 +1,8 @@
+{"component": "eyebrow", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "rule", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "tag", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "callout", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "step-circle", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "pull-quote", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "figure-with-caption", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "signature-block", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}

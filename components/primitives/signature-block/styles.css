@@ -1,0 +1,47 @@
+.katib-signature {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.45;
+    color: var(--text);
+    margin: 1.5em 0;
+    padding-top: 0.6em;
+    page-break-inside: avoid;
+    max-width: 260pt;
+}
+
+.katib-signature--line-over { border-top: 1px solid var(--border-strong); }
+
+.katib-signature--label-prefix {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.katib-signature__label {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.8em;
+}
+
+.katib-signature[lang="ar"] .katib-signature__label {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.katib-signature__name {
+    font-weight: 700;
+    font-size: 11.5pt;
+    margin-bottom: 0.1em;
+}
+
+.katib-signature__title {
+    font-size: 10pt;
+    color: var(--text-secondary);
+}
+
+.katib-signature__date {
+    margin-top: 0.4em;
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+}

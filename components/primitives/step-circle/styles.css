@@ -1,0 +1,36 @@
+.katib-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 10pt;
+    margin: 0.4em 0;
+    font-family: var(--font-primary);
+}
+
+.katib-step__circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22pt;
+    height: 22pt;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 11pt;
+    line-height: 1;
+}
+
+.katib-step--solid .katib-step__circle {
+    background: var(--step-circle-bg);
+    color: var(--step-circle-fg);
+}
+
+.katib-step--outline .katib-step__circle {
+    background: transparent;
+    color: var(--step-circle-bg);
+    border: 1.5pt solid var(--step-circle-bg);
+}
+
+.katib-step__label {
+    color: var(--text);
+    font-size: 11pt;
+    line-height: 1.5;
+}

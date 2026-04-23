@@ -1,0 +1,24 @@
+name: callout
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Boxed message with left accent border and tinted background.
+languages: [en, ar]
+requires:
+  tokens: [text, callout_info_bg, callout_info_accent, callout_warn_bg, callout_warn_accent, callout_danger_bg, callout_danger_accent, callout_tip_bg, callout_tip_accent]
+accepts:
+  inputs:
+    - tone:
+        type: string
+        required: true
+        description: "info | warn | danger | tip"
+    - title:
+        type: string
+        required: false
+        description: Optional bolded first line.
+    - body:
+        type: string
+        required: true
+        description: The message body — plain text or minimal inline HTML.
+page_behavior:
+  break_inside: avoid

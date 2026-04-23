@@ -1,0 +1,63 @@
+name: phase-1-trivial
+version: 0.1.0
+namespace: katib
+description: Phase 1 smoke recipe — exercises every primitive except figure-with-caption.
+languages: [en, ar]
+target_pages: [1, 1]
+page_limit: 2
+when: Day-6 golden target. Proves the composer renders every Phase 1 primitive end-to-end.
+keywords: [phase-1, smoke, primitives]
+sections:
+  - component: eyebrow
+    variant: accent
+    inputs:
+      text: "Phase 1"
+  - component: rule
+    variant: strong
+  - component: eyebrow
+    variant: muted
+    inputs:
+      text: "Primitives showcase"
+  - component: callout
+    inputs:
+      tone: info
+      title: "What this document proves"
+      body: "The composer can resolve recipe YAML, load components, merge tokens, and render a WeasyPrint PDF in EN or AR."
+  - component: step-circle
+    variant: solid
+    inputs:
+      number: 1
+      label: "Load the recipe"
+  - component: step-circle
+    variant: solid
+    inputs:
+      number: 2
+      label: "Resolve each component"
+  - component: step-circle
+    variant: outline
+    inputs:
+      number: 3
+      label: "Render to PDF"
+  - component: rule
+    variant: hairline
+  - component: tag
+    variant: filled
+    inputs:
+      text: "Draft"
+      tone: warn
+  - component: tag
+    variant: outline
+    inputs:
+      text: "Reviewed"
+      tone: tip
+  - component: pull-quote
+    variant: rule-leading
+    inputs:
+      text: "Templates and content must live in different files."
+      attribution: Katib v2 ADR
+  - component: signature-block
+    variant: line-over
+    inputs:
+      name: "Jasem Al Neaimi"
+      title: "Author"
+      date: "2026-04-23"

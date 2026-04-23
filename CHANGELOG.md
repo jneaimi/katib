@@ -3,6 +3,128 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — v2 Phase 1 — Core engine + primitives (2026-04-23)
+
+The render pipeline works end-to-end. A recipe YAML composes through an
+8-primitive library to a WeasyPrint PDF at OS-standard `~/Documents/katib/`,
+in EN or AR, with or without a brand override. Four image providers are
+online (user-file, screenshot, gemini, inline-svg) with the sources-accepted
+gate enforced and fail-loud on missing prerequisites.
+
+### Added
+
+- **Core engine** (`core/`):
+  - `core/output.py` — two-level output resolver: `KATIB_OUTPUT_ROOT` env
+    override → `platformdirs.user_documents_path() / "katib"`. Cache +
+    user-config + user-components helpers.
+  - `core/tokens.py` + `core/tokens.base.yaml` — three-layer token merge
+    (base → brand → overrides), CSS-injection whitelist (ported from v1
+    `brand.py`), per-language identity fallback for `name_ar` /
+    `identity.<field>_ar` siblings, `tokens_css()` emits a single `:root`
+    block with every color + font var.
+  - `core/compose.py` — recipe YAML → HTML. Validates against schema,
+    resolves components (core namespace only in Phase 1 — brand/user
+    resolution arrives Phase 2), per-lang template selection, Jinja
+    autoescape ON for input fields.
+  - `core/render.py` — thin WeasyPrint wrapper.
+  - `core/image/` provider layer — 4 providers with common `Provider`
+    protocol and `ResolvedImage` dataclass:
+    - `user_file.py` — local path + URL, copy-on-reference caching
+    - `screenshot.py` — Playwright + Chromium at 2x density, content-hash
+      cache (ported from v1 `shot.py`)
+    - `gemini.py` — Gemini Nano Banana 2, fail-loud on missing
+      `GEMINI_API_KEY` with actionable guidance, no silent placeholder
+    - `inline_svg.py` — donut chart generator (bar + sparkline arrive
+      Phase 2); deterministic output keyed on spec
+- **Schemas** (`schemas/`):
+  - `component.yaml.schema.json` — tier/version/namespace/languages
+    (`en | ar | bilingual` enum), image inputs with `sources_accepted`
+    whitelist, variants, page_behavior
+  - `recipe.yaml.schema.json` — ordered sections, language mode, namespace
+- **8 seed primitives** (`components/primitives/`):
+  - `eyebrow`, `rule`, `tag`, `callout`, `step-circle`, `pull-quote`,
+    `figure-with-caption`, `signature-block`
+  - Each ships `component.yaml` + EN/AR Jinja templates + `styles.css` +
+    `README.md`. All 8 validate against the component schema.
+- **CLI entries** (`scripts/`):
+  - `build.py` — `uv run scripts/build.py <recipe> --lang en [--brand <name>] [--slug <s>]`;
+    runs a startup audit-presence check before rendering
+  - `generate_capabilities.py` — auto-generates `capabilities.yaml` from
+    components + recipes
+  - `validate_component.py` — standalone schema validator (`katib component
+    validate` lands Phase 2)
+  - `check_no_vault_refs.sh` — CI grep check for vault/obsidian/soul-hub
+    references outside `v1-reference/`
+- **Audit bootstrap** (`memory/component-audit.jsonl`) — 8 seed entries for
+  the Phase 1 primitives. Hand-added components without an audit entry fail
+  the skill load.
+- **Capability index** (`capabilities.yaml`) — auto-generated flat index
+  (8 components, 1 recipe in Phase 1); agents read this before routing.
+- **Brand profiles** (`brands/`) — `example.yaml`, `README.md`, and
+  `fixtures/placeholder-logo.svg` ported from `v1-reference/brands/`.
+  User brands stay at `~/.katib/brands/` (loader reads both paths).
+- **Test suite** (`tests/`) — 61 pytest cases across 5 modules:
+  - `test_output_routing.py` (6 tests) — env override, OS fallback,
+    nested-folder creation
+  - `test_tokens.py` (28 tests) — base/brand/override merge, bilingual
+    fallback, CSS injection whitelist (11 parametrized cases)
+  - `test_image_providers.py` (13 tests) — registry, happy paths, fail-loud
+    paths, `sources_accepted` gate, deterministic cache keys
+  - `test_compose.py` (12 tests) — schema gates, lang gates, brand override,
+    Jinja auto-escape on inputs
+  - `test_render_trivial.py` (4 tests) — end-to-end compose → PDF for EN
+    and AR, invariants via `pypdf` text extraction
+- **Smoke recipe** (`recipes/phase-1-trivial.yaml`) — exercises 7 of 8
+  primitives (figure-with-caption joins once Day 5 providers wire into
+  compose.py; Phase 2 work).
+
+### Changed
+
+- `pyproject.toml`:
+  - Python floor `>=3.10` → `>=3.11`
+  - Version `0.20.0` → `1.0.0-alpha.0`
+  - Added `platformdirs`, `jsonschema` as hard deps
+  - Added `[dependency-groups] dev` for pytest + Playwright + google-genai
+  - Removed `[tool.katib]` section (v2 has no install-wide config defaults)
+  - Added `[build-system]` + `[tool.hatch.build]` for a proper Python
+    package layout
+  - Added `[tool.pytest.ini_options]`
+- Recipe / component pattern: moved from per-doc-type monolithic HTML
+  templates with hardcoded content (v1) to component composition with
+  Jinja partials + YAML recipes (v2). Templates and content are now in
+  different files — the root-cause fix for the `framework-guide` incident.
+
+### Phase 1 exit-criteria verification
+
+- [x] Trivial recipe using primitives only renders in EN and AR
+- [x] Default output lands in `~/Documents/katib/` (macOS) / platform
+      equivalent; `KATIB_OUTPUT_ROOT` overrides for tests
+- [x] `capabilities.yaml` generates from the current component set
+      (8 components, 1 recipe)
+- [x] Brand inheritance works (`example.yaml` tokens override base; tested
+      end-to-end)
+- [x] Golden-level invariants pass (text-extract diff; pixel-level goldens
+      defer to Phase 2 when we have deterministic test fonts)
+- [x] Grep clean for `vault | obsidian | soul-hub` outside `v1-reference/`
+      (enforced by `scripts/check_no_vault_refs.sh`)
+- [x] Gemini-missing-key path produces actionable error, no silent
+      placeholder (covered in `test_image_providers.py`)
+- [x] 61/61 tests pass; zero WeasyPrint warnings at render time
+
+### Known limitations deferred past Phase 1
+
+- Per-component CSS uses physical properties (`border-left` / `border-right`
+  with `[lang="ar"]` overrides) instead of logical properties (`*-inline-*`)
+  because WeasyPrint 68 does not support the logical shorthand forms.
+  Confirmed via direct test; documented in component styles.
+- Pixel-level golden images not shipped — Phase 2 ships when we commit to
+  pinned test fonts.
+- `figure-with-caption` authored but unwired in the smoke recipe; Phase 2
+  wires image-provider resolution into `core/compose.py`.
+- `core/fonts.py` (font installer) not ported from v1. Phase 1 relies on
+  system fonts. Port-forward scheduled when we need deterministic
+  cross-platform renders.
+
 ## [1.0.0-alpha.0] — 2026-04-23 — v2 architecture reset (Phase 0)
 
 v1 (v0.1.0 → v0.20.0) hit an architectural limit surfaced by the
