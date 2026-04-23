@@ -3,15 +3,125 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component CLI (Days 1–11 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component + recipe CLI (Days 1–12 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–11 of 14 have landed. Engine state: 20
-components, 7 recipes (including the `tutorial.yaml` production
-recipe), 297 tests, zero WeasyPrint warnings. **Component authoring is
-now a supported lifecycle** — `katib component new → validate → test →
-register → share → lint --all` is the sanctioned path from empty
-directory to registered component, with build-time audit enforcement
-and a graduation gate wired for Day 13 activation.
+Phase 2 is in progress. Days 1–12 of 14 have landed. Engine state: 20
+components, 7 recipes, 345 tests, **zero WeasyPrint warnings across
+every recipe**. **Both component and recipe authoring are now
+supported lifecycles** — `katib component new → validate → test →
+register → share → lint --all` and the parallel `katib recipe …`
+flow are the sanctioned paths from empty directory / YAML stub to a
+registered, audited, build-gated artifact.
+
+### Added (Day 12 — katib recipe CLI)
+
+- **`scripts/recipe.py`** — dispatcher mirroring `scripts/component.py`
+  with recipe-specific semantics. Six subcommands + `--json` global
+  flag + identical error contract (`{action: "error", message, type}`
+  in JSON mode; `ERROR: …` to stderr in human mode; exit 0/1/2).
+  - `new <name> [--languages … --keywords … --target-pages lo,hi
+    --page-limit N --domain-hint X --when "one-liner"]` — scaffolder
+  - `validate <name>` — schema + component-ref + variant + lang +
+    keywords + pages
+  - `test <name> [--lang X,Y | --all-langs] [--brand Z]` — render to
+    PDF in throwaway `dist/recipe-tests/<name>/`
+  - `register <name>` — re-validate + regen `capabilities.yaml` + audit
+  - `share <name>` — bundle to `dist/recipe-<name>-<version>.tar.gz`
+  - `lint --all` — validate every recipe
+
+- **`core/recipe_ops.py`** — library behind the CLI:
+  - `scaffold_recipe()` — writes a sensible-default skeleton (cover-
+    page + module + summary + whats-next) that renders cleanly out
+    of the box. Audit entry.
+  - `validate_recipe_full()` — schema + component-ref existence with
+    `difflib.get_close_matches` fuzzy suggestions on typos + every
+    declared recipe language supported by every referenced component
+    + variant validity + `keywords` populated warning +
+    `target_pages`/`page_limit` sanity.
+  - `render_recipe()` — delegates to `compose()` + `render_to_pdf()`.
+    Defaults to the fastest path (first declared language only);
+    explicit `langs=[…]` param opts into the full matrix.
+  - `register_recipe()` — validate → regen → audit chain.
+  - `bundle_share_recipe()` — validate → tar.gz with YAML +
+    `MANIFEST.json` listing referenced components.
+  - `lint_all_recipes()` — iterates `recipes/*.yaml`.
+
+- **`memory/recipe-audit.jsonl`** — seeded with 7 bootstrap entries
+  (phase-1-trivial + 5 showcases + tutorial). Mirrors the Phase 1
+  component bootstrap.
+
+- **`scripts/build.py`** — `check_audit` extended to gate recipes too.
+  Hand-added recipes without an audit entry now fail the startup check
+  with a clean error pointing at `scripts/recipe.py new`. Bootstrap
+  entries seeded in the same commit so no existing recipe gets caught
+  by surprise.
+
+- **Graduation gate (soft-pass)** — core-namespace recipe scaffolds
+  check `memory/recipe-requests.jsonl` for ≥3 matching entries. Until
+  Day 13 writes that log, emits a structured warning and permits
+  scaffold. `--force --justification "<reason>"` is the audited
+  override path; `--force` without `--justification` raises.
+
+### Fixed (Day 12)
+
+- **WeasyPrint warning elimination** — removed `unicode-bidi: isolate`
+  from `components/sections/module/styles.css:137`. WeasyPrint 68
+  doesn't support the property; it was emitting a single warning per
+  rich-body render since Day 7 as a silent no-op. The `direction: ltr`
+  on the same rule already handles the monolingual-LTR `<pre>` case.
+  Engine is now truly zero-WeasyPrint-warning across every recipe.
+  Surfaced by Day 12's `recipe test` command.
+
+### Tests (Day 12)
+
+- **`tests/test_recipe_ops.py`** — 28 unit tests. Scaffold happy + sad
+  paths (existing name, bad kebab-case, bad lang, force-without-
+  justification). Validator detects unknown component refs (with
+  `difflib.get_close_matches` suggestions), bad variants, unsupported
+  languages, missing keywords (warning), inverted `target_pages`. Full
+  render round-trip proves the scaffold skeleton renders clean.
+  Register refuses broken recipes; writes audit. Share validates
+  first; includes manifest; excludes machine-local state.
+
+- **`tests/test_recipe_cli.py`** — 20 subprocess tests. Every verb in
+  both human and `--json` mode. Exit-code contract (0/1/2), stderr
+  messages, parseable JSON on every exit path. `--target-pages 3,8`
+  parsing. `--all-langs` flag exercised. JSON-contract regression
+  guard (mirrors `test_route.py` and `test_component_cli.py`).
+
+### End-to-end smoke test (Day 12)
+
+Full lifecycle exercised live during development:
+1. `recipe new smoke-recipe --languages en --keywords smoke,test` —
+   YAML written, audit entry logged, graduation warning printed.
+2. `recipe validate smoke-recipe` — 0 errors, 0 warnings.
+3. `recipe test smoke-recipe` — rendered 9245-byte PDF; exposed the
+   pre-existing `unicode-bidi` WP warning, fixed opportunistically.
+4. `recipe test smoke-recipe` (re-run after fix) — clean, 0 warnings.
+5. `recipe lint --all` — all 7 existing recipes pass with 0 errors,
+   0 warnings.
+
+345 tests pass (297 → 345, +48 for Day 12). Engine state: both
+lifecycle CLIs are in place; Day 13 activates the graduation gates by
+landing the request writers.
+
+### Architecture decisions taken (Day 12 — per Jasem's approval during validation)
+
+1. **Separate `memory/recipe-audit.jsonl`** (not unified with component
+   audit) — clean mental model, ~4 lines added to `build.py` to gate
+   both.
+2. **`recipe test` defaults to first declared language** for fast
+   authoring; `--all-langs` opts into the full matrix.
+3. **Share bundle is YAML + `MANIFEST.json` only** — no transitive
+   component bundling (shadcn-style). Phase 4's `--with-components`
+   flag will handle deployable-bundle case.
+4. **Scaffolder skeleton renders out of the box** — cover-page + module
+   + summary + whats-next is immediately `test`-able.
+5. **Validator ships 5 of 6 proposed checks.** `required_brand_fields`
+   existence deferred to Phase 4 (needs brand registry).
+6. **Graduation gate** wired identical to Day 11 — soft-pass reads
+   `memory/recipe-requests.jsonl`; activates silently when Day 13's
+   writer lands.
 
 ### Added (Day 11 — katib component CLI)
 
