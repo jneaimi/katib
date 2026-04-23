@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T16:39:46+00:00'
+generated_at: '2026-04-23T16:59:53+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -25,6 +25,31 @@ governance:
     - katib recipe validate <name>
     - katib recipe register <name>
 recipes:
+  business-proposal-letter:
+    namespace: katib
+    version: 0.1.0
+    description: Business letter — letterhead, recipient, continuous-prose body, closing signature. First
+      Phase-3 recipe; proves the recipe-migration flow end-to-end.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 3
+    when: Formal business correspondence — cover letter for a proposal, meeting request, partnership introduction,
+      or acceptance acknowledgment. AR variant deferred pending inputs_by_lang schema design.
+    keywords:
+    - letter
+    - business
+    - proposal
+    - formal
+    - correspondence
+    - cover
+    sections_shape:
+    - letterhead
+    - signature-block
+    - module
+    - signature-block
   phase-1-trivial:
     namespace: katib
     version: 0.1.0
@@ -290,7 +315,7 @@ components:
     description: Named-party block for formal documents — renders signatories (closing signature blocks)
       or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
       + date + label.
-    used_in_recipes: 1
+    used_in_recipes: 2
   step-circle:
     namespace: katib
     tier: primitive
@@ -389,7 +414,7 @@ components:
     description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
-    used_in_recipes: 0
+    used_in_recipes: 1
   module:
     namespace: katib
     tier: section
@@ -404,7 +429,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 2
+    used_in_recipes: 3
   objectives-box:
     namespace: katib
     tier: section
