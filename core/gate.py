@@ -183,11 +183,15 @@ def answer_to_value(question_id: str, answer_label: str) -> str:
 # ---------------------------------------------------------------- scoring
 
 
-def _infer_lang(intent: str, threshold: float = 0.7) -> tuple[str | None, float]:
-    """Return (lang, strength 0-1). Strength = fraction of script-dominant letters."""
-    if not intent:
+def infer_script(text: str, threshold: float = 0.7) -> tuple[str | None, float]:
+    """Return (lang, strength 0-1). Strength = fraction of script-dominant letters.
+
+    Public helper — context_sensor imports this directly. `_infer_lang` kept
+    as a private alias for backward-compat within gate.py.
+    """
+    if not text:
         return None, 0.0
-    letters = [c for c in intent if c.isalpha()]
+    letters = [c for c in text if c.isalpha()]
     if not letters:
         return None, 0.0
     ar_count = sum(1 for c in letters if _AR_CHAR_RE.match(c))
@@ -198,6 +202,10 @@ def _infer_lang(intent: str, threshold: float = 0.7) -> tuple[str | None, float]
     if en_ratio >= threshold:
         return "en", en_ratio
     return None, max(ar_ratio, en_ratio)
+
+
+# Private alias for callers inside this module (kept to avoid churn).
+_infer_lang = infer_script
 
 
 def score_confidence(
