@@ -1,16 +1,16 @@
 """Recipe composition: recipe YAML -> single HTML document.
 
-Phase 1 responsibilities:
+Responsibilities:
     1. Load recipe YAML, validate against recipe schema
-    2. For each section, resolve component directory (core only in Phase 1)
+    2. For each section, resolve component directory (core only in Phase 1-2)
     3. Load component.yaml, validate against component schema
     4. Check recipe language is supported by each referenced component
-    5. Render the lang-appropriate Jinja template with tokens + inputs context
-    6. Concatenate section HTML; wrap in a minimal page shell with token CSS
+    5. Resolve any `type: image` inputs through the provider layer
+    6. Render the lang-appropriate Jinja template with tokens + inputs context
+    7. Concatenate section HTML; wrap in a minimal page shell with token CSS
 
-Phase 2+ will extend compose.py with:
+Phase 3+ will add:
     - Brand/user/core component resolution order
-    - Image provider resolution (components declaring `type: image` inputs)
     - Audit-log presence check at startup
     - Capability-index usage
 """
@@ -25,6 +25,8 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from jsonschema import Draft202012Validator
 
+from core.image.base import Provider, default_providers, resolve_image
+from core.output import resolve_cache_dir
 from core.tokens import (
     load_base_tokens,
     load_brand,
@@ -123,11 +125,75 @@ def _jinja_env() -> Environment:
     )
 
 
+def _image_input_specs(comp: dict) -> dict[str, dict]:
+    """Extract {input_name: decl} for inputs declared as `type: image`.
+
+    Accepts both YAML shapes the schema permits:
+        - {image: {type: image, required: true, sources_accepted: [...]}}
+        - {name: image, type: image, required: true, sources_accepted: [...]}
+    """
+    out: dict[str, dict] = {}
+    for entry in comp.get("accepts", {}).get("inputs", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        if "type" in entry and "name" in entry:
+            if entry["type"] == "image":
+                out[entry["name"]] = entry
+            continue
+        if len(entry) == 1:
+            name, decl = next(iter(entry.items()))
+            if isinstance(decl, dict) and decl.get("type") == "image":
+                out[name] = decl
+    return out
+
+
+def _resolve_image_slots(
+    inputs: dict,
+    image_decls: dict[str, dict],
+    cache_dir: Path,
+    providers: dict[str, Provider],
+    comp_name: str,
+) -> dict:
+    if not image_decls:
+        return inputs
+    resolved = dict(inputs)
+    for slot_name, decl in image_decls.items():
+        if slot_name not in inputs:
+            if decl.get("required"):
+                raise ComposeError(
+                    f"component {comp_name!r}: required image input "
+                    f"{slot_name!r} not supplied by recipe"
+                )
+            continue
+        value = inputs[slot_name]
+        if not isinstance(value, dict):
+            raise ComposeError(
+                f"component {comp_name!r}: input {slot_name!r} is type:image; "
+                f"expected dict {{'source': '...', ...}}, got {type(value).__name__}"
+            )
+        img = resolve_image(
+            value,
+            cache_dir,
+            providers,
+            sources_accepted=decl.get("sources_accepted"),
+        )
+        resolved[slot_name] = {
+            "resolved_path": str(img.path) if img.path else None,
+            "resolved_svg": img.inline_svg,
+            "content_hash": img.content_hash,
+            "alt": img.alt_hint or value.get("alt_text") or "",
+            "source": value.get("source"),
+        }
+    return resolved
+
+
 def compose(
     recipe_name: str,
     lang: str,
     brand: str | None = None,
     overrides: dict[str, Any] | None = None,
+    providers: dict[str, Provider] | None = None,
+    image_cache_dir: Path | None = None,
 ) -> tuple[str, dict]:
     recipe = load_recipe(recipe_name)
     _check_lang_supported(recipe, lang)
@@ -136,6 +202,9 @@ def compose(
     brand_data = load_brand(brand) if brand else None
     merged = merge_tokens(base, brand_data, overrides)
     ctx = render_context(merged, lang)
+
+    providers = providers if providers is not None else default_providers()
+    cache_dir = image_cache_dir or resolve_cache_dir("images")
 
     env = _jinja_env()
     body_parts: list[str] = []
@@ -152,6 +221,11 @@ def compose(
         template = env.get_template(template_rel)
 
         inputs = section.get("inputs", {}) or {}
+        image_decls = _image_input_specs(comp)
+        inputs = _resolve_image_slots(
+            inputs, image_decls, cache_dir, providers, comp_name
+        )
+
         rendered = template.render(
             **ctx,
             input=inputs,
