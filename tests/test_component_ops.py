@@ -68,8 +68,14 @@ def test_scaffold_writes_audit_entry(throwaway_name):
     assert "at" in scaffold_entries[0]
 
 
-def test_scaffold_graduation_warning_when_log_missing(throwaway_name):
-    """Until Day 13 writes memory/component-requests.jsonl, the gate is soft-pass."""
+def test_scaffold_graduation_warning_when_log_missing(throwaway_name, tmp_path, monkeypatch):
+    """Fresh-install path: when no request log exists, the gate soft-passes with a warning.
+
+    Previously the repo's `memory/component-requests.jsonl` was absent (through
+    Phase-2 Day-12); Phase-3 Day-1 created it via real graduation requests.
+    To preserve the first-install contract under test, point the log at a
+    throwaway path that intentionally does not exist."""
+    monkeypatch.setattr(ops, "REQUESTS_FILE", tmp_path / "component-requests.jsonl")
     assert not ops.REQUESTS_FILE.exists()
     result = ops.scaffold(throwaway_name, tier="primitive")
     assert result.graduation_warning is not None

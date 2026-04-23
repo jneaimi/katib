@@ -3,24 +3,89 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 complete + post-close-out Open Items resolved (through 2026-04-23)
+## [Unreleased] — v2 Phase 3 in progress (through 2026-04-23)
+
+**Phase 3 kicked off.** Open Item #4 (migration triage) resolved
+2026-04-23 — 14 recipes on the migrate list, 5 genuinely-new components
+identified, bilingual NOC proven to need no new component (CSS
+direction-flip only). See `~/vault/projects/katib/project.md` and ADR
+§Phase 3 for the locked plan.
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
-criteria green with automated proofs, 457 tests passing, zero
+criteria green with automated proofs, 470 tests passing, zero
 WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
 review lives in the vault at `projects/katib/phase-2-gate-review.md`.
 
-**Post-close-out:** Open Item #2 (content-lint wiring) resolved; items
-#1 (push + tag), #3 (PNG goldens), #4 (Phase 3 triage) remain pending
-Jasem sign-off.
+**Post-close-out:** Open Item #2 (content-lint wiring) resolved;
+Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
+HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
+parked by decision.
 
-Engine state: 20 components, 7 recipes (1 production + 6 dev), 6 core
-library modules, 5 CLIs, 4 memory streams, 4 image providers, 0
-external skill dependencies.
+Engine state: 21 components (+1 kv-list), 7 recipes, 6 core library
+modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+dependencies.
 
 **Not shippable as a v1 replacement yet** — v2 has 1 production recipe
-(tutorial); v1 ships 10+ doc-types. Phase 3 ports them. Keep v1
-installed as the daily global skill until Phase 3 closes.
+(tutorial); Phase 3 ports 14 more over ~3 weeks. Keep v1 installed as
+the daily global skill until the cutover.
+
+### Added (Phase 3 Day 1 — `kv-list` section component)
+
+First of 5 genuinely-new Phase-3 components. Dependents:
+`tutorial/cheatsheet`, `tutorial/katib-walkthrough`, `legal/mou`,
+`editorial/white-paper`, `financial/quote`.
+
+- **`components/sections/kv-list/`** (new) — term + value pairs as a
+  two-column `<dl>` grid. Variants: `default`, `dense` (cheatsheet),
+  `spacious` (glossaries, legal defined-terms). Tokens: `text`,
+  `text_secondary`, `border`. Fully bilingual (EN + AR) with RTL
+  cascade; both language templates share the semantic skeleton
+  (dt/dd) and differ only in `dir="rtl"` attribute.
+- **3 graduation requests logged** (`memory/component-requests.jsonl`):
+  cheatsheet-signal, white-paper-signal, quote-signal. Real requests,
+  not retroactive — Phase-3 gate active from Day 1.
+- **Audit trail:** scaffold + register entries in
+  `memory/component-audit.jsonl`. Build-time gate (`scripts/build.py`)
+  refuses orphans.
+- **`capabilities.yaml`** regenerated — `kv-list` now discoverable by
+  recipe composition + the content-aware router.
+
+### Tests (Phase 3 Day 1)
+
+- **`tests/test_kv_list.py`** (new, 13 tests):
+  schema-loads, variants-declared, items-required, token-contract,
+  renders-EN, renders-AR, renders-to-PDF, dense-variant-class,
+  spacious-variant-class, default-variant-class, eyebrow+heading-optional,
+  styles-use-tokens-only, EN/AR-share-semantic-structure.
+- **`tests/test_component_ops.py:test_scaffold_graduation_warning_when_log_missing`**
+  regression-fixed: previously assumed `memory/component-requests.jsonl`
+  does not exist (Phase-2 transitional state); now monkey-patches
+  `ops.REQUESTS_FILE` to an ephemeral path so the first-install
+  soft-pass contract stays proven as the real log grows.
+- **Regression sweep:** 470/470 passing (was 457, +13 kv-list tests).
+  Zero WeasyPrint warnings on 6 render paths (EN/AR × default/dense/spacious).
+
+### Architecture decisions (Phase 3 Day 1)
+
+1. **Migrate list locked at 14 recipes.** Dropped legal/service-agreement
+   in favor of legal/mou (simpler, no counsel review needed to validate
+   the new components). Full list in ADR §Phase 3 and
+   `~/vault/projects/katib/project.md`.
+2. **Deferred v1 doc-types called out in CHANGELOG.** Academic,
+   marketing-print, report domains plus ~7 on-demand variants (formal
+   circular/authority-letter/government-letter, personal bio, financial
+   summary/statement, editorial article/case-study/op-ed, legal
+   nda/engagement-letter). Available in `v1-reference/`, not migrated.
+3. **Open Item #3 (PNG goldens) pushed to Phase 4.** Phase 3 is recipe
+   migration; visual regression harness is orthogonal scope.
+4. **Bilingual NOC scoped as cheap.** Scan of
+   `v1-reference/domains/formal/templates/noc.{en,ar}.html` confirmed
+   both share identical semantic structure — RTL handled by CSS
+   cascade + swapped borders, not structural mirroring. No new
+   `bilingual-paired-section` component needed.
+5. **`kv-list` uses semantic `<dl>` / `<dt>` / `<dd>`.** Chosen over
+   `<table>` because the content is paired-definitions, not tabular
+   data — screen readers announce as a description list.
 
 ### Added (post-close-out — content_lint wired into recipe validate/register)
 

@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T10:31:13+00:00'
+generated_at: '2026-04-23T16:02:29+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -360,6 +360,19 @@ components:
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
     used_in_recipes: 5
+  kv-list:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - dense
+    - spacious
+    description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
+      reference pairs, metadata summaries.
+    used_in_recipes: 0
   module:
     namespace: katib
     tier: section

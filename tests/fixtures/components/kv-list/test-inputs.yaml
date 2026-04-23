@@ -1,0 +1,16 @@
+# Test inputs for `kv-list` isolated render.
+# Used by `katib component test kv-list`.
+inputs:
+  eyebrow: "Defined Terms"
+  heading: "Interpretation"
+  items:
+    - term: "Agreement"
+      value: "This Memorandum of Understanding and any schedules attached."
+    - term: "Effective Date"
+      value: "The date of the last signature below."
+    - term: "Party"
+      value: "Either signatory; together, the Parties."
+    - term: "Confidential Information"
+      value: "Any information marked confidential or that a reasonable person would treat as such."
+brand: null
+variant: null
