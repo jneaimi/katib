@@ -1,0 +1,78 @@
+name: business-proposal-one-pager
+version: 0.1.0
+namespace: katib
+description: Business proposal one-pager — single-page proposal summary with eyebrow row, hero title, 4-metric grid, 2x2 body sections, and footer. Zero new components; second production consumer of sections-grid (default variant with columns=2, validating the shape beyond cheatsheet's dense card use).
+languages: [en]
+target_pages: [1, 1]
+page_limit: 1
+when: Commercial proposal summary designed to fit on a single page. Compact enough to share as a one-page PDF attachment or printed takeaway after a meeting. Pairs with the full business-proposal/proposal recipe when ready. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [business-proposal, one-pager, commercial, summary, pitch]
+
+sections:
+  # 1. Eyebrow row — company name + ref·date in a hairline-bordered strip
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 0.5pt solid var(--border); padding-bottom: 6pt; margin: 0 0 16pt 0;">
+          <div style="font-size: 9pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">jasem | katib</div>
+          <div style="font-size: 8.5pt; color: var(--text-tertiary); font-family: var(--font-mono);">[PROP/2026/001] · 2026-04-24</div>
+        </div>
+
+  # 2. Hero — big title + lead paragraph
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="margin-bottom: 18pt;">
+          <h1 style="font-size: 26pt; font-weight: 500; line-height: 1.15; margin: 0 0 10pt 0; color: var(--accent); letter-spacing: -0.01em;">[Proposal title — the specific outcome the client is buying]</h1>
+          <p style="font-size: 11pt; line-height: 1.55; color: var(--text-secondary); margin: 0; max-width: 150mm;">[Subtitle — one-sentence value promise. Who benefits, what they get, how long it takes.]</p>
+        </div>
+
+  # 3. Metrics block — 4-col big-number + small-label grid (inline-styled; metrics-grid
+  #    has only 1 verified dependent, below auto-graduation threshold — defer)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10pt; margin: 18pt 0; padding: 14pt 0; border-top: 0.5pt solid var(--border); border-bottom: 0.5pt solid var(--border);">
+          <div style="text-align: center;">
+            <div style="font-size: 20pt; font-weight: 500; color: var(--accent); line-height: 1.1;">18</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary); margin-top: 2pt;">Participants</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 20pt; font-weight: 500; color: var(--accent); line-height: 1.1;">6 wk</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary); margin-top: 2pt;">Duration</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 20pt; font-weight: 500; color: var(--accent); line-height: 1.1;">24</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary); margin-top: 2pt;">Training days</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 20pt; font-weight: 500; color: var(--accent); line-height: 1.1;">AED 615K</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary); margin-top: 2pt;">Investment</div>
+          </div>
+        </div>
+
+  # 4. Body sections — 2x2 grid using sections-grid default variant
+  #    (SECOND production consumer of sections-grid, validates default alongside dense)
+  - component: sections-grid
+    inputs:
+      columns: 2
+      items:
+        - title: "Program scope"
+          body: "Full-stack AI engineering curriculum covering prompt engineering, agent design, tool calling, evaluation, and production deployment on Vercel and Cloudflare."
+        - title: "Delivery model"
+          body: "Hybrid split — 2 groups of 9, face-to-face and remote sessions. Morning theory, afternoon hands-on build. Projects shipped to real production."
+        - title: "Outcomes"
+          body: "Every participant ships a working agent + deploy pipeline to production. Portfolio-ready projects. Real GitHub history. Cost reduced by 40% via hybrid vs pure face-to-face."
+        - title: "Next step"
+          raw_body: |
+            <p style="margin: 0 0 8pt 0;">Countersign this page and the full commercial proposal. Kickoff within 14 days of signature.</p>
+            <a style="display: inline-block; background: var(--accent); color: var(--accent-on); padding: 8pt 14pt; border-radius: 3pt; font-size: 10pt; font-weight: 500; text-decoration: none;">Accept proposal</a>
+
+  # 5. Footer — company · author on left, ref on right
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: flex; justify-content: space-between; padding-top: 8pt; margin-top: 16pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary);">
+          <div>jasem | katib · Jasem Al Neaimi</div>
+          <div style="font-family: var(--font-mono);">[PROP/2026/001]</div>
+        </div>

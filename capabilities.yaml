@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T19:13:03+00:00'
+generated_at: '2026-04-23T20:28:38+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -50,6 +50,34 @@ recipes:
     - signature-block
     - module
     - signature-block
+  business-proposal-one-pager:
+    namespace: katib
+    version: 0.1.0
+    description: Business proposal one-pager — single-page proposal summary with eyebrow row, hero title,
+      4-metric grid, 2x2 body sections, and footer. Zero new components; second production consumer of
+      sections-grid (default variant with columns=2, validating the shape beyond cheatsheet's dense card
+      use).
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 1
+    page_limit: 1
+    when: Commercial proposal summary designed to fit on a single page. Compact enough to share as a one-page
+      PDF attachment or printed takeaway after a meeting. Pairs with the full business-proposal/proposal
+      recipe when ready. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - business-proposal
+    - one-pager
+    - commercial
+    - summary
+    - pitch
+    sections_shape:
+    - module
+    - module
+    - module
+    - sections-grid
+    - module
   formal-noc:
     namespace: katib
     version: 0.1.0
@@ -601,7 +629,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 8
+    used_in_recipes: 9
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -653,7 +681,7 @@ components:
     description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
-    used_in_recipes: 1
+    used_in_recipes: 2
   summary:
     namespace: katib
     tier: section

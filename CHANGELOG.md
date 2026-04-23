@@ -26,18 +26,125 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **25 components** (+1 sections-grid Day 11;
-multi-party-signature-block added Day 7, kv-list at 0.2.0,
-signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**13 recipes** (7 production: tutorial + business-proposal-letter +
-personal-cover-letter + formal-noc + tutorial-how-to +
-tutorial-handoff + **tutorial-cheatsheet**; 6 dev showcases).
-6 core library modules, 5 CLIs, 4 memory streams, 4 image
-providers, 0 external skill dependencies.
+Engine state: **25 components** (unchanged count through Day 12;
+sections-grid added Day 11, multi-party-signature-block added Day 7,
+kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0,
+callout at 0.2.0). **14 recipes** (8 production: tutorial +
+business-proposal-letter + personal-cover-letter + formal-noc +
+tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
+**business-proposal-one-pager**; 6 dev showcases). 6 core library
+modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
+skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 7 production
-recipes; Phase 3 ports 8 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 8 production
+recipes; Phase 3 ports 7 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 12 — `business-proposal/one-pager` recipe ships)
+
+Seventh Phase-3 recipe migration. **Resumes the zero-new-component
+streak** (broken intentionally on Day 11 for sections-grid; streak
+now 1 again after validation-driven decision to defer metrics-grid).
+Second production consumer of sections-grid (default variant
+validates the component beyond Day-11 cheatsheet's dense variant).
+
+Day 12 started with a deferred-graduation decision. Pre-day scan of
+v1 proposal.en.html (401 lines) confirmed it does NOT reuse the
+`metrics-grid` 4-col big-number shape — proposal uses title-page +
+TOC + deliverables-table + sign-row. This means metrics-grid has
+only 1 verified dependent (one-pager itself), below the auto-
+graduation threshold of 3. **Decision: inline-style the metrics
+block in one-pager; defer metrics-grid graduation until a second
+recipe introduces the same shape.** Matches the density convention.
+
+- **`recipes/business-proposal-one-pager.yaml`** (new) — 5-section
+  recipe:
+  1. `module` raw_body — **eyebrow row**: company left + ref·date
+     right in a hairline-bordered strip (inline-styled density
+     block #1)
+  2. `module` raw_body — **hero**: 26pt accent title + 11pt
+     subtitle lead paragraph (inline-styled density block #2)
+  3. `module` raw_body — **metrics block**: 4-col inline grid
+     (Participants / Duration / Training days / Investment) with
+     20pt accent numbers + 8pt tertiary labels, bordered top +
+     bottom hairlines (inline-styled density block #3).
+     **Deferred metrics-grid graduation — 1 verified dependent
+     below threshold of 3.**
+  4. `sections-grid` default variant, columns=2 — **SECOND
+     PRODUCTION CONSUMER of sections-grid**. 2x2 body grid
+     (Program scope / Delivery model / Outcomes / Next step).
+     Last card (`Next step`) uses inline `raw_body` with `<a>`
+     CTA styled as accent-bg button.
+  5. `module` raw_body — **footer strip**: company·author left +
+     ref right with top hairline (inline-styled density block #4).
+  Content adapted from `v1-reference/domains/business-proposal/
+  templates/one-pager.en.html`. Placeholder-style prose preserved
+  (`[Proposal title…]`, `[PROP/2026/001]`, etc.).
+- **Rendered output: 1 page, 0 WeasyPrint warnings.** `target_pages:
+  [1, 1]`, `page_limit: 1` — one-pager's whole point is single-page,
+  and the render holds.
+- **Validation clean at default + strict** — 0 content-lint warnings
+  on the proposal prose + placeholders.
+- **4 density-convention inline blocks** (eyebrow-row, hero,
+  metrics, footer) — at NOC's ceiling but within it. If a future
+  recipe introduces a second eyebrow-row, second hero, or second
+  4-metrics shape, those become component candidates.
+- **3 one-pager recipe-requests logged**.
+- **Audit + capabilities:** register entry + `capabilities.yaml`
+  regenerated.
+
+### Tests (Phase 3 Day 12)
+
+- **`tests/test_business_proposal_one_pager.py`** (new, 17 tests):
+  schema-loads, en-only, single-page-target (exactly [1, 1]),
+  has-no-cover-page, five-section-ordering, second-sections-grid-
+  consumer (regression guard for default variant + columns=2 +
+  4 cards), metrics-block-inline-styled (regression guard for the
+  deferred-graduation decision — asserts `repeat(4, 1fr)` inline),
+  validates-clean, validates-strict-clean, renders-EN (asserts
+  `katib-sections-grid--default` present, no cover), pdf-fits-
+  one-page (strict 1-page assertion), renders-all-v1-content
+  (15 distinct phrases spanning eyebrow/hero/4-metrics/4-sections/
+  CTA/footer), four-metric-blocks-rendered (counts inline accent
+  20pt markers), sections-grid-four-cards (card count regression
+  guard), cta-rendered-in-last-card (asserts Accept proposal +
+  accent-bg token), in-capabilities, audit-entry-exists.
+- **Regression sweep:** 677/677 passing (was 660, +17 one-pager
+  tests). Zero WeasyPrint warnings across all 17 render paths.
+
+### Architecture decisions (Phase 3 Day 12)
+
+1. **metrics-grid deferred on evidence, not instinct.** The
+   Day-10 lesson ("read the v1 template before committing") kept
+   paying dividends today. Proposal's body was read end-to-end
+   before Day 12 started; metrics-grid was revealed as a 1-recipe
+   shape. Matches the density convention: *build abstractions when
+   a second recipe needs the same shape, not speculatively.*
+2. **sections-grid validated across two variants.** Day 11 shipped
+   with cheatsheet (dense, 6 cards with raw_body). Day 12 exercises
+   default (2 cards per row, 4 cards total, mix of plain `body` and
+   `raw_body`). Zero component revisions needed — the Day-11 design
+   held. This is the *"find component issues within 24 hours"*
+   discipline from Day-12 planning paying off.
+3. **One-pager is the first single-page Phase-3 recipe.** Prior
+   recipes targeted [1, 2] (letter, cover-letter, NOC) or [2, 3]
+   (how-to, handoff, cheatsheet=1-2). One-pager's `target_pages:
+   [1, 1]` with `page_limit: 1` enforces the single-page constraint.
+   Render met it on first try — good signal that component margins
+   are tuned for compact compositions.
+4. **Four inline blocks = NOC's ceiling tested.** NOC (Day 8)
+   introduced 4 inline-styled module raw_body blocks as "density
+   permitted for structurally dense recipes." One-pager matches
+   that count. Both recipes landed clean. If Day-13's white-paper
+   pushes past 4, we revisit the ceiling. Until then, 4 remains
+   the informal cap.
+5. **CTA as inline `<a>` inside sections-grid card.** `Next step`
+   card uses `raw_body` with an `<a>` styled as accent-bg button.
+   This is inside-card styling (like cheatsheet's kbd chips) —
+   distinct from recipe-level inline. If a second recipe needs
+   a CTA button, a `cta-button` primitive graduates.
+6. **AR variant deferred (seventh recipe in a row).** Consistent
+   since Day 4.
 
 ### Added (Phase 3 Day 11 — `sections-grid` component + `tutorial/cheatsheet` recipe ship)
 
