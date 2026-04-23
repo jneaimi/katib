@@ -1,4 +1,6 @@
+{%- set has_head = (variant == 'numbered' and input.number) or input.eyebrow or input.title or input.intro %}
 <section class="katib-section katib-module katib-module--{{ variant or 'plain' }}" lang="ar" dir="rtl">
+{%- if has_head %}
     <div class="katib-module__head">
 {%- if variant == 'numbered' and input.number %}
         <div class="katib-module__number">{{ input.number }}</div>
@@ -7,12 +9,15 @@
 {%- if input.eyebrow %}
             <div class="katib-eyebrow katib-eyebrow--accent" lang="ar">{{ input.eyebrow }}</div>
 {%- endif %}
+{%- if input.title %}
             <h2 class="katib-module__title">{{ input.title }}</h2>
+{%- endif %}
 {%- if input.intro %}
             <p class="katib-module__intro">{{ input.intro }}</p>
 {%- endif %}
         </div>
     </div>
+{%- endif %}
 {%- if input.raw_body %}
     <div class="katib-module__body katib-module__body--rich">{{ input.raw_body | safe }}</div>
 {%- elif input.body %}

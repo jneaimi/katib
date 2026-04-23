@@ -6,15 +6,16 @@ All notable changes to Katib are documented here. Format loosely follows
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-23)
 
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
-2026-04-23 — 14 recipes on the migrate list, originally 5 and now
-6 genuinely-new components identified after Day-2 scoping revealed
-`letterhead` as a discrete shape under-counted in the Day-0 scan.
-Bilingual NOC proven to need no new component (CSS direction-flip
-only). See `~/vault/projects/katib/project.md` and ADR §Phase 3 for
-the locked plan.
+2026-04-23 — 14 recipes on the migrate list. Component queue revised
+twice: 5 (Day 0) → 6 (Day 2, discovered `letterhead`) → 7 effective
+(Day 3, two component evolutions `signature-block` v0.2.0 +
+`module` v0.3.0 needed before the first letter-class recipe can ship
+thin). Bilingual NOC proven to need no new component (CSS
+direction-flip only). See `~/vault/projects/katib/project.md` and
+ADR §Phase 3 for the locked plan.
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
-criteria green with automated proofs, 486 tests passing, zero
+criteria green with automated proofs, 503 tests passing, zero
 WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
 review lives in the vault at `projects/katib/phase-2-gate-review.md`.
 
@@ -23,13 +24,104 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: 22 components (+1 kv-list Day 1, +1 letterhead Day 2),
-7 recipes, 6 core library modules, 5 CLIs, 4 memory streams, 4 image
-providers, 0 external skill dependencies.
+Engine state: 22 components. Day 3 bumped `signature-block` 0.1.0 →
+0.2.0 (added `organization` + `location` inputs + `recipient` variant)
+and `module` 0.2.0 → 0.3.0 (`title` relaxed to optional — enables
+heading-less continuous-prose sections for letter bodies, legal
+recitals, white-paper abstracts). 7 recipes, 6 core library modules,
+5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+dependencies.
 
 **Not shippable as a v1 replacement yet** — v2 has 1 production recipe
 (tutorial); Phase 3 ports 14 more over ~3 weeks. Keep v1 installed as
 the daily global skill until the cutover.
+
+### Added (Phase 3 Day 3 — component infra for letter-class recipes)
+
+Two component evolutions enabling the business-letter recipe shape.
+Day 3 invested in components first, per the Phase-3 discipline of
+"build new components before the recipes that depend on them."
+
+- **`signature-block` 0.1.0 → 0.2.0** — added two optional inputs
+  (`organization`, `location`) and one variant (`recipient`) that
+  widens the primitive's role from "signatory only" to "named party
+  in a document's context." Existing `line-over` and `label-prefix`
+  variants unchanged; backwards-compatible for all pre-0.2.0 recipes.
+  The `recipient` variant strips the top border and adjusts spacing
+  for use as an addressee block at the top of a letter. README
+  rewritten with explicit signatory-vs-addressee role table.
+- **`module` 0.2.0 → 0.3.0** — `title` relaxed from required to
+  optional. A module with only `raw_body` (or `body`) now renders as
+  pure continuous prose with no head region emitted. Template
+  pre-computes `has_head = number or eyebrow or title or intro`;
+  when false, the `<div class="katib-module__head">` collapses
+  entirely — not an empty div. Enables letter bodies, legal recitals,
+  abstract paragraphs, and any section where a heading is not
+  appropriate. Backwards-compatible — existing recipes providing
+  `title` continue to emit `<h2>` unchanged.
+- **Bug fix (pre-existing, caught by new tests):**
+  `signature-block` templates had a latent bug where `variant=None`
+  would wrongly render a "Signed" label under the default `line-over`
+  variant (because the `variant or 'line-over'` fallback only applied
+  in the class attribute, not in the `{% if variant != 'line-over' %}`
+  condition). Both EN + AR templates now set
+  `effective_variant = variant or 'line-over'` once and reuse it
+  consistently. No previous recipe tripped this because every existing
+  consumer passed an explicit variant; the new v0.2.0 tests
+  (`test_signature_block_renders_default_signatory`) caught it.
+- **Cleanup:** `module` component dropped unused `accent_2` +
+  `text_tertiary` tokens from `requires.tokens` (validator flagged as
+  declared-but-unreferenced). `signature-block` + `module` both gained
+  test fixtures + restructured READMEs (Purpose/Inputs/Variants/
+  Accessibility sections per the validator's doc contract).
+- **Audit trail:** register entries in `memory/component-audit.jsonl`
+  for both components; `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 3)
+
+- **`tests/test_signature_block.py`** (new, 8 tests): schema-loads,
+  new-fields-present, recipient-variant-declared, new-fields-optional
+  (backwards-compat guard), renders-default-signatory (variant=None
+  path — regression-proof), renders-recipient-with-full-fields,
+  label-prefix-still-works (regression), recipient-bilingual,
+  without-optional-fields-still-renders.
+- **`tests/test_module_v03.py`** (new, 8 tests): version-bumped,
+  title-optional, renders-without-title-raw-body, renders-without-
+  title-plain-body, without-title-bilingual, with-title-still-emits-h2
+  (regression), tutorial-recipe-still-renders (production regression),
+  eyebrow-only-still-renders-head.
+- **Regression sweep:** 503/503 passing (was 486, +9 signature-block,
+  +8 module-v03, which match the file counts). Zero WeasyPrint
+  warnings on all render paths. Tutorial.yaml (9 modules) continues
+  to render unchanged — validated structurally by
+  `test_module_tutorial_recipe_still_renders`.
+
+### Architecture decisions (Phase 3 Day 3)
+
+1. **Primitive widens semantic rather than fragment.** Chose to
+   extend `signature-block` with a `recipient` variant + two fields
+   over building a new `recipient-block` primitive. Rationale: the
+   primitive's true role is "named party in a document's context" —
+   signatories and addressees both fit. Adding a new primitive would
+   have fragmented what is semantically one concept across two
+   components. Tests enforce the split via variant-specific
+   structural checks.
+2. **`module` schema aligned with its description.** The component
+   description said "optional numbered eyebrow, heading, intro, and
+   body content" since inception, but the schema declared
+   `title: required: true`. Relaxing this is schema-catches-up-to-
+   description, not an expansion of scope. Module remains a flexible
+   body unit; continuous-prose sections are now a first-class use
+   case rather than needing a new `prose-block` component
+   (considered and rejected as entropy).
+3. **Pre-existing latent bugs count as regressions too.** The
+   signature-block label-under-line-over bug existed from day one
+   but was masked by every consumer passing an explicit variant.
+   The Day-3 test added exercised the default path and exposed it.
+   Fix committed in the same change as the feature extension — good
+   hygiene, but worth the ADR note: Phase 3 tests should continue to
+   exercise default paths even when the affected variants weren't
+   the day's focus.
 
 ### Added (Phase 3 Day 2 — `letterhead` section component)
 

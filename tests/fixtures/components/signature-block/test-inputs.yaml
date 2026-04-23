@@ -1,0 +1,8 @@
+# Test inputs for `signature-block` isolated render.
+# Used by `katib component test signature-block`.
+inputs:
+  name: "Jasem Al Neaimi"
+  title: "Managing Director · jasem | katib"
+  date: "23 April 2026"
+brand: null
+variant: null

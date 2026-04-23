@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T16:24:46+00:00'
+generated_at: '2026-04-23T16:39:46+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -279,14 +279,17 @@ components:
   signature-block:
     namespace: katib
     tier: primitive
-    version: 0.1.0
+    version: 0.2.0
     languages:
     - en
     - ar
     variants:
     - line-over
     - label-prefix
-    description: Signed-by / date / name block for formal documents, contracts, letters.
+    - recipient
+    description: Named-party block for formal documents — renders signatories (closing signature blocks)
+      or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
+      + date + label.
     used_in_recipes: 1
   step-circle:
     namespace: katib
@@ -390,16 +393,17 @@ components:
   module:
     namespace: katib
     tier: section
-    version: 0.2.0
+    version: 0.3.0
     languages:
     - en
     - ar
     variants:
     - plain
     - numbered
-    description: Repeating body unit — optional numbered eyebrow, heading, intro, and body content. `body`
-      is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts)
-      for recipe-supplied content.
+    description: Flexible body unit — optional numbered eyebrow, heading, intro, and body content. All
+      heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
+      paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
+      inline SVG, pull-quotes, callouts) for recipe-supplied content.
     used_in_recipes: 2
   objectives-box:
     namespace: katib

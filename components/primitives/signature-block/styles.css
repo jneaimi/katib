@@ -16,6 +16,14 @@
     padding-top: 0;
 }
 
+/* recipient — addressee block at the top of a letter.
+   No top border; different vertical rhythm than a closing signature. */
+.katib-signature--recipient {
+    border-top: 0;
+    padding-top: 0;
+    margin: 1.2em 0 1.8em 0;
+}
+
 .katib-signature__label {
     font-size: 9pt;
     letter-spacing: 0.08em;
@@ -37,6 +45,16 @@
 
 .katib-signature__title {
     font-size: 10pt;
+    color: var(--text-secondary);
+}
+
+.katib-signature__organization {
+    font-size: 10pt;
+    color: var(--text-secondary);
+}
+
+.katib-signature__location {
+    font-size: 9.5pt;
     color: var(--text-secondary);
 }
 

@@ -1,0 +1,9 @@
+# Test inputs for `module` isolated render.
+# Used by `katib component test module`.
+inputs:
+  eyebrow: "Module 1 · Foundations"
+  title: "Get set up"
+  intro: "Before you can do anything, you need a working environment."
+  body: "Install the tool, authenticate, and verify you can reach the service."
+brand: null
+variant: null

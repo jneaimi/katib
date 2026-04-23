@@ -1,10 +1,17 @@
-<div class="katib-signature katib-signature--{{ variant or 'line-over' }}" lang="ar" dir="rtl">
-{%- if variant != 'line-over' %}
+{%- set effective_variant = variant or 'line-over' %}
+<div class="katib-signature katib-signature--{{ effective_variant }}" lang="ar" dir="rtl">
+{%- if effective_variant not in ('line-over', 'recipient') %}
     <div class="katib-signature__label">{{ input.label or 'التوقيع' }}</div>
 {%- endif %}
     <div class="katib-signature__name">{{ input.name }}</div>
 {%- if input.title %}
     <div class="katib-signature__title">{{ input.title }}</div>
+{%- endif %}
+{%- if input.organization %}
+    <div class="katib-signature__organization">{{ input.organization }}</div>
+{%- endif %}
+{%- if input.location %}
+    <div class="katib-signature__location">{{ input.location }}</div>
 {%- endif %}
 {%- if input.date %}
     <div class="katib-signature__date">{{ input.date }}</div>

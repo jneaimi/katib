@@ -1,11 +1,11 @@
 name: module
 tier: section
-version: 0.2.0
+version: 0.3.0
 namespace: katib
-description: Repeating body unit — optional numbered eyebrow, heading, intro, and body content. `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts) for recipe-supplied content.
+description: Flexible body unit — optional numbered eyebrow, heading, intro, and body content. All heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts) for recipe-supplied content.
 languages: [en, ar]
 requires:
-  tokens: [text, text_secondary, text_tertiary, accent, accent_2, border]
+  tokens: [text, text_secondary, accent, border]
   fonts: [display, primary]
 accepts:
   inputs:
@@ -19,7 +19,8 @@ accepts:
         description: Above-title category label (e.g. "Module 1 · Foundations", "Chapter 2").
     - title:
         type: string
-        required: true
+        required: false
+        description: Module heading. Optional since 0.3.0 — omit for continuous prose sections (letter bodies, abstracts, recitals) where no heading is appropriate.
     - intro:
         type: string
         required: false
