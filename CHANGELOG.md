@@ -26,23 +26,156 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **26 components** (unchanged count through Day 14;
+Engine state: **27 components** (+1 financial-summary Day 15;
 data-table added Day 13, sections-grid added Day 11,
 multi-party-signature-block added Day 7, kv-list at 0.2.0,
 signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**16 recipes** (10 production: tutorial + business-proposal-letter +
+**17 recipes** (11 production: tutorial + business-proposal-letter +
 personal-cover-letter + formal-noc + tutorial-how-to +
 tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
-editorial-white-paper + **business-proposal-proposal**; 6 dev
-showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4
-image providers, 0 external skill dependencies.
+editorial-white-paper + business-proposal-proposal +
+**financial-invoice**; 6 dev showcases). 6 core library modules,
+5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+dependencies.
 
 **Business-proposal domain complete** (Day 14) — all 3 recipes
 shipped: letter (Day 4), one-pager (Day 12), proposal (Day 14).
 
-**Not shippable as a v1 replacement yet** — v2 has 10 production
-recipes; Phase 3 ports 5 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 11 production
+recipes; Phase 3 ports 4 more over the next ~1 week. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 15 — `financial-summary` component + `financial/invoice` recipe ship)
+
+Tenth Phase-3 recipe migration. **Seventh new Phase-3 component built** —
+`financial-summary` closes the Day-0 queue's totals-box requirement.
+Infra+recipe combo day. Honest-intent graduation (2 verified dependents,
+below auto-threshold of 3 — --force with justification, matching Day-5
+masthead-personal pattern).
+
+- **`components/sections/financial-summary/`** (new) — section-tier
+  totals box for invoices and quotes. Right-aligned numeric rows with
+  labels on the leading side; one emphasized Total row with accent
+  background. Container is `flex-end` positioned (70mm wide) so it
+  naturally aligns to the trailing edge of the page. Optional
+  `currency` input appends currency code to the Total row label
+  ("TOTAL AED"). Variants: `default` (70mm), `compact` (60mm, slimmer
+  for quotes). Row data is simple: `{label, value, variant?}` where
+  `variant: "total"` triggers the accent-bg emphasis. Token contract:
+  `text, text_secondary, accent, accent_on, border` — all existing.
+  RTL handling: flex auto-flips; numeric values forced `direction: ltr`
+  (standard Arabic-document convention for currency figures).
+
+- **`recipes/financial-invoice.yaml`** (new) — 8-section UAE tax
+  invoice:
+  1. `letterhead` **commercial variant** — **FIRST PRODUCTION
+     CONSUMER** (Day-2 variant waited 13 days for first real use;
+     NOC Day-8 used formal). Tax Invoice eyebrow + ref code + date.
+  2. `sections-grid` **bordered variant** — **FIRST PRODUCTION
+     CONSUMER** of bordered. Bill From / Bill To 2-col with TRN
+     per party.
+  3. `kv-list` boxed — **third production consumer** (NOC field-
+     summary, handoff status-grid, now invoice meta strip). 4 fields:
+     Invoice Date / Supply Date / Due Date / Currency.
+  4. `data-table` dense — **FIFTH production consumer + FIRST use
+     of `{text, sub}` cell mapping** that was built Day 13
+     specifically for invoice's description column. 7 columns (# /
+     Description / Qty / Unit / VAT% / VAT / Total), 3 line items,
+     each with a title + scope-note sub-line in the description cell.
+  5. `financial-summary` default — **FIRST PRODUCTION CONSUMER**.
+     4 rows (Subtotal / Discount / VAT / Total) with currency "AED".
+  6. `callout` neutral — **fourth production consumer**.
+     "Amount in Words" block.
+  7. `sections-grid` bordered (2nd instance in recipe) — Payment
+     Terms + Bank Details 2-col with inline-styled `<dl>` for bank
+     kv fields.
+  8. `module` raw_body — inline footer (density block #1): VAT Law
+     citation + thank-you + signature line.
+  Content adapted from `v1-reference/domains/financial/templates/
+  invoice.en.html`. Placeholder prose preserved.
+- **Rendered output: 2 pages, 0 WeasyPrint warnings.** `target_pages:
+  [1, 2]`, `page_limit: 2`. Within target.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **1 density-convention inline block** (footer) — well below NOC's
+  ceiling of 4. The recipe composes primarily from existing
+  components; inline styling is minimal.
+- **2 financial-summary component-requests logged** (invoice + quote).
+  **3 invoice recipe-requests logged.**
+- **Audit + capabilities:** component + recipe register entries +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 15)
+
+- **`tests/test_financial_summary.py`** (new, 11 tests): schema-
+  loads, compact-variant-declared, rows-required, token-contract,
+  renders-EN (2 non-total rows + 1 total row), renders-AR
+  (dir=rtl), renders-to-pdf, compact-variant-class-emitted,
+  default-variant-class, currency-appended-to-total-label,
+  currency-absent-when-unset, total-row-emphasis-class (regression
+  guard for the `--total` modifier).
+- **`tests/test_financial_invoice.py`** (new, 20 tests): schema-
+  loads, en-only, page-targets [1, 2], eight-section-ordering,
+  uses-letterhead-commercial-variant (regression guard for the
+  Day-2 commercial variant's first real use),
+  first-financial-summary-consumer (regression guard for 4 rows +
+  variant: total on last row + AED currency), data-table-uses-
+  text-sub-cells (regression guard for the 7-col + 3-row shape
+  with all 3 descriptions using {text, sub} mapping), kv-list-
+  boxed-for-meta-strip, sections-grid-bordered-first-consumer
+  (regression guard for 2 bordered instances), fourth-callout-
+  neutral-consumer, validates-clean, validates-strict-clean,
+  renders-EN (5 marker classes), pdf-within-target-pages (1-2
+  accepted), renders-all-v1-content (30+ distinct phrases),
+  line-items-three-rows-with-sub-cells (regression guard: 3
+  cell-sub spans inside the data-table), totals-has-accent-
+  total-row, in-capabilities, audit-entry-exists.
+- **Regression sweep:** 759/759 passing (was 728, +11 financial-
+  summary +20 invoice tests). Zero WeasyPrint warnings across
+  all 20 render paths.
+
+### Architecture decisions (Phase 3 Day 15)
+
+1. **financial-summary closes the Day-0 component queue (original 7).**
+   Phase 3 started with a 7-component plan: kv-list (Day 1), letterhead
+   (Day 2), masthead-personal (Day 5), multi-party-signature-block
+   (Day 7), financial-summary (Day 15), recitals-block (still pending
+   for mou), legal-disclaimer-strip (probably absorbed into callout
+   neutral). 6 of 7 built. Plus 2 auto-graduated bonus components
+   (sections-grid Day 11, data-table Day 13). Component library is
+   now more complete than originally planned.
+2. **letterhead commercial variant graduates after 13 days.** Built
+   Day 2 with three variants (default, formal, commercial). NOC used
+   formal; nothing used commercial until invoice. This validates the
+   Phase-2 + early-Phase-3 "build variants speculatively IF the v1
+   triage locked them in" pattern — commercial was always going to
+   serve invoice and quote; the wait was just about reaching those
+   recipes.
+3. **data-table `{text, sub}` cell feature used where it was
+   designed.** The feature was built Day 13 specifically for invoice's
+   description column (v1 template review highlighted it). Day 15
+   exercises it. No component revisions needed. This is a tight
+   design-use loop — build for a specific future need, use it when
+   that need arrives, validate in production.
+4. **sections-grid bordered graduates.** Built Day 11 with 3 variants
+   (default, dense, bordered). Dense shipped Day 11 (cheatsheet).
+   Default shipped Day 12 (one-pager). Bordered shipped Day 15
+   (invoice Bill From/To + Payment block). All three variants now
+   have production consumers within 4 days.
+5. **Honest-intent graduation pattern holding.** financial-summary
+   has 2 verified dependents (invoice + quote), below the threshold
+   of 3. Used `--force` + justification citing both recipes on the
+   migrate list. Same pattern as Day 5's masthead-personal. Both
+   decisions look cleaner in retrospect than forcing more dependents
+   or deferring the component until an artificial third consumer.
+6. **Financial domain 50% migrated.** Day 15 ships invoice; Day 16
+   plan is quote (same infra, different variant). Financial domain
+   completes after Day 16.
+7. **Phase-3 progress: 10/14 recipes (71%) in 15 days.** Ahead of
+   1-per-day pace. Remaining: quote (Day 16), MoU (Day 17 w/
+   recitals-block), plus 2 tutorial recipes (onboarding,
+   katib-walkthrough) + CV. Reachable by Day 20 with buffer.
+8. **AR variant deferred (tenth recipe in a row).** Consistent
+   since Day 4.
 
 ### Added (Phase 3 Day 14 — `business-proposal/proposal` recipe ships — business-proposal domain complete)
 

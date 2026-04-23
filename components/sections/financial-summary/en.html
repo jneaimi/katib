@@ -1,0 +1,17 @@
+<section class="katib-section katib-financial-summary katib-financial-summary--{{ variant or 'default' }}" lang="en">
+    <div class="katib-financial-summary__box">
+{%- for row in input.rows %}
+{%- if row.variant == 'total' %}
+        <div class="katib-financial-summary__row katib-financial-summary__row--total">
+            <span class="katib-financial-summary__label">{{ row.label }}{% if input.currency %} {{ input.currency }}{% endif %}</span>
+            <span class="katib-financial-summary__value">{{ row.value }}</span>
+        </div>
+{%- else %}
+        <div class="katib-financial-summary__row">
+            <span class="katib-financial-summary__label">{{ row.label }}</span>
+            <span class="katib-financial-summary__value">{{ row.value }}</span>
+        </div>
+{%- endif %}
+{%- endfor %}
+    </div>
+</section>
