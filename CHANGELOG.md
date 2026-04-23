@@ -26,15 +26,93 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **23 components** (+1 masthead-personal Day 5;
-signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**8 recipes** (2 production: tutorial + business-proposal-letter;
-6 dev showcases). 6 core library modules, 5 CLIs, 4 memory streams,
+Engine state: **23 components** (same count through Day 6;
+masthead-personal shipped Day 5, evolutions to signature-block at 0.2.0,
+module at 0.3.0, callout at 0.2.0). **9 recipes** (3 production:
+tutorial + business-proposal-letter + personal-cover-letter; 6 dev
+showcases). 6 core library modules, 5 CLIs, 4 memory streams,
 4 image providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 2 production
-recipes; Phase 3 ports 13 more over the next ~2.5 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 3 production
+recipes; Phase 3 ports 12 more over the next ~2.5 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 6 — `personal/cover-letter` recipe ships)
+
+Second Phase-3 recipe migration. Richer than the business letter (8
+sections vs 4) but still zero new components — Day 5's infrastructure
+carried the whole recipe.
+
+- **`recipes/personal-cover-letter.yaml`** (new) — 8-section recipe:
+  1. `masthead-personal` (Day 5) — personal identity header
+  2. `module` heading-less (Day 3) — date line (right-end-aligned via inline style)
+  3. `signature-block` recipient variant (Day 3) — addressee
+  4. `callout` neutral tone (Day 5) — subject line
+  5. `module` heading-less (Day 3) — salutation + 3 body paragraphs + closing
+  6. `signature-block` default line-over — closing signature
+  7. `rule` hairline variant — enclosure separator
+  8. `module` heading-less — enclosure line
+  Content ported verbatim from `v1-reference/domains/personal/templates/
+  cover-letter.en.html`. Placeholder-prose style preserved — the v1
+  cover-letter is a template-for-editing (instructional prose in
+  square brackets for the author to replace). EN-only per the
+  `inputs_by_lang` deferral established Day 4.
+- **Inline-style compromise.** Date-line and enclosure-line modules use
+  `<p style="...">` in their `raw_body` with token-driven colors
+  (`var(--text-tertiary)`) and logical-property alignment
+  (`text-align: end`). Considered dedicated `date-line` and
+  `enclosure` primitives and rejected both as one-use entropy; recipe-
+  local inline styling is the right scope when two short lines would
+  otherwise force two one-off components.
+- **Rendered output:** 1-page PDF (12KB), 0 WeasyPrint warnings.
+- **Validation clean at default + strict** — 0 content-lint warnings
+  on instructional placeholder prose. Pre-scan prediction confirmed.
+- **3 recipe-requests logged** — job-application, portfolio-submission,
+  formal-introduction signals.
+- **Audit + capabilities:** register entry in `memory/recipe-audit.jsonl`;
+  `capabilities.yaml` lists the new recipe.
+
+### Tests (Phase 3 Day 6)
+
+- **`tests/test_personal_cover_letter.py`** (new, 16 tests):
+  schema-loads, en-only, page-targets, eight-sections-in-order,
+  uses-masthead-personal (Day 5 first production consumer),
+  uses-callout-neutral-tone (Day 5 first production consumer),
+  uses-recipient-variant (Day 3 second production consumer),
+  uses-rule-hairline, body-module-has-no-title (Day 3 third production
+  consumer), validates-clean, validates-strict-clean, renders-EN
+  (all 8 component marker classes present), pdf-within-target-pages,
+  renders-all-v1-placeholder-content, in-capabilities, audit-entry-
+  exists.
+- **Regression sweep:** 556/556 passing (was 540, +16 cover-letter
+  tests). Zero WeasyPrint warnings.
+
+### Architecture decisions (Phase 3 Day 6)
+
+1. **Placeholder-prose template style preserved.** Unlike Day 4's
+   business-letter (realistic sample content), cover-letter ships
+   with v1's instructional placeholders (`[Opening paragraph — the
+   why]`, `[Hiring Manager Name]`). This is a recipe-style decision
+   worth noting: letter-class recipes can be **exemplar** (realistic
+   sample, user substitutes identifiers) or **template** (placeholder
+   prose, user rewrites). Business-letter is exemplar; cover-letter
+   is template. Both patterns are valid; the v1 author already made
+   the correct call per recipe type, and Day-6 honors it.
+2. **Recipe-local inline styling is acceptable scope.** Two short
+   lines (date + enclosure) with minor typographic distinctness
+   (right-aligned small muted for date; small muted for enclosure).
+   Rejected: dedicated `date-line` and `enclosure` primitives
+   (one-use entropy); stretching `signature-block` to cover date
+   (wrong semantic); no styling (visually off from v1). Chose: inline
+   `<p style="...">` with token vars (`var(--text-tertiary)`) and
+   logical property (`text-align: end` for locale safety). Phase-3
+   convention: inline-style is OK for 1-2 line recipe-specific tweaks
+   that would otherwise force a one-use component.
+3. **8 sections is not too many.** Day 4's business letter was 4
+   sections; Day 6 is 8. Each section serves a distinct role (header,
+   date, addressee, subject, body, signature, separator, enclosure).
+   A denser recipe is still readable and structural — the per-section
+   YAML is small.
 
 ### Added (Phase 3 Day 5 — component infra for cover-letter)
 

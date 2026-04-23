@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T17:46:34+00:00'
+generated_at: '2026-04-23T17:55:26+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -50,6 +50,36 @@ recipes:
     - signature-block
     - module
     - signature-block
+  personal-cover-letter:
+    namespace: katib
+    version: 0.1.0
+    description: Personal cover letter — masthead + date + recipient + subject + continuous-prose body
+      + closing + enclosure. Template with placeholder prose; user edits before rendering.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 3
+    when: Cover letter for a job application, portfolio submission, or formal introduction. Instructional
+      placeholders in the body ([Opening paragraph — the why]) guide the author; replace before final
+      render.
+    keywords:
+    - cover-letter
+    - personal
+    - job-application
+    - portfolio
+    - introduction
+    - correspondence
+    sections_shape:
+    - masthead-personal
+    - module
+    - signature-block
+    - callout
+    - module
+    - signature-block
+    - rule
+    - module
   phase-1-trivial:
     namespace: katib
     version: 0.1.0
@@ -253,7 +283,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 2
+    used_in_recipes: 3
   eyebrow:
     namespace: katib
     tier: primitive
@@ -302,7 +332,7 @@ components:
     - strong
     - double
     description: Horizontal divider between content blocks.
-    used_in_recipes: 1
+    used_in_recipes: 2
   signature-block:
     namespace: katib
     tier: primitive
@@ -317,7 +347,7 @@ components:
     description: Named-party block for formal documents — renders signatories (closing signature blocks)
       or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
       + date + label.
-    used_in_recipes: 2
+    used_in_recipes: 3
   step-circle:
     namespace: katib
     tier: primitive
@@ -428,7 +458,7 @@ components:
     description: Personal-identity masthead — name + tagline on leading side, contact stack (email, phone,
       location) on trailing side. Bottom accent rule. For personal-brand documents (cover-letter, CV,
       bio). Distinct from `letterhead` (which is for organizational/company identity).
-    used_in_recipes: 0
+    used_in_recipes: 1
   module:
     namespace: katib
     tier: section
@@ -443,7 +473,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 3
+    used_in_recipes: 4
   objectives-box:
     namespace: katib
     tier: section
