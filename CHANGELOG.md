@@ -3,14 +3,133 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner (Days 1–10 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component CLI (Days 1–11 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–10 of 14 have landed. Engine state: 20
+Phase 2 is in progress. Days 1–11 of 14 have landed. Engine state: 20
 components, 7 recipes (including the `tutorial.yaml` production
-recipe), 251 tests, zero WeasyPrint warnings. **`/katib` is now a
-functional slash command end-to-end** — transcript → `route.py infer`
-→ gate decision → `build.py` → PDF, with observable signals + a
-structured decision gate for ambiguous requests.
+recipe), 297 tests, zero WeasyPrint warnings. **Component authoring is
+now a supported lifecycle** — `katib component new → validate → test →
+register → share → lint --all` is the sanctioned path from empty
+directory to registered component, with build-time audit enforcement
+and a graduation gate wired for Day 13 activation.
+
+### Added (Day 11 — katib component CLI)
+
+- **`scripts/component.py`** — unified dispatcher for the component
+  authoring lifecycle. Six subcommands, one argparse tree, `--json`
+  global flag for machine-parseable output:
+  - `new <name> --tier <t> [--languages …] [--requires-tokens …]
+    [--description …] [--force --justification …]` — scaffolder
+  - `validate <name>` — full validation (9 ADR checks, 6 implemented
+    now)
+  - `test <name> [--lang …] [--variant …]` — isolated render harness
+  - `register <name>` — re-validate + regen `capabilities.yaml` + audit
+  - `share <name>` — produce `dist/<name>-<version>.tar.gz`
+  - `lint --all` — validate every component across every tier
+
+- **`core/component_ops.py`** — library module behind the CLI. Every
+  function returns a structured result dict (no printing); the CLI
+  formats for either human or JSON consumers.
+  - `scaffold()` — writes `component.yaml` (schema-conformant),
+    language-appropriate HTML stubs, README skeleton, test-input
+    fixture stub. Writes `action: scaffold` audit entry.
+  - `validate_full()` — schema + lang completeness + token hygiene
+    (both HTML `{{ colors.X }}` refs and CSS `var(--X)` refs against
+    `requires.tokens`) + brand hygiene + input parity + root-element
+    a11y lang attribute + README section headers + test-fixture
+    presence. Returns `ValidationResult` with severity-tagged issues.
+  - `render_isolated()` — composes a synthetic single-section recipe
+    on the fly, renders to PDF via WeasyPrint, counts logger warnings.
+    Uses the component's test fixture file when present; auto-
+    synthesizes placeholder inputs from the declared schema otherwise.
+  - `register()` — chains `validate_full` (must pass) → regenerates
+    `capabilities.yaml` → writes `action: register` audit entry.
+  - `bundle_share()` — tar.gz bundle with a strict allowlist
+    (component.yaml, HTML variants, styles.css, README, fixture). No
+    audit, no capabilities, no goldens. Embeds a `MANIFEST.json`
+    header.
+  - `lint_all()` — iterates every component directory under every tier
+    and returns a list of `ValidationResult` objects.
+
+- **Graduation gate (soft-pass)** — core-namespace scaffolds check
+  `memory/component-requests.jsonl` for ≥3 matching entries. Until
+  Day 13 writes that log, the check emits a structured warning and
+  permits scaffold. `--force --justification "<reason>"` is the audited
+  override path; `--force` without `--justification` raises.
+
+- **CLI error contract** — `--json` mode wraps every operational error
+  in `{action: "error", message, type}`. Human mode prints `ERROR: …`
+  to stderr. Never leaks a raw traceback (catch-all at
+  `scripts/component.py:main`). Exit codes: `0` success, `1`
+  operational error, `2` bad CLI usage.
+
+### Tests (Day 11)
+
+- **`tests/test_component_ops.py`** — 27 unit tests covering the
+  library API. Scaffold happy path + sad path (existing name, bad
+  kebab-case, bad tier, `--force` without justification, bilingual
+  mode). Validator detects undeclared input, undeclared HTML token
+  reference, missing lang HTML file, missing README, missing root-
+  element `lang=`. Isolated render produces non-empty PDF with zero
+  WeasyPrint warnings. Register refuses broken component; writes
+  audit. Share excludes audit/capabilities; includes manifest.
+  Lint-all covers every existing component.
+
+- **`tests/test_component_cli.py`** — 19 subprocess tests covering
+  every CLI verb in both human and `--json` mode. Exit-code contract
+  (0/1/2), stderr message content, JSON-parseable stdout on every
+  exit path (regression guard modeled on `test_route.py`). Verifies
+  the full `new → validate → test → register → share` round-trip runs
+  cleanly end-to-end.
+
+### End-to-end smoke test (Day 11)
+
+Full lifecycle exercised live during development:
+1. `component new test-widget --tier primitive --languages en
+   --requires-tokens accent` — 4 files written, audit entry logged,
+   graduation warning printed (as designed for soft-pass mode).
+2. `component validate test-widget` — 0 errors, 1 warning (declared
+   `accent` token not yet referenced in the HTML stub — correct
+   finding).
+3. `component test test-widget` — rendered isolated PDF (3171 bytes,
+   0 WeasyPrint warnings).
+4. `component register test-widget` — capabilities.yaml regenerated,
+   audit entry appended.
+5. `component share test-widget` — `dist/test-widget-0.1.0.tar.gz`
+   (992 bytes, 5 files including MANIFEST.json, no audit/capabilities).
+
+### Architecture decisions taken (Day 11 — per Jasem's approval during validation)
+
+1. **All 6 subcommands ship today** (not split across Days 11/12) —
+   each is small once the dispatcher exists; Day 12 gets recipe CLI
+   to itself.
+2. **PNG goldens deferred to Phase 3.** `test` asserts clean PDF
+   render (non-empty + zero WeasyPrint warnings). Avoids adding
+   pdf2image/poppler as a hard dependency.
+3. **Graduation gate soft-passes until Day 13's requests log
+   exists.** The check is wired; activates silently when the log
+   file appears (zero code churn at Day 13).
+4. **Python-only entry point for Phase 2.** `bin/katib.js` (npx
+   wrapper) stays install-focused. Public-facing CLI verb routing
+   can land later once the verbs are stable.
+5. **Validator at 6/9 ADR checks.** Schema, lang completeness, token
+   hygiene (HTML+CSS), brand hygiene, input parity, a11y root lang
+   attribute, README section headers, test fixture presence.
+   Deferred: full HTML5 validity (html5lib dep), contrast check,
+   page-break warning.
+6. **Fixture + auto-synth fallback for `test`.** Authors provide
+   realistic inputs at `tests/fixtures/components/<name>/test-inputs.yaml`;
+   auto-synthesized placeholders generated from the declared schema
+   when the fixture is missing.
+
+All 9 flagged risks mitigated before shipping — the JSON-contract
+regression guard (modeled on `route.py`'s) is the most important;
+catches any exit path that ever emits non-JSON to stdout in `--json`
+mode.
+
+297 tests pass (251 → 297, +46 for Day 11). Zero WeasyPrint warnings.
+Grep clean. Engine state: component authoring lifecycle is now
+enforceable end-to-end; Day 12 is the parallel lifecycle for recipes.
 
 ### Added (Day 10 — /katib runner + SKILL.md rewrite)
 
