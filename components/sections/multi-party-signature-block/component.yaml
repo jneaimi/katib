@@ -1,0 +1,22 @@
+name: multi-party-signature-block
+tier: section
+version: 0.1.0
+namespace: katib
+description: Multi-party signature grid — side-by-side signature boxes for formal documents (NOC, MOU, contracts). Each party has name + optional title + optional email. Responsive grid auto-flows based on party count (2+ parties supported).
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary]
+  fonts: [primary]
+accepts:
+  inputs:
+    - parties:
+        type: array
+        required: true
+        description: Array of {name, title, email} mappings. `name` required; `title` + `email` optional. 2+ entries render in a flex grid that auto-flows.
+    - heading:
+        type: string
+        required: false
+        description: Optional heading above the grid (e.g., "Signed by the undersigned").
+variants:
+  - line-over
+  - minimal

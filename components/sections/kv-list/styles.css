@@ -62,3 +62,52 @@
 .katib-kv-list__grid > :nth-last-child(-n+2) {
     border-bottom: none;
 }
+
+/* Boxed — field-summary style for formal documents (NOC employee details, invoice meta).
+   Inverts emphasis: term becomes a small uppercase label; value becomes the emphasized data.
+   Adds a container (background + leading accent border + padding) around the grid. */
+.katib-kv-list--boxed {
+    background: var(--tag-bg);
+    padding: 14pt 18pt;
+    border-left: 3pt solid var(--accent);
+    margin: 1.2em 0;
+}
+
+/* RTL — flip the accent rule to the right edge (WeasyPrint doesn't support
+   border-inline-start, so we override physical properties per direction) */
+.katib-kv-list--boxed[dir="rtl"] {
+    border-left: 0;
+    border-right: 3pt solid var(--accent);
+}
+
+.katib-kv-list--boxed .katib-kv-list__heading {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.6em;
+}
+
+.katib-kv-list--boxed .katib-kv-list__grid {
+    grid-template-columns: minmax(35%, 40%) 1fr;
+    gap: 0.1em 0.8em;
+}
+
+.katib-kv-list--boxed .katib-kv-list__term {
+    color: var(--text-secondary);
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 400;
+    padding: 5pt 0;
+    border-bottom: 0.5pt dotted var(--border);
+}
+
+.katib-kv-list--boxed .katib-kv-list__value {
+    color: var(--text);
+    font-size: 10.5pt;
+    font-weight: 600;
+    padding: 5pt 0;
+    border-bottom: 0.5pt dotted var(--border);
+}

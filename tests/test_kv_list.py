@@ -20,7 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def test_kv_list_loads_against_schema():
     c = load_component("kv-list")
     assert c["tier"] == "section"
-    assert c["version"] == "0.1.0"
+    assert c["version"] == "0.2.0"
     assert c["namespace"] == "katib"
     assert set(c["languages"]) == {"en", "ar"}
 

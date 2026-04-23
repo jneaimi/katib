@@ -1,11 +1,11 @@
 name: kv-list
 tier: section
-version: 0.1.0
+version: 0.2.0
 namespace: katib
-description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet reference pairs, metadata summaries.
+description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents (NOC employee details, invoice meta blocks).
 languages: [en, ar]
 requires:
-  tokens: [text, text_secondary, border]
+  tokens: [text, text_secondary, border, tag_bg, accent]
   fonts: [primary, display]
 accepts:
   inputs:
@@ -22,3 +22,4 @@ accepts:
 variants:
   - dense
   - spacious
+  - boxed
