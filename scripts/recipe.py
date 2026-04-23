@@ -168,7 +168,11 @@ def _parse_target_pages(raw: str | None) -> list[int] | None:
 
 def _cmd_validate(args) -> int:
     try:
-        result = ops.validate_recipe_full(args.name)
+        result = ops.validate_recipe_full(
+            args.name,
+            content_lint=not args.no_content_lint,
+            strict=args.strict,
+        )
     except ValueError as e:
         return _emit_error(e, json_out=args.json)
 
@@ -204,7 +208,11 @@ def _cmd_test(args) -> int:
 
 def _cmd_register(args) -> int:
     try:
-        result = ops.register_recipe(args.name)
+        result = ops.register_recipe(
+            args.name,
+            content_lint=not args.no_content_lint,
+            strict=args.strict,
+        )
     except ValueError as e:
         return _emit_error(e, json_out=args.json)
 
@@ -243,7 +251,10 @@ def _cmd_lint(args) -> int:
     if not args.all:
         print("lint requires --all (no per-recipe variant yet)", file=sys.stderr)
         return 2
-    results = ops.lint_all_recipes()
+    results = ops.lint_all_recipes(
+        content_lint=not args.no_content_lint,
+        strict=args.strict,
+    )
     if args.json:
         print(json.dumps([r.as_dict() for r in results], ensure_ascii=False, indent=2))
     else:
@@ -295,6 +306,16 @@ def main(argv: list[str] | None = None) -> int:
     # validate
     p_val = sub.add_parser("validate", help="Run validation")
     p_val.add_argument("name")
+    p_val.add_argument(
+        "--strict",
+        action="store_true",
+        help="Promote content-lint warnings to errors (CI-friendly).",
+    )
+    p_val.add_argument(
+        "--no-content-lint",
+        action="store_true",
+        help="Skip the content_lint pass entirely (legacy content override).",
+    )
     p_val.set_defaults(func=_cmd_validate)
 
     # test
@@ -308,6 +329,16 @@ def main(argv: list[str] | None = None) -> int:
     # register
     p_reg = sub.add_parser("register", help="Register the recipe")
     p_reg.add_argument("name")
+    p_reg.add_argument(
+        "--strict",
+        action="store_true",
+        help="Promote content-lint warnings to errors (blocks register).",
+    )
+    p_reg.add_argument(
+        "--no-content-lint",
+        action="store_true",
+        help="Skip the content_lint pass entirely.",
+    )
     p_reg.set_defaults(func=_cmd_register)
 
     # share
@@ -318,6 +349,16 @@ def main(argv: list[str] | None = None) -> int:
     # lint
     p_lint = sub.add_parser("lint", help="Validate all recipes")
     p_lint.add_argument("--all", action="store_true", required=False)
+    p_lint.add_argument(
+        "--strict",
+        action="store_true",
+        help="Promote content-lint warnings to errors.",
+    )
+    p_lint.add_argument(
+        "--no-content-lint",
+        action="store_true",
+        help="Skip the content_lint pass entirely.",
+    )
     p_lint.set_defaults(func=_cmd_lint)
 
     args = ap.parse_args(argv)

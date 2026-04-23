@@ -286,7 +286,7 @@ def scaffold_recipe(
 @dataclass
 class RecipeIssue:
     severity: str     # "error" | "warning"
-    category: str     # "schema" | "component-ref" | "variant" | "lang" | "keywords" | "pages"
+    category: str     # "schema" | "component-ref" | "variant" | "lang" | "keywords" | "pages" | "content"
     message: str
 
     def as_dict(self) -> dict:
@@ -320,7 +320,22 @@ class RecipeValidationResult:
         }
 
 
-def validate_recipe_full(name: str) -> RecipeValidationResult:
+def validate_recipe_full(
+    name: str,
+    *,
+    content_lint: bool = True,
+    strict: bool = False,
+) -> RecipeValidationResult:
+    """Validate a recipe end-to-end.
+
+    Args:
+        name: Recipe name (filename stem).
+        content_lint: If True, also run content_lint over the recipe YAML
+            prose. Default True. Violations are added as category='content'
+            issues with severity preserved from content_lint ('warn' → 'warning').
+        strict: If True, promote content-lint warnings to errors. Respects
+            KATIB_STRICT_LINT=1 env var as a synonym. CI-friendly.
+    """
     rpath = _recipe_path(name)
     if not rpath.exists():
         raise ValueError(f"recipe {name!r} not found at {rpath}")
@@ -423,6 +438,43 @@ def validate_recipe_full(name: str) -> RecipeValidationResult:
                     "warning",
                     "pages",
                     f"target_pages upper bound {hi} exceeds page_limit {page_limit}",
+                )
+            )
+
+    # 7. Content lint — anti-slop on the recipe's prose
+    if content_lint:
+        import os
+        from core import content_lint as cl
+
+        env_strict = os.environ.get("KATIB_STRICT_LINT", "").strip() in ("1", "true", "yes")
+        promote_to_error = strict or env_strict
+
+        raw = rpath.read_text(encoding="utf-8")
+        text = cl.extract_text(raw)
+        # Recipe prose is EN or AR; default to EN for mixed/explicit detection per recipe metadata
+        recipe_langs = data.get("languages", []) or ["en"]
+        lint_lang = "ar" if "ar" in recipe_langs and "en" not in recipe_langs else "en"
+
+        try:
+            violations = cl.lint(text, lint_lang)
+        except ValueError:
+            violations = []
+
+        for v in violations:
+            # All content-lint findings surface as warnings by default so the
+            # authoring workflow stays unblocked on intentional prose. --strict
+            # (or KATIB_STRICT_LINT=1) promotes every finding to an error,
+            # which blocks register. Content-lint's internal 'error' vs 'warn'
+            # granularity is preserved in the message text for human review.
+            out_severity = "error" if promote_to_error else "warning"
+            result.issues.append(
+                RecipeIssue(
+                    severity=out_severity,
+                    category="content",
+                    message=(
+                        f"L{v.line} [{v.rule}/{v.severity}] {v.pattern}"
+                        + (f" — {v.snippet}" if v.snippet else "")
+                    ),
                 )
             )
 
@@ -546,8 +598,13 @@ class RecipeRegisterResult:
     validation: RecipeValidationResult
 
 
-def register_recipe(name: str) -> RecipeRegisterResult:
-    v = validate_recipe_full(name)
+def register_recipe(
+    name: str,
+    *,
+    content_lint: bool = True,
+    strict: bool = False,
+) -> RecipeRegisterResult:
+    v = validate_recipe_full(name, content_lint=content_lint, strict=strict)
     if not v.ok:
         raise ValueError(
             f"cannot register {name!r}: {len(v.errors)} validation error(s). "
@@ -597,12 +654,18 @@ class RecipeShareResult:
     files_included: list[str]
 
 
-def bundle_share_recipe(name: str, out_dir: Path | None = None) -> RecipeShareResult:
+def bundle_share_recipe(
+    name: str,
+    out_dir: Path | None = None,
+    *,
+    content_lint: bool = True,
+    strict: bool = False,
+) -> RecipeShareResult:
     rpath = _recipe_path(name)
     if not rpath.exists():
         raise ValueError(f"recipe {name!r} not found at {rpath}")
     # Validate first — never bundle a broken recipe
-    v = validate_recipe_full(name)
+    v = validate_recipe_full(name, content_lint=content_lint, strict=strict)
     if not v.ok:
         raise ValueError(
             f"cannot share {name!r}: {len(v.errors)} validation error(s). "
@@ -652,13 +715,17 @@ def bundle_share_recipe(name: str, out_dir: Path | None = None) -> RecipeShareRe
 # ---------------------------------------------------------------------------
 
 
-def lint_all_recipes() -> list[RecipeValidationResult]:
+def lint_all_recipes(
+    *, content_lint: bool = True, strict: bool = False
+) -> list[RecipeValidationResult]:
     results: list[RecipeValidationResult] = []
     if not RECIPES_DIR.exists():
         return results
     for rfile in sorted(RECIPES_DIR.glob("*.yaml")):
         name = rfile.stem
-        results.append(validate_recipe_full(name))
+        results.append(
+            validate_recipe_full(name, content_lint=content_lint, strict=strict)
+        )
     return results
 
 
