@@ -5,3 +5,5 @@
 {"recipe": "phase-2-day5-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 5 image-consuming sections showcase"}
 {"recipe": "phase-2-day6-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 6 chart sections showcase"}
 {"recipe": "tutorial", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 7 first production recipe — Bloom framework guide port"}
+{"recipe": "business-proposal-letter", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T16:54:54+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib recipe new"}
+{"recipe": "business-proposal-letter", "namespace": "katib", "action": "register", "at": "2026-04-23T16:55:36+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

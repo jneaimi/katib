@@ -7,15 +7,16 @@ All notable changes to Katib are documented here. Format loosely follows
 
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
 2026-04-23 — 14 recipes on the migrate list. Component queue revised
-twice: 5 (Day 0) → 6 (Day 2, discovered `letterhead`) → 7 effective
-(Day 3, two component evolutions `signature-block` v0.2.0 +
-`module` v0.3.0 needed before the first letter-class recipe can ship
-thin). Bilingual NOC proven to need no new component (CSS
+twice during Phase 3: 5 (Day 0) → 6 (Day 2, discovered `letterhead`) →
+7 effective (Day 3, two component evolutions needed). **Day 4 shipped
+the first Phase-3 recipe (`business-proposal/letter`)**, proving the
+recipe-migration flow end-to-end with only existing/extended
+components. Bilingual NOC proven to need no new component (CSS
 direction-flip only). See `~/vault/projects/katib/project.md` and
 ADR §Phase 3 for the locked plan.
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
-criteria green with automated proofs, 503 tests passing, zero
+criteria green with automated proofs, 518 tests passing, zero
 WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
 review lives in the vault at `projects/katib/phase-2-gate-review.md`.
 
@@ -24,17 +25,90 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: 22 components. Day 3 bumped `signature-block` 0.1.0 →
-0.2.0 (added `organization` + `location` inputs + `recipient` variant)
-and `module` 0.2.0 → 0.3.0 (`title` relaxed to optional — enables
-heading-less continuous-prose sections for letter bodies, legal
-recitals, white-paper abstracts). 7 recipes, 6 core library modules,
-5 CLIs, 4 memory streams, 4 image providers, 0 external skill
-dependencies.
+Engine state: 22 components (signature-block at 0.2.0, module at 0.3.0).
+**8 recipes** (2 production: tutorial + business-proposal-letter; 6 dev
+showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4 image
+providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 1 production recipe
-(tutorial); Phase 3 ports 14 more over ~3 weeks. Keep v1 installed as
-the daily global skill until the cutover.
+**Not shippable as a v1 replacement yet** — v2 has 2 production
+recipes; Phase 3 ports 13 more over the next ~2.5 weeks. Keep v1
+installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 4 — first Phase-3 recipe ships)
+
+First real recipe migration. `business-proposal/letter` (v1 monolithic
+template) → `business-proposal-letter.yaml` (v2 thin composition of 4
+sections, zero new components).
+
+- **`recipes/business-proposal-letter.yaml`** (new) — 4-section recipe:
+  1. `letterhead` (default variant) — company + reference + date
+  2. `signature-block` (recipient variant, Day 3) — addressee block
+  3. `module` (no title, Day 3) — continuous-prose body with
+     salutation + 3 paragraphs + closing
+  4. `signature-block` (default line-over) — closing signature
+  Content ported verbatim from `v1-reference/domains/business-proposal/
+  templates/letter.en.html`. EN-only for now; AR variant deferred
+  pending `inputs_by_lang` schema design (see Architecture decisions
+  below).
+- **Recipe metadata:** `languages: [en]`, `target_pages: [1, 2]`,
+  `page_limit: 3`, keywords `letter,business,proposal,formal,
+  correspondence,cover`.
+- **Rendered output:** 1-page PDF (11KB), 0 WeasyPrint warnings.
+  Matches v1 letter's 1-page behavior.
+- **3 recipe-requests logged** — cover-letter-for-training-proposal,
+  meeting-request, partnership-introduction signals. First real
+  entries in `memory/recipe-requests.jsonl`.
+- **Validation clean at default + strict** — 0 content-lint warnings
+  on v1 body prose (pre-scan hit rate confirmed: no banned-openers,
+  emphasis-crutches, vague-declaratives, or meta-commentary in the
+  ported content).
+- **Audit + capabilities:** register entry in `memory/recipe-audit.jsonl`;
+  `capabilities.yaml` lists the new recipe.
+
+### Tests (Phase 3 Day 4)
+
+- **`tests/test_business_proposal_letter.py`** (new, 15 tests):
+  schema-loads, en-only, page-targets, four-sections-in-order,
+  recipient-variant-used (Day-3 component in production), body-module-
+  has-no-title (module v0.3.0 in production), closing-signature-default
+  variant, keywords-present, validates-clean, validates-strict-clean,
+  renders-EN (4-section marker classes present), pdf-one-page,
+  renders-all-v1-content (line-wrap tolerant whitespace collapse),
+  in-capabilities (registration regression guard), audit-entry-exists
+  (build.py gate regression guard).
+- **`tests/test_recipe_ops.py:test_scaffold_graduation_warning_when_log_missing`**
+  regression-fixed — same pattern as Day-1 component-ops sibling fix.
+  Monkey-patches `ops.REQUESTS_FILE` to tmp_path because the real
+  `memory/recipe-requests.jsonl` is now populated.
+- **Regression sweep:** 518/518 passing (was 503, +15 letter-recipe
+  tests). Zero WeasyPrint warnings.
+
+### Architecture decisions (Phase 3 Day 4)
+
+1. **`inputs_by_lang` recipe-schema feature deferred to NOC-day.**
+   The v2 recipe schema has no per-language content pattern today.
+   Existing bilingual showcases declare `languages: [en, ar]` but
+   ship English-only content — the AR render is "English text in RTL
+   direction," not culturally-adapted content. For a production letter
+   with different prose per language (v1 ports), this is inadequate.
+   Rather than design the schema extension today, deferred to the
+   NOC day: NOC is the first truly bilingual recipe in the migrate
+   list, and its scan proved the content differs per language. Day 4
+   ships EN-only letter honestly declaring `languages: [en]`; matches
+   tutorial.yaml's pattern.
+2. **Content-lint didn't trip — recipe ships content-clean.** The
+   v1 letter's business prose was written to sharp-prose standards
+   already; no rewriting needed. This is the first production recipe
+   validated under the Day-13 content-lint contract; the wiring
+   proved unobtrusive for well-written content.
+3. **4-section thin recipe validates the composition model.** The
+   letter is 13 non-whitespace lines of YAML composing 4 sections
+   — no template authoring, no custom HTML in the recipe (except the
+   `raw_body` wrapper `<p>` tags around the prose). Proves that the
+   Phase-2 architectural investment (primitives + sections + thin
+   recipes) pays off for real doc-types, not just tutorials. The
+   Day-3 component extensions (signature-block recipient + module
+   no-title) were the load-bearing infrastructure.
 
 ### Added (Phase 3 Day 3 — component infra for letter-class recipes)
 

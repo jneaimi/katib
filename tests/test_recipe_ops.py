@@ -52,7 +52,13 @@ def test_scaffold_writes_audit_entry(throwaway_name):
     assert len(scaffold_entries) == 1
 
 
-def test_scaffold_graduation_warning_when_log_missing(throwaway_name):
+def test_scaffold_graduation_warning_when_log_missing(throwaway_name, tmp_path, monkeypatch):
+    """Fresh-install path: when no request log exists, the gate soft-passes.
+    Monkey-patches `ops.REQUESTS_FILE` because `memory/recipe-requests.jsonl`
+    is now populated (Phase 3 Day 4 created it via real graduation requests
+    for business-proposal-letter). Same hygiene fix as the component-ops
+    sibling test (Phase 3 Day 1)."""
+    monkeypatch.setattr(ops, "REQUESTS_FILE", tmp_path / "recipe-requests.jsonl")
     assert not ops.REQUESTS_FILE.exists()
     result = ops.scaffold_recipe(throwaway_name, languages=["en"])
     assert result.graduation_warning is not None

@@ -1,0 +1,42 @@
+name: business-proposal-letter
+version: 0.1.0
+namespace: katib
+description: Business letter — letterhead, recipient, continuous-prose body, closing signature. First Phase-3 recipe; proves the recipe-migration flow end-to-end.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 3
+when: Formal business correspondence — cover letter for a proposal, meeting request, partnership introduction, or acceptance acknowledgment. AR variant deferred pending inputs_by_lang schema design.
+keywords: [letter, business, proposal, formal, correspondence, cover]
+
+sections:
+  - component: letterhead
+    inputs:
+      company: "jasem | katib"
+      reference_code: "KATIB-2026-001"
+      date: "23 April 2026"
+
+  - component: signature-block
+    variant: recipient
+    inputs:
+      name: "Ms. Sara Al-Hashimi"
+      title: "VP of Learning & Development"
+      organization: "ACME Corp"
+      location: "Dubai, United Arab Emirates"
+
+  - component: module
+    inputs:
+      raw_body: |
+        <p>Dear Ms. Al-Hashimi,</p>
+
+        <p>Thank you for the opportunity to present our proposal for the Applied AI Training Program. After reviewing your requirements and the specific needs of the 18 nominated participants, we have prepared a Hybrid Split delivery model that reduces cost by 40% while preserving the hands-on intensity your team identified as critical.</p>
+
+        <p>The accompanying commercial proposal (KATIB-2026-001) outlines a 6-week program split into two groups of 9, blending in-person sessions at your headquarters with remote afternoon labs. Every participant ships a production-ready AI agent and a live deployment pipeline — no slide-deck theory, no mock projects.</p>
+
+        <p>We would welcome a 30-minute alignment call next week to walk through the curriculum, the selection criteria for participants, and the joint certification framework. A signed acceptance of this page and the commercial proposal is sufficient to trigger kickoff within 14 days.</p>
+
+        <p>Kind regards,</p>
+
+  - component: signature-block
+    inputs:
+      name: "Jasem Al Neaimi"
+      title: "Managing Director · jasem | katib"
