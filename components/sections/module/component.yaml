@@ -1,8 +1,8 @@
 name: module
 tier: section
-version: 0.1.0
+version: 0.2.0
 namespace: katib
-description: Repeating body unit — optional numbered eyebrow, heading, intro, and freeform body content.
+description: Repeating body unit — optional numbered eyebrow, heading, intro, and body content. `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts) for recipe-supplied content.
 languages: [en, ar]
 requires:
   tokens: [text, text_secondary, text_tertiary, accent, accent_2, border]
@@ -27,7 +27,11 @@ accepts:
     - body:
         type: string
         required: false
-        description: Freeform HTML/text body content. Auto-escaped unless wrapped in raw/safe.
+        description: Plain-text or markdown body. Auto-escaped — safe for any source.
+    - raw_body:
+        type: string
+        required: false
+        description: Trusted HTML body. NOT auto-escaped — only use for recipe-authored content (tables, inline SVG, pull-quotes). Takes precedence over `body` if both set.
 variants:
   - plain
   - numbered

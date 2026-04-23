@@ -1,0 +1,270 @@
+name: tutorial
+version: 1.0.0
+namespace: katib
+description: Bloom's AI Collaboration Framework — production tutorial recipe. First real-content v2 recipe; ports the v1 framework-guide output that triggered the ADR.
+languages: [en]
+target_pages: [8, 14]
+page_limit: 16
+when: Use as the canonical tutorial/framework-guide reference. Demonstrates cover + objectives + 8 modules with rich body (tables, inline SVG, pull-quotes, callouts) + summary + whats-next + reference-strip end-to-end through v2.
+keywords: [tutorial, framework-guide, bloom, ai-collaboration, production]
+
+sections:
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "Framework Guide"
+      title: "Bloom's AI Collaboration Framework"
+      subtitle: "A cognitive model for human-AI partnership — who leads at each level"
+      author: "Jasem Al Neaimi"
+      date: "2026-04-23"
+      reference_code: "FRAMEWORK"
+
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "What you'll take away"
+      items:
+        - "A shared vocabulary — six cognitive levels and the trust boundary that splits them"
+        - "The six universal questions to ask before any AI work begins"
+        - "A worked example — drafting a UAE partnership MOU with zero legal expertise"
+        - "A rule of thumb for when to hand the pen to AI and when to keep it"
+
+  - component: module
+    inputs:
+      eyebrow: "Part 1 · Origins"
+      title: "Where this comes from"
+      intro: "The framework stands on three pieces of prior work — and adds one of its own."
+      raw_body: |
+        <p>Most people talk to AI the way they talk to a search engine — throw a prompt, judge the output. That's a fair habit for Level 1 tasks, and a terrible habit for everything above it. This guide hands you a map: six cognitive levels, a trust boundary that decides who leads, and six questions that keep the human in charge of the work that matters.</p>
+
+        <h3>Bloom (1956) and the revision (2001)</h3>
+        <p>Benjamin Bloom's taxonomy of educational objectives grouped human thinking into six cognitive levels — from basic recall up to creative synthesis. Anderson and Krathwohl revised it in 2001 into the version every graduate education programme teaches today: <strong>Remember, Understand, Apply, Analyze, Evaluate, Create</strong>. For seventy years, this scaffold described how students learn.</p>
+
+        <h3>Justin Sung and top-down learning</h3>
+        <p>Dr. Justin Sung's research on study strategy reversed the usual assumption. Starting at Level 5 (Evaluate) — asking <em>why does this matter and what am I trying to do</em> — produces deeper retention than grinding upward from Level 1. The upper levels pull the lower ones into place.</p>
+
+        <h3>The contribution here</h3>
+        <p>Bloom describes how a single human thinks. Sung describes the best order for that human to work. Neither speaks about AI. This framework takes that same six-level stack and draws a <strong>trust boundary</strong> through it — a line that splits the cognitive work between human and machine, and names who leads at each level. The result: a protocol for how a thinking human collaborates with a thinking tool.</p>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 2 · The stack"
+      title: "Six levels, two lanes, one boundary"
+      intro: "Every task a human and an AI tackle together maps to one of six cognitive levels. Each level has an owner."
+      raw_body: |
+        <figure>
+          <svg viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Six-level cognitive stack with trust boundary between Level 3 and Level 4">
+            <text x="70" y="22" fill="#71717A" font-size="9" font-weight="600" text-anchor="start">LEVEL</text>
+            <text x="245" y="22" fill="#71717A" font-size="9" font-weight="600" text-anchor="middle">OWNER</text>
+            <text x="440" y="22" fill="#71717A" font-size="9" font-weight="600" text-anchor="start">WORK</text>
+            <rect x="40" y="36" width="480" height="44" rx="4" fill="#FEF3C7" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="58" y="63" fill="#18181B" font-size="13" font-weight="600">6  Create</text>
+            <rect x="200" y="49" width="100" height="18" rx="9" fill="#F59E0B"/>
+            <text x="250" y="62" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">HUMAN</text>
+            <text x="318" y="63" fill="#3F3F46" font-size="10">Direction, vision, synthesis</text>
+            <rect x="40" y="88" width="480" height="44" rx="4" fill="#FEF3C7" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="58" y="115" fill="#18181B" font-size="13" font-weight="600">5  Evaluate</text>
+            <rect x="200" y="101" width="100" height="18" rx="9" fill="#F59E0B"/>
+            <text x="250" y="114" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">HUMAN</text>
+            <text x="318" y="115" fill="#3F3F46" font-size="10">Judgment, choice, trade-offs</text>
+            <rect x="40" y="140" width="480" height="44" rx="4" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="0.8"/>
+            <text x="58" y="167" fill="#18181B" font-size="13" font-weight="600">4  Analyze</text>
+            <rect x="200" y="153" width="100" height="18" rx="9" fill="#A1A1AA"/>
+            <text x="250" y="166" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">COLLABORATE</text>
+            <text x="318" y="167" fill="#3F3F46" font-size="10">Research, compare, pattern-find</text>
+            <line x1="40" y1="196" x2="520" y2="196" stroke="#F59E0B" stroke-width="1.2" stroke-dasharray="3,3"/>
+            <rect x="220" y="186" width="120" height="20" rx="10" fill="#F59E0B"/>
+            <text x="280" y="200" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">TRUST BOUNDARY</text>
+            <rect x="40" y="216" width="480" height="44" rx="4" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="58" y="243" fill="#18181B" font-size="13" font-weight="600">3  Apply</text>
+            <rect x="200" y="229" width="100" height="18" rx="9" fill="#FB923C"/>
+            <text x="250" y="242" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">AI</text>
+            <text x="318" y="243" fill="#3F3F46" font-size="10">Draft, build, execute</text>
+            <rect x="40" y="268" width="480" height="44" rx="4" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="58" y="295" fill="#18181B" font-size="13" font-weight="600">2  Understand</text>
+            <rect x="200" y="281" width="100" height="18" rx="9" fill="#FB923C"/>
+            <text x="250" y="294" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">AI</text>
+            <text x="318" y="295" fill="#3F3F46" font-size="10">Explain in plain language</text>
+            <rect x="40" y="320" width="480" height="44" rx="4" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="58" y="347" fill="#18181B" font-size="13" font-weight="600">1  Remember</text>
+            <rect x="200" y="333" width="100" height="18" rx="9" fill="#FB923C"/>
+            <text x="250" y="346" fill="#18181B" font-size="9" font-weight="600" text-anchor="middle">AI</text>
+            <text x="318" y="347" fill="#3F3F46" font-size="10">Recall, retrieve, save</text>
+            <text x="280" y="388" fill="#F59E0B" font-size="9.5" font-weight="600" text-anchor="middle">Above the line: verify, direct, decide</text>
+            <text x="280" y="404" fill="#FB923C" font-size="9.5" font-weight="600" text-anchor="middle">Below the line: trust with light verification</text>
+          </svg>
+          <figcaption>Figure 1 — The six cognitive levels, with the trust boundary between Level 3 (Apply) and Level 4 (Analyze).</figcaption>
+        </figure>
+
+        <p>The stack reads bottom-up for <em>capability</em> (recall is easy, creation is hard) and top-down for <em>direction</em> (evaluation tells the rest of the stack what it's for). The trust boundary between Level 3 and Level 4 is the only line that matters for practical work.</p>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 3 · The boundary"
+      title: "Why the line sits between Apply and Analyze"
+      intro: "Below the line, AI is more reliable than most humans. Above it, AI is confidently, fluently, and invisibly wrong."
+      raw_body: |
+        <p>Ask an AI to recall, summarise, translate, or draft code in a known pattern — Levels 1 to 3 — and you get infinite recall and steady output. Ask the same model to judge whether a contract clause is enforceable, whether an architecture choice will age well, or whether a strategy is worth pursuing — Levels 4 to 6 — and the same confident tone now covers reasoning you cannot trust.</p>
+
+        <figure>
+          <svg viewBox="0 0 560 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Trust boundary — two-column comparison">
+            <text x="280" y="20" fill="#71717A" font-size="9" font-weight="600" text-anchor="middle">THE TRUST BOUNDARY</text>
+            <rect x="20" y="40" width="250" height="170" rx="8" fill="#FAFAFA" stroke="#FB923C" stroke-width="1.2"/>
+            <rect x="20" y="40" width="250" height="32" rx="8" fill="#FB923C"/>
+            <text x="145" y="61" fill="#18181B" font-size="11" font-weight="600" text-anchor="middle">Below the line · AI leads</text>
+            <text x="36" y="92"  fill="#18181B" font-size="10" font-weight="600">Levels 1–3 · Remember, Understand, Apply</text>
+            <text x="36" y="118" fill="#3F3F46" font-size="10">✓ Recall and retrieval at scale</text>
+            <text x="36" y="138" fill="#3F3F46" font-size="10">✓ Fluent summary and translation</text>
+            <text x="36" y="158" fill="#3F3F46" font-size="10">✓ Drafting to a known pattern</text>
+            <text x="36" y="178" fill="#3F3F46" font-size="10">✓ Verification cost is low</text>
+            <text x="36" y="200" fill="#FB923C" font-size="10" font-weight="600" font-style="italic">Trust with a quick check.</text>
+            <rect x="290" y="40" width="250" height="170" rx="8" fill="#FAFAFA" stroke="#F59E0B" stroke-width="1.2"/>
+            <rect x="290" y="40" width="250" height="32" rx="8" fill="#F59E0B"/>
+            <text x="415" y="61" fill="#18181B" font-size="11" font-weight="600" text-anchor="middle">Above the line · Human leads</text>
+            <text x="306" y="92"  fill="#18181B" font-size="10" font-weight="600">Levels 4–6 · Analyze, Evaluate, Create</text>
+            <text x="306" y="118" fill="#3F3F46" font-size="10">✗ Judgment under ambiguity</text>
+            <text x="306" y="138" fill="#3F3F46" font-size="10">✗ Context the model cannot see</text>
+            <text x="306" y="158" fill="#3F3F46" font-size="10">✗ Stakes that punish confident error</text>
+            <text x="306" y="178" fill="#3F3F46" font-size="10">✗ Original vision and direction</text>
+            <text x="306" y="200" fill="#F59E0B" font-size="10" font-weight="600" font-style="italic">Verify and direct — never defer.</text>
+          </svg>
+          <figcaption>Figure 2 — The trust boundary rewritten in working terms.</figcaption>
+        </figure>
+
+        <blockquote>The production gap in vibe coding sits exactly here. Teams trust AI at Levels 1–3 to build the prototype, then hit a wall at Level 4 and above — is this secure, does this scale, should we even build it. The framework makes that wall visible.</blockquote>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 4 · The practice"
+      title: "Six questions before any AI work begins"
+      intro: "These questions belong to you. An AI cannot answer them — it does not know your context, your stakes, or your values. Answer them first; everything downstream gets easier."
+      raw_body: |
+        <table>
+          <thead>
+            <tr><th style="width: 6%;">#</th><th style="width: 34%;">Question</th><th>What it forces you to decide</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><strong>What is the purpose?</strong></td><td>Why does this matter enough to spend time on it?</td></tr>
+            <tr><td>2</td><td><strong>What does each side bring?</strong></td><td>Your resources and constraints — what you have, what you need.</td></tr>
+            <tr><td>3</td><td><strong>What does success look like?</strong></td><td>The specific outcome you will measure against later.</td></tr>
+            <tr><td>4</td><td><strong>What are you afraid of?</strong></td><td>The failure modes worth guarding against — your risk priority.</td></tr>
+            <tr><td>5</td><td><strong>What is the scope?</strong></td><td>The boundaries — what's in, what's explicitly out.</td></tr>
+            <tr><td>6</td><td><strong>How deep are you going?</strong></td><td>Commitment level — a test, a serious build, a full bet.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="katib-callout katib-callout--tip" lang="en">
+          <div class="katib-callout__title">Rule of thumb</div>
+          <div class="katib-callout__body">If you cannot answer questions 1, 3, and 5 in one sentence each, you are not ready to hand work to an AI. Answer them first, even if the answer is "I don't know yet" — naming the gap is progress.</div>
+        </div>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 5 · The movement"
+      title: "Work spirals, it doesn't line up"
+      intro: "The framework looks linear on paper and works in a spiral in practice. Most of the value comes from the loop between Level 4 and Level 5."
+      raw_body: |
+        <figure>
+          <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Iterative spiral between Level 4 Analyze and Level 5 Evaluate, then down to execution">
+            <rect x="180" y="20" width="200" height="54" rx="6" fill="#F59E0B"/>
+            <text x="280" y="44" fill="#18181B" font-size="12" font-weight="600" text-anchor="middle">Level 5 · Evaluate</text>
+            <text x="280" y="62" fill="#18181B" font-size="9" text-anchor="middle" opacity="0.9">You decide what matters</text>
+            <rect x="180" y="112" width="200" height="54" rx="6" fill="#FAFAFA" stroke="#A1A1AA" stroke-width="1"/>
+            <text x="280" y="136" fill="#18181B" font-size="12" font-weight="600" text-anchor="middle">Level 4 · Analyze</text>
+            <text x="280" y="154" fill="#3F3F46" font-size="9" text-anchor="middle">AI researches — you steer</text>
+            <path d="M 210 74 Q 150 93 210 112" fill="none" stroke="#A1A1AA" stroke-width="1.2"/>
+            <path d="M 350 112 Q 410 93 350 74" fill="none" stroke="#F59E0B" stroke-width="1.2"/>
+            <text x="124" y="98" fill="#71717A" font-size="8.5" text-anchor="end">research</text>
+            <text x="436" y="98" fill="#F59E0B" font-size="8.5" text-anchor="start">new decision</text>
+            <text x="280" y="95" fill="#71717A" font-size="8.5" font-style="italic" text-anchor="middle">repeats 1–N times</text>
+            <line x1="280" y1="166" x2="280" y2="200" stroke="#FB923C" stroke-width="1.4"/>
+            <text x="296" y="186" fill="#FB923C" font-size="9" font-weight="600">when decisions settle</text>
+            <rect x="60" y="210" width="440" height="50" rx="6" fill="#FEF3C7" stroke="#E4E4E7" stroke-width="0.5"/>
+            <text x="96"  y="230" fill="#18181B" font-size="10" font-weight="600">3 · Apply</text>
+            <text x="96"  y="246" fill="#3F3F46" font-size="9">draft</text>
+            <text x="236" y="230" fill="#18181B" font-size="10" font-weight="600">2 · Understand</text>
+            <text x="236" y="246" fill="#3F3F46" font-size="9">explain</text>
+            <text x="396" y="230" fill="#18181B" font-size="10" font-weight="600">1 · Remember</text>
+            <text x="396" y="246" fill="#3F3F46" font-size="9">save</text>
+          </svg>
+          <figcaption>Figure 3 — The Level 4 ↔ 5 loop is where the framework earns its keep.</figcaption>
+        </figure>
+
+        <p>Research surfaces decisions you did not know you had to make. Each fresh decision sends you back up to Level 5; each answer changes what AI should research next. Treat the loop as the point — not as rework. When the decisions settle, AI takes the pen and executes downward through Levels 3, 2, 1.</p>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 6 · Worked example"
+      title: "Drafting a UAE partnership MOU with zero legal expertise"
+      intro: "A real scenario — a binding memorandum of understanding for a training partnership in the United Arab Emirates, drafted without a lawyer in the room."
+      raw_body: |
+        <table>
+          <thead>
+            <tr><th style="width: 8%;">Step</th><th style="width: 14%;">Level</th><th style="width: 14%;">Lane</th><th>What happened</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>Evaluate</td><td>Human</td><td>Answered the six questions: purpose, contributions, success criteria, fears, scope, commitment.</td></tr>
+            <tr><td>2</td><td>Analyze</td><td>AI ↔ Human</td><td>AI researched UAE MOU law. Key finding: MOUs are binding by default in the UAE — the opposite of most Western jurisdictions.</td></tr>
+            <tr><td>3</td><td>Evaluate</td><td>Human</td><td>Loop-back decision: subcontract model, penalty structure, exclusivity terms — all now needed because of the binding-by-default finding.</td></tr>
+            <tr><td>4</td><td>Analyze</td><td>AI ↔ Human</td><td>Second research pass — penalty enforceability, arbitration clauses, DIFC vs. onshore forum trade-offs.</td></tr>
+            <tr><td>5</td><td>Evaluate</td><td>Human</td><td>Final decisions: revenue split, delivery model, governing law, signature process.</td></tr>
+            <tr><td>6</td><td>Apply</td><td>AI</td><td>Drafted a full 14-clause MOU with UAE-compliant structure.</td></tr>
+            <tr><td>7</td><td>Understand</td><td>AI</td><td>Explained every clause in plain language — what each one commits to and where the risk sits.</td></tr>
+            <tr><td>8</td><td>Remember</td><td>AI</td><td>Saved the final document, the research, and the reasoning trail to the knowledge vault.</td></tr>
+          </tbody>
+        </table>
+
+        <p>The framework produced two Level 4 ↔ 5 loops — one caught the binding-by-default surprise, the second caught enforcement trade-offs. A linear path would have skipped both, and the MOU would have committed to penalty terms the signer did not understand. The real output was not the document. It was a decision trail the signer could defend.</p>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 7 · Why it works"
+      title: "Start at the top, not the bottom"
+      intro: "The usual instinct — brief the AI, read what it produces, then judge it — runs the stack backwards. Flip the order."
+      raw_body: |
+        <p>Sung's research on learning describes why: when a student asks "why does this matter, what am I trying to do" before touching the material, the brain encodes the later content into a frame that already exists. Starting from recall and climbing upward fills memory with facts that have no home.</p>
+
+        <p>The same mechanic decides who should lead AI work. If you start at Level 1 — tell me what you know about X — you hand the model the direction. If you start at Level 5 — here is the decision I have to make, here is what I am afraid of — the model's Level 4 research answers <em>your</em> question instead of its own.</p>
+
+        <blockquote>AI eliminates the drudgery of Levels 1–3. Humans spend all cognitive energy on Evaluate and Create. The collaboration amplifies both strengths — when the human holds the top of the stack.</blockquote>
+
+  - component: module
+    inputs:
+      eyebrow: "Part 8 · Using it"
+      title: "Putting the framework to work this week"
+      raw_body: |
+        <h3>For the next task you're about to hand to AI</h3>
+        <ol class="steps">
+          <li><strong>Pause before the first prompt.</strong> Write answers to the six questions in a note. Short is fine — one sentence each. If you cannot answer three of them, the task is not shaped enough yet.</li>
+          <li><strong>Send AI into Level 4, not Level 3.</strong> Ask for research, comparison, and trade-offs before you ask for a draft. The draft comes faster when the analysis is already done.</li>
+          <li><strong>Expect to loop back.</strong> When the research surfaces something you did not know — a constraint, a trade-off, a risk — return to the six questions. Update your answers. Send AI back with the new brief.</li>
+          <li><strong>Only hand over the pen at Level 3.</strong> When the decisions feel settled, let AI draft, summarise, and save. Everything above the line is still yours.</li>
+        </ol>
+
+  - component: summary
+    inputs:
+      heading: "Summary"
+      body: "Six levels, one boundary, six questions. The framework is a protocol for staying in charge of the work that matters while letting a machine carry the work that does not."
+
+  - component: whats-next
+    inputs:
+      heading: "What's next"
+      items:
+        - "Keep the six questions within arm's reach — a sticky note, a vault note, a saved prompt."
+        - "On the next non-trivial task, force yourself to answer questions 1, 3, and 5 before writing a single prompt."
+        - 'When you feel the urge to say "just build it" to an AI — that is the trust boundary talking. Cross it on purpose, not by accident.'
+
+  - component: reference-strip
+    variant: tagged
+    inputs:
+      heading: "Further reading"
+      items:
+        - label: "Bloom, B.S. (1956)"
+          note: "Taxonomy of Educational Objectives — the cognitive-domain original"
+          tag: "BOOK"
+        - label: "Anderson & Krathwohl (2001)"
+          note: "A Taxonomy for Learning, Teaching, and Assessing — the revision every grad programme teaches"
+          tag: "BOOK"
+        - label: "Sung, Justin (ongoing)"
+          note: "Top-down learning research — why Level 5 goes first"
+          tag: "WEB"
