@@ -1,4 +1,14 @@
-<section class="katib-cover katib-cover--{{ variant or 'minimalist-typographic' }}" lang="en">
+{%- set v = variant or 'minimalist-typographic' %}
+{%- set is_image = v in ('image-background', 'neural-cartography') %}
+<section class="katib-cover katib-cover--{{ v }}{% if is_image %} katib-cover--has-image{% endif %}" lang="en">
+{%- if is_image and input.image and (input.image.resolved_path or input.image.resolved_svg) %}
+{%- if input.image.resolved_svg %}
+    <div class="katib-cover__bg">{{ input.image.resolved_svg | safe }}</div>
+{%- else %}
+    <img class="katib-cover__bg" src="{{ input.image.resolved_path }}" alt="">
+{%- endif %}
+    <div class="katib-cover__scrim"></div>
+{%- endif %}
 {%- if logo and logo.primary %}
     <img class="katib-cover__logo" src="{{ logo.primary }}" alt="{{ name or '' }}" style="max-height: {{ logo.max_height_mm or 18 }}mm;">
 {%- endif %}

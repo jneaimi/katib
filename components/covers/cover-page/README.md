@@ -4,11 +4,11 @@ Full-page document opener. First-class `cover` tier component.
 
 ## Variants
 
-| Variant | Look | Requires |
+| Variant | Look | Image source |
 |---|---|---|
-| `minimalist-typographic` (default, ships in Day 3) | CSS-only — big display-font title, small eyebrow, brand logo top, footer strip with author + ref | None |
-| `image-background` (Day 4) | Full-bleed cover image with typographic overlay | `image` input, `user-file` or `gemini` source |
-| `neural-cartography` (Day 4) | Gemini-generated decorative abstract background | `GEMINI_API_KEY` |
+| `minimalist-typographic` (default) | CSS-only — big display-font title, small eyebrow, brand logo top, footer strip with author + ref | none |
+| `image-background` | Full-bleed photo/illustration with dark-scrim overlay; title in white | `user-file` · `url` |
+| `neural-cartography` | Gemini-generated abstract background + softer scrim | `gemini` (requires `GEMINI_API_KEY`) |
 
 ## Inputs
 
@@ -18,6 +18,7 @@ Full-page document opener. First-class `cover` tier component.
 | `title` | string | yes | Document title — 42pt display, auto-wraps |
 | `subtitle` | string | no | Rendered 14pt under title |
 | `reference_code` | string | no | Monospace code in footer-right |
+| `image` | image | no | Required for `image-background` and `neural-cartography`. Missing → variant falls back to typographic. |
 
 ## Automatic brand fields (no input needed)
 
@@ -30,20 +31,57 @@ Set these in your brand YAML or they render empty.
 
 ## Usage
 
+### Minimalist-typographic (CSS-only)
+
 ```yaml
 - component: cover-page
   variant: minimalist-typographic
   inputs:
     eyebrow: "Tutorial"
     title: "Bloom's AI Collaboration Framework"
-    subtitle: "A six-level cognitive stack for deciding when AI should execute vs. when humans should evaluate."
+    subtitle: "Six-level cognitive stack for deciding when AI should execute vs. when humans should evaluate."
     reference_code: "JN-AI-0001"
 ```
 
-With a brand that sets `logo.primary` and `identity.author_name`, this renders a complete branded cover with no additional recipe fields.
+### Image-background (user-supplied image)
+
+```yaml
+- component: cover-page
+  variant: image-background
+  inputs:
+    eyebrow: "Case study"
+    title: "Dubai Internet City"
+    subtitle: "Where the GCC's software gravity centered."
+    image:
+      source: user-file
+      path: "~/Downloads/dic-hero.jpg"
+      alt_text: "DIC campus aerial shot"
+```
+
+### Neural-cartography (Gemini-generated)
+
+```yaml
+- component: cover-page
+  variant: neural-cartography
+  inputs:
+    eyebrow: "White paper"
+    title: "The GCC AI Ecosystem"
+    subtitle: "A field map from April 2026."
+    image:
+      source: gemini
+      prompt: "abstract topographic map, warm amber and deep navy, editorial style, wide landscape"
+      aspect: "3:4"
+      style: editorial
+```
+
+A missing/invalid `GEMINI_API_KEY` at render time raises a fail-loud error from the provider layer — no silent placeholder.
 
 ## Page behaviour
 
 - `break_after: always` — body content starts on page 2
 - `break_inside: avoid` — cover never splits
-- `min-height: 253mm` — fills A4 minus default margins (297mm - 2×22mm gutters)
+- `min-height: 253mm` — fills A4 minus default margins (297mm − 2×22mm gutters)
+
+## Behaviour when image is missing
+
+If `variant: image-background` or `neural-cartography` is set but no `image` input is supplied (or the image spec is malformed), the template emits the cover without a background — effectively falling back to the minimalist layout. Rendering succeeds, but the cover will look different from the author's intent. Watch for this during review.

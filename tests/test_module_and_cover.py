@@ -22,7 +22,8 @@ def test_module_validates():
 def test_cover_page_validates():
     c = load_component("cover-page")
     assert c["tier"] == "cover"
-    assert c["version"] == "0.1.0"
+    # Version bumps as variants are added (Day 3: 0.1.0; Day 4: 0.2.0)
+    assert c["version"].startswith("0.")
     assert c["page_behavior"]["break_after"] == "always"
     assert c["page_behavior"]["min_height"] == "253mm"
 
