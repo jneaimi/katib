@@ -1,0 +1,38 @@
+<section class="katib-section katib-chart-donut katib-chart-donut--{{ variant or 'default' }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h3 class="katib-chart-donut__heading">{{ input.heading }}</h3>
+{%- endif %}
+{%- if input.body %}
+    <p class="katib-chart-donut__body">{{ input.body }}</p>
+{%- endif %}
+{%- set spec = input.chart.spec or {} %}
+{%- set data = spec.data or [] %}
+{%- set palette = spec.colors or [] %}
+    <figure class="katib-chart-donut__figure" role="group" aria-label="{{ input.alt_text }}">
+        <div class="katib-chart-donut__svg">{{ input.chart.resolved_svg | safe }}</div>
+{%- if data and (variant != 'centered-stat') %}
+        <ul class="katib-chart-donut__legend">
+{%- for item in data %}
+            <li><span class="katib-chart-donut__swatch" style="background: {{ item.color or palette[loop.index0 % (palette | length)] if palette else '#141414' }}"></span>{{ item.label }}<span class="katib-chart-donut__value">{{ item.value }}</span></li>
+{%- endfor %}
+        </ul>
+{%- endif %}
+{%- if data %}
+        <table class="katib-sr-only">
+            <caption>{{ input.alt_text }}</caption>
+            <thead><tr><th>Category</th><th>Value</th></tr></thead>
+            <tbody>
+{%- for item in data %}
+                <tr><td>{{ item.label }}</td><td>{{ item.value }}</td></tr>
+{%- endfor %}
+            </tbody>
+        </table>
+{%- endif %}
+{%- if input.caption %}
+        <figcaption class="katib-chart-donut__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    </figure>
+</section>

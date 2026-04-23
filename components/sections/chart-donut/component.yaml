@@ -1,0 +1,37 @@
+name: chart-donut
+tier: section
+version: 0.1.0
+namespace: katib
+description: Proportional breakdown chart. Data is always inline-svg — factual, deterministic, brand-palette-driven.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - body:
+        type: string
+        required: false
+    - chart:
+        type: image
+        required: true
+        sources_accepted: [inline-svg]
+    - alt_text:
+        type: string
+        required: true
+        description: Text alternative for the chart. Required — charts must be describable.
+    - caption:
+        type: string
+        required: false
+variants:
+  - default
+  - with-legend
+  - centered-stat
+page_behavior:
+  break_inside: avoid

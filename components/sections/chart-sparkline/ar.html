@@ -1,0 +1,39 @@
+<section class="katib-section katib-sparkline katib-sparkline--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h3 class="katib-sparkline__heading">{{ input.heading }}</h3>
+{%- endif %}
+    <figure class="katib-sparkline__figure" role="group" aria-label="{{ input.alt_text }}">
+        <div class="katib-sparkline__stat-row">
+{%- if input.stat %}
+            <div class="katib-sparkline__stat">{{ input.stat }}</div>
+{%- endif %}
+{%- if input.stat_delta and variant == 'with-delta-badge' %}
+            <div class="katib-sparkline__delta">{{ input.stat_delta }}</div>
+{%- endif %}
+        </div>
+        <div class="katib-sparkline__svg">{{ input.chart.resolved_svg | safe }}</div>
+{%- if input.body %}
+        <p class="katib-sparkline__body">{{ input.body }}</p>
+{%- endif %}
+{%- set spec = input.chart.spec or {} %}
+{%- set data = spec.data or [] %}
+{%- set labels = spec.labels or [] %}
+{%- if data %}
+        <table class="katib-sr-only">
+            <caption>{{ input.alt_text }}</caption>
+            <thead><tr><th>الفهرس</th><th>القيمة</th></tr></thead>
+            <tbody>
+{%- for v in data %}
+                <tr><td>{{ labels[loop.index0] if loop.index0 < (labels | length) else loop.index }}</td><td>{{ v }}</td></tr>
+{%- endfor %}
+            </tbody>
+        </table>
+{%- endif %}
+{%- if input.caption %}
+        <figcaption class="katib-sparkline__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    </figure>
+</section>

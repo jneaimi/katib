@@ -1,0 +1,43 @@
+name: chart-sparkline
+tier: section
+version: 0.1.0
+namespace: katib
+description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological convention). Inline-svg only.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - stat:
+        type: string
+        required: false
+        description: Large headline number displayed beside the trendline.
+    - stat_delta:
+        type: string
+        required: false
+        description: Short delta badge (e.g., "+12.4% vs. last month").
+    - body:
+        type: string
+        required: false
+    - chart:
+        type: image
+        required: true
+        sources_accepted: [inline-svg]
+    - alt_text:
+        type: string
+        required: true
+    - caption:
+        type: string
+        required: false
+variants:
+  - default
+  - with-delta-badge
+page_behavior:
+  break_inside: avoid

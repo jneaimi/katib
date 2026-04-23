@@ -1,0 +1,30 @@
+<section class="katib-section katib-chart-bar katib-chart-bar--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h3 class="katib-chart-bar__heading">{{ input.heading }}</h3>
+{%- endif %}
+{%- if input.body %}
+    <p class="katib-chart-bar__body">{{ input.body }}</p>
+{%- endif %}
+{%- set spec = input.chart.spec or {} %}
+{%- set data = spec.data or [] %}
+    <figure class="katib-chart-bar__figure" role="group" aria-label="{{ input.alt_text }}">
+        <div class="katib-chart-bar__svg">{{ input.chart.resolved_svg | safe }}</div>
+{%- if data %}
+        <table class="katib-sr-only">
+            <caption>{{ input.alt_text }}</caption>
+            <thead><tr><th>الفئة</th><th>القيمة</th></tr></thead>
+            <tbody>
+{%- for item in data %}
+                <tr><td>{{ item.label }}</td><td>{{ item.value }}</td></tr>
+{%- endfor %}
+            </tbody>
+        </table>
+{%- endif %}
+{%- if input.caption %}
+        <figcaption class="katib-chart-bar__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    </figure>
+</section>

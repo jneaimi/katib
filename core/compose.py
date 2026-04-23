@@ -181,10 +181,15 @@ def _resolve_image_slots(
     cache_dir: Path,
     providers: dict[str, Provider],
     comp_name: str,
+    tokens: dict | None = None,
+    lang: str | None = None,
 ) -> dict:
     if not image_decls:
         return inputs
     resolved = dict(inputs)
+    charts_cfg = (tokens or {}).get("charts", {}) or {}
+    palette = charts_cfg.get("palette") or []
+    axis_color = charts_cfg.get("axis_color")
     for slot_name, decl in image_decls.items():
         if slot_name not in inputs:
             if decl.get("required"):
@@ -199,6 +204,14 @@ def _resolve_image_slots(
                 f"component {comp_name!r}: input {slot_name!r} is type:image; "
                 f"expected dict {{'source': '...', ...}}, got {type(value).__name__}"
             )
+        if value.get("source") == "inline-svg":
+            value = dict(value)
+            if "colors" not in value and palette:
+                value["colors"] = list(palette)
+            if "lang" not in value and lang:
+                value["lang"] = lang
+            if "axis_color" not in value and axis_color:
+                value["axis_color"] = axis_color
         img = resolve_image(
             value,
             cache_dir,
@@ -211,6 +224,7 @@ def _resolve_image_slots(
             "content_hash": img.content_hash,
             "alt": img.alt_hint or value.get("alt_text") or "",
             "source": value.get("source"),
+            "spec": value,
         }
     return resolved
 
@@ -251,7 +265,8 @@ def compose(
         inputs = section.get("inputs", {}) or {}
         image_decls = _image_input_specs(comp)
         inputs = _resolve_image_slots(
-            inputs, image_decls, cache_dir, providers, comp_name
+            inputs, image_decls, cache_dir, providers, comp_name,
+            tokens=merged, lang=lang,
         )
 
         rendered = template.render(

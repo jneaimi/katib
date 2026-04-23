@@ -1,0 +1,100 @@
+.katib-chart-donut { margin: 1.4em 0; page-break-inside: avoid; }
+
+.katib-chart-donut__heading {
+    margin: 0.2em 0 0.4em 0;
+    font-size: 14pt;
+    line-height: 1.3;
+}
+
+.katib-chart-donut__body {
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 0.6em 0;
+}
+
+.katib-chart-donut__figure {
+    display: flex;
+    gap: 24pt;
+    align-items: center;
+    margin: 0;
+}
+
+.katib-chart-donut[lang="ar"] .katib-chart-donut__figure { flex-direction: row-reverse; }
+
+.katib-chart-donut__svg {
+    flex: 0 0 200px;
+    width: 200px;
+}
+
+.katib-chart-donut__svg > svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.katib-chart-donut__legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 10pt;
+    line-height: 1.65;
+    color: var(--text);
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.katib-chart-donut__legend li {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+}
+
+.katib-chart-donut__swatch {
+    display: inline-block;
+    width: 10pt;
+    height: 10pt;
+    border-radius: 2pt;
+    flex: 0 0 auto;
+}
+
+.katib-chart-donut__value {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+}
+
+.katib-chart-donut[lang="ar"] .katib-chart-donut__value {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+.katib-chart-donut__caption {
+    grid-column: 1 / -1;
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-top: 0.5em;
+    line-height: 1.45;
+}
+
+.katib-chart-donut--centered-stat .katib-chart-donut__figure {
+    flex-direction: column;
+    align-items: center;
+}
+
+.katib-chart-donut--centered-stat .katib-chart-donut__svg {
+    flex: 0 0 240px;
+    width: 240px;
+}
+
+.katib-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

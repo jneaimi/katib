@@ -64,3 +64,20 @@ identity:
 logo:
   primary: null
   max_height_mm: 18
+
+# Chart defaults — consumed by the inline-svg provider.
+# Palette is an ordered hex array; brands override wholesale.
+# By convention it mirrors accent + callout accents above,
+# but they're independent values (no reference resolution).
+charts:
+  palette:
+    - "#1F3A68"
+    - "#D4A437"
+    - "#3A7D8B"
+    - "#B8842A"
+    - "#5A8549"
+    - "#B53E3E"
+    - "#7A7268"
+    - "#CFC4AF"
+  axis_color: "#7A7268"
+  gridline_color: "#E5DED1"
