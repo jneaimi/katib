@@ -26,19 +26,153 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **26 components** (+1 data-table Day 13;
-sections-grid added Day 11, multi-party-signature-block added Day 7,
-kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0,
-callout at 0.2.0). **15 recipes** (9 production: tutorial +
-business-proposal-letter + personal-cover-letter + formal-noc +
-tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
-business-proposal-one-pager + **editorial-white-paper**; 6 dev
+Engine state: **26 components** (unchanged count through Day 14;
+data-table added Day 13, sections-grid added Day 11,
+multi-party-signature-block added Day 7, kv-list at 0.2.0,
+signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
+**16 recipes** (10 production: tutorial + business-proposal-letter +
+personal-cover-letter + formal-noc + tutorial-how-to +
+tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
+editorial-white-paper + **business-proposal-proposal**; 6 dev
 showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4
 image providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 9 production
-recipes; Phase 3 ports 6 more over the next ~2 weeks. Keep v1
+**Business-proposal domain complete** (Day 14) — all 3 recipes
+shipped: letter (Day 4), one-pager (Day 12), proposal (Day 14).
+
+**Not shippable as a v1 replacement yet** — v2 has 10 production
+recipes; Phase 3 ports 5 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 14 — `business-proposal/proposal` recipe ships — business-proposal domain complete)
+
+Ninth Phase-3 recipe migration. **Completes the business-proposal
+domain** — all 3 recipes shipped (letter Day 4, one-pager Day 12,
+proposal Day 14). First Phase-3 domain fully migrated. Zero new
+components (streak = 2). data-table second-consumer validation
+within 24 hours of Day-13 ship: 3 more production uses in one
+recipe across distinct column shapes.
+
+- **`recipes/business-proposal-proposal.yaml`** (new) — 11-section
+  long-form commercial proposal:
+  1. Inline `module` raw_body — **title page** with eyebrow +
+     36pt h1 + subtitle + 4-item meta-block (Reference / Issued /
+     Prepared by / For). Density block #1. `page-break-after:
+     always` inline.
+  2. Inline `module` raw_body — **Table of Contents** with 5
+     numbered rows (number + title + page). Density block #2.
+     TOC graduation deferred: only 2 verified dependents (proposal
+     + onboarding) — below auto-graduation threshold of 3.
+  3. `module` variant=numbered, number=1, title="Executive Summary"
+     with lead paragraph (inline-styled 12pt) + 2 body paragraphs.
+  4. `module` variant=numbered, number=2, title="Program Scope"
+     — intro paragraph only.
+  5. `data-table` — **Program Scope deliverables** (4 columns:
+     # / Module / Focus / Outcome; 4 rows). **Second production
+     consumer of data-table.**
+  6. `module` variant=numbered, number=3, title="Delivery Timeline"
+     — intro paragraph.
+  7. `data-table` — **Delivery Timeline schedule** (4 columns:
+     Week / Theme / Group A / Group B; 6 rows). **Third production
+     consumer.**
+  8. `module` variant=numbered, number=4, title="Investment &
+     Terms" — intro + lead paragraph.
+  9. `data-table` — **Investment milestones** (3 columns:
+     Milestone / Trigger / Amount; 4 rows including Total).
+     **Fourth production consumer.** Total row workaround:
+     colspan not supported, so "Total" in col 1, blank col 2,
+     value in col 3.
+  10. `module` plain — Section 4 closing paragraph (VAT,
+      materials, MSA reference).
+  11. `module` variant=numbered, number=5, title="Acceptance" —
+      body paragraph + inline acceptance block with 3-box
+      sign-row (Name & Title / Signature / Date). Density block #3.
+      sign-row graduation deferred: 1 verified dependent
+      (proposal only).
+  Content adapted from `v1-reference/domains/business-proposal/
+  templates/proposal.en.html`. Placeholder prose preserved
+  (e.g., `[PROP/2026/001]`, `[Client Organization]`).
+- **Rendered output: 5 pages, 0 WeasyPrint warnings.** Placeholder
+  prose renders shorter than v1's ~10-page template-with-content;
+  `target_pages: [5, 10]`, `page_limit: 12` accepts both.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 density-convention inline blocks** (title page, TOC,
+  sign-row-in-acceptance) — below NOC's ceiling of 4.
+- **module numbered variant validated at scale again.** White-paper
+  Day 13 used 6 instances; proposal Day 14 uses 5. Two data points
+  from two recipe families — the Phase-2 design holds.
+- **3 proposal recipe-requests logged.**
+- **Audit + capabilities:** register entry + `capabilities.yaml`
+  regenerated.
+
+### Tests (Phase 3 Day 14)
+
+- **`tests/test_business_proposal_proposal.py`** (new, 18 tests):
+  schema-loads, en-only, page-targets [5, 10], eleven-section-
+  ordering, three-data-table-consumers (regression guard for
+  4/4/6/4/3/4 shapes + captions + Total row workaround),
+  five-numbered-module-sections (regression guard for [1,2,3,4,5]),
+  title-page-has-meta-block (regression guard for 4 meta pairs +
+  page-break-after), toc-has-five-numbered-rows (HTML-entity-aware
+  content check), acceptance-has-inline-sign-row (entity-aware
+  check for 3-box layout + flex), validates-clean,
+  validates-strict-clean, renders-EN (3 data-table-wrap count +
+  5 module-numbered count), pdf-within-target-pages (5-10),
+  renders-all-v1-content (22+ distinct phrases across all 11
+  sections + 3 tables), three-captions-rendered (accessibility
+  regression guard), completes-business-proposal-domain (sentinel
+  test asserting the 3 recipe filenames exist), in-capabilities,
+  audit-entry-exists.
+- **Regression sweep:** 728/728 passing (was 710, +18 proposal
+  tests). Zero WeasyPrint warnings across all 19 render paths.
+
+### Architecture decisions (Phase 3 Day 14)
+
+1. **data-table validated at scale within 24 hours.** Day 13
+   shipped with 1 production consumer (white-paper, 5-col numeric).
+   Day 14 adds 3 more (4-col text, 4-col matrix, 3-col numeric
+   with custom total row) in a single recipe. **Zero component
+   changes needed.** Same discipline as Day 11→12 for sections-grid:
+   ship the component, then exercise it immediately across shape
+   variations.
+2. **TOC deferred on evidence.** 2 verified dependents (proposal
+   + onboarding) below the threshold of 3. Inline-style proposal's
+   TOC; defer graduation until a third recipe introduces the same
+   shape. Matches metrics-grid's Day-12 decision. A `toc` component
+   may graduate when onboarding ships if no third dependent has
+   appeared by then (honest-intent pattern for essential shapes).
+3. **sign-row deferred on evidence.** 1 verified dependent
+   (proposal). Inline-style. If MoU's acceptance section or a
+   future service-agreement recipe introduces a similar 3-box
+   sign-row, graduation triggers.
+4. **colspan workaround in data-table.** Invoice and proposal
+   both have "Total" rows that v1 renders with
+   `<td colspan="2">`. v2's data-table doesn't support per-row
+   colspan hints. Workaround: put "Total" in col 1, blank col 2,
+   value in col 3. Visually matches 95% of intent; semantically
+   clearer (column count stays consistent). If invoice needs a
+   fancier total row later, extend data-table with a
+   `row_type: "summary"` or a `colspan` cell attribute — but
+   only when a second recipe requires it.
+5. **Business-proposal domain fully migrated — first domain
+   complete.** Phase 3 started with 14 recipes across 7 domains.
+   Day 14 closes business-proposal cleanly: letter (Day 4, 4
+   sections), one-pager (Day 12, 5 sections, zero-new-component),
+   proposal (Day 14, 11 sections, zero-new-component). All three
+   compose primarily from `letterhead` (letter) + `sections-grid`
+   (one-pager) + `data-table` + `module numbered` (proposal).
+6. **Phase-3 pace summary through Day 14:**
+   - 9 recipes shipped in 14 days (0.64/day — slightly below the
+     0.69 Day-13 pace due to Day-14 being a longer recipe)
+   - 6 new components built (kv-list, letterhead, masthead-personal,
+     multi-party-signature-block, sections-grid, data-table)
+   - 4 component evolutions complete (100% of original plan)
+   - 2 auto-graduated components (sections-grid, data-table) beyond
+     the original 7-component plan
+   - 0 pivot days lost (CV-pivot Day 10, metrics-grid Day 12, TOC
+     Day 14 — all happened during planning, not execution)
+7. **AR variant deferred (ninth recipe in a row).** Consistent
+   since Day 4.
 
 ### Added (Phase 3 Day 13 — `data-table` primitive + `editorial/white-paper` recipe ship)
 
