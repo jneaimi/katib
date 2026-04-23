@@ -1,0 +1,24 @@
+{%- set v = variant or 'image-left' %}
+<section class="katib-section katib-two-col katib-two-col--{{ v }}" lang="ar" dir="rtl">
+    <div class="katib-two-col__image">
+{%- if input.image.resolved_svg %}
+        <div class="katib-two-col__svg">{{ input.image.resolved_svg | safe }}</div>
+{%- else %}
+        <img src="{{ input.image.resolved_path }}" alt="{{ input.alt_text }}">
+{%- endif %}
+{%- if input.caption %}
+        <div class="katib-two-col__caption">{{ input.caption }}</div>
+{%- endif %}
+    </div>
+    <div class="katib-two-col__text">
+{%- if input.eyebrow %}
+        <div class="katib-eyebrow katib-eyebrow--accent" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+        <h2 class="katib-two-col__heading">{{ input.heading }}</h2>
+{%- endif %}
+{%- if input.body %}
+        <div class="katib-two-col__body">{{ input.body }}</div>
+{%- endif %}
+    </div>
+</section>

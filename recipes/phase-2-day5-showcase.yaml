@@ -1,0 +1,85 @@
+name: phase-2-day5-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 2 Day 5 — two-column-image-text + tutorial-step, exercising user-supplied images end-to-end.
+languages: [en, ar]
+target_pages: [2, 4]
+page_limit: 5
+when: Smoke render for the two image-consuming sections. Uses local fixtures; no network calls.
+keywords: [phase-2, showcase, images, two-column, tutorial-step]
+sections:
+  - component: front-matter
+    inputs:
+      eyebrow: "Day 5"
+      title: "Image-consuming sections"
+      subtitle: "two-column-image-text with three layout variants + tutorial-step with optional screenshot. All image providers are wired into compose()."
+      author: "Katib v2 engineering"
+      date: "2026-04-23"
+
+  - component: two-column-image-text
+    variant: image-left
+    inputs:
+      eyebrow: "Variant A"
+      heading: "image-left"
+      body: "Default two-column layout. Image takes 44% of the row, text the remaining 56%. Under RTL this flips automatically so the image stays on the reading-origin side."
+      image:
+        source: user-file
+        path: tests/fixtures/cover-bg.jpg
+        alt_text: "Navy-to-amber gradient fixture"
+      alt_text: "Navy-to-amber gradient fixture"
+      caption: "Fixture image from Day 4."
+
+  - component: two-column-image-text
+    variant: image-right
+    inputs:
+      eyebrow: "Variant B"
+      heading: "image-right"
+      body: "Mirror of image-left. Use when the text should lead visually — common for product marketing copy where the paragraph introduces what the image shows."
+      image:
+        source: user-file
+        path: tests/fixtures/cover-bg.jpg
+        alt_text: "Same gradient, mirrored layout"
+      alt_text: "Same gradient, mirrored layout"
+
+  - component: two-column-image-text
+    variant: image-top
+    inputs:
+      heading: "image-top"
+      body: "Image spans the full width, text stacks below. Good for narrow sections or when the image needs maximum real-estate."
+      image:
+        source: user-file
+        path: tests/fixtures/cover-bg.jpg
+        alt_text: "Gradient spanning full width"
+      alt_text: "Gradient spanning full width"
+      caption: "Wider layout — image gets 100% of the content column."
+
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "Install the skill"
+      body: "Run `npx @jasemal/katib install` to drop the skill into ~/.claude/skills/katib/."
+
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "Verify the setup"
+      body: "Open the settings page and confirm the footer loads with the correct version."
+      screenshot:
+        source: user-file
+        path: tests/fixtures/tutorial-step.png
+      screenshot_alt: "Settings page with version footer"
+      screenshot_caption: "Settings screenshot captured locally via fixture (1440×800)."
+
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "Render your first recipe"
+      body: "Use `uv run scripts/build.py phase-1-trivial --lang en` to confirm everything works end-to-end."
+
+  - component: summary
+    inputs:
+      heading: "Day 5 recap"
+      items:
+        - "two-column-image-text — three variants, four image sources"
+        - "tutorial-step — deliberately excludes gemini source (screenshots are factual)"
+        - "Both sections use compose.py's image-provider resolution — no per-component image code"

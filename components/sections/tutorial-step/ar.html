@@ -1,0 +1,19 @@
+<section class="katib-section katib-tutorial-step" lang="ar" dir="rtl">
+    <div class="katib-tutorial-step__head">
+        <div class="katib-tutorial-step__circle">{{ input.number }}</div>
+        <div class="katib-tutorial-step__heading">
+            <h3 class="katib-tutorial-step__title">{{ input.title }}</h3>
+{%- if input.body %}
+            <p class="katib-tutorial-step__desc">{{ input.body }}</p>
+{%- endif %}
+        </div>
+    </div>
+{%- if input.screenshot and input.screenshot.resolved_path %}
+    <figure class="katib-tutorial-step__screenshot">
+        <img src="{{ input.screenshot.resolved_path }}" alt="{{ input.screenshot_alt or 'لقطة شاشة للخطوة ' ~ input.number }}">
+{%- if input.screenshot_caption %}
+        <figcaption class="katib-tutorial-step__caption">{{ input.screenshot_caption }}</figcaption>
+{%- endif %}
+    </figure>
+{%- endif %}
+</section>

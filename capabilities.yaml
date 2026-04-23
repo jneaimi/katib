@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T07:29:31+00:00'
+generated_at: '2026-04-23T07:39:19+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -129,6 +129,34 @@ recipes:
     - cover-page
     - cover-page
     - front-matter
+  phase-2-day5-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 2 Day 5 — two-column-image-text + tutorial-step, exercising user-supplied images
+      end-to-end.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 2
+    - 4
+    page_limit: 5
+    when: Smoke render for the two image-consuming sections. Uses local fixtures; no network calls.
+    keywords:
+    - phase-2
+    - showcase
+    - images
+    - two-column
+    - tutorial-step
+    sections_shape:
+    - front-matter
+    - two-column-image-text
+    - two-column-image-text
+    - two-column-image-text
+    - tutorial-step
+    - tutorial-step
+    - tutorial-step
+    - summary
 components:
   callout:
     namespace: katib
@@ -235,7 +263,7 @@ components:
     variants: []
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
-    used_in_recipes: 3
+    used_in_recipes: 4
   module:
     namespace: katib
     tier: section
@@ -281,7 +309,32 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 2
+    used_in_recipes: 3
+  tutorial-step:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Numbered tutorial step — step circle + title + description + optional screenshot. Screenshots
+      are factual; gemini source is deliberately excluded.
+    used_in_recipes: 1
+  two-column-image-text:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - image-left
+    - image-right
+    - image-top
+    description: Side-by-side image + text block. Most flexible image-consuming section — accepts user-supplied,
+      url, Gemini-generated, or screenshot sources.
+    used_in_recipes: 1
   whats-next:
     namespace: katib
     tier: section

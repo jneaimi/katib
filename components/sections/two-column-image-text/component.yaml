@@ -1,0 +1,40 @@
+name: two-column-image-text
+tier: section
+version: 0.1.0
+namespace: katib
+description: Side-by-side image + text block. Most flexible image-consuming section — accepts user-supplied, url, Gemini-generated, or screenshot sources.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border, page_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - body:
+        type: string
+        required: false
+        description: Paragraph text. Use for short blocks; multi-paragraph bodies belong in module.
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini, screenshot]
+        fallback: gemini
+        fallback_prompt: "editorial abstract illustration, soft gradient"
+    - alt_text:
+        type: string
+        required: true
+        description: Accessibility alt text for the image.
+    - caption:
+        type: string
+        required: false
+variants:
+  - image-left
+  - image-right
+  - image-top
+page_behavior:
+  break_inside: avoid
