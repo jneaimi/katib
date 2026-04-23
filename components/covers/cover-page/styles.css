@@ -80,3 +80,77 @@
     letter-spacing: 0.04em;
     font-size: 9pt;
 }
+
+/* ---- Image-backed variants (image-background, neural-cartography) ---- */
+
+.katib-cover--has-image {
+    position: relative;
+    overflow: hidden;
+    padding: 18mm 16mm;
+    box-sizing: border-box;
+}
+
+.katib-cover--has-image .katib-cover__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.katib-cover--has-image .katib-cover__bg > svg {
+    width: 100%;
+    height: 100%;
+}
+
+.katib-cover--has-image .katib-cover__scrim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.80) 100%);
+    z-index: 1;
+}
+
+.katib-cover--has-image .katib-cover__logo,
+.katib-cover--has-image .katib-cover__body,
+.katib-cover--has-image .katib-cover__footer {
+    position: relative;
+    z-index: 2;
+}
+
+.katib-cover--has-image .katib-cover__title,
+.katib-cover--has-image .katib-cover__subtitle {
+    color: #ffffff;
+}
+
+.katib-cover--has-image .katib-cover__subtitle {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.katib-cover--has-image .katib-cover__eyebrow {
+    color: #ffffff;
+    opacity: 0.85;
+}
+
+.katib-cover--has-image .katib-cover__footer {
+    color: rgba(255, 255, 255, 0.7);
+    border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+.katib-cover--has-image .katib-cover__author {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.katib-cover--has-image .katib-cover__ref {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Neural-cartography-specific: slightly softer scrim to let the generated
+   decorative art breathe more than a photo-realistic background image. */
+.katib-cover--neural-cartography .katib-cover__scrim {
+    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%);
+}

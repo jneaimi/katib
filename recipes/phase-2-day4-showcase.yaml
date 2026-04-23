@@ -1,0 +1,37 @@
+name: phase-2-day4-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 2 Day 4 — three cover-page variants side-by-side via a three-page document.
+languages: [en, ar]
+target_pages: [3, 4]
+page_limit: 4
+when: Smoke for cover-page variants. Each variant opens a page; front-matter after acts as minimal body.
+keywords: [phase-2, showcase, cover, image-background, neural-cartography]
+sections:
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "Variant A"
+      title: "Minimalist typographic"
+      subtitle: "CSS-only cover. No image dependency — works out of the box, even offline."
+      reference_code: "COVER-A"
+
+  - component: cover-page
+    variant: image-background
+    inputs:
+      eyebrow: "Variant B"
+      title: "Image background"
+      subtitle: "Full-bleed photo with a dark gradient scrim so display-font title reads on any image."
+      reference_code: "COVER-B"
+      image:
+        source: user-file
+        path: tests/fixtures/cover-bg.jpg
+        alt_text: "Navy-to-amber gradient test fixture"
+
+  - component: front-matter
+    inputs:
+      eyebrow: "Note on variant C"
+      title: "Neural cartography cover"
+      subtitle: "Not included in this showcase — it would call the Gemini API at render time (~$0.12/image) and is covered by component tests instead. See components/covers/cover-page/README.md."
+      author: "Katib v2 engineering"
+      date: "2026-04-23"
