@@ -7,13 +7,14 @@ All notable changes to Katib are documented here. Format loosely follows
 
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
 2026-04-23 — 14 recipes on the migrate list. Component queue revised
-twice during Phase 3: 5 (Day 0) → 6 (Day 2, discovered `letterhead`) →
-7 effective (Day 3, two component evolutions needed). **Day 4 shipped
-the first Phase-3 recipe (`business-proposal/letter`)**, proving the
-recipe-migration flow end-to-end with only existing/extended
-components. Bilingual NOC proven to need no new component (CSS
-direction-flip only). See `~/vault/projects/katib/project.md` and
-ADR §Phase 3 for the locked plan.
+three times during Phase 3: 5 (Day 0) → 6 (Day 2, discovered
+`letterhead`) → 7 (Day 5, discovered `masthead-personal` — personal
+identity is semantically distinct from organizational identity).
+Day 4 shipped the first Phase-3 recipe (`business-proposal/letter`),
+proving the recipe-migration flow end-to-end. Bilingual NOC proven
+to need no new component (CSS direction-flip only). See
+`~/vault/projects/katib/project.md` and ADR §Phase 3 for the locked
+plan.
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
 criteria green with automated proofs, 518 tests passing, zero
@@ -25,14 +26,109 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: 22 components (signature-block at 0.2.0, module at 0.3.0).
-**8 recipes** (2 production: tutorial + business-proposal-letter; 6 dev
-showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4 image
-providers, 0 external skill dependencies.
+Engine state: **23 components** (+1 masthead-personal Day 5;
+signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
+**8 recipes** (2 production: tutorial + business-proposal-letter;
+6 dev showcases). 6 core library modules, 5 CLIs, 4 memory streams,
+4 image providers, 0 external skill dependencies.
 
 **Not shippable as a v1 replacement yet** — v2 has 2 production
 recipes; Phase 3 ports 13 more over the next ~2.5 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 5 — component infra for cover-letter)
+
+Second "component infra day" (after Day 3). Builds the two components
+cover-letter (Day 6) needs before it can ship thin.
+
+- **`components/sections/masthead-personal/`** (new) — personal-identity
+  masthead for personal-brand documents. Sibling to `letterhead` but
+  semantically distinct: organizational identity (company + ref + date)
+  vs personal identity (name + tagline + contact stack). Forecast on
+  Day 2 when the letterhead `personal` variant was explicitly rejected
+  in favor of this separate component. Two-column flex with RTL
+  cascade, 1.5pt bottom accent rule, optional brand-identity fallback
+  (`email`/`phone` inputs fall back to `brand.identity.email`/
+  `identity.phone` when unset). Forced LTR on email + phone inside AR
+  templates (same pattern as letterhead's `reference_code` — addresses
+  + phone numbers are structurally LTR inside RTL documents).
+  Scoped tight: no variants. Tokens: `accent`, `text_secondary`,
+  `text_tertiary`. Zero hex in stylesheet.
+- **`components/primitives/callout/` — v0.1.0 → v0.2.0** — added
+  `neutral` tone for non-status highlighted boxes (cover-letter
+  subject lines, legal non-binding notices, inline emphasis
+  paragraphs). The existing `info | warn | danger | tip` tones carry
+  status semantics (pale blue/amber/red/green bg + matched accent);
+  `neutral` uses `tag_bg` + `accent` for cases where colored status
+  would be semantically wrong. `requires.tokens` gains `tag_bg` +
+  `accent`; existing tones unchanged. README rewritten with full
+  tone table and use-case guidance. Previously missing test fixture
+  created.
+- **Graduation reality for masthead-personal:** 2 firm Phase-3
+  dependents (cover-letter Day 6 + cv later in Phase 3), below the
+  automated threshold of 3. Scaffolded past the soft-gate warning
+  (scaffold doesn't hard-block); 2 real requests logged in
+  `memory/component-requests.jsonl`. Intent-verified via ADR Day 5
+  entry — load-bearing shared component for personal-brand documents
+  (cover-letter + cv + bio-deferred). First Phase-3 component that
+  clears a threshold-below situation honestly rather than
+  speculatively padding the request count to 3.
+
+### Tests (Phase 3 Day 5)
+
+- **`tests/test_masthead_personal.py`** (new, 14 tests): schema-loads,
+  name-required, contact-fields-optional, identity-brand-fields-
+  declared, token-contract, no-variants (scope-lock), renders-EN,
+  renders-AR, ar-contact-rows-forced-ltr, tagline-optional,
+  contact-fields-skip-when-all-missing, brand-identity-fallback
+  (renders without crashing when inputs unset and brand supplies),
+  styles-tokens-only, EN/AR-share-semantic-structure.
+- **`tests/test_callout_v02.py`** (new, 8 tests): version-bumped,
+  requires-tokens-added-for-neutral, neutral-renders-class, neutral-
+  renders-to-PDF, neutral-bilingual, existing-4-tones-still-render
+  (regression), stylesheet-has-neutral-rules, stylesheet-preserves-
+  all-five-tones.
+- **Regression sweep:** 540/540 passing (was 518, +22). Zero
+  WeasyPrint warnings across 10 new render paths (masthead EN/AR +
+  5 callout tones × EN/AR sampled).
+
+### Architecture decisions (Phase 3 Day 5)
+
+1. **Semantic-distinct primitives over vague unification.** Chose to
+   build `masthead-personal` as a separate component rather than
+   stretch `letterhead` with a `personal` variant. Rationale: the
+   schema shapes differ too much — letterhead has
+   `company + reference_code + date + doc_title` for organizational
+   identity; masthead-personal has `name + tagline + email + phone +
+   location` for personal identity. Unifying would force conditional
+   schema (`company OR name`, `meta OR contact`) which vagues the
+   contract for downstream authors. Day 2's explicit scoping decision
+   ("build cover-letter later, see what its real header needs, add a
+   variant or sibling component") pointed exactly here; Day 5 honors
+   that decision.
+2. **`callout` scope widens to non-status highlights.** The existing
+   4 tones all carry status semantics (info/warn/danger/tip). The
+   `neutral` tone extends callout's role to "any boxed highlight with
+   accent border" — cover-letter subject lines + legal non-binding
+   notices + future inline-emphasis paragraphs. Stays inside one
+   primitive's semantic umbrella (boxed message with accent border);
+   doesn't create a second highlight-box primitive.
+3. **Brand-identity fallback is a template-level concern, not schema-
+   level.** `masthead-personal` inputs `email` + `phone` are "optional
+   with brand fallback" — the template uses `input.email or
+   identity.email` to pick recipe value over brand value. Recipe stays
+   clean when brand supplies identity; brand profile stays unchanged
+   when recipe overrides. The same pattern can extend to other
+   components that consume brand identity fields; Phase-3 components
+   using this pattern: masthead-personal (Day 5), letterhead (Day 2,
+   via `logo.primary`).
+4. **Graduation threshold is intent, not a gate.** `masthead-personal`
+   shipped with 2 real requests (below threshold of 3). Honest
+   documentation of intent in the ADR + audit trail beats padding the
+   count to hit the automated gate. The graduation mechanism is a
+   soft-gate on scaffold; registration doesn't enforce it. Lesson:
+   when genuine intent is below 3 firm dependents + ≥1 planned
+   deferred, document the decision and proceed.
 
 ### Added (Phase 3 Day 4 — first Phase-3 recipe ships)
 

@@ -19,12 +19,14 @@
 
 .katib-callout__body { font-size: 10.5pt; line-height: 1.55; }
 
-.katib-callout--info   { background: var(--callout-info-bg);   border-color: var(--callout-info-accent); }
-.katib-callout--warn   { background: var(--callout-warn-bg);   border-color: var(--callout-warn-accent); }
-.katib-callout--danger { background: var(--callout-danger-bg); border-color: var(--callout-danger-accent); }
-.katib-callout--tip    { background: var(--callout-tip-bg);    border-color: var(--callout-tip-accent); }
+.katib-callout--info    { background: var(--callout-info-bg);   border-color: var(--callout-info-accent); }
+.katib-callout--warn    { background: var(--callout-warn-bg);   border-color: var(--callout-warn-accent); }
+.katib-callout--danger  { background: var(--callout-danger-bg); border-color: var(--callout-danger-accent); }
+.katib-callout--tip     { background: var(--callout-tip-bg);    border-color: var(--callout-tip-accent); }
+.katib-callout--neutral { background: var(--tag-bg);            border-color: var(--accent); }
 
-.katib-callout--info   .katib-callout__title { color: var(--callout-info-accent); }
-.katib-callout--warn   .katib-callout__title { color: var(--callout-warn-accent); }
-.katib-callout--danger .katib-callout__title { color: var(--callout-danger-accent); }
-.katib-callout--tip    .katib-callout__title { color: var(--callout-tip-accent); }
+.katib-callout--info    .katib-callout__title { color: var(--callout-info-accent); }
+.katib-callout--warn    .katib-callout__title { color: var(--callout-warn-accent); }
+.katib-callout--danger  .katib-callout__title { color: var(--callout-danger-accent); }
+.katib-callout--tip     .katib-callout__title { color: var(--callout-tip-accent); }
+.katib-callout--neutral .katib-callout__title { color: var(--accent); }

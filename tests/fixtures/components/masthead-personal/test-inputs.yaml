@@ -1,0 +1,10 @@
+# Test inputs for `masthead-personal` isolated render.
+# Used by `katib component test masthead-personal`.
+inputs:
+  name: "Jasem Al Neaimi"
+  tagline: "Senior AI Engineer"
+  email: "jasem@example.com"
+  phone: "+971 50 000 0000"
+  location: "Dubai, UAE"
+brand: null
+variant: null

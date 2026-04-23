@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T16:59:53+00:00'
+generated_at: '2026-04-23T17:46:34+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -245,12 +245,14 @@ components:
   callout:
     namespace: katib
     tier: primitive
-    version: 0.1.0
+    version: 0.2.0
     languages:
     - en
     - ar
     variants: []
-    description: Boxed message with left accent border and tinted background.
+    description: Boxed message with left accent border and tinted background. Tones map to conventional
+      UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
+      boxes (subject lines, non-binding notices, inline callout paragraphs).
     used_in_recipes: 2
   eyebrow:
     namespace: katib
@@ -415,6 +417,18 @@ components:
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
     used_in_recipes: 1
+  masthead-personal:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Personal-identity masthead — name + tagline on leading side, contact stack (email, phone,
+      location) on trailing side. Bottom accent rule. For personal-brand documents (cover-letter, CV,
+      bio). Distinct from `letterhead` (which is for organizational/company identity).
+    used_in_recipes: 0
   module:
     namespace: katib
     tier: section

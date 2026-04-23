@@ -1,0 +1,33 @@
+name: masthead-personal
+tier: section
+version: 0.1.0
+namespace: katib
+description: Personal-identity masthead — name + tagline on leading side, contact stack (email, phone, location) on trailing side. Bottom accent rule. For personal-brand documents (cover-letter, CV, bio). Distinct from `letterhead` (which is for organizational/company identity).
+languages: [en, ar]
+requires:
+  tokens: [text_secondary, text_tertiary, accent]
+  fonts: [primary, display]
+  brand_fields: [identity.email, identity.phone]
+accepts:
+  inputs:
+    - name:
+        type: string
+        required: true
+        description: Full name of the person, shown large and accent-colored on the leading side.
+    - tagline:
+        type: string
+        required: false
+        description: Professional headline (e.g., "Senior AI Engineer"). Shown beneath the name in a muted tertiary text color.
+    - email:
+        type: string
+        required: false
+        description: Email address. Falls back to `brand.identity.email` when unset; renders nothing if neither is set.
+    - phone:
+        type: string
+        required: false
+        description: Phone number. Falls back to `brand.identity.phone` when unset; renders nothing if neither is set.
+    - location:
+        type: string
+        required: false
+        description: City or city+country line (e.g., "Dubai, UAE"). Recipe-supplied only — no brand fallback.
+variants: []
