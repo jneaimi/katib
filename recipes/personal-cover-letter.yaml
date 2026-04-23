@@ -1,0 +1,58 @@
+name: personal-cover-letter
+version: 0.1.0
+namespace: katib
+description: Personal cover letter — masthead + date + recipient + subject + continuous-prose body + closing + enclosure. Template with placeholder prose; user edits before rendering.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 3
+when: Cover letter for a job application, portfolio submission, or formal introduction. Instructional placeholders in the body ([Opening paragraph — the why]) guide the author; replace before final render.
+keywords: [cover-letter, personal, job-application, portfolio, introduction, correspondence]
+
+sections:
+  - component: masthead-personal
+    inputs:
+      name: "Jasem Al Neaimi"
+      tagline: "[Professional headline — e.g., Senior AI Engineer]"
+      email: "jasem@example.com"
+      phone: "+971 50 000 0000"
+      location: "Dubai, UAE"
+
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="text-align: end; color: var(--text-tertiary); font-size: 9.5pt;">23 April 2026</p>
+
+  - component: signature-block
+    variant: recipient
+    inputs:
+      name: "[Hiring Manager Name]"
+      title: "[Title — e.g., Director of Engineering]"
+      organization: "[Company Name]"
+      location: "[City]"
+
+  - component: callout
+    inputs:
+      tone: neutral
+      body: "Application for [Role Title]"
+
+  - component: module
+    inputs:
+      raw_body: |
+        <p><strong>Dear [Mr. / Ms.] [Last Name],</strong></p>
+        <p>[Opening paragraph — the why. Which role, how you heard about it, and the one sentence that ties your strongest credential to what they need. Avoid "I am writing to apply" — lead with value.]</p>
+        <p>[Middle paragraph — the what. Pick one or two concrete achievements from your CV and connect them to specific needs in the job description. Use numbers. One paragraph, not two — recruiters skim.]</p>
+        <p>[Closing paragraph — the next step. State interest in an interview, mention availability, and thank them briefly. Do not repeat the opening.]</p>
+        <p>Sincerely,</p>
+
+  - component: signature-block
+    inputs:
+      name: "Jasem Al Neaimi"
+      title: "[Title / current role]"
+
+  - component: rule
+    variant: hairline
+
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="font-size: 9pt; color: var(--text-tertiary);"><strong>Enclosed:</strong> Curriculum Vitae · [Portfolio link if applicable] · [Reference letters if requested]</p>
