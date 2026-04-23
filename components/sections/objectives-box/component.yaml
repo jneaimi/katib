@@ -1,0 +1,24 @@
+name: objectives-box
+tier: section
+version: 0.1.0
+namespace: katib
+description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
+languages: [en, ar]
+requires:
+  tokens: [accent, callout_info_bg, text, text_secondary]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - label:
+        type: string
+        required: false
+        description: Small uppercase label above the list. Defaults per-language.
+    - items:
+        type: array
+        required: true
+        description: Array of strings.
+variants:
+  - boxed
+  - minimal
+page_behavior:
+  break_inside: avoid

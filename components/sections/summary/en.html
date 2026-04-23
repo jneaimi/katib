@@ -1,0 +1,14 @@
+<section class="katib-section katib-summary" lang="en">
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="en">{{ input.eyebrow or 'Wrap-up' }}</div>
+    <h2 class="katib-summary__heading">{{ input.heading or 'Summary' }}</h2>
+{%- if input.body %}
+    <p class="katib-summary__body">{{ input.body }}</p>
+{%- endif %}
+{%- if input.items %}
+    <ul class="katib-summary__items">
+{%- for item in input.items %}
+        <li>{{ item }}</li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+</section>

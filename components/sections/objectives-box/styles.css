@@ -1,0 +1,38 @@
+.katib-objectives {
+    margin: 1.2em 0;
+    page-break-inside: avoid;
+}
+
+.katib-objectives--boxed {
+    background: var(--callout-info-bg);
+    padding: 12pt 16pt;
+    border-radius: 3pt;
+    border: 0 solid var(--accent);
+}
+
+.katib-objectives--boxed[lang="en"] { border-left-width: 3px; }
+.katib-objectives--boxed[lang="ar"] { border-right-width: 3px; }
+
+.katib-objectives__label {
+    font-family: var(--font-display);
+    font-size: 9.5pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 0.6em 0;
+}
+
+.katib-objectives[lang="ar"] .katib-objectives__label {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 11pt;
+}
+
+.katib-objectives__items {
+    margin: 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+}
+
+.katib-objectives__items li { margin: 0.2em 0; }

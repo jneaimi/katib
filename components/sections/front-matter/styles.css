@@ -1,0 +1,49 @@
+.katib-front-matter {
+    page-break-after: always;
+    margin-bottom: 0;
+    padding-top: 20mm;
+}
+
+.katib-front-matter__title {
+    font-size: 26pt;
+    font-weight: 700;
+    margin: 0.4em 0 0.2em 0;
+    line-height: 1.15;
+    color: var(--text);
+}
+
+.katib-front-matter[lang="ar"] .katib-front-matter__title {
+    font-size: 28pt;
+}
+
+.katib-front-matter__subtitle {
+    font-size: 13pt;
+    color: var(--text-secondary);
+    margin: 0.4em 0 1em 0;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.katib-front-matter .katib-rule { margin: 1em 0 0.8em 0; }
+
+.katib-front-matter__meta {
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    font-family: var(--font-primary);
+    letter-spacing: 0.02em;
+}
+
+.katib-front-matter__meta-item {
+    margin-right: 1.5em;
+}
+
+.katib-front-matter[lang="ar"] .katib-front-matter__meta-item {
+    margin-right: 0;
+    margin-left: 1.5em;
+}
+
+.katib-front-matter__meta-ref {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
