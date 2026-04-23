@@ -19,3 +19,5 @@
 {"recipe": "tutorial-cheatsheet", "namespace": "katib", "action": "register", "at": "2026-04-23T19:10:40+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "business-proposal-one-pager", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T20:26:01+00:00", "from_graduation": null, "force_justification": "Day 12 Phase-3 — business-proposal/one-pager zero-new-component recipe (2nd sections-grid consumer)", "note": "Scaffolded by katib recipe new"}
 {"recipe": "business-proposal-one-pager", "namespace": "katib", "action": "register", "at": "2026-04-23T20:27:08+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "editorial-white-paper", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T20:54:47+00:00", "from_graduation": null, "force_justification": "Day 13 Phase-3 — editorial/white-paper recipe (first production consumer of data-table)", "note": "Scaffolded by katib recipe new"}
+{"recipe": "editorial-white-paper", "namespace": "katib", "action": "register", "at": "2026-04-23T20:55:47+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

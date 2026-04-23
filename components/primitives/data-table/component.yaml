@@ -1,0 +1,28 @@
+name: data-table
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Accessible tabular data — headers, rows, per-column alignment, alt-row backgrounds. Supports numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items), onboarding (30/60/90 windows).
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border, tag_bg]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - caption:
+        type: string
+        required: false
+        description: Accessible caption above the table (screen-reader-friendly label).
+    - columns:
+        type: array
+        required: true
+        description: "Array of column descriptors — {label (required string), align (optional: 'num' for right-aligned tabular-nums), width (optional CSS width e.g. '50pt')}."
+    - rows:
+        type: array
+        required: true
+        description: "Array of rows — each row is an array of cell values. Each cell is either a string (simple) OR {text, sub?} (text + optional muted sub-line, for invoice description cells)."
+variants:
+  - bordered
+  - dense
+page_behavior:
+  break_inside: auto

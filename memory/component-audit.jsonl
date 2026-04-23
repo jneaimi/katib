@@ -33,3 +33,5 @@
 {"component": "kv-list", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T18:03:28+00:00", "from_graduation": null, "note": "Registered by katib component register"}
 {"component": "sections-grid", "tier": "section", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T19:07:46+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
 {"component": "sections-grid", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T19:09:48+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "data-table", "tier": "primitive", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T20:52:25+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
+{"component": "data-table", "tier": "primitive", "namespace": "katib", "action": "register", "at": "2026-04-23T20:54:41+00:00", "from_graduation": null, "note": "Registered by katib component register"}

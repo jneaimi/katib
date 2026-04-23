@@ -1,0 +1,39 @@
+<section class="katib-data-table-wrap" lang="ar" dir="rtl">
+<table class="katib-data-table katib-data-table--{{ variant or 'default' }}">
+{%- if input.caption %}
+    <caption class="katib-data-table__caption">{{ input.caption }}</caption>
+{%- endif %}
+    <thead>
+        <tr class="katib-data-table__head-row">
+{%- for col in input.columns %}
+{%- set th_classes = "katib-data-table__th" + (" katib-data-table__th--num" if col.align == "num" else "") %}
+{%- if col.width %}
+            <th class="{{ th_classes }}" style="width: {{ col.width }};" scope="col">{{ col.label }}</th>
+{%- else %}
+            <th class="{{ th_classes }}" scope="col">{{ col.label }}</th>
+{%- endif %}
+{%- endfor %}
+        </tr>
+    </thead>
+    <tbody>
+{%- for row in input.rows %}
+        <tr>
+{%- for cell in row %}
+{%- set col = input.columns[loop.index0] %}
+{%- set td_classes = "katib-data-table__td" + (" katib-data-table__td--num" if col.align == "num" else "") %}
+{%- if cell is mapping %}
+            <td class="{{ td_classes }}">
+                <span class="katib-data-table__cell-text">{{ cell.text }}</span>
+{%- if cell.sub %}
+                <span class="katib-data-table__cell-sub">{{ cell.sub }}</span>
+{%- endif %}
+            </td>
+{%- else %}
+            <td class="{{ td_classes }}">{{ cell }}</td>
+{%- endif %}
+{%- endfor %}
+        </tr>
+{%- endfor %}
+    </tbody>
+</table>
+</section>
