@@ -1,0 +1,23 @@
+name: financial-summary
+tier: section
+version: 0.1.0
+namespace: katib
+description: Totals box for invoices and quotes. Right-aligned numeric rows with labels on the leading side; one emphasized Total row with accent background. Container is flex-end positioned (70mm wide) so it naturally aligns to the trailing edge of the page. Optional currency code shown alongside totals. Used by financial/invoice and financial/quote.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, accent_on, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - rows:
+        type: array
+        required: true
+        description: "Array of {label, value, variant?} rows. `variant: 'total'` triggers the accent-bg emphasized Total row (usually the final row). All values right-aligned with tabular-nums; labels on the leading side."
+    - currency:
+        type: string
+        required: false
+        description: "Currency code shown in the Total row label (e.g. 'AED', 'USD'). Displayed as 'TOTAL <currency>' when the row is variant: total."
+variants:
+  - compact
+page_behavior:
+  break_inside: avoid

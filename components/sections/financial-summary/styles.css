@@ -1,0 +1,67 @@
+.katib-financial-summary {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1em 0 1.2em 0;
+    font-family: var(--font-primary);
+    page-break-inside: avoid;
+}
+
+.katib-financial-summary__box {
+    width: 70mm;
+    font-size: 10pt;
+    color: var(--text);
+}
+
+.katib-financial-summary__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4pt 0;
+    border-bottom: 0.25pt solid var(--border);
+}
+
+.katib-financial-summary__row:last-child {
+    border-bottom: 0;
+}
+
+.katib-financial-summary__label {
+    color: var(--text-secondary);
+}
+
+.katib-financial-summary__value {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Total row — accent bg, larger emphasis */
+.katib-financial-summary__row--total {
+    padding: 8pt 10pt;
+    margin-top: 6pt;
+    background: var(--accent);
+    border-bottom: 0;
+    font-size: 12pt;
+    font-weight: 700;
+}
+
+.katib-financial-summary__row--total .katib-financial-summary__label,
+.katib-financial-summary__row--total .katib-financial-summary__value {
+    color: var(--accent-on);
+}
+
+/* Compact — slimmer for quotes with fewer rows */
+.katib-financial-summary--compact .katib-financial-summary__box {
+    width: 60mm;
+    font-size: 9.5pt;
+}
+
+.katib-financial-summary--compact .katib-financial-summary__row--total {
+    padding: 6pt 8pt;
+    font-size: 11pt;
+}
+
+/* RTL — flex-end auto-flips with dir, but ensure explicit LTR for the
+   numeric value column (amounts render LTR even inside Arabic pages) */
+.katib-financial-summary[dir="rtl"] .katib-financial-summary__value {
+    direction: ltr;
+    text-align: left;
+}

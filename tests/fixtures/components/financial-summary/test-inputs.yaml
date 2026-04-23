@@ -1,0 +1,6 @@
+# Test inputs for `financial-summary` isolated render.
+# Used by `katib component test financial-summary`. Add realistic sample values.
+inputs:
+  title: "Sample title"
+brand: null        # or a registered brand name, e.g. jasem
+variant: null      # or a declared variant name

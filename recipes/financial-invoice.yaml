@@ -1,0 +1,143 @@
+name: financial-invoice
+version: 0.1.0
+namespace: katib
+description: UAE tax invoice — letterhead commercial variant + Bill From/Bill To parties + 4-field meta strip + line-items table (with desc+sub cells) + totals box + amount-in-words callout + payment block + footer. First production consumer of financial-summary (Day 15 component) and letterhead commercial variant (Day 2). Fifth production consumer of data-table (with first-ever use of {text, sub} cell feature). Validates the financial domain's full stack.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 2
+when: UAE Federal-Decree-Law-compliant tax invoice with TRN, VAT rates, payment terms, bank details. Pairs with financial/quote (Day 16). EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [financial, invoice, tax, vat, uae, billing]
+
+sections:
+  # 1. Letterhead — commercial variant (first production consumer after Day-2 build)
+  - component: letterhead
+    variant: commercial
+    inputs:
+      company: "jasem | katib"
+      reference_code: "INV-2026-0042"
+      date: "2026-04-24"
+      doc_title: "Tax Invoice"
+
+  # 2. Bill From / Bill To — 2-col parties using sections-grid bordered
+  #    (4th sections-grid consumer; first use of bordered variant)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - eyebrow: "Bill From"
+          title: "jasem | katib"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Street address]<br>[PO Box, City — UAE]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">TRN: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[100000000000003]</span></div>
+        - eyebrow: "Bill To"
+          title: "[Client Legal Name LLC]"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Client street address]<br>[PO Box, City — UAE]<br>[Attn: Accounts Payable]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">TRN: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[100000000000004]</span></div>
+
+  # 3. Meta strip — 4-field kv-list boxed (third consumer after NOC + handoff)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Invoice Date", value: "2026-04-24"}
+        - {term: "Supply Date", value: "2026-04-24"}
+        - {term: "Due Date", value: "2026-05-24"}
+        - {term: "Currency", value: "AED"}
+
+  # 4. Line items — data-table dense (5th production consumer; FIRST use of {text, sub} cells)
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "#"
+          align: num
+          width: "24pt"
+        - label: "Description"
+        - label: "Qty"
+          align: num
+          width: "40pt"
+        - label: "Unit Price"
+          align: num
+          width: "70pt"
+        - label: "VAT %"
+          align: num
+          width: "40pt"
+        - label: "VAT"
+          align: num
+          width: "60pt"
+        - label: "Total (AED)"
+          align: num
+          width: "70pt"
+      rows:
+        - - "1"
+          - {text: "[Service / product name]", sub: "[Scope note — dates, deliverable, contract ref]"}
+          - "1"
+          - "10,000.00"
+          - "5%"
+          - "500.00"
+          - "10,500.00"
+        - - "2"
+          - {text: "[Second line item]", sub: "[Short note]"}
+          - "10"
+          - "200.00"
+          - "5%"
+          - "100.00"
+          - "2,100.00"
+        - - "3"
+          - {text: "[Third line item — zero-rated example]", sub: "[e.g., international transport, exported service]"}
+          - "1"
+          - "5,000.00"
+          - "0%"
+          - "0.00"
+          - "5,000.00"
+
+  # 5. Totals — financial-summary (FIRST PRODUCTION CONSUMER)
+  - component: financial-summary
+    inputs:
+      currency: "AED"
+      rows:
+        - {label: "Subtotal (excl. VAT)", value: "17,000.00"}
+        - {label: "Discount", value: "0.00"}
+        - {label: "VAT (5%)", value: "600.00"}
+        - {label: "TOTAL", value: "17,600.00", variant: total}
+
+  # 6. Amount in Words — callout neutral (4th production consumer)
+  - component: callout
+    inputs:
+      tone: neutral
+      title: "Amount in Words"
+      body: "UAE Dirhams [Seventeen Thousand Six Hundred] only."
+
+  # 7. Payment block — sections-grid bordered (Payment Terms + Bank Details)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - title: "Payment Terms"
+          raw_body: |
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.55;"><strong>Due within [30] days</strong> from invoice date. Late payments may accrue interest at [1.5%] per month. Please reference the invoice number <strong>INV-2026-0042</strong> in your remittance.</p>
+        - title: "Bank Details"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 65pt 1fr; gap: 2pt 8pt; margin: 0; font-size: 9pt;">
+              <dt style="color: var(--text-secondary);">Account Name</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">jasem | katib</dd>
+              <dt style="color: var(--text-secondary);">Bank</dt><dd style="margin: 0; font-weight: 600;">[Bank name]</dd>
+              <dt style="color: var(--text-secondary);">Account No.</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">[000 000 0000 000]</dd>
+              <dt style="color: var(--text-secondary);">IBAN</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">AE00 0000 0000 0000 0000 000</dd>
+              <dt style="color: var(--text-secondary);">Swift</dt><dd style="margin: 0; font-weight: 600;">[BICCODE]</dd>
+            </dl>
+
+  # 8. Footer — VAT Law citation + thank-you + signature line (inline density block)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.5;">
+          <p style="margin: 3pt 0;"><strong style="color: var(--text);">Thank you for your business.</strong> Questions on this invoice should be directed to <a href="mailto:jasem@jneaimi.com" style="color: var(--accent); text-decoration: none;">jasem@jneaimi.com</a>.</p>
+          <p style="margin: 3pt 0;">This is a tax invoice issued under the UAE Federal Decree-Law No. 8 of 2017 (VAT Law) and its Executive Regulations. All figures in AED unless noted otherwise.</p>
+          <div style="margin-top: 16pt; font-size: 9pt; color: var(--text-secondary);">
+            <div style="border-bottom: 0.5pt solid var(--border-strong); width: 60mm; margin-bottom: 3pt; height: 18pt;"></div>
+            Authorised signatory · Jasem Al Neaimi
+          </div>
+        </div>
