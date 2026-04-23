@@ -3,15 +3,76 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, routing chain (Days 1–9 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner (Days 1–10 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–9 of 14 have landed. Engine state: 20
+Phase 2 is in progress. Days 1–10 of 14 have landed. Engine state: 20
 components, 7 recipes (including the `tutorial.yaml` production
-recipe), 232 tests, zero WeasyPrint warnings. **Routing chain is now
-end-to-end Python**: transcript → `infer_signals()` → `Signals` →
-`gate.evaluate()` → `ResolvedPlan` or `Question[]`. Zero glue code
-between sensor and gate — Day 10's `/katib` runner will be a
-pass-through.
+recipe), 251 tests, zero WeasyPrint warnings. **`/katib` is now a
+functional slash command end-to-end** — transcript → `route.py infer`
+→ gate decision → `build.py` → PDF, with observable signals + a
+structured decision gate for ambiguous requests.
+
+### Added (Day 10 — /katib runner + SKILL.md rewrite)
+
+- **`scripts/route.py`** — unified JSON-emitting CLI router. Two
+  subcommands:
+  - `infer` — reads transcript (via `--transcript-file` or
+    `--transcript`), chains `context_sensor.infer_signals` →
+    `gate.evaluate`, emits one of 5 action types as JSON:
+    `render` / `present_candidates` / `ask_questions` /
+    `ask_intent` / `error`.
+  - `resolve` — consumes Q1/Q2 answer labels from the agent's
+    `AskUserQuestion` call on a fired gate; emits final action
+    (`render` / `wait` / `graduate`) plus the `log_entry` dict
+    for Day 13's writer.
+  - **Subprocess JSON contract**: every exit path emits exactly
+    one valid JSON document on stdout. Exceptions wrapped at
+    `main()` — raw tracebacks never leak to stdout (would break
+    the agent's JSON parse).
+  - **Stale capabilities auto-regen**: if any recipe or component
+    source file is newer than the cached `capabilities.yaml`, the
+    router regenerates it via subprocess before routing. Notes
+    the regen in the response's `capability_notes` field.
+
+- **`SKILL.md`** — full rewrite replacing the v2-dev placeholder. A
+  thin interpreter on top of `route.py`:
+  - 4 invocation modes (bare / prose / explicit / mixed)
+  - Single dispatch loop with ASCII flow diagram
+  - 5 per-branch pseudocode blocks (including concrete
+    `AskUserQuestion(questions=response["questions"])` calls for
+    `present_candidates` and `ask_questions`)
+  - Non-negotiable rules (always show signals, no registry hand-
+    edits, no path bypasses the log, explicit flags win)
+  - Fresh-install sanity check
+  - Troubleshooting table (audit gate, missing image input,
+    Gemini key)
+  - Explicit out-of-scope boundaries (no vault integration, no
+    file navigation, no external skill dependencies)
+
+### Tests (Day 10)
+
+- **`tests/test_route.py`** — 19 tests:
+  - All 5 action branches (`render`, `present_candidates`,
+    `ask_questions`, `ask_intent`, `error`)
+  - Explicit-override merge (lang/brand override inferred,
+    recorded in `reasons[]`)
+  - AUQ payload shape on both `present_candidates` and
+    `ask_questions` (matches `AskUserQuestion` tool contract 1:1)
+  - Parametrized Q1×Q2 matrix through `resolve` subcommand
+  - Force-graduation requires non-empty justification
+  - Subprocess JSON contract regression guard — asserts every
+    invocation produces parseable JSON stdout (guards against
+    any future exception leak)
+
+### End-to-end smoke test (Day 10)
+
+Manual smoke test passed during the commit:
+
+    transcript → scripts/route.py infer → HIGH confidence → scripts/build.py
+    → tutorial.en.pdf (111KB, Jasem Warm-Ember brand)
+
+---
+
 
 ### Added (Day 9 — context sensor)
 
