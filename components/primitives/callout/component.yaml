@@ -1,17 +1,17 @@
 name: callout
 tier: primitive
-version: 0.1.0
+version: 0.2.0
 namespace: katib
-description: Boxed message with left accent border and tinted background.
+description: Boxed message with left accent border and tinted background. Tones map to conventional UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted boxes (subject lines, non-binding notices, inline callout paragraphs).
 languages: [en, ar]
 requires:
-  tokens: [text, callout_info_bg, callout_info_accent, callout_warn_bg, callout_warn_accent, callout_danger_bg, callout_danger_accent, callout_tip_bg, callout_tip_accent]
+  tokens: [text, accent, tag_bg, callout_info_bg, callout_info_accent, callout_warn_bg, callout_warn_accent, callout_danger_bg, callout_danger_accent, callout_tip_bg, callout_tip_accent]
 accepts:
   inputs:
     - tone:
         type: string
         required: true
-        description: "info | warn | danger | tip"
+        description: "info | warn | danger | tip | neutral. neutral (added 0.2.0) uses tag_bg + accent, for non-status highlights like cover-letter subject lines and mou non-binding notices."
     - title:
         type: string
         required: false

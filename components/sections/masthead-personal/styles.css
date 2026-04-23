@@ -1,0 +1,52 @@
+.katib-masthead-personal {
+    margin: 0 0 1.5em 0;
+}
+
+.katib-masthead-personal__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1em;
+    padding-bottom: 0.6em;
+    border-bottom: 1.5pt solid var(--accent);
+}
+
+/* RTL — reverse flex direction so identity stays on the visual start */
+.katib-masthead-personal[dir="rtl"] .katib-masthead-personal__bar {
+    flex-direction: row-reverse;
+}
+
+.katib-masthead-personal__identity {
+    min-width: 0;
+}
+
+.katib-masthead-personal__name {
+    font-family: var(--font-display, inherit);
+    font-size: 22pt;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.15em;
+}
+
+.katib-masthead-personal__tagline {
+    font-size: 10pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.02em;
+}
+
+.katib-masthead-personal__contact {
+    text-align: end;
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+    line-height: 1.55;
+}
+
+.katib-masthead-personal__contact-row {
+    margin-bottom: 0.15em;
+}
+
+.katib-masthead-personal__contact-row:last-child {
+    margin-bottom: 0;
+}

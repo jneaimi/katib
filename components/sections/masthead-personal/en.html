@@ -1,0 +1,23 @@
+{%- set email = input.email or identity.email %}
+{%- set phone = input.phone or identity.phone %}
+<section class="katib-section katib-masthead-personal" lang="en">
+    <div class="katib-masthead-personal__bar">
+        <div class="katib-masthead-personal__identity">
+            <div class="katib-masthead-personal__name">{{ input.name }}</div>
+{%- if input.tagline %}
+            <div class="katib-masthead-personal__tagline">{{ input.tagline }}</div>
+{%- endif %}
+        </div>
+        <div class="katib-masthead-personal__contact">
+{%- if email %}
+            <div class="katib-masthead-personal__contact-row">{{ email }}</div>
+{%- endif %}
+{%- if phone %}
+            <div class="katib-masthead-personal__contact-row" dir="ltr">{{ phone }}</div>
+{%- endif %}
+{%- if input.location %}
+            <div class="katib-masthead-personal__contact-row">{{ input.location }}</div>
+{%- endif %}
+        </div>
+    </div>
+</section>

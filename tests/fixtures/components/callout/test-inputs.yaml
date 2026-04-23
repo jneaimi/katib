@@ -1,0 +1,8 @@
+# Test inputs for `callout` isolated render.
+# Used by `katib component test callout`.
+inputs:
+  tone: info
+  title: "Good to know"
+  body: "This is a sample callout to verify the primitive renders cleanly."
+brand: null
+variant: null
