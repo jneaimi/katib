@@ -3,13 +3,81 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, first production recipe (Days 1–7 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, routing gate (Days 1–8 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–7 of 14 have landed. The engine has 20
-components (8 primitives + 11 sections + 1 cover with 3 variants), 7
-recipes including the first **production recipe** (`tutorial.yaml` —
-the Bloom framework guide that triggered the ADR), 141 tests, zero
-WeasyPrint warnings.
+Phase 2 is in progress. Days 1–8 of 14 have landed. Engine state: 20
+components, 7 recipes (including the `tutorial.yaml` production
+recipe), 198 tests, zero WeasyPrint warnings. The routing layer is now
+Python-complete — capabilities loader + decision gate online; Day 10's
+slash-command runner will be a no-glue pass-through.
+
+### Added (Day 8 — decision gate + capabilities loader)
+
+- **`core/capabilities.py`** — in-process loader for
+  `capabilities.yaml` + deterministic keyword-based recipe ranker. No
+  LLM. Returns `RecipeMatch` objects with `{name, score, reasons, data}`
+  so callers can explain their routing decisions. Public API:
+  `load_capabilities`, `rank_recipes(top_k=3)`, `find_closest_recipe`.
+  Weights: 40% name-match, 30% keyword overlap, 20% when/description,
+  10% section-shape hints — tunable via `weights` kwarg on
+  `rank_recipes`.
+
+- **`core/gate.py`** — self-contained three-question flow for
+  LOW-confidence recipe routing, per ADR §Built-in decision gate. Pure
+  Python, zero Claude-Code coupling beyond the `Question` dataclass
+  shape (which matches the `AskUserQuestion` tool schema 1:1 so the
+  Day 10 runner can pass-through via `question.to_ask_user_question()`).
+  Three moving parts:
+  - `score_confidence(signals, caps)` — 0–100 score + HIGH/MEDIUM/LOW
+    verdict. Thresholds 90/50 per ADR. Topic 50 / brand 25 / lang 25.
+    All sub-weights + thresholds tunable via kwargs.
+  - `evaluate(signals, caps)` — routes to one of four outcomes:
+    `proceed` (HIGH + `ResolvedPlan`), `choose` (MEDIUM + top-3
+    candidates), `fire` (LOW + 2 questions: FIT + FREQUENCY),
+    `needs-intent` (empty intent or zero recipe match).
+  - `resolve(q1, q2, closest)` — computes Q3 action from the ADR's
+    Q1×Q2 matrix. Emits log-entry drafts with `schema_version: 1` +
+    v1-parity fields (`{ts, request, routed_to, reason}`) plus gate
+    fields (`{recipe_closest, closest_score, fit, frequency, action,
+    force_graduation_justification}`) for Day 13's
+    `log_recipe_request`.
+
+- **57 new tests** — 12 for capabilities (loading, tokenization,
+  ranking edge cases, reasons array) + 45 for gate (confidence scoring,
+  language inference, evaluate outcomes, AskUserQuestion payload shape,
+  Q1×Q2 matrix parametrized, force_graduation flow, log schema, 7-row
+  snapshot corpus).
+
+### Risk mitigations (Day 8, documented for the gate)
+
+Eleven mitigations applied across seven pre-flagged risks:
+
+- **Margin guard** — HIGH requires top recipe score to beat #2 by
+  ≥1.3×; tied rankings cap topic credit at moderate.
+- **Belt-and-suspenders HIGH** — score ≥90 AND strong topic credit
+  both required; future weight tweaks can't green-light weak-topic
+  renders via brand+lang alone.
+- **AskUserQuestion schema match** — field names, option shape (no
+  `value` leakage), `header` ≤12 chars, 2–4 options, all verified
+  against the live tool schema loaded via `ToolSearch`.
+- **Label→value adapter** — `answer_to_value(question_id, label)`
+  maps user-selected labels back to internal routing values
+  (`yes-fits`, `partial`, etc.).
+- **Log schema version** — `schema_version: 1` + v1-parity fields
+  make Day 13's consumer contract explicit.
+- **Strict language inference** — ≥70% script dominance required
+  (configurable); mixed-script returns `lang=None`.
+- **Mandatory justification** — `force_graduation=True` requires a
+  non-empty `force_graduation_justification` string.
+- **`needs-intent` outcome** — empty intent or zero recipe match
+  skips the gate entirely and returns an instructional message.
+- **Tunable kwargs** — `weights`, `thresholds`,
+  `inference_threshold`, `topic_strong`, `topic_moderate`,
+  `high_margin` all overridable.
+- **Snapshot corpus** — 7 canonical `(intent, expected_top_recipe)`
+  pairs catch ranking regressions.
+
+---
 
 ### Added (Day 7 — tutorial.yaml production recipe)
 
