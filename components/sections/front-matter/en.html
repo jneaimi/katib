@@ -1,0 +1,19 @@
+<section class="katib-section katib-front-matter" lang="en">
+    <div class="katib-eyebrow katib-eyebrow--accent" lang="en">{{ input.eyebrow or 'Document' }}</div>
+    <h1 class="katib-front-matter__title">{{ input.title }}</h1>
+{%- if input.subtitle %}
+    <p class="katib-front-matter__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    <hr class="katib-rule katib-rule--hairline">
+    <div class="katib-front-matter__meta">
+{%- if input.author %}
+        <span class="katib-front-matter__meta-item">{{ input.author }}</span>
+{%- endif %}
+{%- if input.date %}
+        <span class="katib-front-matter__meta-item">{{ input.date }}</span>
+{%- endif %}
+{%- if input.reference_code %}
+        <span class="katib-front-matter__meta-item katib-front-matter__meta-ref">{{ input.reference_code }}</span>
+{%- endif %}
+    </div>
+</section>

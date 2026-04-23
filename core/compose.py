@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
+from jinja2 import Environment, FileSystemLoader, Undefined, select_autoescape
 from jsonschema import Draft202012Validator
 
 from core.image.base import Provider, default_providers, resolve_image
@@ -117,12 +117,40 @@ def _check_component_supports_lang(comp: dict, lang: str) -> None:
 
 
 def _jinja_env() -> Environment:
-    return Environment(
+    env = Environment(
         loader=FileSystemLoader(str(COMPONENTS_DIR)),
-        undefined=StrictUndefined,
+        undefined=Undefined,
         autoescape=select_autoescape(enabled_extensions=("html", "htm"), default=True),
         keep_trailing_newline=True,
     )
+    # `{{ input.items }}` must resolve to the 'items' KEY of the inputs dict,
+    # not dict.items() method. Jinja's default getattr tries attribute first;
+    # override to prefer item-lookup for mapping access.
+    original_getattr = env.getattr
+
+    def _getattr_item_first(obj: Any, attribute: Any) -> Any:
+        try:
+            return obj[attribute]
+        except (TypeError, LookupError):
+            return original_getattr(obj, attribute)
+
+    env.getattr = _getattr_item_first
+    return env
+
+
+def _load_primitive_styles() -> list[str]:
+    primitives_dir = COMPONENTS_DIR / "primitives"
+    if not primitives_dir.exists():
+        return []
+    out: list[str] = []
+    for pdir in sorted(primitives_dir.iterdir()):
+        styles_file = pdir / "styles.css"
+        if styles_file.exists():
+            out.append(
+                f"/* primitive: {pdir.name} */\n"
+                f"{styles_file.read_text(encoding='utf-8')}"
+            )
+    return out
 
 
 def _image_input_specs(comp: dict) -> dict[str, dict]:
@@ -208,8 +236,8 @@ def compose(
 
     env = _jinja_env()
     body_parts: list[str] = []
-    style_parts: list[str] = []
-    seen_components: set[str] = set()
+    style_parts: list[str] = _load_primitive_styles()
+    seen_non_primitive: set[str] = set()
 
     for idx, section in enumerate(recipe["sections"]):
         comp_name = section["component"]
@@ -237,8 +265,8 @@ def compose(
             f"<!-- section[{idx}]: {comp_name} -->\n{rendered.rstrip()}\n"
         )
 
-        if comp_name not in seen_components:
-            seen_components.add(comp_name)
+        if tier != "primitive" and comp_name not in seen_non_primitive:
+            seen_non_primitive.add(comp_name)
             styles_file = Path(comp["__dir__"]) / "styles.css"
             if styles_file.exists():
                 style_parts.append(
@@ -299,7 +327,46 @@ body {{
     font-size: 11pt;
     line-height: 1.6;
 }}
-.katib-section {{ margin-bottom: 1.2em; }}
+
+h1, h2, h3, h4 {{
+    font-family: var(--font-display);
+    line-height: 1.25;
+    margin: 1em 0 0.4em 0;
+    color: var(--text);
+}}
+h1 {{ font-size: 22pt; font-weight: 700; }}
+h2 {{ font-size: 15pt; font-weight: 700; }}
+h3 {{ font-size: 12pt; font-weight: 700; }}
+h4 {{ font-size: 11pt; font-weight: 700; }}
+
+p {{ margin: 0.5em 0; }}
+
+ul, ol {{
+    margin: 0.6em 0;
+    padding-left: 1.4em;
+}}
+[dir="rtl"] ul,
+[dir="rtl"] ol {{
+    padding-left: 0;
+    padding-right: 1.4em;
+}}
+li {{ margin: 0.3em 0; }}
+
+code {{
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    font-size: 9.5pt;
+}}
+
+a {{ color: var(--accent); text-decoration: none; }}
+
+.katib-section {{
+    margin-bottom: 1.4em;
+    page-break-inside: avoid;
+}}
 """.strip()
 
     return f"""<!DOCTYPE html>

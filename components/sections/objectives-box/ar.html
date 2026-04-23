@@ -1,0 +1,8 @@
+<section class="katib-section katib-objectives katib-objectives--{{ variant or 'boxed' }}" lang="ar" dir="rtl">
+    <div class="katib-objectives__label">{{ input.label or "ما ستتعلمه" }}</div>
+    <ul class="katib-objectives__items">
+{%- for item in input.items %}
+        <li>{{ item }}</li>
+{%- endfor %}
+    </ul>
+</section>

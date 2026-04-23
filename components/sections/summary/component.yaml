@@ -1,0 +1,29 @@
+name: summary
+tier: section
+version: 0.1.0
+namespace: katib
+description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
+languages: [en, ar]
+requires:
+  tokens: [accent, text, text_secondary, border_strong]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the heading.
+    - heading:
+        type: string
+        required: false
+        description: Defaults to "Summary" (EN) / "ملخص" (AR).
+    - body:
+        type: string
+        required: false
+        description: Short wrap-up paragraph.
+    - items:
+        type: array
+        required: false
+        description: Bulleted takeaways.
+page_behavior:
+  break_inside: avoid

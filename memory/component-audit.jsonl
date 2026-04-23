@@ -6,3 +6,8 @@
 {"component": "pull-quote", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
 {"component": "figure-with-caption", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
 {"component": "signature-block", "tier": "primitive", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 seed primitive"}
+{"component": "front-matter", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
+{"component": "objectives-box", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
+{"component": "summary", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
+{"component": "whats-next", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
+{"component": "reference-strip", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}

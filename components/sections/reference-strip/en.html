@@ -1,0 +1,20 @@
+<section class="katib-section katib-references katib-references--{{ variant or 'flat' }}" lang="en">
+    <hr class="katib-rule katib-rule--hairline">
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="en">{{ input.eyebrow or 'References' }}</div>
+    <h3 class="katib-references__heading">{{ input.heading or 'Further reading' }}</h3>
+    <ul class="katib-references__list">
+{%- for item in input.items %}
+        <li class="katib-references__item">
+{%- if item is mapping %}
+{%- if variant == 'tagged' and item.tag %} <span class="katib-tag katib-tag--outline katib-tag--neutral">{{ item.tag }}</span>
+{%- endif %}
+            <strong>{{ item.label }}</strong>
+{%- if item.url %} <span class="katib-references__url">{{ item.url }}</span>{% endif -%}
+{%- if item.note %} <span class="katib-references__note">— {{ item.note }}</span>{% endif -%}
+{%- else %}
+            {{ item }}
+{%- endif %}
+        </li>
+{%- endfor %}
+    </ul>
+</section>

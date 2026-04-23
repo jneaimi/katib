@@ -1,0 +1,68 @@
+name: phase-2-day2-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 2 Day 2 showcase — exercises every scaffolding section in sequence.
+languages: [en, ar]
+target_pages: [2, 3]
+page_limit: 4
+when: Smoke render for the five Day-2 scaffolding sections. Not for user-facing documents.
+keywords: [phase-2, showcase, scaffolding]
+sections:
+  - component: front-matter
+    inputs:
+      eyebrow: "Phase 2 smoke"
+      title: "Scaffolding sections showcase"
+      subtitle: "Five Tier 2 sections composing Tier 1 primitives — front-matter, objectives-box, summary, whats-next, reference-strip."
+      author: "Katib v2 engineering"
+      date: "2026-04-23"
+      reference_code: "PH2-D2-SHOWCASE"
+
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "What this document proves"
+      items:
+        - "Sections compose primitive CSS classes without template includes"
+        - "Page shell emits consistent heading + list typography"
+        - "Audit-presence gate accepts the 5 new section components"
+        - "Arabic RTL renders with Cairo fonts and mirrored list markers"
+
+  - component: summary
+    inputs:
+      heading: "Day 2 recap"
+      body: "The five scaffolding sections are the frame a real recipe hangs content on. Front-matter opens, objectives set the contract, whats-next and summary close, reference-strip cites."
+      items:
+        - "front-matter — title page without image background"
+        - "objectives-box — labeled bullet list, boxed or minimal"
+        - "summary — heading + paragraph + optional takeaways"
+        - "whats-next — bullet or numbered CTA list"
+        - "reference-strip — compact citations with optional tags"
+
+  - component: whats-next
+    variant: numbered
+    inputs:
+      heading: "After Day 2 lands"
+      items:
+        - title: "Day 3"
+          description: "module + cover-page (minimalist-typographic variant)"
+        - title: "Day 4"
+          description: "cover-page image-background + neural-cartography variants"
+        - title: "Day 7"
+          description: "First real recipe (tutorial.yaml) + Bloom framework guide render"
+
+  - component: reference-strip
+    variant: tagged
+    inputs:
+      heading: "Further reading"
+      items:
+        - label: "Katib v2 ADR"
+          url: "github.com/jneaimi/katib"
+          note: "Component architecture + graduation flow"
+          tag: "ADR"
+        - label: "shadcn/ui"
+          url: "ui.shadcn.com"
+          note: "Copy-in component model reference"
+          tag: "WEB"
+        - label: "v1-reference/NOTES.md"
+          note: "What worked, what broke, what to port forward"
+          tag: "NOTE"

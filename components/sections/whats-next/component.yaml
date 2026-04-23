@@ -1,0 +1,26 @@
+name: whats-next
+tier: section
+version: 0.1.0
+namespace: katib
+description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
+languages: [en, ar]
+requires:
+  tokens: [accent, accent_2, text, step_circle_bg, step_circle_fg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - items:
+        type: array
+        required: true
+        description: Array of strings OR {title, description} objects.
+variants:
+  - bullet
+  - numbered
+page_behavior:
+  break_inside: avoid

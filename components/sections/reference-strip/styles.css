@@ -1,0 +1,47 @@
+.katib-references {
+    margin: 1.5em 0 0.5em 0;
+    color: var(--text-secondary);
+}
+
+.katib-references .katib-rule { margin: 0 0 0.6em 0; }
+
+.katib-references__heading {
+    font-size: 11pt;
+    font-weight: 700;
+    margin: 0.2em 0 0.5em 0;
+    color: var(--text);
+}
+
+.katib-references__list {
+    margin: 0.3em 0;
+    padding-left: 1.2em;
+    list-style: disc;
+}
+
+.katib-references[lang="ar"] .katib-references__list {
+    padding-left: 0;
+    padding-right: 1.2em;
+}
+
+.katib-references__item {
+    margin: 0.3em 0;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.katib-references__item strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.katib-references__url {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    word-break: break-all;
+}
+
+.katib-references__note {
+    color: var(--text-tertiary);
+}

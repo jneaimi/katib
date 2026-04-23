@@ -1,0 +1,24 @@
+name: reference-strip
+tier: section
+version: 0.1.0
+namespace: katib
+description: Compact list of further-reading references or source citations.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, border, border_strong, tag_bg, tag_fg]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - items:
+        type: array
+        required: true
+        description: Array of strings or {label, url?, note?, tag?} objects.
+variants:
+  - flat
+  - tagged

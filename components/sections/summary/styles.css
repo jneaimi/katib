@@ -1,0 +1,25 @@
+.katib-summary {
+    margin: 1.8em 0 1em 0;
+    padding-top: 0.8em;
+    border-top: 1px solid var(--border-strong);
+    page-break-inside: avoid;
+}
+
+.katib-summary__heading {
+    margin: 0.2em 0 0.4em 0;
+}
+
+.katib-summary__body {
+    font-size: 11pt;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 0.4em 0;
+}
+
+.katib-summary__items {
+    margin: 0.6em 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+}
+
+.katib-summary__items li { margin: 0.25em 0; }

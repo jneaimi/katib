@@ -1,0 +1,17 @@
+<section class="katib-section katib-whats-next katib-whats-next--{{ variant or 'bullet' }}" lang="ar" dir="rtl">
+    <div class="katib-eyebrow katib-eyebrow--accent" lang="ar">{{ input.eyebrow or 'التالي' }}</div>
+    <h2 class="katib-whats-next__heading">{{ input.heading or 'الخطوات التالية' }}</h2>
+{%- if variant == 'numbered' %}
+    <ol class="katib-whats-next__list">
+{%- for item in input.items %}
+        <li>{% if item is mapping %}<strong>{{ item.title }}</strong>{% if item.description %} — {{ item.description }}{% endif %}{% else %}{{ item }}{% endif %}</li>
+{%- endfor %}
+    </ol>
+{%- else %}
+    <ul class="katib-whats-next__list">
+{%- for item in input.items %}
+        <li>{% if item is mapping %}<strong>{{ item.title }}</strong>{% if item.description %} — {{ item.description }}{% endif %}{% else %}{{ item }}{% endif %}</li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+</section>

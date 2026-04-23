@@ -1,0 +1,34 @@
+name: front-matter
+tier: section
+version: 0.1.0
+namespace: katib
+description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref). Lighter than a full cover-page.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, border_strong]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Document category label. Defaults per-language.
+    - title:
+        type: string
+        required: true
+    - subtitle:
+        type: string
+        required: false
+    - author:
+        type: string
+        required: false
+    - date:
+        type: string
+        required: false
+    - reference_code:
+        type: string
+        required: false
+        description: Short code rendered in monospace at the end of the meta strip.
+page_behavior:
+  break_after: always
+  break_inside: avoid

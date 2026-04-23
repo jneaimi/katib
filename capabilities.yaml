@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T05:39:25+00:00'
+generated_at: '2026-04-23T06:59:24+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -54,6 +54,28 @@ recipes:
     - tag
     - pull-quote
     - signature-block
+  phase-2-day2-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 2 Day 2 showcase — exercises every scaffolding section in sequence.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 2
+    - 3
+    page_limit: 4
+    when: Smoke render for the five Day-2 scaffolding sections. Not for user-facing documents.
+    keywords:
+    - phase-2
+    - showcase
+    - scaffolding
+    sections_shape:
+    - front-matter
+    - objectives-box
+    - summary
+    - whats-next
+    - reference-strip
 components:
   callout:
     namespace: katib
@@ -149,4 +171,61 @@ components:
     - filled
     - outline
     description: Inline badge/chip label — short noun, tonal background.
+    used_in_recipes: 1
+  front-matter:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
+      Lighter than a full cover-page.
+    used_in_recipes: 1
+  objectives-box:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - boxed
+    - minimal
+    description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
+    used_in_recipes: 1
+  reference-strip:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - flat
+    - tagged
+    description: Compact list of further-reading references or source citations.
+    used_in_recipes: 1
+  summary:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
+    used_in_recipes: 1
+  whats-next:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - bullet
+    - numbered
+    description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
     used_in_recipes: 1

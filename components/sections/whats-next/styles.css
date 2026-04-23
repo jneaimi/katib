@@ -1,0 +1,56 @@
+.katib-whats-next {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.katib-whats-next__heading {
+    margin: 0.2em 0 0.4em 0;
+}
+
+.katib-whats-next__list {
+    margin: 0.6em 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+}
+
+.katib-whats-next__list li { margin: 0.35em 0; }
+
+.katib-whats-next--numbered .katib-whats-next__list {
+    counter-reset: katib-next;
+    list-style: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.katib-whats-next--numbered .katib-whats-next__list li {
+    counter-increment: katib-next;
+    position: relative;
+    margin: 0.5em 0;
+    min-height: 1.4em;
+}
+
+.katib-whats-next--numbered[lang="en"] .katib-whats-next__list li {
+    padding-left: 1.9em;
+}
+.katib-whats-next--numbered[lang="ar"] .katib-whats-next__list li {
+    padding-right: 1.9em;
+}
+
+.katib-whats-next--numbered .katib-whats-next__list li::before {
+    content: counter(katib-next);
+    position: absolute;
+    top: 0;
+    width: 1.4em;
+    height: 1.4em;
+    background: var(--step-circle-bg);
+    color: var(--step-circle-fg);
+    border-radius: 50%;
+    font-size: 9pt;
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.4em;
+    font-family: var(--font-display);
+}
+
+.katib-whats-next--numbered[lang="en"] .katib-whats-next__list li::before { left: 0; }
+.katib-whats-next--numbered[lang="ar"] .katib-whats-next__list li::before { right: 0; }
