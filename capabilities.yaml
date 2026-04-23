@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T18:55:38+00:00'
+generated_at: '2026-04-23T19:13:03+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -271,6 +271,31 @@ recipes:
     - chart-bar
     - chart-sparkline
     - summary
+  tutorial-cheatsheet:
+    namespace: katib
+    version: 0.1.0
+    description: Cheatsheet — dense single-page reference card with titled sections (keyboard shortcuts,
+      commands, flags, troubleshooting). First production consumer of sections-grid; designed to fit on
+      one page at dense variant.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: Quick-reference document — a single page (or two) packed with keyboard shortcuts, commands,
+      flags, or any reference-style grouped content. Uses sections-grid dense variant. EN-only; AR deferred
+      pending inputs_by_lang schema.
+    keywords:
+    - tutorial
+    - cheatsheet
+    - reference
+    - keyboard-shortcuts
+    - quick-reference
+    sections_shape:
+    - module
+    - sections-grid
+    - module
   tutorial-handoff:
     namespace: katib
     version: 0.1.0
@@ -576,7 +601,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 7
+    used_in_recipes: 8
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -615,6 +640,20 @@ components:
     - tagged
     description: Compact list of further-reading references or source citations.
     used_in_recipes: 2
+  sections-grid:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - dense
+    - bordered
+    description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
+      either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
+      2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
+    used_in_recipes: 1
   summary:
     namespace: katib
     tier: section

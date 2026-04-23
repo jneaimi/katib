@@ -1,0 +1,24 @@
+{%- set cols = input.columns or 2 -%}
+<section class="katib-section katib-sections-grid katib-sections-grid--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-sections-grid__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h2 class="katib-sections-grid__heading">{{ input.heading }}</h2>
+{%- endif %}
+    <div class="katib-sections-grid__grid katib-sections-grid__grid--cols-{{ cols }}">
+{%- for card in input.items %}
+        <article class="katib-sections-grid__card">
+{%- if card.eyebrow %}
+            <div class="katib-sections-grid__card-eyebrow">{{ card.eyebrow }}</div>
+{%- endif %}
+            <h3 class="katib-sections-grid__card-title">{{ card.title }}</h3>
+{%- if card.raw_body %}
+            <div class="katib-sections-grid__card-body">{{ card.raw_body|safe }}</div>
+{%- elif card.body %}
+            <p class="katib-sections-grid__card-body">{{ card.body }}</p>
+{%- endif %}
+        </article>
+{%- endfor %}
+    </div>
+</section>

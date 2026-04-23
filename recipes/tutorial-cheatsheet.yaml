@@ -1,0 +1,87 @@
+name: tutorial-cheatsheet
+version: 0.1.0
+namespace: katib
+description: Cheatsheet — dense single-page reference card with titled sections (keyboard shortcuts, commands, flags, troubleshooting). First production consumer of sections-grid; designed to fit on one page at dense variant.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 2
+when: Quick-reference document — a single page (or two) packed with keyboard shortcuts, commands, flags, or any reference-style grouped content. Uses sections-grid dense variant. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [tutorial, cheatsheet, reference, keyboard-shortcuts, quick-reference]
+
+sections:
+  # 1. Header — compact module (no cover — cheatsheet is a working reference, not a presentation)
+  - component: module
+    inputs:
+      eyebrow: "Cheatsheet"
+      title: "[Tool or system name] — quick reference"
+      intro: "Single-page reference card. Keyboard shortcuts, commands, flags, troubleshooting."
+
+  # 2. Main grid — 6 cards, dense variant (first production consumer of sections-grid)
+  - component: sections-grid
+    variant: dense
+    inputs:
+      columns: 2
+      items:
+        - title: "Quick actions"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 55pt 1fr; gap: 2pt 8pt; margin: 0;">
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">⌘K</dt><dd style="margin: 0; color: var(--text-secondary);">Quick-create anywhere</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">⌘/</dt><dd style="margin: 0; color: var(--text-secondary);">Global search</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">⌘.</dt><dd style="margin: 0; color: var(--text-secondary);">Command palette</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">⌘↩</dt><dd style="margin: 0; color: var(--text-secondary);">Confirm &amp; close dialog</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">Esc</dt><dd style="margin: 0; color: var(--text-secondary);">Dismiss / back</dd>
+            </dl>
+
+        - title: "Navigation"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 55pt 1fr; gap: 2pt 8pt; margin: 0;">
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">g h</dt><dd style="margin: 0; color: var(--text-secondary);">Go home</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">g v</dt><dd style="margin: 0; color: var(--text-secondary);">Go to vault</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">g i</dt><dd style="margin: 0; color: var(--text-secondary);">Go to inbox</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">g s</dt><dd style="margin: 0; color: var(--text-secondary);">Go to settings</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">⌘[ / ⌘]</dt><dd style="margin: 0; color: var(--text-secondary);">Back / forward</dd>
+            </dl>
+
+        - title: "Vault"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 0; list-style: none;">
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘N</kbd> — new note</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘⇧N</kbd> — new folder</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘⇧F</kbd> — full-text search</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘R</kbd> — rename</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘⌫</kbd> — move to trash</li>
+            </ul>
+
+        - title: "Terminal"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 0; list-style: none;">
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘T</kbd> — new terminal tab</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌃C</kbd> — interrupt running process</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌃D</kbd> — end session</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘K</kbd> — clear scrollback</li>
+              <li style="margin-bottom: 2pt;"><kbd style="font-family: var(--font-mono); background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 8pt;">⌘⇧F</kbd> — search in terminal</li>
+            </ul>
+
+        - title: "Common flags"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 70pt 1fr; gap: 2pt 8pt; margin: 0;">
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">--dry-run</dt><dd style="margin: 0; color: var(--text-secondary);">Preview action without writing</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">--force</dt><dd style="margin: 0; color: var(--text-secondary);">Overwrite existing outputs</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">--verbose</dt><dd style="margin: 0; color: var(--text-secondary);">Detailed trace output</dd>
+              <dt style="font-family: var(--font-mono); font-weight: 600; color: var(--text);">--help</dt><dd style="margin: 0; color: var(--text-secondary);">Show flags and usage</dd>
+            </dl>
+
+        - title: "Troubleshooting"
+          raw_body: |
+            <div style="margin-bottom: 4pt;"><strong style="font-size: 9pt;">Build fails</strong><br><span style="color: var(--text-secondary);">Run with <code style="background: var(--tag-bg); padding: 0 3pt; border-radius: 2pt; font-size: 8pt;">--verbose</code> and check the first error, not the last.</span></div>
+            <div style="margin-bottom: 4pt;"><strong style="font-size: 9pt;">Server won't start</strong><br><span style="color: var(--text-secondary);">Check the port isn't taken: <code style="background: var(--tag-bg); padding: 0 3pt; border-radius: 2pt; font-size: 8pt;">lsof -i :2400</code></span></div>
+            <div><strong style="font-size: 9pt;">Missing deps</strong><br><span style="color: var(--text-secondary);">Clear cache and reinstall: <code style="background: var(--tag-bg); padding: 0 3pt; border-radius: 2pt; font-size: 8pt;">npm ci</code> or <code style="background: var(--tag-bg); padding: 0 3pt; border-radius: 2pt; font-size: 8pt;">uv sync</code></span></div>
+
+  # 3. Footer — reference code + date via inline-styled module
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: flex; justify-content: space-between; padding-top: 10pt; margin-top: 14pt; border-top: 0.5pt solid var(--border); font-family: var(--font-mono); font-size: 8pt; color: var(--text-tertiary);">
+          <span>Cheatsheet · [Tool version]</span>
+          <span>2026-04-23</span>
+        </div>
