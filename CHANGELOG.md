@@ -26,17 +26,147 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **24 components** (unchanged count through Day 9;
+Engine state: **24 components** (unchanged count through Day 10;
 multi-party-signature-block added Day 7, kv-list at 0.2.0,
 signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**11 recipes** (5 production: tutorial + business-proposal-letter +
-personal-cover-letter + formal-noc + **tutorial-how-to**; 6 dev
-showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4
-image providers, 0 external skill dependencies.
+**12 recipes** (6 production: tutorial + business-proposal-letter +
+personal-cover-letter + formal-noc + tutorial-how-to +
+**tutorial-handoff**; 6 dev showcases). 6 core library modules,
+5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 5 production
-recipes; Phase 3 ports 10 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 6 production
+recipes; Phase 3 ports 9 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 10 — `tutorial/handoff` recipe ships)
+
+Fifth Phase-3 recipe migration. **Fifth zero-new-component recipe
+in a row** (Days 4, 6, 8, 9, 10). First Phase-3 recipe to validate
+the *headerless* pattern — no cover page, no title page, content
+starts directly with a compact module header.
+
+Day 10 was preceded by a plan pivot: `personal/cv` was scoped as the
+Day 10 target but investigation of the v1 template revealed a
+2-column sidebar layout with 4-5 genuinely new component shapes
+(sidebar grid, skill-bar-list, tag chips, experience-entry,
+education-entry). CV deferred to a proper 2-day infra+recipe sprint
+later in Phase 3. `tutorial/handoff` picked instead after verifying
+its v1 template composes from existing components + density-convention
+inline styles only.
+
+- **`recipes/tutorial-handoff.yaml`** (new) — 11-section recipe:
+  1. `module` with eyebrow="Handoff" + title + intro — compact
+     header (no cover page by design — handoff is a working doc)
+  2. `kv-list` boxed — **4-field status meta**: Status / Reference /
+     Handoff date / Owner. **Second production consumer of kv-list
+     boxed** — validates the component serves status-grid shape as
+     well as NOC's field-summary shape (both 4-7 item KV grids with
+     identical styling; the Day-7 boxed variant handles both).
+  3. `module` plain — Summary
+  4. `module` raw_body — What shipped bullet list (release, docs,
+     monitoring, runbook, follow-ups)
+  5. `module` plain — Architecture in 30 seconds
+  6. `callout` tone=info — **first production consumer of info
+     tone** (prior consumers: NOC+cover-letter used neutral;
+     how-to used tip+warn). "Key decision" box for ADR-adjacent
+     context.
+  7. `module` raw_body — Runbook with 3 `<h3>` sub-sections +
+     `<pre><code>` code blocks (inline-styled tag-bg code styling)
+  8. `module` raw_body — Known issues: 3 inline-styled severity
+     cards (Medium / Low / Low) with warn-bg + info-bg token
+     backgrounds and left accent borders. Density-convention block.
+  9. `module` raw_body — Contacts: 4 inline-styled contact cards
+     in a 2x2 flex grid (Handing off / Taking over / Escalation /
+     On-call). Density-convention block.
+  10. `module` raw_body — Next steps ordered list
+  11. `callout` tone=tip — **second production consumer of tip
+      tone** after how-to. "One last note" closing message.
+  Content adapted from `v1-reference/domains/tutorial/templates/
+  handoff.en.html`. Placeholder-style prose preserved
+  (`[Feature / service / area being handed off]`,
+  `[Outgoing owner]`, `[Incoming owner]`, etc.).
+- **Rendered output: 3 pages, 0 WeasyPrint warnings.** No cover
+  page — content starts at page 1 with the compact module header.
+  3-page split: ~page 1 (header + status meta + summary + what
+  shipped), ~page 2 (architecture + key decision + runbook),
+  ~page 3 (known issues + contacts + next steps + closing).
+  `target_pages: [2, 3]` with `page_limit: 3`.
+- **Validation clean at default + strict** — 0 content-lint warnings
+  on the handoff prose + placeholders.
+- **3 recipe-requests logged** — soul-hub-feature-handoff,
+  on-call-rotation-handoff, signal-forge-pipeline-handoff
+  (stand-in signals for future handoff consumers).
+- **Audit + capabilities:** register entry + `capabilities.yaml`
+  regenerated.
+
+### Tests (Phase 3 Day 10)
+
+- **`tests/test_tutorial_handoff.py`** (new, 18 tests): schema-
+  loads, en-only, page-targets [2, 3], has-no-cover-page (regression
+  guard for the headerless pattern), eleven-section-ordering,
+  uses-kv-list-boxed-status-grid (second production consumer
+  regression guard, 4 terms: Status/Reference/Handoff date/Owner),
+  first-callout-info-consumer (regression guard for tone=info's
+  debut), second-callout-tip-consumer (pairs-with-how-to regression
+  guard), module-header-uses-eyebrow-pattern (validates the
+  no-cover compact-header pattern), validates-clean,
+  validates-strict-clean, renders-EN (3 component marker classes +
+  negative assertion for cover), pdf-within-target-pages (2-3
+  accepted), renders-all-v1-content (22 distinct phrases spanning
+  header/meta/summary/what-shipped/architecture/key-decision/runbook/
+  known-issues/contacts/next-steps/closing), known-issues-inline-
+  block-present (regression guard for density-block severity
+  counts + token bg refs), contacts-inline-block-present (regression
+  guard for 4 labels), in-capabilities, audit-entry-exists.
+- **Regression sweep:** 630/630 passing (was 612, +18 handoff
+  tests). Zero WeasyPrint warnings across all 15 render paths.
+
+### Architecture decisions (Phase 3 Day 10)
+
+1. **Day 10 pivot proved honest estimation matters.** The original
+   CV plan fell over on contact with the v1 template. Lesson: read
+   the v1 template *before* committing to a "pure composition" day
+   — instincts about recipe complexity can't substitute for
+   validation. Zero velocity lost by the pivot because handoff
+   shipped cleanly the same day; the recovery was fast precisely
+   because the pivot happened during planning, not during execution.
+2. **Zero-new-component streak = 5.** Business-letter → cover-letter
+   → NOC → how-to → handoff. The component library is handling
+   composition at a rate that was hard to predict. 6 of 14 Phase-3
+   recipes now shipped (43%) using 4 of the 7 planned Phase-3
+   components. Remaining 8 recipes will likely split: 4-5 pure
+   composition (handoff-like), 3-4 needing 1-2 new components
+   (CV, white-paper, invoice, one-pager, cheatsheet, mou).
+3. **kv-list boxed is now validated as dual-purpose.** First used
+   Day 7 for NOC's 7-field employee details (field-summary shape);
+   Day 10 used for handoff's 4-field status grid (status-meta shape).
+   Same variant, same styling, two distinct editorial roles. This
+   is the component library working — *one variant, multiple
+   document-scoped semantics*.
+4. **"Headerless" composition is a first-class pattern.** Handoff
+   intentionally has no cover page or front-matter — content starts
+   at the compact module header. This is the right shape for
+   working docs (runbooks, handoffs, internal memos) where a full
+   cover would be overkill. Documents *without* covers are as
+   legitimate as documents *with* covers.
+5. **Inline-styled "card grid" pattern used twice but not
+   graduated.** Known-issues (3 severity cards) and Contacts (4
+   info cards) are structurally similar: flex container of N
+   similar cards with accent/border + label + title + detail.
+   *Same recipe, not a second recipe.* The density convention
+   says: build a `card-grid` component when a *second recipe*
+   introduces the same shape. Onboarding.en.html uses contact-cards
+   too — when onboarding ships (Day 11+), we'll see if graduation
+   is justified.
+6. **Code-block styling as inline style.** The runbook's
+   `<pre><code>` blocks use inline tag-bg token + padding styling.
+   This is a candidate for a `code-block` primitive if multiple
+   recipes need it (cheatsheet and katib-walkthrough likely will).
+   Deferred to the point of consumer-count signal.
+7. **AR variant deferred (fifth recipe in a row).** Consistent
+   since Day 4; NOC remains the designated first-bilingual recipe
+   that triggers `inputs_by_lang` schema design.
 
 ### Added (Phase 3 Day 9 — `tutorial/how-to` recipe ships)
 

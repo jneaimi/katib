@@ -13,3 +13,5 @@
 {"recipe": "formal-noc", "namespace": "katib", "action": "register", "at": "2026-04-23T18:17:14+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "tutorial-how-to", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T18:34:48+00:00", "from_graduation": null, "force_justification": "Day 9 Phase-3 — tutorial/how-to composition recipe", "note": "Scaffolded by katib recipe new"}
 {"recipe": "tutorial-how-to", "namespace": "katib", "action": "register", "at": "2026-04-23T18:35:33+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "tutorial-handoff", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T18:52:31+00:00", "from_graduation": null, "force_justification": "Day 10 Phase-3 — tutorial/handoff composition recipe", "note": "Scaffolded by katib recipe new"}
+{"recipe": "tutorial-handoff", "namespace": "katib", "action": "register", "at": "2026-04-23T18:53:55+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
