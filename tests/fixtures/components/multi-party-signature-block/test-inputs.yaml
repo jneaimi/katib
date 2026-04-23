@@ -1,0 +1,11 @@
+# Test inputs for `multi-party-signature-block` isolated render.
+# Used by `katib component test multi-party-signature-block`.
+inputs:
+  parties:
+    - name: "Jasem Al Neaimi"
+      title: "HR Manager"
+      email: "hr@example.com"
+    - name: "Authorised signatory"
+      title: "Signature & company stamp"
+brand: null
+variant: null

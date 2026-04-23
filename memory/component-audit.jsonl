@@ -28,3 +28,6 @@
 {"component": "masthead-personal", "tier": "section", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T17:39:28+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
 {"component": "masthead-personal", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T17:42:22+00:00", "from_graduation": null, "note": "Registered by katib component register"}
 {"component": "callout", "tier": "primitive", "namespace": "katib", "action": "register", "at": "2026-04-23T17:42:42+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "multi-party-signature-block", "tier": "section", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T18:00:48+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
+{"component": "multi-party-signature-block", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T18:03:28+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "kv-list", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T18:03:28+00:00", "from_graduation": null, "note": "Registered by katib component register"}

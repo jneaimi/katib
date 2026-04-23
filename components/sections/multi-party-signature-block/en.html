@@ -1,0 +1,19 @@
+{%- set effective_variant = variant or 'line-over' %}
+<section class="katib-section katib-multi-party-signature-block katib-multi-party-signature-block--{{ effective_variant }}" lang="en">
+{%- if input.heading %}
+    <h3 class="katib-multi-party-signature-block__heading">{{ input.heading }}</h3>
+{%- endif %}
+    <div class="katib-multi-party-signature-block__grid">
+{%- for party in input.parties %}
+        <div class="katib-multi-party-signature-block__box">
+            <div class="katib-multi-party-signature-block__name">{{ party.name }}</div>
+{%- if party.title %}
+            <div class="katib-multi-party-signature-block__title">{{ party.title }}</div>
+{%- endif %}
+{%- if party.email %}
+            <div class="katib-multi-party-signature-block__email" dir="ltr">{{ party.email }}</div>
+{%- endif %}
+        </div>
+{%- endfor %}
+    </div>
+</section>

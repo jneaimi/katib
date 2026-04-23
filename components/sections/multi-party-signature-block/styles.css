@@ -1,0 +1,50 @@
+.katib-multi-party-signature-block {
+    margin: 1.5em 0;
+    page-break-inside: avoid;
+}
+
+.katib-multi-party-signature-block__heading {
+    font-family: var(--font-display, inherit);
+    font-size: 11pt;
+    font-weight: 700;
+    margin: 0 0 0.8em 0;
+    color: var(--text);
+}
+
+.katib-multi-party-signature-block__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40pt;
+}
+
+.katib-multi-party-signature-block__box {
+    flex: 1 1 200pt;
+    min-width: 180pt;
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    padding-top: 34pt;
+    page-break-inside: avoid;
+}
+
+.katib-multi-party-signature-block--line-over .katib-multi-party-signature-block__box {
+    border-top: 0.5pt solid var(--text);
+}
+
+.katib-multi-party-signature-block__name {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 10.5pt;
+    margin-bottom: 0.2em;
+}
+
+.katib-multi-party-signature-block__title {
+    font-size: 9pt;
+    color: var(--text-secondary);
+    margin-bottom: 0.2em;
+}
+
+.katib-multi-party-signature-block__email {
+    font-size: 9pt;
+    color: var(--text-tertiary);
+}

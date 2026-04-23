@@ -26,16 +26,112 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **23 components** (same count through Day 6;
-masthead-personal shipped Day 5, evolutions to signature-block at 0.2.0,
-module at 0.3.0, callout at 0.2.0). **9 recipes** (3 production:
-tutorial + business-proposal-letter + personal-cover-letter; 6 dev
-showcases). 6 core library modules, 5 CLIs, 4 memory streams,
-4 image providers, 0 external skill dependencies.
+Engine state: **24 components** (+1 multi-party-signature-block Day 7;
+kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout at
+0.2.0). **9 recipes** (3 production: tutorial + business-proposal-letter
++ personal-cover-letter; 6 dev showcases). 6 core library modules,
+5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+dependencies.
 
 **Not shippable as a v1 replacement yet** — v2 has 3 production
 recipes; Phase 3 ports 12 more over the next ~2.5 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 7 — component infra for `formal/noc`)
+
+Third "component infra day" (after Days 3 + 5). Builds the two additions
+the NOC recipe needs before it can ship on Day 8.
+
+- **`components/sections/multi-party-signature-block/`** (new) — Day-0
+  queue item #3 of 6, section-tier component that lays out 2+ parties
+  in a responsive side-by-side signature grid. Each party has
+  `name` (required) + `title` + `email` (optional). Variants:
+  `line-over` (default, top border as signing line) and `minimal` (no
+  borders). Heading optional. Flexbox layout with
+  `flex: 1 1 200pt` for auto-flow across 2-N parties (WeasyPrint
+  doesn't support `grid-template-columns: repeat(auto-fit, ...)`,
+  documented in the Day-7 ADR entry as the primary workaround
+  convention). Email field forced `dir="ltr"` inside AR templates
+  (continues the letterhead/masthead pattern). Tokens: `text`,
+  `text_secondary`, `text_tertiary`. Zero hex in stylesheet.
+- **`components/sections/kv-list/`** — v0.1.0 → v0.2.0 — added
+  `boxed` variant for field-summary use (NOC employee details,
+  future invoice/quote meta). Inverts emphasis relative to default:
+  term renders as small-uppercase label-style (`text_secondary`,
+  9pt, letter-spaced, normal weight); value renders as emphasized
+  data (`text`, 10.5pt, 600 weight). Container adds background
+  (`tag_bg`), leading accent border (3pt `accent`), 14pt × 18pt
+  padding. Dotted row separators replace the default solid ones.
+  RTL override flips the leading border to the trailing side
+  (WeasyPrint doesn't support `border-inline-start` — hence the
+  physical-property pattern with `[dir="rtl"]` override).
+  `requires.tokens` gains `tag_bg` + `accent`. Existing default/
+  dense/spacious variants unchanged.
+- **Graduation reality for multi-party-signature-block:** 2 firm
+  Phase-3 dependents (NOC Day 8 + mou later), below the automated
+  threshold. Same honest-intent pattern as masthead-personal (Day 5):
+  scaffold past the soft-warning, log 2 real requests, document
+  intent in the ADR audit trail.
+- **Audit + capabilities:** register entries for both components in
+  `memory/component-audit.jsonl`; `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 7)
+
+- **`tests/test_multi_party_signature_block.py`** (new, 12 tests):
+  schema-loads, parties-required, variants-declared, heading-
+  optional, renders-EN-two-party, renders-AR, email-forced-ltr-in-
+  arabic, renders-three-party-grid (flex auto-flow regression guard),
+  line-over-top-border, minimal-variant, heading-rendered-when-set,
+  heading-omitted-when-unset, styles-tokens-only, EN/AR-share-
+  semantic-structure.
+- **`tests/test_kv_list_v02.py`** (new, 8 tests): version-bumped,
+  boxed-variant-declared, requires-added-tokens, boxed-renders-EN,
+  boxed-renders-to-PDF, boxed-AR-flips-accent-border-to-right,
+  styles-tokens-only, boxed-emphasis-inverted (stylesheet contract
+  guards the term/value emphasis inversion).
+- **`tests/test_kv_list.py`** — `test_kv_list_loads_against_schema`
+  updated (0.1.0 → 0.2.0 version assertion).
+- **Regression sweep:** 578/578 passing (was 556, +22 Day-7 tests +
+  1 version-assertion update). Zero WeasyPrint warnings.
+
+### Architecture decisions (Phase 3 Day 7)
+
+1. **WeasyPrint constraints on modern CSS.** Two CSS logical/modern
+   properties tripped during Day 7 render tests:
+   (a) `grid-template-columns: repeat(auto-fit, minmax(200pt, 1fr))`
+       — unsupported; switched to `flex` with `flex: 1 1 200pt` for
+       auto-flow.
+   (b) `border-inline-start` — unsupported; switched to `border-left`
+       with explicit `[dir="rtl"]` override flipping to `border-right`.
+   Phase-3 convention going forward: **prefer flex over grid for
+   flexible column counts**; **use physical border properties with
+   direction overrides instead of logical properties**. The
+   `text-align: end` logical property DOES work in WeasyPrint
+   (confirmed on cover-letter), so it's the exception.
+2. **kv-list variant widens component scope without splitting.**
+   `boxed` variant serves NOC's field-summary use case, which could
+   have justified a separate `field-summary-box` primitive (Day-0
+   scan initially proposed this). Chose to extend kv-list because
+   semantically both are "term + value pairs" — boxed is a
+   presentation variant, not a distinct shape. This parallels the
+   Day-5 call to extend `callout` with `neutral` rather than build
+   a separate primitive for non-status highlights. The rule-of-thumb:
+   if the shape is the same and only styling differs, it's a variant.
+3. **Emphasis inversion via variant is legitimate.** `kv-list` boxed
+   variant inverts term/value emphasis (default: term bold+dark,
+   value lighter; boxed: term lighter+uppercase-label, value bold+
+   dark+emphasized). This is an aesthetic decision — the field-
+   summary idiom reverses the scanning emphasis (field labels recede,
+   data advances). Stylesheet contract tested via
+   `test_kv_list_boxed_emphasis_inverted`.
+4. **Day-0 scan `field-summary-box` component eliminated.** By
+   extending kv-list with boxed variant, the Day-0 queue item (one
+   of 17 proposed NEW components) is absorbed into kv-list. Running
+   Day-0-queue-resolution tally: `kv-list` (Day 1 base) +
+   `letterhead` (Day 2) + `masthead-personal` (Day 5 —
+   not-in-day-0-list, queue-revision) + `multi-party-signature-block`
+   (Day 7) = 4 of original queue items resolved; `field-summary-box`
+   absorbed into kv-list as variant.
 
 ### Added (Phase 3 Day 6 — `personal/cover-letter` recipe ships)
 
