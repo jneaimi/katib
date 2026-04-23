@@ -21,3 +21,5 @@
 {"recipe": "business-proposal-one-pager", "namespace": "katib", "action": "register", "at": "2026-04-23T20:27:08+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "editorial-white-paper", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T20:54:47+00:00", "from_graduation": null, "force_justification": "Day 13 Phase-3 — editorial/white-paper recipe (first production consumer of data-table)", "note": "Scaffolded by katib recipe new"}
 {"recipe": "editorial-white-paper", "namespace": "katib", "action": "register", "at": "2026-04-23T20:55:47+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "business-proposal-proposal", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T21:08:15+00:00", "from_graduation": null, "force_justification": "Day 14 Phase-3 — business-proposal/proposal recipe (data-table second-consumer validation)", "note": "Scaffolded by katib recipe new"}
+{"recipe": "business-proposal-proposal", "namespace": "katib", "action": "register", "at": "2026-04-23T21:09:19+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

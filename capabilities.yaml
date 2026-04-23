@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T20:57:58+00:00'
+generated_at: '2026-04-23T21:11:25+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -77,6 +77,42 @@ recipes:
     - module
     - module
     - sections-grid
+    - module
+  business-proposal-proposal:
+    namespace: katib
+    version: 0.1.0
+    description: Commercial proposal — long-form business-proposal with title page, TOC, 5 numbered body
+      sections (Executive Summary, Program Scope, Delivery Timeline, Investment & Terms, Acceptance),
+      3 deliverables-style data-tables, and an inline sign-row acceptance block. Zero new components;
+      data-table gets 3 more production consumers (2nd-4th uses), completing the business-proposal domain
+      (letter + one-pager + proposal).
+    languages:
+    - en
+    target_pages:
+    - 5
+    - 10
+    page_limit: 12
+    when: Long-form commercial proposal with scope, timeline, investment, and acceptance terms. Pairs
+      with business-proposal/letter (cover) and business-proposal/one-pager (summary). EN-only; AR deferred
+      pending inputs_by_lang schema.
+    keywords:
+    - business-proposal
+    - commercial
+    - proposal
+    - engagement
+    - scope
+    - pricing
+    sections_shape:
+    - module
+    - module
+    - module
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
     - module
   editorial-white-paper:
     namespace: katib
@@ -487,7 +523,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 1
+    used_in_recipes: 2
   eyebrow:
     namespace: katib
     tier: primitive
@@ -679,7 +715,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 10
+    used_in_recipes: 11
   multi-party-signature-block:
     namespace: katib
     tier: section

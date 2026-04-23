@@ -1,0 +1,184 @@
+name: business-proposal-proposal
+version: 0.1.0
+namespace: katib
+description: Commercial proposal — long-form business-proposal with title page, TOC, 5 numbered body sections (Executive Summary, Program Scope, Delivery Timeline, Investment & Terms, Acceptance), 3 deliverables-style data-tables, and an inline sign-row acceptance block. Zero new components; data-table gets 3 more production consumers (2nd-4th uses), completing the business-proposal domain (letter + one-pager + proposal).
+languages: [en]
+target_pages: [5, 10]
+page_limit: 12
+when: Long-form commercial proposal with scope, timeline, investment, and acceptance terms. Pairs with business-proposal/letter (cover) and business-proposal/one-pager (summary). EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [business-proposal, commercial, proposal, engagement, scope, pricing]
+
+sections:
+  # 1. Title page — brand bar + eyebrow + h1 + subtitle + 4-item meta-block (density #1)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="height: 247mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always;">
+          <div>
+            <div style="font-size: 9pt; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 14pt; padding-bottom: 8pt; border-bottom: 2pt solid var(--accent); display: inline-block;">Commercial Proposal</div>
+            <h1 style="font-size: 36pt; line-height: 1.15; color: var(--text); margin: 0 0 12pt 0; font-weight: 500; max-width: 160mm;">Applied AI Training Program</h1>
+            <div style="font-size: 14pt; line-height: 1.45; color: var(--text-secondary); font-style: italic; max-width: 150mm; margin-top: 10pt;">A 6-week hybrid program to build production-grade AI agent engineering capability.</div>
+          </div>
+          <div style="padding-top: 18pt; border-top: 0.5pt solid var(--border); display: grid; grid-template-columns: repeat(2, 1fr); gap: 14pt 24pt;">
+            <div>
+              <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt;">Reference</div>
+              <div style="font-size: 11pt; font-weight: 500; color: var(--text);">[PROP/2026/001]</div>
+            </div>
+            <div>
+              <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt;">Issued</div>
+              <div style="font-size: 11pt; font-weight: 500; color: var(--text);">2026-04-24</div>
+            </div>
+            <div>
+              <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt;">Prepared by</div>
+              <div style="font-size: 11pt; font-weight: 500; color: var(--text);">Jasem Al Neaimi</div>
+            </div>
+            <div>
+              <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 2pt;">For</div>
+              <div style="font-size: 11pt; font-weight: 500; color: var(--text);">[Client Organization]</div>
+            </div>
+          </div>
+        </div>
+
+  # 2. Table of contents — inline ol with number + title + page (density #2)
+  - component: module
+    inputs:
+      raw_body: |
+        <section style="page-break-after: always;">
+          <h2 style="font-size: 18pt; font-weight: 500; color: var(--text); margin: 0 0 18pt 0;">Contents</h2>
+          <ol style="list-style: none; padding: 0; margin: 0;">
+            <li style="display: flex; align-items: baseline; padding: 8pt 0; border-bottom: 0.5pt solid var(--border); font-size: 11pt;">
+              <span style="width: 24pt; color: var(--accent); font-weight: 600;">1</span>
+              <span style="flex: 1; color: var(--text);">Executive Summary</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9pt;">3</span>
+            </li>
+            <li style="display: flex; align-items: baseline; padding: 8pt 0; border-bottom: 0.5pt solid var(--border); font-size: 11pt;">
+              <span style="width: 24pt; color: var(--accent); font-weight: 600;">2</span>
+              <span style="flex: 1; color: var(--text);">Program Scope</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9pt;">4</span>
+            </li>
+            <li style="display: flex; align-items: baseline; padding: 8pt 0; border-bottom: 0.5pt solid var(--border); font-size: 11pt;">
+              <span style="width: 24pt; color: var(--accent); font-weight: 600;">3</span>
+              <span style="flex: 1; color: var(--text);">Delivery Timeline</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9pt;">6</span>
+            </li>
+            <li style="display: flex; align-items: baseline; padding: 8pt 0; border-bottom: 0.5pt solid var(--border); font-size: 11pt;">
+              <span style="width: 24pt; color: var(--accent); font-weight: 600;">4</span>
+              <span style="flex: 1; color: var(--text);">Investment &amp; Terms</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9pt;">8</span>
+            </li>
+            <li style="display: flex; align-items: baseline; padding: 8pt 0; font-size: 11pt;">
+              <span style="width: 24pt; color: var(--accent); font-weight: 600;">5</span>
+              <span style="flex: 1; color: var(--text);">Acceptance</span>
+              <span style="color: var(--text-tertiary); font-family: var(--font-mono); font-size: 9pt;">10</span>
+            </li>
+          </ol>
+        </section>
+
+  # 3. Section 1 — Executive Summary (module numbered)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Executive Summary"
+      raw_body: |
+        <p style="font-size: 12pt; line-height: 1.6; color: var(--text); margin: 0 0 10pt 0; font-weight: 400;">The Applied AI Training Program equips 18 participants with production-grade skills in AI agent engineering, prompt design, tool calling, and deployment to modern cloud platforms.</p>
+        <p>Our Hybrid Split delivery model — two groups of 9, blending face-to-face and remote sessions — reduces total cost by 40% versus a pure on-campus program while preserving the hands-on rigor your faculty identified as critical. Over 24 training days across 6 weeks, each participant ships a working AI agent to production, with a public GitHub portfolio and measurable skill outcomes.</p>
+        <p>This proposal outlines scope, timeline, investment, and acceptance terms. Total engagement value is <strong>AED 615,000</strong>, inclusive of curriculum, delivery, and joint certification.</p>
+
+  # 4. Section 2 — Program Scope (intro)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Program Scope"
+      body: "The program is structured in four progressive modules, each building on the last. Participants move from fundamentals to production deployment over the 6-week span."
+
+  # 5. Program Scope deliverables — data-table (4-col text)
+  - component: data-table
+    inputs:
+      caption: "Program modules and outcomes"
+      columns:
+        - label: "#"
+          align: num
+          width: "24pt"
+        - label: "Module"
+        - label: "Focus"
+        - label: "Outcome"
+      rows:
+        - ["1", "Foundations", "Prompt engineering, LLM fundamentals, tool calling", "Working prompt library with evals"]
+        - ["2", "Agent Design", "Multi-step agents, state management, memory patterns", "Prototype agent with 3+ tools"]
+        - ["3", "Production", "Deployment to Vercel, Cloudflare Workers; observability", "Live agent deployed to production URL"]
+        - ["4", "Integration", "API design, security, cost controls, team handoff", "Documented, maintainable codebase"]
+
+  # 6. Section 3 — Delivery Timeline (intro)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Delivery Timeline"
+      body: "Two groups run in parallel on offset weeks. Face-to-face sessions take place at the client's headquarters; remote labs run via live video and shared IDE. The 24-day schedule breaks down as follows:"
+
+  # 7. Delivery Timeline schedule — data-table (4-col matrix)
+  - component: data-table
+    inputs:
+      caption: "6-week schedule — hybrid split across two groups"
+      columns:
+        - label: "Week"
+          align: num
+        - label: "Theme"
+        - label: "Group A"
+        - label: "Group B"
+      rows:
+        - ["1", "Foundations", "F2F (HQ)", "Remote labs"]
+        - ["2", "Prompting + evals", "Remote labs", "F2F (HQ)"]
+        - ["3", "Agent design", "F2F (HQ)", "Remote labs"]
+        - ["4", "Production deployment", "Remote labs", "F2F (HQ)"]
+        - ["5", "Integration & security", "F2F (HQ)", "Remote labs"]
+        - ["6", "Capstone + demo day", "F2F (HQ) — joint", "F2F (HQ) — joint"]
+
+  # 8. Section 4 — Investment & Terms (intro + lead)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "Investment & Terms"
+      raw_body: |
+        <p style="font-size: 12pt; line-height: 1.6; color: var(--text); margin: 0 0 10pt 0; font-weight: 400;">Total program investment: <strong>AED 615,000</strong>. Payment milestones align to delivery phases.</p>
+
+  # 9. Investment milestones — data-table (3-col numeric; total row workaround)
+  - component: data-table
+    inputs:
+      caption: "Payment milestones in AED"
+      columns:
+        - label: "Milestone"
+        - label: "Trigger"
+        - label: "Amount (AED)"
+          align: num
+      rows:
+        - ["Kickoff", "Signed acceptance", "184,500"]
+        - ["Mid-program", "End of week 3", "246,000"]
+        - ["Completion", "Capstone demo day", "184,500"]
+        - ["Total", "", "615,000"]
+
+  # 10. Section 4 closing + Section 5 Acceptance + inline sign-row (density #3)
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="margin: 12pt 0;">All figures exclude VAT where applicable. Materials, facilitator travel, and joint certification are included. Refund policy, cancellation terms, and IP ownership are detailed in the Master Services Agreement (OFFER-26-MSA-001).</p>
+
+  # 11. Section 5 — Acceptance (module numbered + inline sign-row)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Acceptance"
+      raw_body: |
+        <p>Countersign below to accept this proposal and trigger kickoff within 14 days.</p>
+        <div style="margin-top: 18pt; padding: 14pt 18pt; background: var(--tag-bg); border-left: 3pt solid var(--accent);">
+          <p style="margin: 0 0 18pt 0; color: var(--text);"><strong>On behalf of the client</strong>, I accept the Applied AI Training Program as scoped in sections 1 through 4 of this document, reference <strong>[PROP/2026/001]</strong>.</p>
+          <div style="display: flex; gap: 18pt; margin-top: 36pt;">
+            <div style="flex: 1; padding-top: 30pt; border-top: 0.5pt solid var(--text); font-size: 9pt; color: var(--text-tertiary);">Name &amp; Title</div>
+            <div style="flex: 1; padding-top: 30pt; border-top: 0.5pt solid var(--text); font-size: 9pt; color: var(--text-tertiary);">Signature</div>
+            <div style="flex: 1; padding-top: 30pt; border-top: 0.5pt solid var(--text); font-size: 9pt; color: var(--text-tertiary);">Date</div>
+          </div>
+        </div>
