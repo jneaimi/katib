@@ -1,0 +1,19 @@
+<section class="katib-section katib-module katib-module--{{ variant or 'plain' }}" lang="ar" dir="rtl">
+    <div class="katib-module__head">
+{%- if variant == 'numbered' and input.number %}
+        <div class="katib-module__number">{{ input.number }}</div>
+{%- endif %}
+        <div class="katib-module__headings">
+{%- if input.eyebrow %}
+            <div class="katib-eyebrow katib-eyebrow--accent" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+            <h2 class="katib-module__title">{{ input.title }}</h2>
+{%- if input.intro %}
+            <p class="katib-module__intro">{{ input.intro }}</p>
+{%- endif %}
+        </div>
+    </div>
+{%- if input.body %}
+    <div class="katib-module__body">{{ input.body }}</div>
+{%- endif %}
+</section>

@@ -1,0 +1,82 @@
+.katib-cover {
+    min-height: 253mm;
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+    page-break-inside: avoid;
+    padding: 0;
+    margin: 0;
+}
+
+.katib-cover__logo {
+    margin: 0 0 auto 0;
+    max-height: 18mm;
+}
+
+.katib-cover__body {
+    margin-top: 60mm;
+    margin-bottom: auto;
+}
+
+.katib-cover__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 16pt;
+}
+
+.katib-cover[lang="ar"] .katib-cover__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12pt;
+}
+
+.katib-cover__title {
+    font-family: var(--font-display);
+    font-size: 42pt;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.015em;
+    max-width: 16em;
+}
+
+.katib-cover[lang="ar"] .katib-cover__title {
+    font-size: 44pt;
+    letter-spacing: 0;
+    line-height: 1.2;
+}
+
+.katib-cover__subtitle {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 18pt 0 0 0;
+    line-height: 1.45;
+    max-width: 28em;
+}
+
+.katib-cover__footer {
+    margin-top: auto;
+    padding-top: 0.8em;
+    border-top: 1px solid var(--border-strong);
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.katib-cover__author { font-weight: 500; color: var(--text-secondary); }
+
+.katib-cover__ref {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    letter-spacing: 0.04em;
+    font-size: 9pt;
+}

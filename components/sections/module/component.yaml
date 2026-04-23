@@ -1,0 +1,36 @@
+name: module
+tier: section
+version: 0.1.0
+namespace: katib
+description: Repeating body unit — optional numbered eyebrow, heading, intro, and freeform body content.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_2, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - number:
+        type: int
+        required: false
+        description: Module number rendered as a large accent-colored digit (numbered variant only).
+    - eyebrow:
+        type: string
+        required: false
+        description: Above-title category label (e.g. "Module 1 · Foundations", "Chapter 2").
+    - title:
+        type: string
+        required: true
+    - intro:
+        type: string
+        required: false
+        description: Paragraph under the title setting context for the module body.
+    - body:
+        type: string
+        required: false
+        description: Freeform HTML/text body content. Auto-escaped unless wrapped in raw/safe.
+variants:
+  - plain
+  - numbered
+page_behavior:
+  break_before: auto
+  break_inside: auto

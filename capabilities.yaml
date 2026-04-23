@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T06:59:24+00:00'
+generated_at: '2026-04-23T07:23:51+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -76,6 +76,36 @@ recipes:
     - summary
     - whats-next
     - reference-strip
+  phase-2-day3-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 2 Day 3 showcase — cover-page + module composition demonstrates the full doc-shape
+      the Bloom framework guide will use in Day 7.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 3
+    - 5
+    page_limit: 6
+    when: Smoke render for cover-page (minimalist-typographic) + module sections. Not for user-facing
+      documents.
+    keywords:
+    - phase-2
+    - showcase
+    - cover
+    - module
+    sections_shape:
+    - cover-page
+    - front-matter
+    - module
+    - objectives-box
+    - callout
+    - module
+    - objectives-box
+    - module
+    - summary
+    - whats-next
 components:
   callout:
     namespace: katib
@@ -86,7 +116,7 @@ components:
     - ar
     variants: []
     description: Boxed message with left accent border and tinted background.
-    used_in_recipes: 1
+    used_in_recipes: 2
   eyebrow:
     namespace: katib
     tier: primitive
@@ -182,6 +212,18 @@ components:
     variants: []
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
+    used_in_recipes: 2
+  module:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - plain
+    - numbered
+    description: Repeating body unit — optional numbered eyebrow, heading, intro, and freeform body content.
     used_in_recipes: 1
   objectives-box:
     namespace: katib
@@ -194,7 +236,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 1
+    used_in_recipes: 2
   reference-strip:
     namespace: katib
     tier: section
@@ -216,7 +258,7 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 1
+    used_in_recipes: 2
   whats-next:
     namespace: katib
     tier: section
@@ -228,4 +270,16 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
+    used_in_recipes: 2
+  cover-page:
+    namespace: katib
+    tier: cover
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - minimalist-typographic
+    description: Full-page document opener. Minimalist-typographic variant — CSS-only, no background image,
+      brand-logo optional.
     used_in_recipes: 1

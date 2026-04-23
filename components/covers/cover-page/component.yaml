@@ -1,0 +1,32 @@
+name: cover-page
+tier: cover
+version: 0.1.0
+namespace: katib
+description: Full-page document opener. Minimalist-typographic variant — CSS-only, no background image, brand-logo optional.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_2, border_strong, page_bg]
+  fonts: [display, primary]
+  brand_fields: [logo.primary, identity.author_name]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Category label above the title (e.g. "Tutorial", "Strategy brief").
+    - title:
+        type: string
+        required: true
+    - subtitle:
+        type: string
+        required: false
+    - reference_code:
+        type: string
+        required: false
+        description: Monospace code rendered in the footer strip.
+variants:
+  - minimalist-typographic
+page_behavior:
+  break_after: always
+  break_inside: avoid
+  min_height: 253mm
