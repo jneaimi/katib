@@ -11,6 +11,18 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 ROUTE = ["uv", "run", "scripts/route.py"]
 
 
+def _inject_no_persist(args: tuple[str, ...]) -> list[str]:
+    """Append --no-persist to infer/resolve invocations so tests don't pollute
+    memory/*.jsonl. Day 13's persist-path tests live in test_request_log_cli.py
+    and explicitly exercise persistence with their own tmp memory dirs.
+    """
+    if not args:
+        return list(args)
+    if args[0] in ("infer", "resolve"):
+        return list(args) + ["--no-persist"]
+    return list(args)
+
+
 def _run(*args: str, cwd: Path = REPO_ROOT) -> dict:
     """Run route.py with args, parse stdout as JSON, return dict.
 
@@ -18,7 +30,7 @@ def _run(*args: str, cwd: Path = REPO_ROOT) -> dict:
     JSON contract leak that was explicitly called out in the ADR.
     """
     result = subprocess.run(
-        [*ROUTE, *args],
+        [*ROUTE, *_inject_no_persist(args)],
         cwd=cwd,
         capture_output=True,
         text=True,
@@ -122,7 +134,7 @@ def test_infer_low_confidence_fires_questions(tmp_path):
 
     env.update({k: os.environ[k] for k in ("HOME", "PATH") if k in os.environ})
     result = subprocess.run(
-        [*ROUTE, "infer", "--transcript", "showcase mixed تركي widget blarg"],
+        [*ROUTE, "infer", "--transcript", "showcase mixed تركي widget blarg", "--no-persist"],
         cwd=REPO_ROOT,
         env=env,
         capture_output=True,
@@ -278,7 +290,7 @@ def test_internal_error_wraps_not_raw_traceback(tmp_path):
     # clean JSON error, not a raw FileNotFoundError traceback.
     missing = tmp_path / "nope.txt"
     result = subprocess.run(
-        [*ROUTE, "infer", "--transcript-file", str(missing)],
+        [*ROUTE, "infer", "--transcript-file", str(missing), "--no-persist"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -300,7 +312,7 @@ def test_json_contract_always_valid():
     ]
     for args in invocations:
         result = subprocess.run(
-            [*ROUTE, *args],
+            [*ROUTE, *_inject_no_persist(tuple(args))],
             cwd=REPO_ROOT,
             capture_output=True,
             text=True,
