@@ -1,0 +1,57 @@
+.katib-module {
+    margin: 1.5em 0 1.2em 0;
+    page-break-inside: auto;
+    page-break-before: auto;
+}
+
+.katib-module__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+    margin-bottom: 0.4em;
+}
+
+.katib-module__number {
+    font-family: var(--font-display);
+    font-size: 32pt;
+    font-weight: 700;
+    line-height: 0.95;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    min-width: 0.9em;
+    flex-shrink: 0;
+}
+
+.katib-module[lang="ar"] .katib-module__number {
+    letter-spacing: 0;
+    font-size: 36pt;
+}
+
+.katib-module__headings {
+    flex: 1;
+}
+
+.katib-module__title {
+    margin: 0;
+    font-size: 16pt;
+    line-height: 1.25;
+}
+
+.katib-module--plain .katib-module__title { font-size: 15pt; }
+
+.katib-module__intro {
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0.4em 0 0 0;
+}
+
+.katib-module__body {
+    margin-top: 0.6em;
+    font-size: 11pt;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.katib-module__body > p:first-child { margin-top: 0; }
+.katib-module__body > p:last-child  { margin-bottom: 0; }

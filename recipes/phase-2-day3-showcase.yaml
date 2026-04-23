@@ -1,0 +1,89 @@
+name: phase-2-day3-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 2 Day 3 showcase — cover-page + module composition demonstrates the full doc-shape the Bloom framework guide will use in Day 7.
+languages: [en, ar]
+target_pages: [3, 5]
+page_limit: 6
+when: Smoke render for cover-page (minimalist-typographic) + module sections. Not for user-facing documents.
+keywords: [phase-2, showcase, cover, module]
+sections:
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "Tutorial"
+      title: "Module composition showcase"
+      subtitle: "Cover-page opens, modules repeat, sibling sections (objectives, callouts) frame each module's content."
+      reference_code: "PH2-D3-SHOW"
+
+  - component: front-matter
+    inputs:
+      eyebrow: "About this document"
+      title: "What you're about to read"
+      subtitle: "Three modules demonstrating the sibling-composition pattern — modules do one thing (the body unit), objectives-box does another (the goals), callouts punctuate."
+      author: "Katib v2 engineering"
+      date: "2026-04-23"
+
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      eyebrow: "Module 1 · Foundations"
+      title: "The component model"
+      intro: "Everything visible in a v2 document is a component. Primitives are atomic styling shapes. Sections compose primitives into semantic units. Recipes order sections."
+
+  - component: objectives-box
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Understand the three-tier model (primitives / sections / covers)"
+        - "See how recipe YAML assembles sections into a document"
+        - "Notice what sections do NOT do — they don't declare tokens, nest other sections, or embed content"
+
+  - component: callout
+    inputs:
+      tone: tip
+      title: "Composition, not inheritance"
+      body: "Sections don't subclass primitives. They reference primitive CSS class names directly. That's the public API."
+
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      eyebrow: "Module 2 · The recipe"
+      title: "Sibling-composition pattern"
+      intro: "Instead of a module containing its own objectives, the recipe lists module + objectives-box as siblings. Ergonomic and loose-coupled."
+
+  - component: objectives-box
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Write a recipe that places module, objectives-box, and callout as peers"
+        - "Notice the visual grouping is achieved by section spacing + page-break rules, not by nesting"
+        - "Recognize why this is better for v2's long-term scalability"
+
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      eyebrow: "Module 3 · Going further"
+      title: "What Day 7 proves"
+      intro: "With cover-page + module + objectives-box in place, we can render the Bloom framework guide — a real 10-page tutorial — via a single tutorial.yaml recipe."
+
+  - component: summary
+    inputs:
+      heading: "Day 3 recap"
+      items:
+        - "cover-page ships as a first-class cover tier with minimalist-typographic variant"
+        - "module section is the repeating body unit — no objectives inlined"
+        - "Recipes compose module + objectives-box + callout as siblings"
+        - "Next: Day 4 adds image-background + neural-cartography cover variants"
+
+  - component: whats-next
+    variant: bullet
+    inputs:
+      items:
+        - "Day 4 — image-background + neural-cartography cover variants"
+        - "Day 5 — two-column-image-text + tutorial-step"
+        - "Day 6 — chart-donut + chart-bar + chart-sparkline"
+        - "Day 7 — render the Bloom framework guide via tutorial.yaml"

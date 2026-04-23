@@ -11,3 +11,5 @@
 {"component": "summary", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
 {"component": "whats-next", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
 {"component": "reference-strip", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding section"}
+{"component": "module", "tier": "section", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 3 repeating body unit"}
+{"component": "cover-page", "tier": "cover", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 3 first cover (minimalist-typographic variant)"}

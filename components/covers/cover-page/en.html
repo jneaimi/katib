@@ -1,0 +1,22 @@
+<section class="katib-cover katib-cover--{{ variant or 'minimalist-typographic' }}" lang="en">
+{%- if logo and logo.primary %}
+    <img class="katib-cover__logo" src="{{ logo.primary }}" alt="{{ name or '' }}" style="max-height: {{ logo.max_height_mm or 18 }}mm;">
+{%- endif %}
+    <div class="katib-cover__body">
+{%- if input.eyebrow %}
+        <div class="katib-cover__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <h1 class="katib-cover__title">{{ input.title }}</h1>
+{%- if input.subtitle %}
+        <p class="katib-cover__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </div>
+    <div class="katib-cover__footer">
+{%- if identity and identity.author_name %}
+        <span class="katib-cover__author">{{ identity.author_name }}</span>
+{%- endif %}
+{%- if input.reference_code %}
+        <span class="katib-cover__ref">{{ input.reference_code }}</span>
+{%- endif %}
+    </div>
+</section>
