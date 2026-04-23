@@ -52,6 +52,11 @@ from core.gate import (  # noqa: E402
     evaluate,
     resolve,
 )
+from core.request_log import (  # noqa: E402
+    log_context_inference,
+    log_gate_decision,
+    log_recipe_request,
+)
 
 CAPS_FILE = REPO_ROOT / "capabilities.yaml"
 RECIPES_DIR = REPO_ROOT / "recipes"
@@ -215,6 +220,13 @@ def _cmd_infer(args) -> dict:
     known = enumerate_brands()
     inference = infer_signals(transcript, known_brands=known)
 
+    # Persist the context inference (unless opted out)
+    if not args.no_persist and inference.log_entry:
+        try:
+            log_context_inference(inference.log_entry)
+        except OSError:
+            pass   # never fail routing on a log write
+
     # 4. Apply explicit overrides
     override_notes: list[str] = []
     signals = inference.signals
@@ -351,7 +363,7 @@ def _cmd_resolve(args) -> dict:
             "brand": args.brand,
             "slug": args.slug,
             "reasons": resolution.reasons,
-            "log_entry": resolution.log_entry,  # Day 13 writer consumes this
+            "log_entry": resolution.log_entry,
             "resolved_action": resolution.action,
         }
     elif resolution.action == "log-and-wait":
@@ -374,6 +386,27 @@ def _cmd_resolve(args) -> dict:
             "reasons": resolution.reasons,
             "log_entry": resolution.log_entry,
         }
+
+    # Persist the gate decision + drop a recipe-request signal when the gate
+    # says the closest recipe isn't a true fit (log-and-*, graduate).
+    if not args.no_persist and out.get("action") != "error":
+        try:
+            log_gate_decision(resolution.log_entry)
+        except OSError:
+            pass
+        if resolution.action in ("log-and-fill", "log-and-wait", "request-graduation"):
+            try:
+                log_recipe_request(
+                    requested=None,
+                    closest_existing=(closest.name if closest else None),
+                    intent=args.intent or "",
+                    reason=(resolution.reasons[0] if resolution.reasons else ""),
+                    source="gate-resolve",
+                    logged_by="route.py",
+                )
+            except (OSError, ValueError):
+                pass
+
     if cap_notes:
         out["capability_notes"] = cap_notes
     return out
@@ -394,6 +427,11 @@ def main(argv: list[str] | None = None) -> int:
     p_infer.add_argument("--lang", type=str, choices=["en", "ar", "bilingual"])
     p_infer.add_argument("--brand", type=str, help="Explicit brand override.")
     p_infer.add_argument("--slug", type=str, help="Output folder slug override.")
+    p_infer.add_argument(
+        "--no-persist",
+        action="store_true",
+        help="Skip writing context-inferences.jsonl (tests only).",
+    )
     p_infer.set_defaults(func=_cmd_infer)
 
     p_resolve = sub.add_parser("resolve", help="Resolve gate Q1/Q2 answers to final action.")
@@ -408,6 +446,11 @@ def main(argv: list[str] | None = None) -> int:
     p_resolve.add_argument("--slug", type=str)
     p_resolve.add_argument("--force-graduation", action="store_true")
     p_resolve.add_argument("--justification", type=str)
+    p_resolve.add_argument(
+        "--no-persist",
+        action="store_true",
+        help="Skip writing gate-decisions.jsonl / recipe-requests.jsonl (tests only).",
+    )
     p_resolve.set_defaults(func=_cmd_resolve)
 
     args = ap.parse_args(argv)
