@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T18:08:09+00:00'
+generated_at: '2026-04-23T18:21:15+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -50,6 +50,40 @@ recipes:
     - signature-block
     - module
     - signature-block
+  formal-noc:
+    namespace: katib
+    version: 0.1.0
+    description: No Objection Certificate — formal document confirming employment and stating no-objection
+      to a specified purpose (visa, banking, school enrolment). 10 sections composing letterhead formal
+      + 4 inline-styled banner modules + field-summary + purpose + validity + signature + footer.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: Formal NOC letter for UAE employers — visa applications, school enrolments, bank account openings,
+      embassy visits, business travel authorizations. EN-only; bilingual variant deferred pending inputs_by_lang
+      schema (NOC is the expected first genuinely bilingual recipe).
+    keywords:
+    - noc
+    - no-objection-certificate
+    - formal
+    - employment
+    - uae
+    - visa
+    - authorization
+    sections_shape:
+    - letterhead
+    - module
+    - module
+    - module
+    - kv-list
+    - callout
+    - module
+    - module
+    - multi-party-signature-block
+    - module
   personal-cover-letter:
     namespace: katib
     version: 0.1.0
@@ -283,7 +317,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 3
+    used_in_recipes: 4
   eyebrow:
     namespace: katib
     tier: primitive
@@ -434,7 +468,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 0
+    used_in_recipes: 1
   letterhead:
     namespace: katib
     tier: section
@@ -448,7 +482,7 @@ components:
     description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
-    used_in_recipes: 1
+    used_in_recipes: 2
   masthead-personal:
     namespace: katib
     tier: section
@@ -475,7 +509,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 4
+    used_in_recipes: 5
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -489,7 +523,7 @@ components:
     description: Multi-party signature grid — side-by-side signature boxes for formal documents (NOC,
       MOU, contracts). Each party has name + optional title + optional email. Responsive grid auto-flows
       based on party count (2+ parties supported).
-    used_in_recipes: 0
+    used_in_recipes: 1
   objectives-box:
     namespace: katib
     tier: section
