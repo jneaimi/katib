@@ -3,12 +3,16 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 complete (Days 1–14 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 complete + post-close-out Open Items resolved (through 2026-04-23)
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
-criteria green with automated proofs, 440 tests passing, zero
+criteria green with automated proofs, 457 tests passing, zero
 WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
 review lives in the vault at `projects/katib/phase-2-gate-review.md`.
+
+**Post-close-out:** Open Item #2 (content-lint wiring) resolved; items
+#1 (push + tag), #3 (PNG goldens), #4 (Phase 3 triage) remain pending
+Jasem sign-off.
 
 Engine state: 20 components, 7 recipes (1 production + 6 dev), 6 core
 library modules, 5 CLIs, 4 memory streams, 4 image providers, 0
@@ -17,6 +21,74 @@ external skill dependencies.
 **Not shippable as a v1 replacement yet** — v2 has 1 production recipe
 (tutorial); v1 ships 10+ doc-types. Phase 3 ports them. Keep v1
 installed as the daily global skill until Phase 3 closes.
+
+### Added (post-close-out — content_lint wired into recipe validate/register)
+
+Closes Open Item #2 from the Phase-2 gate review (Day-13 deferral).
+
+- **`core/recipe_ops.py:validate_recipe_full()`** gains two keyword
+  args:
+  - `content_lint: bool = True` — run `core.content_lint.lint()` over
+    the recipe's extracted prose.
+  - `strict: bool = False` — promote warnings to errors (CI-friendly).
+    Honors `KATIB_STRICT_LINT=1` env var as a synonym.
+  - New check #7: `content_lint` violations emitted as
+    `RecipeIssue(category="content")`. All findings surface as
+    warnings by default; `--strict` promotes to errors.
+  - `register_recipe`, `bundle_share_recipe`, `lint_all_recipes`
+    forward both flags consistently.
+
+- **`scripts/recipe.py`** — `validate`, `register`, `lint`
+  subcommands each gain:
+  - `--strict` — promote content-lint warnings to errors (blocks
+    register when strict)
+  - `--no-content-lint` — skip the content-lint pass entirely
+    (legacy-content escape hatch)
+  - `KATIB_STRICT_LINT=1` env var — CI-friendly synonym for `--strict`
+
+### Design: three-mode gating contract
+
+| Mode | Findings → | Blocks register? | Use case |
+|---|---|---|---|
+| default | all → warnings | no | daily authoring |
+| `--strict` / env var | all → errors | yes | CI, production gate |
+| `--no-content-lint` | skipped | no | legacy override |
+
+Content-lint's internal `error`/`warn` severity is preserved in the
+message text (`[banned-opener/error]`) but collapsed at the wiring
+boundary — in default mode, ALL findings surface as warnings,
+regardless of content_lint's own grading. This prevents aggressive
+rules (like `banned-opener`) from silently blocking the first author
+who tries the feature.
+
+### Pre-wiring audit
+
+Ran `content_lint` against all shipped artifacts before any code
+change:
+- **7/7 recipes clean** (including `tutorial.yaml` — 111KB production
+  prose)
+- **20/20 components × EN clean**
+- **20/20 components × AR clean**
+
+Zero pre-existing errors. Zero pre-existing warnings. Safe to wire at
+warning-default.
+
+### Tests
+
+- **`tests/test_recipe_content_lint.py`** — 17 new tests covering
+  all three modes, env-var synonym, CLI subprocess paths,
+  `lint --all --strict` green on the full shipped tree (regression
+  guard against future rule additions).
+
+**457 tests pass** (440 → 457, +17).
+
+### Scope discipline
+
+- **Only `recipe_ops` wired** — component HTML templates are mostly
+  Jinja placeholders (low signal); audit decision was to skip them.
+- **`scripts/lint.py` standalone behavior unchanged** — Day 13's
+  file-level linter still works the same way.
+- **Zero regressions** in the 440 pre-wiring tests.
 
 ### Added (Day 14 — integration tests + exit-criteria suite)
 
