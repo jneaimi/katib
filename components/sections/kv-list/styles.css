@@ -1,0 +1,64 @@
+.katib-kv-list {
+    margin: 1.2em 0;
+    color: var(--text);
+}
+
+.katib-kv-list__heading {
+    font-family: var(--font-display, inherit);
+    font-size: 12pt;
+    font-weight: 700;
+    margin: 0.2em 0 0.6em 0;
+    color: var(--text);
+}
+
+.katib-kv-list__grid {
+    display: grid;
+    grid-template-columns: minmax(30%, 35%) 1fr;
+    gap: 0.3em 1em;
+    margin: 0;
+    padding: 0;
+}
+
+.katib-kv-list__term {
+    font-weight: 600;
+    color: var(--text);
+    padding: 0.35em 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.katib-kv-list__value {
+    margin: 0;
+    color: var(--text-secondary);
+    padding: 0.35em 0;
+    border-bottom: 1px solid var(--border);
+}
+
+/* Dense — cheatsheet-style packed reference lists */
+.katib-kv-list--dense .katib-kv-list__grid {
+    gap: 0.15em 0.8em;
+}
+
+.katib-kv-list--dense .katib-kv-list__term,
+.katib-kv-list--dense .katib-kv-list__value {
+    font-size: 9pt;
+    line-height: 1.45;
+    padding: 0.2em 0;
+}
+
+/* Spacious — glossary / formal definitions */
+.katib-kv-list--spacious .katib-kv-list__grid {
+    grid-template-columns: minmax(25%, 30%) 1fr;
+    gap: 0.6em 1.4em;
+}
+
+.katib-kv-list--spacious .katib-kv-list__term,
+.katib-kv-list--spacious .katib-kv-list__value {
+    font-size: 10.5pt;
+    line-height: 1.65;
+    padding: 0.55em 0;
+}
+
+/* Strip the trailing border on the last row for clean termination */
+.katib-kv-list__grid > :nth-last-child(-n+2) {
+    border-bottom: none;
+}

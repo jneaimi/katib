@@ -1,0 +1,14 @@
+<section class="katib-section katib-kv-list katib-kv-list--{{ variant or 'default' }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-eyebrow katib-eyebrow--muted" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h3 class="katib-kv-list__heading">{{ input.heading }}</h3>
+{%- endif %}
+    <dl class="katib-kv-list__grid">
+{%- for item in input.items %}
+        <dt class="katib-kv-list__term">{{ item.term }}</dt>
+        <dd class="katib-kv-list__value">{{ item.value }}</dd>
+{%- endfor %}
+    </dl>
+</section>

@@ -1,0 +1,24 @@
+name: kv-list
+tier: section
+version: 0.1.0
+namespace: katib
+description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet reference pairs, metadata summaries.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, border]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - heading:
+        type: string
+        required: false
+    - items:
+        type: array
+        required: true
+        description: Array of {term, value} mappings. `term` is the key/label on the leading side; `value` is the explanation or data on the trailing side. Both are strings.
+variants:
+  - dense
+  - spacious
