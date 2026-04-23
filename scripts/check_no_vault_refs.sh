@@ -8,7 +8,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-PATTERN='vault|obsidian|soul-hub|soul_hub|SoulHub'
+# Match path-like / code-like references only. The bare English word
+# "vault" is legitimate in prose (e.g., "knowledge vault"), so we match
+# path prefixes / suffixes + the Obsidian config dir + Soul Hub identifiers.
+PATTERN='vault/|/vault|~vault|\.obsidian|soul-hub|soul_hub|SoulHub'
 
 matches="$(
     grep -rnE "${PATTERN}" \

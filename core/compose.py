@@ -125,10 +125,17 @@ def _jinja_env() -> Environment:
     )
     # `{{ input.items }}` must resolve to the 'items' KEY of the inputs dict,
     # not dict.items() method. Jinja's default getattr tries attribute first;
-    # override to prefer item-lookup for mapping access.
+    # override to prefer item-lookup for mapping access. When a dict key is
+    # missing, return env.undefined (not the dict's bound method) so template
+    # `{%- if input.missing %}` checks evaluate falsy instead of truthy-on-method.
     original_getattr = env.getattr
 
     def _getattr_item_first(obj: Any, attribute: Any) -> Any:
+        if isinstance(obj, dict):
+            try:
+                return obj[attribute]
+            except KeyError:
+                return env.undefined(name=attribute)
         try:
             return obj[attribute]
         except (TypeError, LookupError):

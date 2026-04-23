@@ -13,7 +13,9 @@
 {%- endif %}
         </div>
     </div>
-{%- if input.body %}
+{%- if input.raw_body %}
+    <div class="katib-module__body katib-module__body--rich">{{ input.raw_body | safe }}</div>
+{%- elif input.body %}
     <div class="katib-module__body">{{ input.body }}</div>
 {%- endif %}
 </section>
