@@ -1,0 +1,155 @@
+name: tutorial-handoff
+version: 0.1.0
+namespace: katib
+description: Handoff document — ownership transfer with status meta, what-shipped, runbook, known issues, contacts, next steps. Zero new components; first production consumer of callout info tone; second consumer of kv-list boxed (status-grid vs. NOC's field-summary use case).
+languages: [en]
+target_pages: [2, 3]
+page_limit: 3
+when: Handoff / ownership transfer document. Captures what shipped, how to operate, known issues, contacts, and next steps. No cover page — handoff is a working doc, not a presentation. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [tutorial, handoff, ownership-transfer, runbook, operations]
+
+sections:
+  # 1. Header — module with eyebrow + title + intro (no cover page by design)
+  - component: module
+    inputs:
+      eyebrow: "Handoff"
+      title: "[Feature / service / area being handed off]"
+      intro: "A structured transfer of ownership — what shipped, how to operate it, what's known to be broken or fragile, and who to contact for questions."
+
+  # 2. Status meta — kv-list boxed (second production consumer; status-grid variant of the shape)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Status", value: "Done"}
+        - {term: "Reference", value: "HT-0001"}
+        - {term: "Handoff date", value: "2026-04-23"}
+        - {term: "Owner going forward", value: "[Team lead / incoming owner]"}
+
+  # 3. Summary — short framing paragraph
+  - component: module
+    inputs:
+      title: "Summary"
+      body: "This document hands over ownership of the described work. It covers what shipped, how to operate it, what's known to be broken or fragile, and who to contact for questions."
+
+  # 4. What shipped — bullet list
+  - component: module
+    inputs:
+      title: "What shipped"
+      raw_body: |
+        <ul>
+          <li>Core feature released to all users on <strong>[release date]</strong></li>
+          <li>Documentation published to the shared docs site</li>
+          <li>Monitoring dashboards configured and alert thresholds set</li>
+          <li>Runbook reviewed and linked from the on-call rotation</li>
+          <li>Post-release follow-up tickets filed for non-blocking cleanups</li>
+        </ul>
+
+  # 5. Architecture in 30 seconds
+  - component: module
+    inputs:
+      title: "Architecture in 30 seconds"
+      body: "A single entry-point service receives requests, writes to a primary database, and dispatches notifications via a queued worker. Failure of the worker never blocks the primary write path — notifications are eventually-consistent by design."
+
+  # 6. Key decision callout — info tone (first production consumer)
+  - component: callout
+    inputs:
+      tone: info
+      title: "Key decision"
+      body: "We deliberately chose eventual consistency for notifications so the write path stays fast even during downstream outages. Don't reverse this without revisiting the original ADR."
+
+  # 7. Runbook — module raw_body with h3 + pre/code blocks
+  - component: module
+    inputs:
+      title: "Runbook"
+      raw_body: |
+        <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Deploy</h3>
+        <pre style="background: var(--tag-bg); padding: 8pt 10pt; border-radius: 3pt; font-family: var(--font-mono); font-size: 9pt; line-height: 1.45; color: var(--text); margin: 4pt 0 10pt 0; white-space: pre-wrap;"><code>git push origin main
+        # CI runs, then promotes automatically to staging
+        # Promote to production via the deploy tool</code></pre>
+
+        <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Rollback</h3>
+        <pre style="background: var(--tag-bg); padding: 8pt 10pt; border-radius: 3pt; font-family: var(--font-mono); font-size: 9pt; line-height: 1.45; color: var(--text); margin: 4pt 0 6pt 0; white-space: pre-wrap;"><code>deploy rollback --service &lt;name&gt; --to-version &lt;previous-sha&gt;</code></pre>
+        <p style="margin: 0 0 10pt 0;">Rollback completes in under two minutes. Customer-facing errors usually clear within a minute of the rollback finishing.</p>
+
+        <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Health checks</h3>
+        <ul style="margin: 4pt 0; padding-left: 18pt;">
+          <li style="margin-bottom: 3pt;"><strong>Primary service:</strong> <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">/healthz</code> on the public endpoint</li>
+          <li style="margin-bottom: 3pt;"><strong>Worker:</strong> depth of the notification queue (stays under 100 in steady state)</li>
+          <li style="margin-bottom: 3pt;"><strong>Database:</strong> latency panel on the shared dashboard</li>
+        </ul>
+
+  # 8. Known issues — inline-styled severity cards (density convention)
+  - component: module
+    inputs:
+      title: "Known issues"
+      raw_body: |
+        <div style="display: flex; flex-direction: column; gap: 8pt; margin: 6pt 0;">
+          <div style="display: flex; gap: 12pt; padding: 10pt 12pt; background: var(--callout-warn-bg); border-left: 2pt solid var(--callout-warn-accent);">
+            <div style="font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-warn-accent); flex-shrink: 0; width: 48pt; padding-top: 1pt;">Medium</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text); margin-bottom: 3pt;">Notification retries can duplicate in rare race conditions</div>
+              <div style="font-size: 9.5pt; color: var(--text-secondary); line-height: 1.5;">Affects about 1 in 10,000 notifications. De-duplication is planned for next quarter. Acceptable in the meantime because consumers are idempotent.</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12pt; padding: 10pt 12pt; background: var(--callout-info-bg); border-left: 2pt solid var(--callout-info-accent);">
+            <div style="font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-info-accent); flex-shrink: 0; width: 48pt; padding-top: 1pt;">Low</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text); margin-bottom: 3pt;">Admin dashboard is slow for tenants with more than 50k records</div>
+              <div style="font-size: 9.5pt; color: var(--text-secondary); line-height: 1.5;">Pagination works around it. A proper index is queued for the next perf sprint.</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12pt; padding: 10pt 12pt; background: var(--callout-info-bg); border-left: 2pt solid var(--callout-info-accent);">
+            <div style="font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-info-accent); flex-shrink: 0; width: 48pt; padding-top: 1pt;">Low</div>
+            <div>
+              <div style="font-weight: 600; color: var(--text); margin-bottom: 3pt;">Localized date formats are inconsistent in the export CSV</div>
+              <div style="font-size: 9.5pt; color: var(--text-secondary); line-height: 1.5;">Cosmetic. Tracked in issue #1247; fix is a one-liner whenever someone picks it up.</div>
+            </div>
+          </div>
+        </div>
+
+  # 9. Contacts — inline-styled 2x2 contact cards
+  - component: module
+    inputs:
+      title: "Contacts"
+      raw_body: |
+        <div style="display: flex; flex-wrap: wrap; gap: 8pt; margin: 6pt 0;">
+          <div style="flex: 1 1 calc(50% - 4pt); min-width: 180pt; padding: 10pt 12pt; border: 0.5pt solid var(--border); border-radius: 3pt;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 3pt;">Handing off</div>
+            <div style="font-size: 10.5pt; font-weight: 600; color: var(--text); margin-bottom: 2pt;">[Outgoing owner]</div>
+            <div style="font-size: 9pt; color: var(--text-secondary); line-height: 1.45;">Original feature owner · available for questions for 30 days</div>
+          </div>
+          <div style="flex: 1 1 calc(50% - 4pt); min-width: 180pt; padding: 10pt 12pt; border: 0.5pt solid var(--border); border-radius: 3pt;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 3pt;">Taking over</div>
+            <div style="font-size: 10.5pt; font-weight: 600; color: var(--text); margin-bottom: 2pt;">[Incoming owner]</div>
+            <div style="font-size: 9pt; color: var(--text-secondary); line-height: 1.45;">Primary point of contact going forward</div>
+          </div>
+          <div style="flex: 1 1 calc(50% - 4pt); min-width: 180pt; padding: 10pt 12pt; border: 0.5pt solid var(--border); border-radius: 3pt;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 3pt;">Escalation</div>
+            <div style="font-size: 10.5pt; font-weight: 600; color: var(--text); margin-bottom: 2pt;">[Team lead]</div>
+            <div style="font-size: 9pt; color: var(--text-secondary); line-height: 1.45;">For blocking incidents or cross-team coordination</div>
+          </div>
+          <div style="flex: 1 1 calc(50% - 4pt); min-width: 180pt; padding: 10pt 12pt; border: 0.5pt solid var(--border); border-radius: 3pt;">
+            <div style="font-size: 7.5pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 3pt;">On-call</div>
+            <div style="font-size: 10.5pt; font-weight: 600; color: var(--text); margin-bottom: 2pt;">Rotating engineer</div>
+            <div style="font-size: 9pt; color: var(--text-secondary); line-height: 1.45;">See the on-call schedule in the shared calendar</div>
+          </div>
+        </div>
+
+  # 10. Next steps — module with ordered list raw_body
+  - component: module
+    inputs:
+      title: "Next steps"
+      raw_body: |
+        <ol style="margin: 6pt 0; padding-left: 22pt;">
+          <li style="margin-bottom: 4pt;">Incoming owner confirms they've read this doc and the linked ADRs.</li>
+          <li style="margin-bottom: 4pt;">Pair once on a live deploy to make sure the runbook is clear.</li>
+          <li style="margin-bottom: 4pt;">Schedule a 30-day check-in to close out the known-issue backlog.</li>
+        </ol>
+
+  # 11. Closing callout — tip (second production consumer after how-to)
+  - component: callout
+    inputs:
+      tone: tip
+      title: "One last note"
+      body: "The best handoff is one that doesn't need the outgoing owner again. If anything in this doc was ambiguous, fix it in place — future readers will thank you."

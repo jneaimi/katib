@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T18:37:58+00:00'
+generated_at: '2026-04-23T18:55:38+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -271,6 +271,39 @@ recipes:
     - chart-bar
     - chart-sparkline
     - summary
+  tutorial-handoff:
+    namespace: katib
+    version: 0.1.0
+    description: Handoff document — ownership transfer with status meta, what-shipped, runbook, known
+      issues, contacts, next steps. Zero new components; first production consumer of callout info tone;
+      second consumer of kv-list boxed (status-grid vs. NOC's field-summary use case).
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 3
+    page_limit: 3
+    when: Handoff / ownership transfer document. Captures what shipped, how to operate, known issues,
+      contacts, and next steps. No cover page — handoff is a working doc, not a presentation. EN-only;
+      AR deferred pending inputs_by_lang schema.
+    keywords:
+    - tutorial
+    - handoff
+    - ownership-transfer
+    - runbook
+    - operations
+    sections_shape:
+    - module
+    - kv-list
+    - module
+    - module
+    - module
+    - callout
+    - module
+    - module
+    - module
+    - module
+    - callout
   tutorial-how-to:
     namespace: katib
     version: 0.1.0
@@ -351,7 +384,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 5
+    used_in_recipes: 6
   eyebrow:
     namespace: katib
     tier: primitive
@@ -502,7 +535,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 1
+    used_in_recipes: 2
   letterhead:
     namespace: katib
     tier: section
@@ -543,7 +576,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 6
+    used_in_recipes: 7
   multi-party-signature-block:
     namespace: katib
     tier: section
