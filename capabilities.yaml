@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T18:21:15+00:00'
+generated_at: '2026-04-23T18:37:58+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -271,6 +271,40 @@ recipes:
     - chart-bar
     - chart-sparkline
     - summary
+  tutorial-how-to:
+    namespace: katib
+    version: 0.1.0
+    description: How-to guide — procedural, task-oriented tutorial. Cover + lead + prerequisites + 4 steps
+      + tip/warn callouts + do/don't compare + troubleshooting + whats-next. Pure composition (0 new components);
+      first production consumer of tutorial-step, callout tip, callout warn.
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 3
+    page_limit: 3
+    when: Short procedural guide (5-minute task walkthrough). EN-only; AR deferred pending inputs_by_lang
+      schema (NOC remains designated first bilingual recipe). Uses minimalist-typographic cover — factual
+      procedural tone rules out image covers.
+    keywords:
+    - tutorial
+    - how-to
+    - guide
+    - procedural
+    - step-by-step
+    sections_shape:
+    - cover-page
+    - module
+    - objectives-box
+    - tutorial-step
+    - tutorial-step
+    - tutorial-step
+    - tutorial-step
+    - callout
+    - callout
+    - module
+    - module
+    - whats-next
   tutorial:
     namespace: katib
     version: 1.0.0
@@ -317,7 +351,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 4
+    used_in_recipes: 5
   eyebrow:
     namespace: katib
     tier: primitive
@@ -509,7 +543,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 5
+    used_in_recipes: 6
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -535,7 +569,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 3
+    used_in_recipes: 4
   reference-strip:
     namespace: katib
     tier: section
@@ -568,7 +602,7 @@ components:
     variants: []
     description: Numbered tutorial step — step circle + title + description + optional screenshot. Screenshots
       are factual; gemini source is deliberately excluded.
-    used_in_recipes: 1
+    used_in_recipes: 2
   two-column-image-text:
     namespace: katib
     tier: section
@@ -594,7 +628,7 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
-    used_in_recipes: 3
+    used_in_recipes: 4
   cover-page:
     namespace: katib
     tier: cover
@@ -608,4 +642,4 @@ components:
     - neural-cartography
     description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background
       (user-file/url full-bleed), neural-cartography (Gemini-generated).
-    used_in_recipes: 3
+    used_in_recipes: 4
