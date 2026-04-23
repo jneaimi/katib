@@ -26,16 +26,121 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **24 components** (+1 multi-party-signature-block Day 7;
-kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout at
-0.2.0). **9 recipes** (3 production: tutorial + business-proposal-letter
-+ personal-cover-letter; 6 dev showcases). 6 core library modules,
-5 CLIs, 4 memory streams, 4 image providers, 0 external skill
-dependencies.
+Engine state: **24 components** (unchanged count through Day 8;
+multi-party-signature-block added Day 7, kv-list at 0.2.0,
+signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
+**10 recipes** (4 production: tutorial + business-proposal-letter +
+personal-cover-letter + **formal-noc**; 6 dev showcases). 6 core
+library modules, 5 CLIs, 4 memory streams, 4 image providers, 0
+external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 3 production
-recipes; Phase 3 ports 12 more over the next ~2.5 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 4 production
+recipes; Phase 3 ports 11 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 8 — `formal/noc` recipe ships)
+
+Third Phase-3 recipe migration. Densest recipe yet (10 sections vs
+cover-letter's 8 vs letter's 4) and first real test of the
+"inline-style budget scales with recipe density" convention from
+Day 6 ADR. Zero new components built.
+
+- **`recipes/formal-noc.yaml`** (new) — 10-section recipe:
+  1. `letterhead` formal variant (Day 2) — austere uppercased
+     company, 1.25pt text-color rule
+  2-3. `module` raw_body × 2 — inline-styled banner labels
+     (doc-marker "NO OBJECTION CERTIFICATE" with top+bottom hairlines;
+     opener "TO WHOM IT MAY CONCERN" centered larger letter-spaced)
+  4. `module` raw_body — opening body paragraph (justified)
+  5. `kv-list` boxed variant (Day 7) — 7-field employee details
+     (Name/Nationality/Passport No./Emirates ID/Position/Date of
+     Joining/Employment Status)
+  6. `callout` neutral tone (Day 5) — purpose block with label
+     "Purpose of this letter"
+  7. `module` raw_body — validity-line (centered dashed-border
+     box with inline `<strong>` for the day count)
+  8. `module` raw_body — closing paragraph
+  9. `multi-party-signature-block` (Day 7) — 2-party signature grid
+     (HR signatory with email + Authorised signatory box for stamp)
+  10. `module` raw_body — footer note (bordered, small, muted,
+      centered)
+  Content ported verbatim from `v1-reference/domains/formal/
+  templates/noc.en.html`. Placeholder-prose template style preserved
+  (v1's `[Full name as per passport]`, `[Nationality]`, etc.).
+  Stamp-hint decorative circle intentionally dropped (position:
+  absolute under WeasyPrint paged media is finicky; stamp placement
+  is a post-print physical act).
+- **Rendered output: 2 pages, 200KB PDF, 0 WeasyPrint warnings.** v1
+  NOC fit 1 page with 30mm/25mm margins; v2 renders to 2 pages under
+  20mm defaults because component-level whitespace (kv-list boxed
+  padding, multi-party-signature-block 34pt padding-top for signing
+  line, etc.) adds ~25mm of structural space v1 didn't have. Page 1
+  = letter content (letterhead → closing paragraph). Page 2 =
+  signatures + footer. Architecturally acceptable — components
+  provide semantic spacing; target_pages [1, 2] permits this.
+- **Validation clean at default + strict** — 0 content-lint warnings
+  on formal NOC prose + placeholders.
+- **3 recipe-requests logged** — visa-application, bank-account-
+  opening, school-enrolment (stand-in for "dependent registration")
+  signals.
+- **Audit + capabilities:** register entry + `capabilities.yaml`
+  regenerated.
+
+### Tests (Phase 3 Day 8)
+
+- **`tests/test_formal_noc.py`** (new, 16 tests): schema-loads,
+  en-only, page-targets, ten-sections-in-order,
+  uses-letterhead-formal-variant, uses-kv-list-boxed-variant
+  (Day 7 first production consumer), uses-multi-party-signature-
+  block (Day 7 first production consumer),
+  uses-callout-neutral-tone (Day 5 second production consumer),
+  validates-clean, validates-strict-clean, renders-EN (4 component
+  marker classes), pdf-within-target-pages (1 or 2 accepted),
+  renders-all-v1-content (14 distinct phrases + 7 field labels),
+  employee-details-has-seven-fields (kv-list boxed regression
+  guard), in-capabilities, audit-entry-exists.
+- **Regression sweep:** 594/594 passing (was 578, +16 NOC tests).
+  Zero WeasyPrint warnings across all 13 render paths.
+
+### Architecture decisions (Phase 3 Day 8)
+
+1. **Inline-style density convention validated.** NOC has 4 distinct
+   inline-styled `module raw_body` blocks (doc-marker, opener,
+   validity-line, footer-note) — more than any prior recipe. Each
+   is NOC-specific (no other migrate-list recipe has centered-
+   formal-notice shapes per Day 8 planning scan). Accepting these
+   as inline styles rather than building a speculative
+   `banner-label` primitive matches the Phase-3 rule:
+   *build abstractions when a second recipe needs the same shape,
+   not speculatively.* The inline styles all use token vars
+   (`var(--accent)`, `var(--text)`, `var(--border)`,
+   `var(--border-strong)`, `var(--text-secondary)`,
+   `var(--text-tertiary)`) and supported WeasyPrint CSS properties
+   — zero warnings in render.
+2. **v2 page-count divergence is acceptable.** v1 NOC was 1 page;
+   v2 renders to 2. This isn't a bug — it's the honest outcome of
+   richer component-level whitespace. A recipe-level
+   `page_margins` schema override was considered and deferred:
+   *"don't design for hypothetical future requirements."* If a
+   stakeholder later requires strict 1-page NOC, we add the
+   schema then (~30 min feature).
+3. **Stamp-hint intentionally dropped.** v1 had a decorative
+   "COMPANY STAMP" circle positioned bottom-right via
+   `position: absolute`. Under WeasyPrint paged media, absolute
+   positioning across pages is finicky. The stamp is also a
+   physical placement hint, not legal substance. Dropping it
+   keeps the recipe focused on legal structure.
+4. **Callout neutral for purpose block — minor v1 divergence
+   accepted.** v1's purpose div had no left border; v2's callout
+   neutral adds a 3pt accent left border. Visual improvement
+   (accent emphasis) trumps pixel-perfect v1 fidelity. v2 is a
+   thoughtful port, not a copy.
+5. **Letterhead formal variant's ref-block missing label
+   prefixes.** v1 has "Ref: X / Date: Y" (labeled rows); v2
+   renders ref_code + date as plain stacked lines. Minor visual
+   divergence; content clarity preserved since ref format
+   (`NOC/2026/042`) and date format are self-descriptive. Not
+   worth extending letterhead schema for this one recipe.
 
 ### Added (Phase 3 Day 7 — component infra for `formal/noc`)
 

@@ -1,0 +1,84 @@
+name: formal-noc
+version: 0.1.0
+namespace: katib
+description: No Objection Certificate — formal document confirming employment and stating no-objection to a specified purpose (visa, banking, school enrolment). 10 sections composing letterhead formal + 4 inline-styled banner modules + field-summary + purpose + validity + signature + footer.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 2
+when: Formal NOC letter for UAE employers — visa applications, school enrolments, bank account openings, embassy visits, business travel authorizations. EN-only; bilingual variant deferred pending inputs_by_lang schema (NOC is the expected first genuinely bilingual recipe).
+keywords: [noc, no-objection-certificate, formal, employment, uae, visa, authorization]
+
+sections:
+  # 1. Letterhead — formal variant, austere uppercased company + doc-title role
+  - component: letterhead
+    variant: formal
+    inputs:
+      company: "jasem | katib"
+      reference_code: "NOC/2026/042"
+      date: "23 April 2026"
+
+  # 2. Doc-marker — centered uppercase with hairline top+bottom borders
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; font-size: 11pt; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); margin: 12pt 0 10pt 0; padding: 6pt 0; border-top: 0.5pt solid var(--border); border-bottom: 0.5pt solid var(--border);">NO OBJECTION CERTIFICATE</div>
+
+  # 3. Opener — "TO WHOM IT MAY CONCERN"
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; font-size: 13pt; font-weight: 700; letter-spacing: 0.1em; margin: 10pt 0 14pt 0; color: var(--text);">TO WHOM IT MAY CONCERN</div>
+
+  # 4. Opening body paragraph
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="text-align: justify;">This letter is to confirm that the following individual is currently employed with jasem | katib in the capacity stated below, and that the company has no objection to the purpose specified below.</p>
+
+  # 5. Employee details — kv-list boxed variant (field-summary style)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Name", value: "[Full name as per passport]"}
+        - {term: "Nationality", value: "[Nationality]"}
+        - {term: "Passport No.", value: "[Passport number]"}
+        - {term: "Emirates ID", value: "[784-YYYY-NNNNNNN-N]"}
+        - {term: "Position", value: "[Job title]"}
+        - {term: "Date of Joining", value: "[YYYY-MM-DD]"}
+        - {term: "Employment Status", value: "Active — Full Time"}
+
+  # 6. Purpose of the NOC — callout neutral
+  - component: callout
+    inputs:
+      tone: neutral
+      title: "Purpose of this letter"
+      body: "[Purpose: e.g., visa application to [country], school enrolment for [child name], bank account opening at [institution], embassy visit, business travel for [reason].]"
+
+  # 7. Validity line — centered, dashed border, inline strong
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; margin: 10pt 0; padding: 6pt 12pt; border: 0.5pt dashed var(--border-strong); font-size: 10pt; color: var(--text-secondary);">This letter is valid for <strong style="color: var(--text); font-weight: 700;">[30 / 60 / 90]</strong> days from the date of issuance unless otherwise stated.</div>
+
+  # 8. Closing paragraph
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="margin: 12pt 0 16pt 0;">Should further verification or clarification be required, please contact the undersigned at the details below. We confirm that this letter is issued upon the request of the employee named above for the stated purpose only.</p>
+
+  # 9. Signature — 2-party (HR Manager + Authorised signatory/company stamp)
+  - component: multi-party-signature-block
+    inputs:
+      parties:
+        - name: "[Authorised signatory name]"
+          title: "[Title — e.g., HR Manager]"
+          email: "[email@company.example]"
+        - name: "Authorised signatory"
+          title: "Signature & company stamp"
+
+  # 10. Footer note — issuance + alteration prohibition
+  - component: module
+    inputs:
+      raw_body: |
+        <p style="margin-top: 16pt; padding-top: 8pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary); text-align: center;">This document is issued by jasem | katib. Unauthorised alteration or reproduction is prohibited.</p>
