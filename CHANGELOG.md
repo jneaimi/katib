@@ -3,13 +3,81 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, routing gate (Days 1–8 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, routing chain (Days 1–9 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–8 of 14 have landed. Engine state: 20
+Phase 2 is in progress. Days 1–9 of 14 have landed. Engine state: 20
 components, 7 recipes (including the `tutorial.yaml` production
-recipe), 198 tests, zero WeasyPrint warnings. The routing layer is now
-Python-complete — capabilities loader + decision gate online; Day 10's
-slash-command runner will be a no-glue pass-through.
+recipe), 232 tests, zero WeasyPrint warnings. **Routing chain is now
+end-to-end Python**: transcript → `infer_signals()` → `Signals` →
+`gate.evaluate()` → `ResolvedPlan` or `Question[]`. Zero glue code
+between sensor and gate — Day 10's `/katib` runner will be a
+pass-through.
+
+### Added (Day 9 — context sensor)
+
+- **`core/context_sensor.py`** — session-context reader that extracts
+  routing `Signals` from a plain-text transcript + filesystem brand
+  state. Pure Python, deterministic, no LLM. Public API:
+  - `infer_signals(transcript, *, known_brands=None, max_chars=4000)`
+    → `ContextInference` (signals + summary + reasons +
+    transcript_sample + log_entry draft for Day 13).
+  - `enumerate_brands(user_dir=None, repo_dir=None)` — lists brand
+    names from `$KATIB_BRANDS_DIR` / `~/.katib/brands/` + repo
+    `brands/`; user dir dedups over repo.
+  - `from_messages(messages: list[dict])` — joins role-tagged
+    messages into a transcript string; caps at last 10.
+  - `extract_intent` / `extract_brand` / `extract_lang_marker` —
+    helpers exposed for testability.
+
+- **Brand extraction with indicator-verb guard**: word-boundary match
+  against enumerated brands, requires an indicator verb (`use`,
+  `with`, `apply`, `for`, `in`, `as`, `brand`, `using`) within ±3
+  tokens OR quoted/backtick context. Bare word mentions are rejected.
+  Most-recent-position wins among multiple candidates; earlier
+  candidate count reported in the reason.
+
+- **Explicit language markers**: regex-based detection of `in
+  Arabic/English`, `ar/en only`, and Arabic variants (`باللغة
+  العربية`, `بالعربية`, `بالإنجليزية`, `بالإنكليزية`). Latest
+  match wins. Explicit marker always overrides script inference;
+  conflict is logged in `reasons`.
+
+- **Observability + privacy**:
+  - `transcript_sample` = first 200 + `...` + last 200 chars. Middle
+    redacted.
+  - `summary` is ONE sentence joined by `;` (not `.`) so runners can
+    splice it into observability text without re-parsing.
+  - `log_entry.schema_version: 1`; fields `{transcript_sample,
+    transcript_length, inferred: {intent_preview (120 chars), brand,
+    lang, lang_source}, known_brands}`.
+  - Full intent text stays in-memory only; never written to log.
+
+### Changed (Day 9)
+
+- **`core/gate.py`**: promoted `_infer_lang` to public
+  `infer_script(text, threshold=0.7)`. Back-compat alias preserved so
+  internal callers don't churn.
+
+### Risk mitigations (Day 9, 8 flagged risks)
+
+- **Transcript format ambiguity** — plain-text contract documented;
+  `from_messages()` adapter provided.
+- **Intent recency heuristic** — `max_chars` kwarg bounds the extracted
+  window (default 4000).
+- **False brand matches** — indicator-verb proximity + quoting guard.
+- **Signal staleness** — last-N-chars only for intent; `from_messages`
+  keeps last 10 messages.
+- **Marker-vs-script conflict** — explicit marker always wins; conflict
+  explicitly logged.
+- **Privacy** — transcript middle redacted in `log_entry`; full text
+  never persisted.
+- **Brand-dir caching** — `enumerate_brands` reads fresh every call; no
+  caching.
+- **Multi-candidate brand** — most-recent-by-position wins;
+  earlier-candidate count reported.
+
+---
+
 
 ### Added (Day 8 — decision gate + capabilities loader)
 
