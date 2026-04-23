@@ -3,16 +3,86 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component + recipe CLI, graduation gates (Days 1–13 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 complete (Days 1–14 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–13 of 14 have landed. Engine state: 20
-components, 7 recipes, **426 tests**, **zero WeasyPrint warnings**.
-**The graduation gates are now active** — the Day-11 and Day-12
-scaffolders read request logs that the Day-13 writer populates. Every
-`route.py resolve` decision that emerges a log-and-* action drops a
-recipe-request signal automatically. `katib component new` and `katib
-recipe new` go silent on their graduation warning once ≥ 3 matching
-requests accumulate for a given name.
+**Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
+criteria green with automated proofs, 440 tests passing, zero
+WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
+review lives in the vault at `projects/katib/phase-2-gate-review.md`.
+
+Engine state: 20 components, 7 recipes (1 production + 6 dev), 6 core
+library modules, 5 CLIs, 4 memory streams, 4 image providers, 0
+external skill dependencies.
+
+**Not shippable as a v1 replacement yet** — v2 has 1 production recipe
+(tutorial); v1 ships 10+ doc-types. Phase 3 ports them. Keep v1
+installed as the daily global skill until Phase 3 closes.
+
+### Added (Day 14 — integration tests + exit-criteria suite)
+
+- **`tests/test_phase2_integration.py`** — 6 cross-module integration
+  tests:
+  - T1 graduation workflow: log 3 requests → scaffold silent →
+    validate → register → audit updated
+  - T2 bare `/katib` happy path: transcript → infer HIGH → build.py →
+    PDF written
+  - T3 gate-fire full loop: resolve yes-fits/one-off → render action
+  - T4 log-and-wait contract: resolve no-fit/recurring → wait action
+    + recipe-request + gate-decision persisted, no PDF
+  - T5 content-lint on `tutorial.yaml`: 0 errors (intentional
+    production prose passes)
+  - T6 audit-gate breakage: strip audit entry → `build.py` refuses
+    with clean error
+
+- **`tests/test_exit_criteria.py`** — 8 automated exit-criteria
+  proofs, one per ADR §Phase 2 exit criterion. CI fails if any
+  regresses:
+  - EC1 Bloom framework guide renders via v2 tutorial recipe
+  - EC2 `two-column-image-text` accepts user-file + gemini + url
+  - EC3 `tutorial-step` supports optional screenshot
+  - EC4 `chart-donut` accepts only inline-svg
+  - EC5 Gemini-missing-key fails loud
+  - EC6 SKILL.md describes v2 flow
+  - EC7 `/katib` context-aware mode infers recipe + brand + lang
+  - EC8 fresh-install flow renders tutorial cleanly
+
+### Phase 2 — 14-day arc summary
+
+| Day | Deliverable |
+|---|---|
+| 1 | Image providers wired into compose |
+| 2 | Five Tier-2 scaffolding sections |
+| 3 | module + cover-page minimalist variant |
+| 4 | Cover image-background + neural-cartography |
+| 5 | two-column-image-text + tutorial-step |
+| 6 | chart-donut + chart-bar + chart-sparkline |
+| 7 | tutorial.yaml (Bloom framework guide) |
+| 8 | capabilities.py + gate.py |
+| 9 | context_sensor.py |
+| 10 | route.py + SKILL.md rewrite |
+| 11 | katib component CLI |
+| 12 | katib recipe CLI + unicode-bidi fix |
+| 13 | request_log + content_lint + auto-persist |
+| 14 | Integration + exit-criteria suites + gate review |
+
+### Architectural properties proven in Phase 2
+
+1. Composability — every visible element is a component
+2. Self-contained — no sibling-skill dependencies
+3. Trilingual — EN / AR / bilingual first-class
+4. Four image providers with sources_accepted whitelist
+5. Enforced graduation — build-time audit gate for components + recipes
+6. Auto-persistence — gate decisions + inferences + request signals
+7. Observable routing — summary + reasons + log_entry on every response
+8. JSON-contract discipline — parseable JSON on every --json exit path
+
+### Open items (Jasem's post-close-out decisions)
+
+Tracked in `projects/katib/phase-2-gate-review.md`:
+1. Push branch to GitHub + tag `v1.0.0-alpha.2`
+2. Wire content-lint into `register`/`validate` (Day 13 deferral)
+3. Add PNG golden-diff tooling (Day 11 deferral)
+4. Phase 3 triage — which v1 doc-types migrate
 
 ### Added (Day 13 — request-log writer + content_lint port)
 
