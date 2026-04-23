@@ -26,17 +26,124 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **24 components** (unchanged count through Day 8;
+Engine state: **24 components** (unchanged count through Day 9;
 multi-party-signature-block added Day 7, kv-list at 0.2.0,
 signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**10 recipes** (4 production: tutorial + business-proposal-letter +
-personal-cover-letter + **formal-noc**; 6 dev showcases). 6 core
-library modules, 5 CLIs, 4 memory streams, 4 image providers, 0
-external skill dependencies.
+**11 recipes** (5 production: tutorial + business-proposal-letter +
+personal-cover-letter + formal-noc + **tutorial-how-to**; 6 dev
+showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4
+image providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 4 production
-recipes; Phase 3 ports 11 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 5 production
+recipes; Phase 3 ports 10 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 9 — `tutorial/how-to` recipe ships)
+
+Fourth Phase-3 recipe migration. **Fourth zero-new-component
+recipe in a row** — confirms the component library has reached the
+size where most tutorial and procedural docs compose from existing
+primitives + sections. First Phase-3 recipe to use the covers tier.
+
+- **`recipes/tutorial-how-to.yaml`** (new) — 12-section recipe:
+  1. `cover-page` minimalist-typographic (CSS-only, zero cost,
+     factual tone) — **first Phase-3 recipe to use the covers tier**
+  2. `module` raw_body — lead paragraph (inline-styled `.lead`
+     class via p tag)
+  3. `objectives-box` boxed — "Before you start" preconditions
+     (3 items); second production consumer after tutorial.yaml
+  4-7. `tutorial-step` × 4 — **first production consumer**
+     (previously only used in phase-2-day5-showcase). Numbered
+     1-4, each with title + body.
+  8. `callout` tone=tip — **first production consumer of tip
+     tone** (cover-letter and noc both used neutral).
+  9. `callout` tone=warn — **first production consumer of warn
+     tone**.
+  10. `module` raw_body — Do/Don't 2-col inline-styled compare
+      box (flex layout, tip-bg/danger-bg halves). Single-recipe
+      use per density convention — we wait for a second consumer
+      before graduating a `compare-box` section.
+  11. `module` raw_body — "If it doesn't work" h2 + 3-item
+      troubleshooting bullet list (inline-styled).
+  12. `whats-next` bullet — 3-item forward CTA; second consumer
+      after tutorial.yaml.
+  Content adapted from `v1-reference/domains/tutorial/templates/
+  how-to.en.html`. Placeholder-style title preserved
+  ("[Primary action the reader will accomplish]") since how-to
+  is a template, not an instance.
+- **Rendered output: 3 pages, 0 WeasyPrint warnings.** Cover is
+  always 1 full page under `page_behavior.break_after: always`.
+  Body fits in 2 pages given component-level whitespace.
+  `target_pages: [2, 3]` with `page_limit: 3` — within bounds.
+- **Validation clean at default + strict** — 0 content-lint
+  warnings on the procedural prose.
+- **3 recipe-requests logged** — how-to-soul-hub-vault, how-to-
+  claude-skill-install, how-to-katib-ci-setup (stand-in signals
+  for future how-to consumers).
+- **Audit + capabilities:** register entry + `capabilities.yaml`
+  regenerated.
+
+### Tests (Phase 3 Day 9)
+
+- **`tests/test_tutorial_how_to.py`** (new, 18 tests): schema-
+  loads, en-only, page-targets [2, 3], twelve-section-ordering,
+  uses-cover-page-minimalist (first Phase-3 covers-tier use),
+  uses-objectives-box-boxed (second production consumer),
+  first-tutorial-step-production-consumer (regression guard —
+  4 numbered steps, 1-4, each with title + body),
+  first-callout-tip-and-warn-consumers (regression guard —
+  both tones in the `[tip, warn]` order),
+  uses-whats-next-bullet (second production consumer),
+  validates-clean, validates-strict-clean, renders-EN (6
+  component marker classes), pdf-within-target-pages (2-3
+  accepted), renders-all-v1-content (17 distinct phrases
+  spanning cover/lead/prereqs/4-steps/tip/warn/do-dont/
+  troubleshooting/whats-next), four-tutorial-steps-rendered
+  (counts `<div class="katib-tutorial-step__circle">`),
+  do-dont-inline-block-present (asserts Do/Don't halves +
+  callout-tip-bg/callout-danger-bg token references),
+  in-capabilities, audit-entry-exists.
+- **Regression sweep:** 612/612 passing (was 594, +18 how-to
+  tests). Zero WeasyPrint warnings across all 14 render paths.
+
+### Architecture decisions (Phase 3 Day 9)
+
+1. **Zero-new-component streak hits 4.** Business-letter (Day 4)
+   → cover-letter (Day 6) → NOC (Day 8) → how-to (Day 9) all
+   shipped without building a new component. The v2 component
+   library has reached a size where template-style procedural
+   docs compose from primitives + sections + carefully-scoped
+   inline style. This reshapes the Phase-3 remaining queue:
+   financial-summary and recitals-block may still be needed for
+   invoice/quote and legal/mou, but the remaining tutorial and
+   editorial recipes (cheatsheet, white-paper, how-to, onboarding,
+   handoff, katib-walkthrough) look like pure composition OR
+   +1 component at most.
+2. **Do/Don't as inline-styled module — not a new component.**
+   Used exactly once in how-to; no other migrate-list recipe in
+   the scan has a 2-col compare layout (cheatsheet has a
+   section-grid, different shape). Matches the density
+   convention: *build abstractions when a second recipe needs
+   the same shape, not speculatively.* If onboarding or any
+   other recipe later introduces the same compare pattern,
+   THAT's when `compare-box` graduates.
+3. **`tutorial-step` promoted from showcase-only to production
+   without change.** The component was built in Phase 2 (Day 5
+   showcase) and never needed revisions to serve how-to. Clean
+   proof that the Phase-2 component design held up.
+4. **Cover variant choice: minimalist-typographic.** CSS-only,
+   no Gemini cost, no external assets, matches the factual
+   procedural tone. Image covers would be decorative noise for
+   a how-to.
+5. **AR variant deferred (fourth recipe in a row).** Consistent
+   pattern since Day 4; `inputs_by_lang` schema design remains
+   tied to NOC's bilingual port, not triggered by template-style
+   procedural recipes.
+6. **Placeholder-style content over realistic content.** Like
+   NOC, how-to is a *template* — users fill in action,
+   screenshots, tip text. The v1 template style is preserved
+   (`[Primary action…]`). Realistic-content exemplars are a
+   separate deliverable; not in scope for Phase 3 recipe migration.
 
 ### Added (Phase 3 Day 8 — `formal/noc` recipe ships)
 

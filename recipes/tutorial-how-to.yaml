@@ -1,0 +1,112 @@
+name: tutorial-how-to
+version: 0.1.0
+namespace: katib
+description: How-to guide — procedural, task-oriented tutorial. Cover + lead + prerequisites + 4 steps + tip/warn callouts + do/don't compare + troubleshooting + whats-next. Pure composition (0 new components); first production consumer of tutorial-step, callout tip, callout warn.
+languages: [en]
+target_pages: [2, 3]
+page_limit: 3
+when: Short procedural guide (5-minute task walkthrough). EN-only; AR deferred pending inputs_by_lang schema (NOC remains designated first bilingual recipe). Uses minimalist-typographic cover — factual procedural tone rules out image covers.
+keywords: [tutorial, how-to, guide, procedural, step-by-step]
+
+sections:
+  # 1. Cover — CSS-only minimalist-typographic (no image, factual tone)
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "How-to Guide"
+      title: "[Primary action the reader will accomplish]"
+      subtitle: "A short guide to accomplishing a specific task, step by step."
+      reference_code: "HOW-TO"
+      date: "2026-04-23"
+
+  # 2. Lead paragraph — frames the task in one sentence
+  - component: module
+    inputs:
+      raw_body: |
+        <p class="lead" style="font-size: 12pt; line-height: 1.6; color: var(--text); margin: 0 0 14pt 0;">A short guide to accomplishing a specific task, step by step. Keep this paragraph tight — readers skim guides to confirm relevance before committing five minutes.</p>
+
+  # 3. Prerequisites — objectives-box labelled for preconditions
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Before you start"
+      items:
+        - "Have access to the system or tool being documented"
+        - "Know your way around basic navigation"
+        - "About 5 minutes of uninterrupted time"
+
+  # 4. Steps — tutorial-step × 4 (first production consumer)
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "Open the target screen"
+      body: "Navigate to the page where you'll perform the action. If you're using Soul Hub, this is usually the Vault tab."
+
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "Locate the entry point"
+      body: "Look for the primary action button — typically top-right, labeled with the verb you want to perform."
+
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "Fill in the details"
+      body: "Provide the required fields. Optional fields are marked with a neutral label; required ones have a subtle accent color."
+
+  - component: tutorial-step
+    inputs:
+      number: 4
+      title: "Confirm and verify"
+      body: "After submitting, you should see the new item appear in the list within a second. If it doesn't, refresh and check for error states."
+
+  # 5. Tip callout — first production consumer of callout tip tone
+  - component: callout
+    inputs:
+      tone: tip
+      title: "Keyboard shortcut"
+      body: "⌘K opens a quick-create dialog on every page — often faster than clicking through the UI."
+
+  # 6. Warn callout — first production consumer of callout warn tone
+  - component: callout
+    inputs:
+      tone: warn
+      title: "Watch out"
+      body: "If you see a red banner, the action wasn't saved. Re-read the error message — it usually points to a specific field."
+
+  # 7. Do / Don't — inline-styled 2-col compare box (single recipe use; density convention)
+  - component: module
+    inputs:
+      raw_body: |
+        <h2 style="font-size: 14pt; font-weight: 600; color: var(--text); margin: 14pt 0 8pt 0;">Do &amp; Don't</h2>
+        <div style="display: flex; gap: 10pt; margin: 6pt 0;">
+          <div style="flex: 1 1 0; padding: 10pt 12pt; background: var(--callout-tip-bg); border-left: 2pt solid var(--callout-tip-accent); font-size: 10pt; line-height: 1.55;">
+            <div style="font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-tip-accent); margin-bottom: 4pt;">Do</div>
+            <div style="color: var(--text);">Use descriptive names. Search becomes powerful when names carry meaning — "client-onboarding-v2" beats "doc-final-final".</div>
+          </div>
+          <div style="flex: 1 1 0; padding: 10pt 12pt; background: var(--callout-danger-bg); border-left: 2pt solid var(--callout-danger-accent); font-size: 10pt; line-height: 1.55;">
+            <div style="font-size: 8pt; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-danger-accent); margin-bottom: 4pt;">Don't</div>
+            <div style="color: var(--text);">Reuse names across categories. Two items called "notes" in different folders will collide in search results.</div>
+          </div>
+        </div>
+
+  # 8. Troubleshooting — inline h2 + bullet list
+  - component: module
+    inputs:
+      raw_body: |
+        <h2 style="font-size: 14pt; font-weight: 600; color: var(--text); margin: 14pt 0 6pt 0;">If it doesn't work</h2>
+        <ul style="margin: 6pt 0; padding-left: 18pt; font-size: 10.5pt; line-height: 1.6;">
+          <li style="margin-bottom: 4pt;"><strong>Page doesn't load:</strong> check that the service is running at the expected address.</li>
+          <li style="margin-bottom: 4pt;"><strong>Button greyed out:</strong> usually means a prerequisite isn't met — hover for tooltip.</li>
+          <li style="margin-bottom: 4pt;"><strong>Changes don't persist:</strong> verify you have write permission to the target folder.</li>
+        </ul>
+
+  # 9. What's next — forward-pointing CTA
+  - component: whats-next
+    variant: bullet
+    inputs:
+      heading: "What's next"
+      items:
+        - "Explore related guides to deepen your grasp of the tool"
+        - "Bookmark the primary action for faster access next time"
+        - "Share this guide with a teammate who would benefit"
