@@ -1,0 +1,12 @@
+name: rule
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Horizontal divider between content blocks.
+languages: [en, ar]
+requires:
+  tokens: [border_strong, border]
+variants:
+  - hairline
+  - strong
+  - double

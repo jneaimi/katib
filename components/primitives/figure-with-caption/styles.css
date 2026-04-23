@@ -1,0 +1,27 @@
+.katib-figure {
+    margin: 1.2em 0;
+    page-break-inside: avoid;
+}
+
+.katib-figure__img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+}
+
+.katib-figure--full-width .katib-figure__img { width: 100%; }
+
+.katib-figure--inset {
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.katib-figure__caption {
+    margin-top: 0.5em;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--text-tertiary);
+    text-align: center;
+}

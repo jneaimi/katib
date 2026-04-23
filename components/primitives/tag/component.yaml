@@ -1,0 +1,22 @@
+name: tag
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Inline badge/chip label — short noun, tonal background.
+languages: [en, ar]
+requires:
+  tokens: [tag_bg, tag_fg, callout_info_bg, callout_info_accent, callout_warn_bg, callout_warn_accent, callout_danger_bg, callout_danger_accent, callout_tip_bg, callout_tip_accent]
+accepts:
+  inputs:
+    - text:
+        type: string
+        required: true
+        description: Short noun — one or two words.
+    - tone:
+        type: string
+        required: false
+        default: neutral
+        description: "neutral | info | warn | danger | tip"
+variants:
+  - filled
+  - outline

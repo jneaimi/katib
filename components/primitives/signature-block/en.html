@@ -1,0 +1,12 @@
+<div class="katib-signature katib-signature--{{ variant or 'line-over' }}" lang="en">
+{%- if variant != 'line-over' %}
+    <div class="katib-signature__label">{{ input.label or 'Signed' }}</div>
+{%- endif %}
+    <div class="katib-signature__name">{{ input.name }}</div>
+{%- if input.title %}
+    <div class="katib-signature__title">{{ input.title }}</div>
+{%- endif %}
+{%- if input.date %}
+    <div class="katib-signature__date">{{ input.date }}</div>
+{%- endif %}
+</div>

@@ -1,0 +1,18 @@
+.katib-eyebrow {
+    font-family: var(--font-display);
+    font-size: 9.5pt;
+    font-weight: 600;
+    margin: 0 0 0.35em 0;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.katib-eyebrow--muted { color: var(--text-tertiary); }
+.katib-eyebrow--accent { color: var(--accent); }
+
+.katib-eyebrow[lang="ar"] {
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: 11pt;
+    font-weight: 700;
+}

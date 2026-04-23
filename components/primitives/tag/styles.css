@@ -1,0 +1,26 @@
+.katib-tag {
+    display: inline-block;
+    font-family: var(--font-primary);
+    font-size: 8.5pt;
+    font-weight: 600;
+    line-height: 1;
+    padding: 3pt 7pt;
+    border-radius: 3pt;
+    letter-spacing: 0.02em;
+    vertical-align: baseline;
+}
+
+.katib-tag[lang="ar"] { letter-spacing: 0; font-size: 9.5pt; font-weight: 700; }
+
+.katib-tag--filled.katib-tag--neutral { background: var(--tag-bg); color: var(--tag-fg); }
+.katib-tag--filled.katib-tag--info    { background: var(--callout-info-bg); color: var(--callout-info-accent); }
+.katib-tag--filled.katib-tag--warn    { background: var(--callout-warn-bg); color: var(--callout-warn-accent); }
+.katib-tag--filled.katib-tag--danger  { background: var(--callout-danger-bg); color: var(--callout-danger-accent); }
+.katib-tag--filled.katib-tag--tip     { background: var(--callout-tip-bg); color: var(--callout-tip-accent); }
+
+.katib-tag--outline { background: transparent; padding: 2pt 6pt; }
+.katib-tag--outline.katib-tag--neutral { border: 1px solid var(--border-strong); color: var(--text); }
+.katib-tag--outline.katib-tag--info    { border: 1px solid var(--callout-info-accent); color: var(--callout-info-accent); }
+.katib-tag--outline.katib-tag--warn    { border: 1px solid var(--callout-warn-accent); color: var(--callout-warn-accent); }
+.katib-tag--outline.katib-tag--danger  { border: 1px solid var(--callout-danger-accent); color: var(--callout-danger-accent); }
+.katib-tag--outline.katib-tag--tip     { border: 1px solid var(--callout-tip-accent); color: var(--callout-tip-accent); }

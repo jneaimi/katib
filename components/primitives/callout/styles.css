@@ -1,0 +1,30 @@
+.katib-callout {
+    font-family: var(--font-primary);
+    padding: 10pt 14pt;
+    margin: 0.9em 0;
+    border-radius: 3pt;
+    color: var(--text);
+    border: 0 solid transparent;
+    page-break-inside: avoid;
+}
+
+.katib-callout[lang="en"] { border-left-width: 3px; }
+.katib-callout[lang="ar"] { border-right-width: 3px; }
+
+.katib-callout__title {
+    font-weight: 700;
+    margin-bottom: 0.3em;
+    font-size: 11pt;
+}
+
+.katib-callout__body { font-size: 10.5pt; line-height: 1.55; }
+
+.katib-callout--info   { background: var(--callout-info-bg);   border-color: var(--callout-info-accent); }
+.katib-callout--warn   { background: var(--callout-warn-bg);   border-color: var(--callout-warn-accent); }
+.katib-callout--danger { background: var(--callout-danger-bg); border-color: var(--callout-danger-accent); }
+.katib-callout--tip    { background: var(--callout-tip-bg);    border-color: var(--callout-tip-accent); }
+
+.katib-callout--info   .katib-callout__title { color: var(--callout-info-accent); }
+.katib-callout--warn   .katib-callout__title { color: var(--callout-warn-accent); }
+.katib-callout--danger .katib-callout__title { color: var(--callout-danger-accent); }
+.katib-callout--tip    .katib-callout__title { color: var(--callout-tip-accent); }

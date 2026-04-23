@@ -1,0 +1,24 @@
+name: pull-quote
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Emphasized blockquote — larger text with accent rule and optional attribution.
+languages: [en, ar]
+requires:
+  tokens: [accent, text, text_secondary, border_strong]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - text:
+        type: string
+        required: true
+        description: The quote body.
+    - attribution:
+        type: string
+        required: false
+        description: Attribution line (author, source, role).
+variants:
+  - rule-leading
+  - large-quote
+page_behavior:
+  break_inside: avoid

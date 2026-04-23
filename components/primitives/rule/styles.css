@@ -1,0 +1,13 @@
+.katib-rule {
+    border: 0;
+    margin: 1.2em 0;
+    height: 0;
+}
+
+.katib-rule--hairline { border-top: 1px solid var(--border); }
+.katib-rule--strong   { border-top: 1px solid var(--border-strong); }
+.katib-rule--double {
+    border-top: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+    height: 3px;
+}
