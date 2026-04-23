@@ -25,3 +25,5 @@
 {"recipe": "business-proposal-proposal", "namespace": "katib", "action": "register", "at": "2026-04-23T21:09:19+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "financial-invoice", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T21:26:13+00:00", "from_graduation": null, "force_justification": "Day 15 Phase-3 — financial/invoice (first production consumer of financial-summary + letterhead commercial variant)", "note": "Scaffolded by katib recipe new"}
 {"recipe": "financial-invoice", "namespace": "katib", "action": "register", "at": "2026-04-23T21:27:06+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "financial-quote", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T21:42:33+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib recipe new"}
+{"recipe": "financial-quote", "namespace": "katib", "action": "register", "at": "2026-04-23T21:45:47+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

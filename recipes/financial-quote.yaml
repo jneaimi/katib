@@ -1,0 +1,171 @@
+name: financial-quote
+version: 0.1.0
+namespace: katib
+description: UAE commercial quotation — letterhead commercial + meta strip + Prepared-For callout + numbered Scope/Pricing/Acceptance + line-items table + compact totals + 2x2 terms grid + signature block. Zero new components. First production consumer of financial-summary compact variant (24-hour ship from Day-15 default). Closes the financial domain with financial-invoice.
+languages:
+- en
+target_pages:
+- 1
+- 2
+page_limit: 2
+when: UAE-compliant commercial quotation with scope, pricing, VAT, validity window, payment schedule, and acceptance sign-row. Pairs with financial/invoice — quote → acceptance → invoice is the commercial flow. EN-only; AR deferred pending inputs_by_lang schema.
+keywords:
+- financial
+- quote
+- quotation
+- commercial
+- pricing
+- vat
+- uae
+
+sections:
+  # 1. Letterhead — commercial variant (2nd production consumer after invoice Day-15)
+  - component: letterhead
+    variant: commercial
+    inputs:
+      company: "jasem | katib"
+      reference_code: "QTE-2026-0042"
+      date: "2026-04-24"
+      doc_title: "Quotation"
+
+  # 2. Meta strip — 4-field kv-list boxed (4th consumer: NOC + handoff + invoice + quote)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Issued", value: "2026-04-24"}
+        - {term: "Valid Until", value: "2026-05-24"}
+        - {term: "Currency", value: "AED"}
+        - {term: "Prepared By", value: "Jasem Al Neaimi"}
+
+  # 3. Prepared For — callout info (2nd production info consumer after handoff Day-10).
+  #    v1 quote used --callout-border color for this block; info tone is the right semantic.
+  - component: callout
+    inputs:
+      tone: info
+      title: "Prepared For"
+      body: "[Client Legal Name LLC] · [Attn: Primary contact name] · [Client street address, City — UAE] · [email@client.ae]"
+
+  # 4. Scope — module numbered (6th production use of numbered variant).
+  #    raw_body holds intro prose + Inclusions ul + Exclusions ul inline.
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Scope"
+      intro: "[One paragraph. Describe what the quote covers — the outcome the client is buying, not a feature list. Keep it specific to their situation.]"
+      raw_body: |
+        <h3 style="font-size: 10pt; margin: 10pt 0 4pt 0; color: var(--text); font-weight: 600;">Inclusions</h3>
+        <ul style="margin: 0 0 8pt 0; padding-left: 18pt; font-size: 10pt; line-height: 1.55;">
+          <li style="margin-bottom: 2pt;">[Deliverable 1 — concrete]</li>
+          <li style="margin-bottom: 2pt;">[Deliverable 2]</li>
+          <li style="margin-bottom: 2pt;">[Deliverable 3]</li>
+          <li>[Reasonable inclusion — e.g., two revision rounds, handover call]</li>
+        </ul>
+        <h3 style="font-size: 10pt; margin: 10pt 0 4pt 0; color: var(--text); font-weight: 600;">Exclusions</h3>
+        <ul style="margin: 0; padding-left: 18pt; font-size: 10pt; line-height: 1.55;">
+          <li style="margin-bottom: 2pt;">[Out-of-scope item — name it explicitly to prevent scope creep later]</li>
+          <li style="margin-bottom: 2pt;">[Third-party licences / fees]</li>
+          <li>[Travel / accommodation unless agreed separately]</li>
+        </ul>
+
+  # 5. Pricing section header — module numbered (just the heading; data-table follows)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Pricing"
+      intro: "All figures in AED. VAT chargeable at prevailing UAE rates."
+
+  # 6. Line items — data-table dense (6th consumer; 2nd use of {text, sub} cell mapping)
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "#"
+          align: num
+          width: "24pt"
+        - label: "Description"
+        - label: "Qty"
+          align: num
+          width: "40pt"
+        - label: "Unit Price"
+          align: num
+          width: "80pt"
+        - label: "Total (AED)"
+          align: num
+          width: "90pt"
+      rows:
+        - - "1"
+          - {text: "[Phase / service 1]", sub: "[Timing · 2 weeks]"}
+          - "1"
+          - "15,000.00"
+          - "15,000.00"
+        - - "2"
+          - {text: "[Phase / service 2]", sub: "[Timing · 3 weeks]"}
+          - "1"
+          - "25,000.00"
+          - "25,000.00"
+        - - "3"
+          - {text: "[Optional add-on]", sub: "[At client election]"}
+          - "1"
+          - "8,000.00"
+          - "8,000.00"
+
+  # 7. Totals — financial-summary COMPACT (FIRST production consumer of compact variant)
+  #    3 rows fit the 60mm compact box; 24-hour ship from Day-15 default-variant debut.
+  - component: financial-summary
+    variant: compact
+    inputs:
+      currency: "AED"
+      rows:
+        - {label: "Subtotal (excl. VAT)", value: "48,000.00"}
+        - {label: "VAT (5%)", value: "2,400.00"}
+        - {label: "TOTAL", value: "50,400.00", variant: total}
+
+  # 8. Terms grid — sections-grid bordered 2x2 (3rd bordered consumer after invoice's 2 uses)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - title: "Payment Schedule"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 16pt; font-size: 9.5pt; line-height: 1.55;">
+              <li style="margin-bottom: 2pt;">[50% on acceptance]</li>
+              <li style="margin-bottom: 2pt;">[25% on [milestone]]</li>
+              <li>[25% on delivery]</li>
+            </ul>
+        - title: "Timeline"
+          raw_body: |
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.55;">[Start: within 5 business days of signed acceptance. Delivery: [N weeks] from start date, subject to timely client inputs.]</p>
+        - title: "Validity"
+          raw_body: |
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.55;">This quotation is valid until <strong>[2026-05-24]</strong>. Prices beyond this date subject to review.</p>
+        - title: "Terms &amp; Conditions"
+          raw_body: |
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.55;">VAT chargeable at prevailing UAE rates. Payments in AED unless agreed otherwise. Late payments subject to 1.5% monthly interest. Full terms on engagement letter.</p>
+
+  # 9. Acceptance — module numbered + inline 2-col signature grid (honest-intent inline pattern)
+  #    Matches Day-14 proposal sign-row — 2 dependents below threshold, raw_body acceptable.
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Acceptance"
+      intro: "To proceed, please sign below and return a scanned copy to jasem@jneaimi.com. On receipt, we will issue the initial invoice and confirm the project start date."
+      raw_body: |
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18pt; margin-top: 14pt;">
+          <div>
+            <div style="font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 600; margin-bottom: 3pt;">For jasem | katib</div>
+            <div style="border-bottom: 0.5pt solid var(--border-strong); height: 22pt; margin-bottom: 3pt;"></div>
+            <div style="font-size: 9.5pt;">Jasem Al Neaimi</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary);">Name · Title · Date</div>
+          </div>
+          <div>
+            <div style="font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 600; margin-bottom: 3pt;">Accepted by Client</div>
+            <div style="border-bottom: 0.5pt solid var(--border-strong); height: 22pt; margin-bottom: 3pt;"></div>
+            <div style="font-size: 9.5pt;">[Authorised signatory name]</div>
+            <div style="font-size: 8pt; color: var(--text-tertiary);">Name · Title · Date</div>
+          </div>
+        </div>

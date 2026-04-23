@@ -3,7 +3,7 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 3 in progress (through 2026-04-23)
+## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
 
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
 2026-04-23 — 14 recipes on the migrate list. Component queue revised
@@ -26,24 +26,153 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **27 components** (+1 financial-summary Day 15;
-data-table added Day 13, sections-grid added Day 11,
-multi-party-signature-block added Day 7, kv-list at 0.2.0,
-signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**17 recipes** (11 production: tutorial + business-proposal-letter +
-personal-cover-letter + formal-noc + tutorial-how-to +
-tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
-editorial-white-paper + business-proposal-proposal +
-**financial-invoice**; 6 dev showcases). 6 core library modules,
-5 CLIs, 4 memory streams, 4 image providers, 0 external skill
+Engine state: **27 components** (financial-summary Day 15, data-table
+Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
+kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
+at 0.2.0). **18 recipes** (12 production: tutorial +
+business-proposal-letter + personal-cover-letter + formal-noc +
+tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
+business-proposal-one-pager + editorial-white-paper +
+business-proposal-proposal + financial-invoice +
+**financial-quote**; 6 dev showcases). 6 core library modules, 5
+CLIs, 4 memory streams, 4 image providers, 0 external skill
 dependencies.
 
 **Business-proposal domain complete** (Day 14) — all 3 recipes
 shipped: letter (Day 4), one-pager (Day 12), proposal (Day 14).
+**Financial domain complete** (Day 16) — both recipes shipped:
+invoice (Day 15), quote (Day 16).
 
-**Not shippable as a v1 replacement yet** — v2 has 11 production
-recipes; Phase 3 ports 4 more over the next ~1 week. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 12 production
+recipes; Phase 3 ports 3 more over the next ~5 days. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 16 — `financial/quote` recipe ship; financial domain complete)
+
+Eleventh Phase-3 recipe migration. **Zero-new-component day** — pure
+composition of the Day-15 financial stack. **24-hour ship discipline
+validated**: `financial-summary` default variant shipped Day 15,
+compact variant gets its first production consumer Day 16.
+
+- **`recipes/financial-quote.yaml`** (new) — 9-section UAE commercial
+  quotation:
+  1. `letterhead` **commercial variant** — **second production use**
+     (validates Day-2 variant beyond the invoice 1-off). Quotation
+     eyebrow + ref code `QTE-2026-0042` + issue date.
+  2. `kv-list` boxed — **fourth production consumer** (NOC +
+     handoff + invoice + quote). 4 fields: Issued / Valid Until /
+     Currency / Prepared By.
+  3. `callout` **info tone** — **second production consumer** (after
+     handoff Day-10). "Prepared For" client block — v1 quote used
+     `--callout-border` color here; info tone is the right semantic.
+  4. `module` **numbered** (§1 Scope) — intro prose + inline
+     Inclusions ul + Exclusions ul (raw_body — content-specific
+     sublists don't warrant a list component).
+  5. `module` **numbered** (§2 Pricing) — section header only;
+     data-table follows.
+  6. `data-table` dense — **sixth production consumer + second
+     production use of `{text, sub}` cell mapping**. 5 columns (# /
+     Description / Qty / Unit Price / Total), 3 line items, each
+     with title + timing sub-line in the description cell.
+  7. `financial-summary` **compact variant** — **FIRST PRODUCTION
+     CONSUMER** (Day-15 built → Day-16 shipped = 24-hour ship
+     discipline). 3 rows (Subtotal / VAT / Total) fit the 60mm box
+     well; currency "AED" appended to Total row label.
+  8. `sections-grid` bordered — **third bordered consumer** (invoice
+     had 2 instances; quote adds 1). 2x2 Terms grid: Payment
+     Schedule / Timeline / Validity / T&C.
+  9. `module` **numbered** (§3 Acceptance) — intro prose + inline
+     2-col signature grid (raw_body — honest-intent inline pattern
+     matching Day-14 proposal sign-row; 2 dependents below
+     graduation threshold).
+  Content adapted from `v1-reference/domains/financial/templates/
+  quote.en.html`. Placeholder prose preserved.
+- **Rendered output: 2 pages, 0 WeasyPrint warnings.** `target_pages:
+  [1, 2]`, `page_limit: 2`. Within target.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **1 density-convention inline block** (acceptance signature grid)
+  — well below NOC's ceiling of 4.
+- **Heaviest single-recipe deployment of `module numbered`** (3
+  uses in one recipe — Scope/Pricing/Acceptance). Prior max was
+  6 consecutive in white-paper Day 13 (different recipe).
+- **3 quote recipe-requests logged** (Triden training / consulting
+  engagement / workshop facilitation).
+- **Audit + capabilities:** recipe register entry +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 16)
+
+- **`tests/test_financial_quote.py`** (new, 22 tests): schema-
+  loads, en-only, page-targets [1, 2], nine-section-ordering,
+  uses-letterhead-commercial (regression guard for the Day-2
+  variant's second production use), first-financial-summary-
+  compact-consumer (regression guard for 3 rows + variant: total
+  on last + "50,400.00" value + "AED" currency), data-table-uses-
+  text-sub-cells (regression guard for 5-col + 3-row shape with
+  all 3 descriptions using {text, sub} mapping), uses-callout-info
+  (regression guard for info tone + "Prepared For" title),
+  uses-kv-list-boxed (regression guard for 4 meta terms),
+  sections-grid-bordered-third-consumer (regression guard for
+  single 2x2 instance), uses-three-numbered-modules (regression
+  guard for Scope/Pricing/Acceptance numbers 1-2-3), validates-
+  clean, validates-strict-clean, renders-EN (6 marker classes),
+  pdf-within-target-pages (1-2 accepted), renders-all-v1-content
+  (30+ distinct phrases including all totals 48,000/2,400/50,400),
+  line-items-three-rows-with-sub-cells (regression guard: 3
+  cell-sub spans), totals-has-accent-total-row, compact-variant-
+  class-emitted, three-numbered-modules-in-html (regression guard
+  at element level), in-capabilities, audit-entry-exists.
+- **Regression sweep:** 781/781 passing (was 759, +22 quote tests).
+  Zero WeasyPrint warnings across all 21 render paths.
+
+### Architecture decisions (Phase 3 Day 16)
+
+1. **24-hour ship discipline validated for financial-summary compact.**
+   Built Day 15 with two variants (default 70mm, compact 60mm). Default
+   shipped Day 15 (invoice — 4 rows). Compact shipped Day 16 (quote —
+   3 rows). Both variants have production consumers within 24 hours
+   of each other. Same pattern as sections-grid Day 11→12 (dense then
+   default) and data-table Day 13→14 (white-paper then proposal). The
+   discipline holds: build with dependents already confirmed, ship
+   the second dependent the next day.
+2. **Financial domain complete in 2 days.** Invoice Day 15 + quote
+   Day 16. Both rely on letterhead commercial + kv-list boxed +
+   data-table dense with {text, sub} + financial-summary (both
+   variants) + sections-grid bordered + callout. Common-denominator
+   infra — both recipes compose from the same 6 components with
+   different section orderings and variant choices.
+3. **letterhead commercial variant is now a validated production
+   variant.** Day-2 build spent 13 days with zero consumers, then
+   got 2 consumers in 2 days. The Phase-2 "build variants
+   speculatively IF v1 triage locked them in" pattern is validated
+   retroactively — the ~13-day wait was just reaching the recipes,
+   not a signal of overbuilding.
+4. **callout info tone graduates.** Built during callout 0.2.0
+   (neutral addition). Handoff Day-10 was the 1st info consumer.
+   Quote Day-16 is the 2nd. Below the 3-consumer auto-graduation
+   threshold but demonstrates the tone's semantic fit across
+   working-doc (handoff status block) and commercial-doc (quote
+   client block) shapes.
+5. **module numbered scales to 3-use single-recipe deployment.**
+   Quote uses numbered module 3 times (Scope/Pricing/Acceptance).
+   Prior records: white-paper Day 13 used 6 consecutive, proposal
+   Day 14 used 5. The 3-use pattern here is a section-header shape
+   (numbered heading + optional raw_body) rather than the chapter-
+   like shape of white-paper/proposal. Same component serves both
+   shapes cleanly.
+6. **Zero-new-component forecast held for the 3rd time in Phase 3.**
+   Day 4 (letter), Day 8 (NOC AR), Day 9 (how-to), Day 10 (handoff),
+   Day 12 (one-pager), Day 14 (proposal), Day 16 (quote) — 7
+   zero-new-component days on a 14-recipe migrate list. The queue
+   is composing well.
+7. **Phase-3 progress: 11/14 recipes (79%) in 16 days.** On pace.
+   Remaining: CV (2-day sprint), MoU (Day 17+ w/ recitals-block —
+   last Day-0 queue item), plus 2 tutorial recipes (onboarding,
+   katib-walkthrough). Reachable by Day 20 with buffer.
+8. **AR variant deferred (eleventh recipe in a row).** Consistent
+   since Day 4. MoU may break the streak depending on recitals-
+   block bilingual support; NOC remains the designated first
+   bilingual recipe.
 
 ### Added (Phase 3 Day 15 — `financial-summary` component + `financial/invoice` recipe ship)
 
