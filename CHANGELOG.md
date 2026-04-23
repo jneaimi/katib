@@ -3,15 +3,120 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component + recipe CLI (Days 1–12 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, production recipe, /katib runner, component + recipe CLI, graduation gates (Days 1–13 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–12 of 14 have landed. Engine state: 20
-components, 7 recipes, 345 tests, **zero WeasyPrint warnings across
-every recipe**. **Both component and recipe authoring are now
-supported lifecycles** — `katib component new → validate → test →
-register → share → lint --all` and the parallel `katib recipe …`
-flow are the sanctioned paths from empty directory / YAML stub to a
-registered, audited, build-gated artifact.
+Phase 2 is in progress. Days 1–13 of 14 have landed. Engine state: 20
+components, 7 recipes, **426 tests**, **zero WeasyPrint warnings**.
+**The graduation gates are now active** — the Day-11 and Day-12
+scaffolders read request logs that the Day-13 writer populates. Every
+`route.py resolve` decision that emerges a log-and-* action drops a
+recipe-request signal automatically. `katib component new` and `katib
+recipe new` go silent on their graduation warning once ≥ 3 matching
+requests accumulate for a given name.
+
+### Added (Day 13 — request-log writer + content_lint port)
+
+- **`core/request_log.py`** — JSONL writer + reader library for four
+  memory files:
+  - `memory/component-requests.jsonl` (Day-11 gate input)
+  - `memory/recipe-requests.jsonl` (Day-12 gate input)
+  - `memory/gate-decisions.jsonl` (every `route.py resolve` decision)
+  - `memory/context-inferences.jsonl` (every `route.py infer` signal
+    extraction)
+  - Schema locked at `REQUEST_SCHEMA_VERSION = 1`. Writer populates
+    both `requested` and `closest_existing` so either-key reader
+    match (the Day-11/12 contract) always succeeds.
+  - `KATIB_MEMORY_DIR` env var redirects all four paths — tests use
+    `tmp_path`, production uses the repo default.
+  - POSIX atomic-append (single `write()` per line <4KB) — verified
+    by a 20-thread concurrent-append smoke test.
+  - Reader API: `read_requests(kind, since=timedelta)`,
+    `count_requests(kind, name)`, `search_requests(kind, needle)`,
+    `read_gate_decisions`, `read_context_inferences`. `parse_since`
+    understands `"7d" | "2w" | "12h"`.
+
+- **`core/content_lint.py`** — v1's 421-line content linter ported as
+  a library. All rules preserved (AR banned-openers, emphasis
+  crutches, jargon, vague declaratives, meta commentary,
+  untranslated abbreviations, ambiguous tech terms, واو chains; EN
+  equivalents). `extract_text()` strips HTML + Jinja + `<style>` +
+  `<script>`. `guess_language()` suffix-first, then char-ratio
+  fallback. `lint(text, lang)` dispatcher. Pure Python, no vault or
+  config imports.
+
+- **`scripts/log_request.py`** — CLI with six subcommands:
+  - `component [--requested X] [--closest Y] --intent "…" --reason "…"`
+  - `recipe [--requested X] [--closest Y] --intent "…" --reason "…"`
+  - `list {component|recipe} [--since 30d]`
+  - `count {component|recipe} <name>`
+  - `search {component|recipe} <term>`
+  - `--json` global flag; identical error contract to Days 10/11/12.
+
+- **`scripts/lint.py`** — content-lint CLI:
+  - `<file>` or `--stdin` input modes
+  - `--lang` force override
+  - `--json` machine output
+  - Exit codes: 0 (clean) / 1 (errors found) / 2 (bad input)
+
+- **`scripts/route.py`** — auto-persistence wired:
+  - `infer` persists the context inference (unless `--no-persist`)
+  - `resolve` persists the gate decision AND drops a recipe-request
+    entry on `log-and-fill` / `log-and-wait` / `request-graduation`
+    (these are the signals that accumulate for recipe graduation)
+  - Log writes wrapped in `try: except OSError/ValueError: pass` so
+    a logging failure never breaks routing
+  - `--no-persist` flag opts out (tests only)
+
+### Changed (Day 13)
+
+- **`tests/test_route.py`** — `_inject_no_persist()` helper appends
+  `--no-persist` to every `infer`/`resolve` invocation so the 19
+  existing tests preserve their no-disk-side-effect contract. Route
+  tests assert routing decisions; persistence gets its own test file.
+
+### Tests (Day 13)
+
+81 new tests (345 → 426 total):
+- **`tests/test_request_log.py`** (23 unit tests): memory-dir
+  resolution, component/recipe append, read/count/search, `since`
+  filtering, schema-version locks, 20-thread concurrent-append smoke,
+  gate-decisions + context-inferences writers.
+- **`tests/test_content_lint.py`** (29 unit tests): `extract_text`
+  (tags / Jinja / style / script), `guess_language` (suffix + char
+  ratio), every English rule, every Arabic rule (including
+  translated-abbrev pass), `lint` dispatcher, `lint_file`.
+- **`tests/test_log_request_cli.py`** (12 subprocess tests): every
+  verb in both human and `--json` mode, JSON-contract regression
+  guard.
+- **`tests/test_lint_cli.py`** (11 subprocess tests): file + stdin
+  modes, lang force, JSON output shape, real recipe render + lint.
+- **`tests/test_graduation_activation.py`** (6 end-to-end tests):
+  proves the Day-11 and Day-12 graduation gates go silent once the
+  Day-13 writer has logged ≥ 3 matching requests, with counts
+  matching either `requested` or `closest_existing` fields.
+
+### Architecture decisions taken (Day 13 — per Jasem's approval during validation)
+
+1. **Separate library + CLI** (`core/request_log.py` +
+   `scripts/log_request.py`) — matches the Days 8–12 pattern.
+2. **`route.py` auto-persists by default**; `--no-persist` opts out.
+   Production contract is that log writes happen; tests explicitly
+   override.
+3. **`KATIB_MEMORY_DIR` env var** for memory path redirection — clean
+   test isolation; no monkeypatching of module-level paths.
+4. **Content-lint stays standalone** for Day 13 — not wired into
+   `register` or `validate`. Avoids false-positive flood on existing
+   intentional prose; Day 14 can optionally wire it as a warning-
+   level check.
+5. **Full CLI set** on `log_request.py` including `list` / `count` /
+   `search`. Phase-4 reflect will shell out to these rather than
+   reimplementing JSONL parsing.
+6. **Schema locked at `schema_version: 1`** with `requested` +
+   `closest_existing` both written on every entry. Any future field
+   additions are purely additive with defaults.
+7. **Day-11/12 readers unchanged.** Writer populates both match
+   keys; readers already check either — symmetry proves the
+   contract without touching Phase-2 code.
 
 ### Added (Day 12 — katib recipe CLI)
 
