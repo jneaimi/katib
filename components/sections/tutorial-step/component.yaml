@@ -1,0 +1,36 @@
+name: tutorial-step
+tier: section
+version: 0.1.0
+namespace: katib
+description: Numbered tutorial step — step circle + title + description + optional screenshot. Screenshots are factual; gemini source is deliberately excluded.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border, step_circle_bg, step_circle_fg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - number:
+        type: int
+        required: true
+        description: 1-based step number rendered in the step circle.
+    - title:
+        type: string
+        required: true
+    - body:
+        type: string
+        required: false
+        description: Paragraph explaining what the step does and why.
+    - screenshot:
+        type: image
+        required: false
+        sources_accepted: [screenshot, user-file]
+        description: Optional screenshot. No gemini source — screenshots are factual, not decorative.
+    - screenshot_alt:
+        type: string
+        required: false
+        description: Alt text for the screenshot. Falls back to "Screenshot for step N" if absent.
+    - screenshot_caption:
+        type: string
+        required: false
+page_behavior:
+  break_inside: avoid

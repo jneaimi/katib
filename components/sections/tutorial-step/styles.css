@@ -1,0 +1,66 @@
+.katib-tutorial-step {
+    margin: 1.2em 0;
+    page-break-inside: avoid;
+}
+
+.katib-tutorial-step__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12pt;
+}
+
+.katib-tutorial-step__circle {
+    flex-shrink: 0;
+    width: 28pt;
+    height: 28pt;
+    background: var(--step-circle-bg);
+    color: var(--step-circle-fg);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13pt;
+    font-family: var(--font-display);
+    line-height: 1;
+}
+
+.katib-tutorial-step__heading { flex: 1; min-width: 0; }
+
+.katib-tutorial-step__title {
+    margin: 0 0 0.25em 0;
+    font-size: 12.5pt;
+    line-height: 1.3;
+}
+
+.katib-tutorial-step__desc {
+    margin: 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.katib-tutorial-step__screenshot {
+    margin: 0.8em 0 0 40pt;
+    max-width: calc(100% - 40pt);
+}
+
+.katib-tutorial-step[lang="ar"] .katib-tutorial-step__screenshot {
+    margin: 0.8em 40pt 0 0;
+}
+
+.katib-tutorial-step__screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 2pt;
+}
+
+.katib-tutorial-step__caption {
+    font-size: 9pt;
+    line-height: 1.4;
+    color: var(--text-tertiary);
+    margin-top: 0.4em;
+    font-family: var(--font-primary);
+}
