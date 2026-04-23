@@ -1,0 +1,8 @@
+# Test inputs for `letterhead` isolated render.
+# Used by `katib component test letterhead`.
+inputs:
+  company: "jasem | katib"
+  reference_code: "KATIB-2026-001"
+  date: "23 April 2026"
+brand: null
+variant: null

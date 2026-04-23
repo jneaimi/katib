@@ -21,3 +21,5 @@
 {"component": "module", "tier": "section", "namespace": "katib", "action": "version-bump", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 7 — 0.1.0 → 0.2.0: added raw_body input + rich-body styles (tables, inline SVG, pull-quotes, callouts, ordered step lists) for production recipe content"}
 {"component": "kv-list", "tier": "section", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T15:55:11+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
 {"component": "kv-list", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T15:57:38+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "letterhead", "tier": "section", "namespace": "katib", "action": "scaffold", "at": "2026-04-23T16:18:58+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
+{"component": "letterhead", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-23T16:21:28+00:00", "from_graduation": null, "note": "Registered by katib component register"}

@@ -1,0 +1,97 @@
+.katib-letterhead {
+    margin: 0 0 1.2em 0;
+}
+
+.katib-letterhead__logo {
+    display: block;
+    max-width: 55mm;
+    margin-bottom: 0.6em;
+}
+
+.katib-letterhead__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1em;
+    padding-bottom: 0.35em;
+    border-bottom: 0.75pt solid var(--accent);
+}
+
+/* RTL — flex-direction row-reverse so the leading side is on the right */
+.katib-letterhead[dir="rtl"] .katib-letterhead__bar {
+    flex-direction: row-reverse;
+}
+
+.katib-letterhead__lead {
+    min-width: 0;
+}
+
+.katib-letterhead__company {
+    font-family: var(--font-display, inherit);
+    font-size: 13pt;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+}
+
+.katib-letterhead__meta {
+    text-align: end;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    line-height: 1.55;
+}
+
+.katib-letterhead__ref {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+}
+
+.katib-letterhead__date,
+.katib-letterhead__meta-line {
+    color: var(--text-tertiary);
+}
+
+/* --------------------------------------------------------- formal
+   NOC / legal — stronger rule, company in body text color (austere) */
+.katib-letterhead--formal .katib-letterhead__bar {
+    border-bottom-width: 1.25pt;
+    border-bottom-color: var(--text);
+}
+
+.katib-letterhead--formal .katib-letterhead__company {
+    color: var(--text);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 12pt;
+}
+
+.katib-letterhead--formal .katib-letterhead__doc-title {
+    font-weight: 600;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10pt;
+    margin-bottom: 0.15em;
+}
+
+/* --------------------------------------------------------- commercial
+   invoice / quote — doc_title emphasized on trailing side */
+.katib-letterhead--commercial .katib-letterhead__bar {
+    align-items: flex-start;
+}
+
+.katib-letterhead--commercial .katib-letterhead__doc-title {
+    font-family: var(--font-display, inherit);
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 14pt;
+    margin-bottom: 0.3em;
+}
+
+.katib-letterhead--commercial .katib-letterhead__company {
+    font-size: 14pt;
+    color: var(--text);
+}

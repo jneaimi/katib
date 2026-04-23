@@ -6,13 +6,15 @@ All notable changes to Katib are documented here. Format loosely follows
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-23)
 
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
-2026-04-23 — 14 recipes on the migrate list, 5 genuinely-new components
-identified, bilingual NOC proven to need no new component (CSS
-direction-flip only). See `~/vault/projects/katib/project.md` and ADR
-§Phase 3 for the locked plan.
+2026-04-23 — 14 recipes on the migrate list, originally 5 and now
+6 genuinely-new components identified after Day-2 scoping revealed
+`letterhead` as a discrete shape under-counted in the Day-0 scan.
+Bilingual NOC proven to need no new component (CSS direction-flip
+only). See `~/vault/projects/katib/project.md` and ADR §Phase 3 for
+the locked plan.
 
 **Phase 2 milestone complete.** All 14 days delivered, all 8 ADR exit
-criteria green with automated proofs, 470 tests passing, zero
+criteria green with automated proofs, 486 tests passing, zero
 WeasyPrint warnings, grep-clean outside `v1-reference/`. Phase-2 gate
 review lives in the vault at `projects/katib/phase-2-gate-review.md`.
 
@@ -21,13 +23,81 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: 21 components (+1 kv-list), 7 recipes, 6 core library
-modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external skill
-dependencies.
+Engine state: 22 components (+1 kv-list Day 1, +1 letterhead Day 2),
+7 recipes, 6 core library modules, 5 CLIs, 4 memory streams, 4 image
+providers, 0 external skill dependencies.
 
 **Not shippable as a v1 replacement yet** — v2 has 1 production recipe
 (tutorial); Phase 3 ports 14 more over ~3 weeks. Keep v1 installed as
 the daily global skill until the cutover.
+
+### Added (Phase 3 Day 2 — `letterhead` section component)
+
+Second Phase-3 component. Dependents: `business-proposal/letter`,
+`business-proposal/one-pager`, `formal/noc`, `financial/invoice`,
+`financial/quote` (5 recipes).
+
+- **`components/sections/letterhead/`** (new) — 2-column header strip
+  for letters, NOCs, invoices, quotes. Leading side: brand/company.
+  Trailing side: doc title + reference code + date + custom meta lines.
+  Bottom accent rule. Optional leading brand logo from
+  `brand.logo.primary`. Does NOT force a page break (that's
+  `front-matter`'s distinct role — see scope note below).
+- **Variants:** `default` (business letter, 0.75pt accent rule,
+  accent-color company), `formal` (NOC/legal, 1.25pt text-color rule,
+  uppercased austere company, uppercased doc-title), `commercial`
+  (invoice/quote, large accent doc-title, body-text-color company,
+  top-aligned for tall meta blocks).
+- **Tokens:** `accent`, `text`, `text_secondary`, `text_tertiary`.
+  Zero hex in stylesheet (tested).
+- **Bilingual:** EN + AR share semantic `<header>` skeleton. RTL
+  cascade flips flex direction so leading side stays on visual start.
+  `reference_code` is forced `dir="ltr"` in AR templates (codes are
+  LTR inside RTL documents).
+- **5 graduation requests logged** — letter, one-pager, noc, invoice,
+  quote signals.
+- **Audit + capabilities:** scaffold + register entries in
+  `memory/component-audit.jsonl`; `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 2)
+
+- **`tests/test_letterhead.py`** (new, 16 tests): schema-loads,
+  variants-declared, company-required, token-contract,
+  does-not-force-page-break (regression guard for scope),
+  declares-logo-brand-field, renders-EN, renders-AR (ref-code
+  dir=ltr inside RTL asserted), renders-to-PDF, formal-variant,
+  commercial-variant, meta-lines-order-preserved, doc-title-optional,
+  logo-omitted-without-brand, styles-tokens-only,
+  EN/AR-share-semantic-structure.
+- **Regression sweep:** 486/486 passing (was 470, +16 letterhead
+  tests). Zero WeasyPrint warnings on 6 render paths (EN/AR ×
+  default/formal/commercial).
+
+### Architecture decisions (Phase 3 Day 2)
+
+1. **`letterhead` is distinct from `front-matter`.** Both are
+   "document opener" sections but serve different page roles:
+   `letterhead` is a header strip (<40pt) above body content on page
+   1; `front-matter` is a title section that consumes the whole page
+   via `break_after: always`. A regression test
+   (`test_letterhead_does_not_force_page_break`) guards the boundary.
+2. **Scoped tight to prevent entropy.** Rejected the `personal`
+   variant during scoping — cover-letter's masthead (name+tagline |
+   contact block) is structurally different enough that stretching
+   `letterhead` to cover both would vague the schema. Cover-letter
+   will either add a variant later (once its real shape is known) or
+   get a sibling `masthead-personal` component. Don't pre-unify.
+3. **Phase 3 component queue revised to 6 (was 5).** Day-2 scoping
+   surfaced that the Day-0 structural scan over-counted dependents on
+   existing components — the letterhead shape doesn't compose from
+   `eyebrow` + `reference-strip`. Queue is now a living estimate, not
+   a Day-0 contract; may grow again as Phase 3 progresses and more
+   recipes are read critically.
+4. **`reference_code` forced LTR inside Arabic.** Codes like
+   `NOC/2026/042` are structurally LTR even when embedded in RTL
+   documents. The AR template explicitly declares `dir="ltr"` on the
+   ref div to prevent visual reversal. Asserted in
+   `test_letterhead_renders_ar`.
 
 ### Added (Phase 3 Day 1 — `kv-list` section component)
 

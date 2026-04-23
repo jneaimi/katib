@@ -1,0 +1,24 @@
+<section class="katib-section katib-letterhead katib-letterhead--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- if logo and logo.primary %}
+    <img class="katib-letterhead__logo" src="{{ logo.primary }}" alt="{{ name or input.company }}" style="max-height: {{ logo.max_height_mm or 18 }}mm;">
+{%- endif %}
+    <header class="katib-letterhead__bar">
+        <div class="katib-letterhead__lead">
+            <div class="katib-letterhead__company">{{ input.company }}</div>
+        </div>
+        <div class="katib-letterhead__meta">
+{%- if input.doc_title %}
+            <div class="katib-letterhead__doc-title">{{ input.doc_title }}</div>
+{%- endif %}
+{%- if input.reference_code %}
+            <div class="katib-letterhead__ref" dir="ltr">{{ input.reference_code }}</div>
+{%- endif %}
+{%- if input.date %}
+            <div class="katib-letterhead__date">{{ input.date }}</div>
+{%- endif %}
+{%- for line in input.meta_lines or [] %}
+            <div class="katib-letterhead__meta-line">{{ line }}</div>
+{%- endfor %}
+        </div>
+    </header>
+</section>
