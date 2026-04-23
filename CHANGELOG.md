@@ -3,6 +3,84 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.0-alpha.0] — 2026-04-23 — v2 architecture reset (Phase 0)
+
+v1 (v0.1.0 → v0.20.0) hit an architectural limit surfaced by the
+`framework-guide` incident on 2026-04-23: per-doc-type monolithic HTML
+templates with hardcoded sample content cannot grow without template
+corruption or doc-type entropy. v2 begins as a clean-canvas rebuild around
+a component-first architecture with YAML recipes.
+
+**This alpha release ships an empty repo root** — the intended state during
+the v2 build-out. Functional code lands progressively across Phases 1–5.
+Do **not** install from source off `main` during alpha. For v1 stable
+(still fully functional), continue using `@jasemal/katib@0.20.0` from npm.
+
+### Architecture direction (planned across v2 roadmap)
+
+- **Components replace templates.** Three-tier model: primitives (atomic
+  layout shapes), sections (composed units like `cover-page`, `module`),
+  covers (variants like `minimalist-typographic`, `neural-cartography`).
+- **YAML recipes replace doc-types.** A doc-type becomes an ordered list of
+  components plus metadata (target pages, brand field requirements,
+  language mode). No more per-doc-type HTML files.
+- **Trilingual contract.** EN / AR / **bilingual** (third state) for
+  side-by-side UAE contracts in a single PDF.
+- **Vault integration removed.** Every install writes to
+  `~/Documents/katib/` via `platformdirs`. Public install equals Jasem's
+  install, byte-for-byte.
+- **Self-contained skill.** No external skill dependencies. Decision gate,
+  content lint, context sensor all ship inside `@jasemal/katib`.
+- **Four image-source providers.** `user-file`, `screenshot`, `gemini`,
+  `inline-svg` — components declare which sources they accept; recipes
+  pick per invocation.
+- **Component authoring workflow.** Five CLI subcommands
+  (`katib component new | validate | test | register | share`). Hand-edits
+  to the component registry fail the skill load.
+- **Graduation flow enforced.** New components and recipes go through
+  `log_request` → reflect clustering (≥ 3 requests) → scaffold.
+  Enforcement lives in `build.py` startup checks, not just in SKILL.md
+  prose.
+
+### Phase 0 changes (this release)
+
+- Tagged `v1-final` on v0.20.0 HEAD as the v1 archival marker.
+- Moved v1 code into `v1-reference/` as a read-only reference:
+  `SKILL.md`, `domains/`, `scripts/`, `references/`, `styles/`, `assets/`,
+  `brands/`, `tests/`, `config.example.yaml`.
+- Created `v1-reference/NOTES.md` documenting what worked, what broke
+  (the `framework-guide` incident and its root cause), and what ports
+  forward to v2.
+- Seeded `memory/domain-requests.jsonl` with the retroactive
+  `framework-guide` request as the first logged entry, turning a v1
+  rule-bypass into the proof-of-concept data point for v2's enforced
+  graduation flow.
+- Reverted the v1-violating `framework-guide` doc-type drift from the
+  installed skill at `~/.claude/skills/katib/`.
+- Updated `SKILL.md`, `README.md`, `package.json` to signal v2 dev status.
+
+### What still works
+
+- `@jasemal/katib@0.20.0` on npm remains the stable v1 release.
+  `npx @jasemal/katib@0 install` gets the last v1 tarball.
+- v0.x tags continue to be accessible via git
+  (`git checkout v0.20.0`).
+- `v1-final` tag marks the archival point.
+
+### What does not work (yet)
+
+- Installing from `main` branch directly during Phases 0–4.
+  `install.sh` at `main` will deploy the v2-dev stub skill with a
+  read-only `v1-reference/` directory. Use npm instead.
+
+### Reference
+
+- v2 ADR: `~/vault/knowledge/adr-katib-v2-component-architecture.md`
+  (R6, approved 2026-04-23)
+- v1-reference notes: `v1-reference/NOTES.md`
+
+---
+
 ## [0.20.0] — 2026-04-22 — Diagram catalog (13 types + editorial primitives)
 
 Replaces the monolithic `references/diagrams.md` (278 lines, 5 patterns)
