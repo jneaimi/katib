@@ -3,7 +3,126 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 1 — Core engine + primitives (2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections + charts (Days 1–6 shipped, 2026-04-23)
+
+Phase 2 is in progress. Days 1–6 of 14 have landed. The engine now has
+20 components (8 primitives + 11 sections + 1 cover with 3 variants),
+6 recipes, 141 tests, zero WeasyPrint warnings. PDFs render EN + AR
+in every showcase recipe.
+
+### Added (Day 6 — chart sections)
+
+- **`core/tokens.base.yaml`** — new top-level `charts:` block:
+  - `palette` — 8-color hex array, mirrors accent + callout accents by
+    convention. Brands override the whole array to restyle all charts
+    in one sweep.
+  - `axis_color`, `gridline_color` — chart chrome colors.
+- **`core/image/inline_svg.py`** — extended:
+  - `render_bar()` — horizontal bars, language-aware growth direction
+    (EN: grow right from left axis; AR: grow left from right axis).
+    Rejects negative values, all-zero data, empty data.
+  - `render_sparkline()` — flat trendline. Always LTR (chronological
+    data-vis convention, not a text convention). Handles single-point
+    (dot), flat-line (mid-height), and negative values. Area fill +
+    polyline stroke, both drawn from palette[0..1].
+  - Removed hardcoded `DEFAULT_PALETTE` — provider is now strict and
+    refuses to render without an explicit `colors` array in the spec.
+    Forces `compose()` to be the single injection point.
+- **`core/compose.py:_resolve_image_slots`** — when source is
+  `inline-svg`, auto-injects `colors` + `lang` + `axis_color` from
+  merged tokens before handing the spec to the provider. Resolved
+  image dict now persists the original `spec` so templates can access
+  `data` + `colors` for legend rendering + the sr-only data table.
+- **3 new Tier-2 sections** (`components/sections/`):
+  - `chart-donut` — proportional breakdown, legend to the side (or
+    centered-stat variant). Accepts `sources_accepted: [inline-svg]`
+    only.
+  - `chart-bar` — horizontal bar chart, axis flips for AR.
+  - `chart-sparkline` — trendline with optional headline stat + delta
+    badge (`with-delta-badge` variant).
+  - Each emits a visually-hidden `<table class="katib-sr-only">` data
+    alternative with localized headers (EN: Category/Value, AR:
+    الفئة/القيمة) alongside the SVG.
+- **Recipe** — `phase-2-day6-showcase.yaml` exercises all three charts
+  with realistic data (signal sources, revenue by channel, MAU growth).
+- **Tests** — `tests/test_chart_sections.py` (27 tests): palette in
+  tokens, schema source gate, renderer edge cases, RTL axis flip,
+  sparkline LTR invariance, brand override precedence, sr-only table
+  presence, end-to-end PDF.
+- **Audit** — 3 new bootstrap entries in `memory/component-audit.jsonl`.
+
+### Added (Day 5 — image-consuming sections)
+
+- `components/sections/two-column-image-text/` — 3 variants (image-left,
+  image-right, image-top). Accepts all four image sources: user-file,
+  url, gemini, screenshot. RTL flips image-text order via flex-direction
+  with `[lang="ar"]` override. Fallback to gemini if image missing.
+- `components/sections/tutorial-step/` — numbered step with optional
+  screenshot. Declares `sources_accepted: [screenshot, user-file]` for
+  the screenshot input — deliberately excludes gemini because tutorial
+  screenshots are factual, not illustrative.
+- `recipes/phase-2-day5-showcase.yaml` — exercises both sections EN + AR
+  with 4 embedded images (3 fixture images + 1 tutorial screenshot).
+
+### Added (Day 4 — cover variants)
+
+- `components/covers/cover-page/` bumps `0.1.0 → 0.2.0`:
+  - `image-background` variant — full-bleed image + scrim + foreground.
+  - `neural-cartography` variant — generative inline-SVG cover
+    (continues to work without Gemini API key).
+  - Variant branching via Jinja `{%- set is_image = ... %}` +
+    `katib-cover--has-image` class modifier.
+
+### Added (Day 3 — module + first cover)
+
+- `components/sections/module/` — repeating body unit for
+  tutorial/guide documents. Variants: `plain`, `workbook`.
+- `components/covers/cover-page/` — first cover with
+  `minimalist-typographic` variant. Establishes the cover tier
+  in `components/covers/`.
+
+### Added (Day 2 — scaffolding sections)
+
+- Five Tier-2 sections land: `front-matter`, `objectives-box`,
+  `summary`, `whats-next`, `reference-strip`. All compose primitives by
+  CSS class name (primitive styles are always-loaded globally via
+  `_load_primitive_styles()`); no Jinja include/macro layer needed.
+
+### Added (Day 1 — image providers wired into compose)
+
+- `_image_input_specs()` — extracts `type: image` inputs from
+  `accepts.inputs` (handles both schema dict-forms).
+- `_resolve_image_slots()` — routes each slot through `resolve_image()`
+  with the component's `sources_accepted` gate enforced; replaces the
+  raw spec with `{resolved_path, resolved_svg, content_hash, alt,
+  source, spec}` in template context.
+- Four providers online: `user-file`, `screenshot`, `gemini`,
+  `inline-svg`. Fallback policy documented per component.
+
+### Fixed
+
+- Jinja `input.items` collision with `dict.items()` method — overrode
+  `env.getattr` to prefer item-lookup for mapping access (Day 2).
+- WeasyPrint 68 doesn't support `*-inline-*` logical properties —
+  switched affected components to physical properties with
+  `[lang="ar"]` overrides (Day 2).
+- WeasyPrint 68 doesn't support `color-mix()` — switched to rgba()
+  for the sparkline delta badge background (Day 6).
+- Input name `description` collided with schema `inputDef.description`
+  property — renamed `tutorial-step.description` → `body` (Day 5).
+- Test assertions on class-name strings in HTML were false-positive on
+  stylesheet selectors — moved to regex-extracted class attributes
+  (Day 4).
+
+### Changed
+
+- `core/image/inline_svg.py` no longer holds any default palette.
+  Provider fails loud if `colors` missing; `compose()` is the single
+  injection point for token-driven colors (Day 6).
+- Component tier directory layout now firmly three-way:
+  `components/{primitives,sections,covers}/` (Day 3).
+
+## v2 Phase 1 — Core engine + primitives (2026-04-23)
 
 The render pipeline works end-to-end. A recipe YAML composes through an
 8-primitive library to a WeasyPrint PDF at OS-standard `~/Documents/katib/`,
