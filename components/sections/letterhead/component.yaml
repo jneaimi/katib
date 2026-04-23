@@ -1,0 +1,35 @@
+name: letterhead
+tier: section
+version: 0.1.0
+namespace: katib
+description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content on page 1 — does NOT force a page break (that's `front-matter`'s job).
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent]
+  fonts: [primary, display]
+  brand_fields: [logo.primary]
+accepts:
+  inputs:
+    - company:
+        type: string
+        required: true
+        description: Company or organization name shown on the leading side.
+    - reference_code:
+        type: string
+        required: false
+        description: Short document reference code — rendered in monospace at the top of the meta stack.
+    - date:
+        type: string
+        required: false
+        description: Issue/letter date (free-form — caller formats per locale).
+    - meta_lines:
+        type: array
+        required: false
+        description: Extra trailing-side lines below date (e.g., "Strictly Confidential"). Free-form strings, rendered in order.
+    - doc_title:
+        type: string
+        required: false
+        description: Document-class label shown prominently on the trailing side — "INVOICE", "QUOTE", "NO OBJECTION CERTIFICATE". Used by the `commercial` and `formal` variants.
+variants:
+  - formal
+  - commercial
