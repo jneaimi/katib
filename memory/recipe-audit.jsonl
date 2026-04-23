@@ -1,0 +1,7 @@
+{"recipe": "phase-1-trivial", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 1 smoke recipe — first seed entry"}
+{"recipe": "phase-2-day2-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 2 scaffolding sections showcase"}
+{"recipe": "phase-2-day3-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 3 module + cover showcase"}
+{"recipe": "phase-2-day4-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 4 cover variants showcase"}
+{"recipe": "phase-2-day5-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 5 image-consuming sections showcase"}
+{"recipe": "phase-2-day6-showcase", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 6 chart sections showcase"}
+{"recipe": "tutorial", "namespace": "katib", "action": "bootstrap", "at": "2026-04-23T00:00:00Z", "from_graduation": null, "note": "Phase 2 Day 7 first production recipe — Bloom framework guide port"}
