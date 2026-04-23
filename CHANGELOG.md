@@ -3,12 +3,57 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 2 — Sections + charts (Days 1–6 shipped, 2026-04-23)
+## [Unreleased] — v2 Phase 2 — Sections, charts, first production recipe (Days 1–7 shipped, 2026-04-23)
 
-Phase 2 is in progress. Days 1–6 of 14 have landed. The engine now has
-20 components (8 primitives + 11 sections + 1 cover with 3 variants),
-6 recipes, 141 tests, zero WeasyPrint warnings. PDFs render EN + AR
-in every showcase recipe.
+Phase 2 is in progress. Days 1–7 of 14 have landed. The engine has 20
+components (8 primitives + 11 sections + 1 cover with 3 variants), 7
+recipes including the first **production recipe** (`tutorial.yaml` —
+the Bloom framework guide that triggered the ADR), 141 tests, zero
+WeasyPrint warnings.
+
+### Added (Day 7 — tutorial.yaml production recipe)
+
+- **`recipes/tutorial.yaml`** — full production port of the v1
+  `framework-guide` output. Cover (minimalist-typographic, Jasem brand,
+  logo on cover) + objectives-box + 8 modules with rich body content
+  (3 inline SVG diagrams, 2 tables, 1 tip callout, 2 pull-quotes,
+  1 ordered step list) + summary + whats-next + reference-strip. 7-page,
+  111KB EN PDF. No lorem, no placeholder — shippable document.
+- **`components/sections/module` 0.1.0 → 0.2.0**:
+  - New `raw_body` input — Jinja `| safe`, opt-in for trusted
+    recipe-authored HTML (tables, inline SVG, callouts, pull-quotes).
+    Preserves the autoescape contract on the existing `body` input.
+  - `.katib-module__body--rich` CSS for embedded `<table>` (with
+    `thead`/`th`/`td` styling matching v1 conventions), `<pre>`,
+    `<blockquote>` (with RTL-aware border-side), `<figure>` + `<svg>`
+    + `<figcaption>`, and `<ol class="steps">`.
+
+### Fixed (Day 7)
+
+- **Jinja `getattr` override — dict-method fallthrough.** When a
+  template accessed `input.<missing_key>` (e.g., the summary template's
+  `{% if input.items %}` when a recipe supplied `body` only), the
+  override was falling through to the dict's bound method — returning
+  `dict.items` (truthy) instead of `Undefined`. The `{% for %}` then
+  raised `'builtin_function_or_method' object is not iterable`. Fix:
+  explicit `isinstance(obj, dict)` branch returns `env.undefined()` on
+  `KeyError`, so missing keys evaluate falsy consistently.
+- **`scripts/check_no_vault_refs.sh`** — tightened pattern from bare
+  `vault` to path-like refs (`vault/`, `/vault`, `~vault`, `.obsidian`).
+  The English word "vault" is legitimate in prose (e.g., "knowledge
+  vault"); only path-style references indicate a v1-integration leak.
+
+### Port
+
+- **Jasem brand profile** (`~/.katib/brands/jasem.yaml`) — v1 → v2:
+  `accent_secondary` renamed to `accent_2` (matches v2 base-token
+  key). `identity_ar: {author_name: ...}` top-level dict collapsed
+  into `identity.author_name_ar` sibling (matches v2
+  `render_context()` bilingual fallback convention). Logo path
+  unchanged.
+
+
+---
 
 ### Added (Day 6 — chart sections)
 
