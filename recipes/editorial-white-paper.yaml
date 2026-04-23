@@ -1,0 +1,159 @@
+name: editorial-white-paper
+version: 0.1.0
+namespace: katib
+description: White paper — long-form editorial argument with title page, executive summary, 6 numbered body sections, pull-quote, data-table, footnotes, and about-author box. First production consumer of data-table (Day 13). Third production consumer of callout neutral; first Phase-3 consumer of pull-quote primitive.
+languages: [en]
+target_pages: [4, 8]
+page_limit: 10
+when: Long-form editorial piece — thesis-driven paper with evidence, argument, counterarguments, implications. Typically 4-8 pages. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [editorial, white-paper, long-form, thesis, argument, research]
+
+sections:
+  # 1. Title page — inline-styled module with break-after: always (density block #1)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="height: 247mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always;">
+          <div style="margin-top: 40mm;">
+            <div style="font-size: 9pt; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 14pt; border-bottom: 2pt solid var(--accent); padding-bottom: 8pt; display: inline-block;">White Paper · [Topic Category]</div>
+            <h1 style="font-size: 36pt; line-height: 1.15; color: var(--text); margin: 0 0 12pt 0; font-weight: 500; max-width: 160mm;">[Primary Title — a claim or tension the paper resolves]</h1>
+            <p style="font-size: 14pt; line-height: 1.45; color: var(--text-secondary); font-style: italic; max-width: 150mm; margin-top: 10pt;">[Subtitle that narrows scope or names the argument. One sentence, 10–14 words.]</p>
+          </div>
+          <div style="padding-top: 18pt; border-top: 0.5pt solid var(--border);">
+            <div style="font-size: 11pt; color: var(--text); margin-bottom: 4pt;">By <span style="font-weight: 600;">Jasem Al Neaimi</span>, jasem | katib</div>
+            <div style="font-size: 9pt; color: var(--text-tertiary); letter-spacing: 0.05em;">2026-04-24</div>
+          </div>
+        </div>
+
+  # 2. Abstract / Executive summary — callout neutral (3rd production consumer)
+  - component: callout
+    inputs:
+      tone: neutral
+      title: "Executive Summary"
+      body: "[The paper's thesis in one sentence. If the reader only reads this line, what must they know? Then four to six sentences: state the problem, the evidence base, the counter-argument you dismiss, the recommendation, and who should act.]"
+
+  # 3. Section 1 — Introduction (module numbered variant)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Introduction"
+      raw_body: |
+        <p><span style="font-size: 28pt; line-height: 1; color: var(--accent); font-weight: 500; padding-right: 2pt; float: left; margin-right: 4pt;">T</span>he opening paragraph. Lead with a specific observation, scene, or number — not a generic market framing. Drop the reader into the situation the paper addresses. Three to five sentences.</p>
+        <p>Second paragraph. Narrow from the opening to the precise question this paper answers. State the question plainly.</p>
+
+  # 4. Section 2 — The State of the Problem (module numbered)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "The State of the Problem"
+      raw_body: |
+        <p>Establish what is known. Cite three or four sources that represent the current consensus.<sup style="font-size: 7.5pt; color: var(--accent); font-weight: 600; vertical-align: super;">1</sup> This section is the baseline against which your argument will move.</p>
+        <h3 style="font-size: 13pt; color: var(--text); margin: 16pt 0 6pt 0; font-weight: 700;">2.1 · [Sub-theme]</h3>
+        <p>Evidence paragraph. Name specific figures, studies, or cases. Avoid "many experts believe" — name the expert.</p>
+        <h3 style="font-size: 13pt; color: var(--text); margin: 16pt 0 6pt 0; font-weight: 700;">2.2 · [Sub-theme]</h3>
+        <p>Second evidence paragraph.</p>
+
+  # 5. Data table — FIRST PRODUCTION CONSUMER of data-table (Day 13 new component)
+  - component: data-table
+    inputs:
+      caption: "Indicator trends, 2020–2026"
+      columns:
+        - label: "Indicator"
+        - label: "2020"
+          align: num
+        - label: "2022"
+          align: num
+        - label: "2024"
+          align: num
+        - label: "2026"
+          align: num
+      rows:
+        - ["[Metric 1]", "1,200", "1,580", "2,100", "2,600"]
+        - ["[Metric 2]", "28%", "34%", "41%", "49%"]
+        - ["[Metric 3]", "450", "620", "880", "1,100"]
+
+  # 6. Section 3 — The Argument (module numbered + pull-quote inline)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "The Argument"
+      raw_body: |
+        <p>Develop the argument in structured paragraphs. Each paragraph should add a distinct piece of the case, not restate the thesis in new words.</p>
+        <p>Second paragraph of the argument.<sup style="font-size: 7.5pt; color: var(--accent); font-weight: 600; vertical-align: super;">2</sup> Lean on specific evidence from Section 2.</p>
+
+  # 7. Pull quote — first Phase-3 consumer of pull-quote primitive
+  - component: pull-quote
+    variant: rule-leading
+    inputs:
+      text: "[A single compressed sentence that captures the paper's central argument. Memorable, quotable, strong.]"
+      attribution: "The central claim of this paper"
+
+  # 8. Section 4 — Counterarguments & Limits (module numbered)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "Counterarguments & Limits"
+      raw_body: |
+        <p>Name the strongest objection to your thesis. Steel-man it in two or three sentences before responding. Readers trust writers who engage the opposition seriously.</p>
+        <h3 style="font-size: 13pt; color: var(--text); margin: 16pt 0 6pt 0; font-weight: 700;">Where this framing does not apply</h3>
+        <ul>
+          <li>[Boundary condition 1 — context in which the argument breaks down.]</li>
+          <li>[Boundary condition 2.]</li>
+          <li>[Boundary condition 3.]</li>
+        </ul>
+
+  # 9. Section 5 — Implications & Recommendations (module numbered)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Implications & Recommendations"
+      raw_body: |
+        <p>Open with what changes if the argument is right.</p>
+        <h3 style="font-size: 13pt; color: var(--text); margin: 16pt 0 6pt 0; font-weight: 700;">For [stakeholder group 1]</h3>
+        <ol>
+          <li>[Concrete recommendation. Actionable this quarter, not generic.]</li>
+          <li>[Second recommendation.]</li>
+        </ol>
+        <h3 style="font-size: 13pt; color: var(--text); margin: 16pt 0 6pt 0; font-weight: 700;">For [stakeholder group 2]</h3>
+        <ol>
+          <li>[Recommendation tailored to this audience.]</li>
+          <li>[Second recommendation.]</li>
+        </ol>
+
+  # 10. Section 6 — Conclusion (module numbered)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 6
+      title: "Conclusion"
+      raw_body: |
+        <p>Restate — in fresh words — the single most important takeaway. Do not introduce new evidence here. Two paragraphs maximum.</p>
+        <p>Close with a forward-looking sentence: what to watch, what the author plans to examine next, or what the reader should do within the next month.</p>
+
+  # 11. Footnotes — inline module raw_body (density block #2)
+  - component: module
+    inputs:
+      raw_body: |
+        <section style="margin-top: 30pt; padding-top: 14pt; border-top: 0.5pt solid var(--border); font-size: 9pt; line-height: 1.55; color: var(--text-secondary);">
+          <h3 style="font-size: 10pt; font-weight: 700; color: var(--text); margin: 0 0 8pt 0; text-transform: uppercase; letter-spacing: 0.08em;">Notes</h3>
+          <ol style="padding-left: 18pt; margin: 0;">
+            <li style="margin-bottom: 4pt;">[Author, <em>Title</em>, Publisher (YYYY), p. xx.]</li>
+            <li style="margin-bottom: 4pt;">[Author, "Article Title," <em>Journal</em> Vol(Issue), YYYY, pp. xx–yy.]</li>
+          </ol>
+        </section>
+
+  # 12. About author — inline module raw_body (density block #3)
+  - component: module
+    inputs:
+      raw_body: |
+        <section style="margin-top: 24pt; padding: 16pt 18pt; border: 0.5pt solid var(--border); background: var(--page-bg); font-size: 10pt; line-height: 1.6;">
+          <h4 style="font-size: 9pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 0 0 6pt 0;">About the Author</h4>
+          <div style="font-weight: 700; font-size: 11pt; margin-bottom: 2pt; color: var(--text);">Jasem Al Neaimi</div>
+          <p style="margin: 0 0 6pt 0; color: var(--text);">[One to three sentences. Role, relevant expertise, and the prior work that qualifies this paper. Keep it factual — let the paper speak for craft.]</p>
+          <p style="margin-top: 6pt; font-size: 9pt; color: var(--text-tertiary);">Contact: jasem@jneaimi.com · jasem | katib</p>
+        </section>

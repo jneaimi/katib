@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T20:28:38+00:00'
+generated_at: '2026-04-23T20:57:58+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -77,6 +77,41 @@ recipes:
     - module
     - module
     - sections-grid
+    - module
+  editorial-white-paper:
+    namespace: katib
+    version: 0.1.0
+    description: White paper — long-form editorial argument with title page, executive summary, 6 numbered
+      body sections, pull-quote, data-table, footnotes, and about-author box. First production consumer
+      of data-table (Day 13). Third production consumer of callout neutral; first Phase-3 consumer of
+      pull-quote primitive.
+    languages:
+    - en
+    target_pages:
+    - 4
+    - 8
+    page_limit: 10
+    when: Long-form editorial piece — thesis-driven paper with evidence, argument, counterarguments, implications.
+      Typically 4-8 pages. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - editorial
+    - white-paper
+    - long-form
+    - thesis
+    - argument
+    - research
+    sections_shape:
+    - module
+    - callout
+    - module
+    - module
+    - data-table
+    - module
+    - pull-quote
+    - module
+    - module
+    - module
+    - module
     - module
   formal-noc:
     namespace: katib
@@ -437,7 +472,22 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 6
+    used_in_recipes: 7
+  data-table:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - bordered
+    - dense
+    description: Accessible tabular data — headers, rows, per-column alignment, alt-row backgrounds. Supports
+      numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
+      lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
+      onboarding (30/60/90 windows).
+    used_in_recipes: 1
   eyebrow:
     namespace: katib
     tier: primitive
@@ -473,7 +523,7 @@ components:
     - rule-leading
     - large-quote
     description: Emphasized blockquote — larger text with accent rule and optional attribution.
-    used_in_recipes: 1
+    used_in_recipes: 2
   rule:
     namespace: katib
     tier: primitive
@@ -629,7 +679,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 9
+    used_in_recipes: 10
   multi-party-signature-block:
     namespace: katib
     tier: section

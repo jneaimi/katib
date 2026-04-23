@@ -1,0 +1,86 @@
+.katib-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 10pt;
+    line-height: 1.45;
+    color: var(--text);
+    page-break-inside: auto;
+}
+
+.katib-data-table__caption {
+    caption-side: top;
+    font-size: 9pt;
+    color: var(--text-secondary);
+    text-align: left;
+    padding: 0 0 6pt 0;
+    font-weight: 500;
+}
+
+.katib-data-table__head-row {
+    background: var(--accent);
+}
+
+.katib-data-table__th {
+    color: var(--accent-on);
+    padding: 7pt 10pt;
+    text-align: left;
+    font-weight: 500;
+    font-size: 9.5pt;
+    vertical-align: bottom;
+}
+
+.katib-data-table__th--num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.katib-data-table__td {
+    border-bottom: 0.5pt solid var(--border);
+    padding: 6pt 10pt;
+    vertical-align: top;
+}
+
+.katib-data-table__td--num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Cells with a sub-line (invoice description: title + muted context) */
+.katib-data-table__cell-text { display: block; }
+
+.katib-data-table__cell-sub {
+    display: block;
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-top: 1pt;
+}
+
+/* Alt-row background — default variant */
+.katib-data-table tbody tr:nth-child(even) td {
+    background: var(--tag-bg);
+}
+
+/* Bordered variant — every cell gets a border, no alt rows */
+.katib-data-table--bordered .katib-data-table__td {
+    border: 0.5pt solid var(--border);
+}
+
+.katib-data-table--bordered tbody tr:nth-child(even) td {
+    background: transparent;
+}
+
+/* Dense — tighter padding for high-column-count tables (invoice line items) */
+.katib-data-table--dense .katib-data-table__th {
+    padding: 5pt 7pt;
+    font-size: 8.5pt;
+}
+
+.katib-data-table--dense .katib-data-table__td {
+    padding: 4pt 7pt;
+    font-size: 9pt;
+}
+
+/* RTL: no special handling needed — text-align: left/right behave correctly
+   under dir="rtl" per CSS logical direction inheritance with physical properties
+   (WeasyPrint's dir handling on table cells). Tests cover this. */

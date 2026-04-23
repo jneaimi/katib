@@ -26,19 +26,178 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **25 components** (unchanged count through Day 12;
+Engine state: **26 components** (+1 data-table Day 13;
 sections-grid added Day 11, multi-party-signature-block added Day 7,
 kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0,
-callout at 0.2.0). **14 recipes** (8 production: tutorial +
+callout at 0.2.0). **15 recipes** (9 production: tutorial +
 business-proposal-letter + personal-cover-letter + formal-noc +
 tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
-**business-proposal-one-pager**; 6 dev showcases). 6 core library
-modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
-skill dependencies.
+business-proposal-one-pager + **editorial-white-paper**; 6 dev
+showcases). 6 core library modules, 5 CLIs, 4 memory streams, 4
+image providers, 0 external skill dependencies.
 
-**Not shippable as a v1 replacement yet** — v2 has 8 production
-recipes; Phase 3 ports 7 more over the next ~2 weeks. Keep v1
+**Not shippable as a v1 replacement yet** — v2 has 9 production
+recipes; Phase 3 ports 6 more over the next ~2 weeks. Keep v1
 installed as the daily global skill until the cutover.
+
+### Added (Phase 3 Day 13 — `data-table` primitive + `editorial/white-paper` recipe ship)
+
+Fifth infra+recipe combo day. **Second Phase-3 component to
+auto-graduate** via the request log (4 verified dependents logged
+before scaffold: white-paper, proposal, invoice, onboarding — no
+--force). Eighth Phase-3 recipe migration.
+
+- **`components/primitives/data-table/`** (new) — primitive-tier
+  accessible tabular data component. Supports per-column numeric
+  alignment (`align: num` → right-aligned + tabular-nums), optional
+  column widths, optional caption, and cells that are either plain
+  strings OR `{text, sub?}` mappings (for invoice-style description
+  cells with muted sub-lines). Variants: `default` (zebra alt rows
+  via `tag_bg`), `bordered` (per-cell borders, no alt), `dense`
+  (tighter padding for high-column-count tables). Token contract:
+  `text, text_secondary, text_tertiary, accent, accent_on, border,
+  tag_bg` — all existing tokens, no new ones needed. Accessibility:
+  `<caption>` preferred over sibling heading; `<th scope="col">`
+  on every column header. Root wrapped in `<section lang="...">`
+  because the validator's a11y regex doesn't accept `<table>` as
+  a lang-carrying root (out-of-scope for today; hygiene workaround).
+
+- **`recipes/editorial-white-paper.yaml`** (new) — 12-section
+  white-paper recipe:
+  1. Inline `module` raw_body — **title page** with 36pt h1 + 14pt
+     italic subtitle + byline/date (density block #1, `page-break-
+     after: always` via inline style)
+  2. `callout` tone=neutral — **Executive Summary abstract**.
+     Third production consumer of neutral tone (cover-letter subject,
+     NOC purpose, now white-paper abstract — neutral is the primary
+     non-status highlight tone).
+  3. `module` variant=numbered, number=1 — **Introduction** with
+     inline-styled drop cap (`<span style="font-size: 28pt; color:
+     accent; ...">T</span>` on the opening letter).
+  4. `module` variant=numbered, number=2 — **The State of the
+     Problem** with inline h3 sub-sections (2.1, 2.2) and footnote
+     ref.
+  5. `data-table` — **Indicator trends, 2020-2026**: 5 columns
+     (Indicator + 4 years), 3 rows, 4 numeric-aligned columns.
+     **First production consumer of data-table.**
+  6. `module` variant=numbered, number=3 — **The Argument** with
+     footnote ref.
+  7. `pull-quote` variant=rule-leading — central claim quote with
+     attribution. **First Phase-3 consumer of pull-quote**
+     (was used in tutorial.yaml Phase-2 but this is the first
+     Phase-3 use — the primitive's been waiting in the wings).
+  8. `module` variant=numbered, number=4 — **Counterarguments &
+     Limits** with inline h3 + ul.
+  9. `module` variant=numbered, number=5 — **Implications &
+     Recommendations** with inline h3 per-stakeholder + ol.
+  10. `module` variant=numbered, number=6 — **Conclusion**.
+  11. Inline `module` raw_body — **Notes (footnotes)** ordered
+      list with top border (density block #2).
+  12. Inline `module` raw_body — **About the Author** box with
+      bordered background, author name + bio + contact (density
+      block #3).
+  Content adapted verbatim from `v1-reference/domains/editorial/
+  templates/white-paper.en.html`. Placeholder prose preserved.
+- **Rendered output: 4 pages, 0 WeasyPrint warnings.** Squarely
+  within `target_pages: [4, 8]` with `page_limit: 10`. Title page
+  takes 1 full page; body fills 3 more under placeholder prose
+  (real content would push to 5-8).
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 density-convention inline blocks** (title page, footnotes,
+  about-author) — below NOC's ceiling of 4. The 6 numbered body
+  sections use module's native `numbered` variant — no inline
+  styling needed for the section-num markers.
+- **4 data-table component-requests logged** (white-paper,
+  proposal, invoice, onboarding). **3 white-paper recipe-requests
+  logged**.
+- **Audit + capabilities:** component + recipe register entries +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 13)
+
+- **`tests/test_data_table.py`** (new, 15 tests): schema-loads,
+  variants-declared (bordered + dense), columns-and-rows-required,
+  token-contract (text/accent/accent_on/border/tag_bg),
+  renders-EN (semantic `<table>`/`<thead>`/`<tbody>`, 3 `<th>`s,
+  num class on align:num columns), renders-AR (dir=rtl),
+  renders-to-pdf, bordered-variant-class, dense-variant-class,
+  default-variant-class-when-unset, caption-rendered-when-set,
+  caption-absent-when-unset, cell-with-sub-text (invoice-style
+  regression guard), column-width-hint-applied (inline style),
+  th-scope-attribute-for-a11y (3 `scope="col"` count).
+- **`tests/test_editorial_white_paper.py`** (new, 18 tests):
+  schema-loads, en-only, page-targets [4, 8], twelve-section-
+  ordering, first-data-table-consumer (regression guard for 5
+  cols, 4 numeric, 3 rows, caption), third-callout-neutral-
+  consumer (pairs-with regression guard), uses-pull-quote-rule-
+  leading (first Phase-3 use), six-numbered-module-sections
+  (regression guard for [1,2,3,4,5,6] numbers + section titles),
+  validates-clean, validates-strict-clean, renders-EN (4 marker
+  classes), pdf-within-target-pages (4-8 accepted),
+  renders-all-v1-content (25+ distinct phrases spanning title
+  page / abstract / 6 numbered sections / data-table / pull-quote /
+  footnotes / about-author), data-table-has-five-columns-rendered
+  (scope="col" count inside the data-table wrap), three-data-rows-
+  rendered, drop-cap-inline-styled, in-capabilities,
+  audit-entry-exists.
+- **Regression sweep:** 710/710 passing (was 677, +15 data-table
+  +18 white-paper tests). Zero WeasyPrint warnings across all 18
+  render paths.
+
+### Architecture decisions (Phase 3 Day 13)
+
+1. **Second Phase-3 auto-graduation — the request-driven flow is
+   now the default path.** sections-grid Day 11 was the first;
+   data-table Day 13 is the second. Both logged 3+ real requests
+   tied to verified v1 templates *before* scaffolding. Neither
+   needed `--force`. The pattern is now: (a) 4-template verification
+   scan, (b) log request per verified dependent, (c) scaffold +
+   build. Days 1/2/5/7 components used `--force` by necessity
+   because the request log was either stale or the threshold
+   hadn't been reached — that's the old normal. Day 11/13 is the
+   new normal.
+2. **Primitive tier for data-table.** Tables live inline in body
+   prose (white-paper, proposal body, invoice line items) — they're
+   not top-level sections. `pull-quote` and `callout` are similar
+   in-body primitives. This matches the tier taxonomy.
+3. **Cell flexibility via `{text, sub}` mapping.** The invoice
+   requirement (description cell with muted sub-line) could have
+   forced a variant-per-recipe split. Instead, allowing each cell
+   to be string OR mapping keeps one component serving all 4
+   dependents with no forking. The cost is `<span>` wrapping on
+   every cell — acceptable for accessibility clarity.
+4. **module's `numbered` variant carried white-paper's 6 sections.**
+   Phase-2 module 0.2.0 introduced the variant; Day-3 0.3.0 made
+   title optional. White-paper is the first production recipe to
+   exercise `numbered` at scale (6 consecutive instances). Zero
+   component changes needed — the Phase-2 design holds. Same
+   pattern as Day 11's sections-grid validation within 24 hours.
+5. **Drop cap via inline span, not CSS `::first-letter`.** v1
+   used `.body-start::first-letter` pseudo-element. WeasyPrint
+   supports `::first-letter` but the effect is fragile with
+   `float: left` (which WeasyPrint's float model handles poorly
+   in paged media). Inline-spanning the first letter with explicit
+   styles (`font-size: 28pt; color: accent; float: left`) is less
+   elegant but renders predictably. The inline approach is also
+   user-editable in the recipe YAML.
+6. **Validator regex limitation — workaround, not fix.** The a11y
+   validator's `_ROOT_LANG_RE` accepts only section/div/article/main
+   as lang-carrying roots. data-table's root is `<table>` which
+   would trigger a false warning. Wrapped in `<section lang="...">`.
+   A proper fix (patch the regex to include `<table>`) is out of
+   scope for a recipe day; logged mentally for a future maintenance
+   pass.
+7. **AR variant deferred (eighth recipe in a row).** Consistent
+   since Day 4.
+8. **Day-14 plan:** Continue evidence-driven path. Remaining 6
+   recipes: proposal (4-section business proposal, similar to
+   one-pager but longer + deliverables-table using Day-13's data-
+   table), cv (2-day infra+recipe sprint), invoice + quote (need
+   financial-summary + data-table), mou (needs recitals-block),
+   onboarding (needs section-divider + contact-card grid +
+   Day-13's data-table), katib-walkthrough (pure composition?).
+   Instinct: proposal Day 14 as pure composition + data-table
+   reuse. Will verify before committing.
 
 ### Added (Phase 3 Day 12 — `business-proposal/one-pager` recipe ships)
 
