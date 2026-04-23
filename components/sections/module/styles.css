@@ -134,7 +134,6 @@
     page-break-inside: avoid;
     font-family: var(--font-mono, "JetBrains Mono", monospace);
     direction: ltr;
-    unicode-bidi: isolate;
 }
 
 .katib-module__body--rich blockquote {

@@ -24,7 +24,9 @@ from core.output import resolve_document_folder  # noqa: E402
 from core.render import render_to_pdf  # noqa: E402
 
 COMPONENTS_DIR = REPO_ROOT / "components"
+RECIPES_DIR = REPO_ROOT / "recipes"
 AUDIT_FILE = REPO_ROOT / "memory" / "component-audit.jsonl"
+RECIPE_AUDIT_FILE = REPO_ROOT / "memory" / "recipe-audit.jsonl"
 TIER_DIRS = ("primitives", "sections", "covers")
 
 
@@ -62,7 +64,32 @@ def _audit_entries() -> set[str]:
     return out
 
 
+def _on_disk_recipes() -> set[str]:
+    if not RECIPES_DIR.exists():
+        return set()
+    return {p.stem for p in RECIPES_DIR.glob("*.yaml")}
+
+
+def _recipe_audit_entries() -> set[str]:
+    if not RECIPE_AUDIT_FILE.exists():
+        return set()
+    out: set[str] = set()
+    for line in RECIPE_AUDIT_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            entry = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        name = entry.get("recipe")
+        if name:
+            out.add(name)
+    return out
+
+
 def check_audit() -> None:
+    # Components
     on_disk = _on_disk_components()
     audited = _audit_entries()
     orphans = on_disk - audited
@@ -74,7 +101,21 @@ def check_audit() -> None:
             "Every component under components/ must have a matching entry "
             f"in {AUDIT_FILE.relative_to(REPO_ROOT)}.\n"
             "Either remove the component or seed an audit entry.\n"
-            "(Future: `katib component new <name>` handles this automatically.)"
+            "(Use `uv run scripts/component.py new <name>` to handle this automatically.)"
+        )
+    # Recipes
+    on_disk_recipes = _on_disk_recipes()
+    audited_recipes = _recipe_audit_entries()
+    recipe_orphans = on_disk_recipes - audited_recipes
+    if recipe_orphans:
+        names = ", ".join(sorted(recipe_orphans))
+        raise AuditError(
+            "Recipe(s) present on disk without an audit entry:\n"
+            f"    {names}\n"
+            "Every recipe under recipes/ must have a matching entry "
+            f"in {RECIPE_AUDIT_FILE.relative_to(REPO_ROOT)}.\n"
+            "Either remove the recipe or seed an audit entry.\n"
+            "(Use `uv run scripts/recipe.py new <name>` to handle this automatically.)"
         )
 
 
