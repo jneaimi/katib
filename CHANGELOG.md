@@ -3,6 +3,95 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — Phase-5: user content layout (2026-04-24)
+
+Separates **user content** from **bundled content** so `npx install`
+never clobbers user work. Users can create their own recipes, components,
+and brand cover presets under `~/.katib/` and the engine resolves them
+alongside the shipped skill. Delivered across four phases + two brand
+cover days. All shadow semantics match: user tier shadows bundled at
+resolve time, scaffold refuses bundled shadow without
+`--force --justification '<why>'`.
+
+### Added
+
+- **`~/.katib/recipes/`** — user recipes survive `npx install`.
+  Scaffold with `uv run scripts/recipe.py new <name> --namespace user`.
+- **`~/.katib/components/`** — user primitives, sections, and covers
+  survive reinstall. Scaffold with
+  `uv run scripts/component.py new <name> --tier <t> --namespace user`.
+- **`~/.katib/memory/`** — audit + graduation-gate logs move off
+  `REPO_ROOT/memory/` so a skill reinstall doesn't wipe a user's audit
+  trail. Legacy `~/.local/share/katib/memory/` (dead v1 path, never
+  read) removed from `install.sh` / `uninstall.sh`.
+- **Brand cover presets** — `~/.katib/brands/<brand>-assets/covers/`.
+  Save a freshly-rendered cover (Gemini, user-file) as a named preset
+  via `build.py --save-cover-preset <name>`, reference later as
+  `source: brand-preset, name: <name>` in any recipe.
+- **Interactive cover-save in `/katib`** — after a render that used a
+  brand cover image, the agent offers an `AskUserQuestion` prompt to
+  capture it as a preset. One-turn offer; never loops.
+- **Env var overrides** — `KATIB_RECIPES_DIR`, `KATIB_COMPONENTS_DIR`,
+  `KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR` for test isolation and custom
+  layouts.
+- **Two-tier troubleshooting in `SKILL.md`** — new rows for "recipe/
+  component not found" (names both paths checked) and "cannot shadow
+  bundled" errors, plus a user-content tier table.
+
+### Changed
+
+- **`core.compose._resolve_component_dir`** now searches user tier first,
+  then bundled. `_jinja_env()` runs a two-root `FileSystemLoader` so
+  user templates can `{% include %}` bundled partials (and vice versa).
+  `_load_primitive_styles()` merges primitive CSS from both tiers and
+  dedups by name (user wins on collision).
+- **`core.recipe_ops`** / **`core.component_ops`** — scaffold routes to
+  the user tier on `--namespace user`; refuses to shadow a bundled
+  name of the same shape without `--force --justification`. Six naked
+  `.relative_to(REPO_ROOT)` sites replaced with a `_display_path()`
+  helper that falls back to absolute paths for user-tier locations.
+- **`scripts/build.py`** — `_on_disk_components` + `_on_disk_recipes`
+  union both tiers so the audit gate catches unaudited user content.
+  Audit files are read as a union of bundled (`REPO_ROOT/memory/`) and
+  user (`~/.katib/memory/`) so bundled components stay audited after
+  the audit dir moved.
+- **`scripts/generate_capabilities.py`** — `collect_recipes` and
+  `collect_components` union both tiers, user-shadows-bundled. User
+  content surfaces in `/katib` agent routing via the staleness regen
+  on first invocation after user scaffolding.
+- **`scripts/route.py._ensure_capabilities_fresh`** watches both user
+  dirs alongside bundled ones — new user content triggers regen
+  automatically.
+
+### Fixed
+
+- **`install.sh` memory path divergence** — installer created
+  `~/.local/share/katib/memory/` but no code ever read from it; the
+  real audit file lived under `~/.katib/memory/`. Removed the dead
+  path and the matching line in the seeded `config.yaml`.
+- **Phase-2 regression**: `build.py`'s audit file constants were
+  bundled-only, so a user scaffolding a recipe hit `AuditError` on
+  their first render. Fixed by union-reading both tiers.
+
+### Tests
+
+- **972 → 979 passing**. Seven Phase-5 guards added across:
+  - `test_phase3_e2e_user_recipe.py` — fresh-install scaffold + render
+    via audit-gated `build.py` path (3 tests)
+  - `test_phase4_e2e_user_component.py` — subprocess E2E + in-process
+    CSS sentinel proving user primitive AND section CSS reach compose
+    output + bundled-shadow refusal (3 tests)
+  - `test_phase5_install_release.py` — install.sh syntax + directory
+    structure + post-clone sandbox (4 tests)
+  - `test_phase5_routing_sees_user_content.py` — router surfaces user
+    recipes + user components via staleness regen (3 tests)
+
+Each phase was validated by a subprocess E2E test before landing —
+discipline adopted after the Phase-2 audit-gate regression surfaced
+mid-flight.
+
+---
+
 ## [Unreleased] — cover-page full-bleed hotfix (2026-04-24)
 
 ### Fixed

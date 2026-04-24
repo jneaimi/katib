@@ -1,7 +1,7 @@
 {
   "name": "@jasemal/katib",
-  "version": "1.0.0-alpha.0",
-  "description": "Bilingual (EN + AR) print-grade PDF document generation — a Claude Code skill. v2 under active development; install @jasemal/katib@0 for the stable v1 release (v0.20.0).",
+  "version": "1.0.0-alpha.1",
+  "description": "Bilingual (EN + AR) print-grade PDF document generation — a Claude Code skill. v2 alpha with user-tier custom recipes/components under ~/.katib/. For the stable v1 release, install @jasemal/katib@0 (v0.20.0).",
   "bin": {
     "katib": "bin/katib.js"
   },
