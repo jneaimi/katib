@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T03:01:00+00:00'
+generated_at: '2026-04-24T03:15:58+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -718,6 +718,19 @@ components:
       or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
       + date + label.
     used_in_recipes: 3
+  skill-bar-list:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Skill/proficiency list — named items with visual level bars (1-5 scale). Each item renders
+      as name + horizontal bar filled to a level-driven percentage (l1=20%, l5=100%). Used for CV Languages
+      + Core Skills sections; future portfolio/bio proficiency displays. Reusable across personal-domain
+      recipes for any named-proficiency rendering.
+    used_in_recipes: 0
   step-circle:
     namespace: katib
     tier: primitive
@@ -742,6 +755,19 @@ components:
     - outline
     description: Inline badge/chip label — short noun, tonal background.
     used_in_recipes: 1
+  tag-chips:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Inline tag-pill list — rounded rectangular chips for tags, tools, technologies, keywords,
+      or topics. Items render as inline-block pills with accent-muted background and small-font, semi-bold
+      text. Reusable across CV Tools section, future bio/portfolio skill lists, blog post keywords, editorial
+      metadata tags.
+    used_in_recipes: 0
   chart-bar:
     namespace: katib
     tier: section
@@ -779,6 +805,20 @@ components:
     description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological
       convention). Inline-svg only.
     used_in_recipes: 1
+  cv-layout:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: 2-column sidebar+main page layout for CV / profile / portfolio recipes. Emits a full-page
+      CSS grid with 70mm sidebar (dark accent background) + 1fr main column. Sidebar and main content
+      are supplied as raw HTML via `sidebar_html` and `main_html` inputs — callers compose sidebar primitives
+      (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural
+      shape; future reuse expected for portfolio and profile pages.
+    used_in_recipes: 0
   financial-summary:
     namespace: katib
     tier: section

@@ -1,0 +1,21 @@
+name: cv-layout
+tier: section
+version: 0.1.0
+namespace: katib
+description: 2-column sidebar+main page layout for CV / profile / portfolio recipes. Emits a full-page CSS grid with 70mm sidebar (dark accent background) + 1fr main column. Sidebar and main content are supplied as raw HTML via `sidebar_html` and `main_html` inputs — callers compose sidebar primitives (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural shape; future reuse expected for portfolio and profile pages.
+languages: [en, ar]
+requires:
+  tokens: [text, accent, accent_on]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - sidebar_html:
+        type: string
+        required: true
+        description: "Trusted HTML content for the sidebar column (70mm wide, dark accent background). Typically contains photo slot + name block + contact list + skill-bar-list + tag-chips sections."
+    - main_html:
+        type: string
+        required: true
+        description: "Trusted HTML content for the main column (1fr wide, light background). Typically contains Summary + Experience + Education + Selected Projects sections."
+page_behavior:
+  break_inside: avoid

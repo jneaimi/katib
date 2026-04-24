@@ -1,0 +1,11 @@
+<section class="katib-tag-chips-wrap" lang="en">
+<ul class="katib-tag-chips" lang="en">
+{%- for item in input.items %}
+{%- if item is mapping %}
+    <li class="katib-tag-chips__chip">{{ item.text }}</li>
+{%- else %}
+    <li class="katib-tag-chips__chip">{{ item }}</li>
+{%- endif %}
+{%- endfor %}
+</ul>
+</section>

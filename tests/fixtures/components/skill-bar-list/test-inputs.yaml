@@ -1,0 +1,10 @@
+# Test inputs for `skill-bar-list` isolated render.
+inputs:
+  items:
+    - {name: "English", level: 5}
+    - {name: "Arabic", level: 5}
+    - {name: "Python", level: 4}
+    - {name: "TypeScript", level: 3}
+    - {name: "Rust", level: 2}
+brand: null
+variant: null

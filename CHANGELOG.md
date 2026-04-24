@@ -5,7 +5,152 @@ All notable changes to Katib are documented here. Format loosely follows
 
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
 
-### Added (Phase 3 Day 17 — `clause-list` primitive + `legal/mou` recipe ship; Day-0 queue closed; legal domain opens)
+### Added (Phase 3 Day 18 — CV infrastructure sprint day 1: `cv-layout` + `skill-bar-list` + `tag-chips` components)
+
+Day 1 of the 2-day personal/cv infra+recipe sprint. **3 new components
+built in parallel** — all three auto-graduated through the request log
+(3 verified dependents each: personal-cv primary + 2 Deferred
+recipes per component). First Phase-3 day to build 3 components
+simultaneously.
+
+**Key architectural novelty:** cv-layout introduces the first 2-column
+page layout in v2. Every other recipe uses single-column linear flow
+top-to-bottom; CV needs a full-page grid with 70mm dark-accent
+sidebar + 1fr main column. Implementation keeps the single-section
+composition model (the recipe still looks like a flat section list);
+cv-layout just accepts `sidebar_html` + `main_html` raw inputs and
+emits the grid wrapper.
+
+- **`components/primitives/skill-bar-list/`** (new) — primitive-tier
+  proficiency list. `items: [{name, level (1-5)}]` → `<ul>` with name
+  + level-bar span. Level drives CSS modifier class
+  (`--l1` through `--l5`) controlling fill width (20%→100% in 20%
+  increments). RTL: bar fills from trailing edge via lang-scoped
+  `::after` positioning (same pattern as clause-list Day 17).
+  Token contract: `text, accent, border` (accent for bar fill; border
+  for unfilled track). No variants.
+- **`components/primitives/tag-chips/`** (new) — primitive-tier inline
+  tag-pill list. `items: [string|{text}]` → `<ul>` with `font-size: 0`
+  trick to eliminate inline-block whitespace gaps; each `<li>` is a
+  rounded-corner pill with tag-bg background. RTL: chip trailing-margin
+  flips so gaps appear on the correct side. Items accept strings or
+  `{text}` mappings for primitive consistency with clause-list +
+  data-table. Token contract: `text, tag_bg`. No variants.
+- **`components/sections/cv-layout/`** (new) — section-tier 2-column
+  page layout. `sidebar_html` + `main_html` raw-string inputs (trusted
+  HTML via Jinja2 `| safe` filter — same pattern as module raw_body).
+  CSS grid `70mm 1fr` with `min-height: 257mm` (A4 height minus
+  default page margins) + `margin: -20mm` (pulls the layout to page
+  edges under default @page margins — no recipe-level @page override
+  needed). Sidebar uses accent bg + accent-on fg (inverts against
+  dark accent); main uses transparent bg + text fg. Sidebar-scoped
+  overrides for nested `skill-bar-list` + `tag-chips` primitives so
+  their colors invert correctly against the dark sidebar background.
+  Token contract: `text, accent, accent_on` (tight — no border or
+  secondary text needed since content is raw-HTML callee-supplied).
+- **9 component-requests logged** (3 per component) — all three
+  components auto-graduated cleanly (threshold: 3 verified
+  dependents). No `--force` needed; this is the second consecutive
+  multi-request auto-graduation (data-table Day 13 had 4, now these
+  three with 3 each). Request-driven graduation is operating as
+  designed.
+- **Validation: token contracts tightened pre-register.** Initial
+  declarations included tokens that weren't referenced in the HTML
+  or styles.css. Validator caught each, tightened to actual usage.
+  Clean patterns reinforced.
+- **Isolated-render harness: 6 PDFs clean.** Each component rendered
+  EN + AR through `katib component test` with 0 WeasyPrint warnings.
+- **Audit + capabilities:** 3 component register entries +
+  `capabilities.yaml` regenerated (now 31 components).
+
+### Tests (Phase 3 Day 18)
+
+- **`tests/test_skill_bar_list.py`** (new, 10 tests): schema-loads,
+  items-required, token-contract, no-variants, renders-EN (4 items),
+  renders-AR (dir=rtl), renders-to-pdf, level-modifier-classes-
+  emitted (regression guard for l1-l5 class-name contract), name-
+  and-level-spans-present, wrap-section-has-lang-attr.
+- **`tests/test_tag_chips.py`** (new, 10 tests): schema-loads,
+  items-required, token-contract, no-variants, renders-EN (3 chips),
+  renders-AR (dir=rtl), renders-to-pdf, accepts-mapping-form
+  (regression guard for string OR {text} item support), wrap-section-
+  has-lang-attr, ul-has-lang-attr (regression guard — inner `<ul>`
+  also carries lang= so RTL CSS scoping applies).
+- **`tests/test_cv_layout.py`** (new, 10 tests): schema-loads,
+  inputs-required (sidebar_html + main_html), token-contract,
+  no-variants, renders-EN (semantic aside + main tags), renders-AR
+  (dir=rtl), renders-to-pdf, grid-in-styles (regression guard for
+  `grid-template-columns: 70mm 1fr` + `min-height: 257mm` declarations
+  surviving to rendered HTML), sidebar-styling-present (regression
+  guard for `background: var(--accent)` + `color: var(--accent-on)`
+  rules), html-passthrough-preserves-structure (regression guard:
+  raw HTML flows through `{{ input.sidebar_html | safe }}` unchanged).
+- **Regression sweep:** 848/848 passing (was 818, +30 from 3×10
+  component tests). Zero WeasyPrint warnings across all 24 render
+  paths (21 from prior recipes + 6 from Day-18 isolated component
+  harnesses — actually 24 total after including Day-18 internal
+  compose renders).
+
+### Architecture decisions (Phase 3 Day 18)
+
+1. **2-column layout kept as a single component, not a schema
+   extension.** Alternative considered: add `layout: two-column-sidebar`
+   field to recipe schema and have the compose engine wrap section
+   subsets. Rejected — the engine extension would only benefit one
+   recipe (CV); the single-component approach (cv-layout section with
+   sidebar_html + main_html raw inputs) keeps the recipe schema
+   stable and contains the novelty to one component. Phase-4 can
+   promote layout to schema if demand emerges.
+2. **Raw-HTML inputs over nested-component composition.** cv-layout's
+   sidebar/main inputs accept raw HTML rather than nested component
+   references. This matches module's `raw_body` precedent (Phase 2)
+   and avoids the complexity of recursive component resolution that
+   v2 compose doesn't currently support. Trade-off: sub-shape
+   validation lost, but recipe authors can still use skill-bar-list
+   and tag-chips primitives by rendering them inline via Jinja2
+   templating at recipe level — Day 19 will show this pattern.
+3. **Reuse accent + accent-on for sidebar colors, not new tokens.**
+   v1 CV used dedicated `--sidebar-bg`, `--sidebar-fg`, `--sidebar-muted`
+   tokens. v2 reuses `accent` (dark sidebar bg) + `accent-on` (light
+   text on dark bg). Trade-off: brand palettes now drive both the
+   accent color AND the sidebar color; if future CV-like recipes
+   need a neutral-dark sidebar rather than brand-accent, revisit
+   with dedicated tokens. For now, accent-driven sidebar is visually
+   correct for personal-brand CVs.
+4. **Negative-margin grid to handle page margins.** cv-layout emits
+   `margin: -20mm` on the grid to pull content to page edges under
+   default @page 20mm margins. Alternative was recipe-level
+   `@page { margin: 0 }` override — would require extending recipe
+   schema. Negative-margin approach keeps the schema stable and
+   works across all brand templates.
+5. **Request-driven auto-graduation holding at Day 18.** Third
+   multi-request auto-graduation cluster (sections-grid Day 11 with
+   3 deps, data-table Day 13 with 4 deps, Day 18 with 3×3=9 total
+   requests across 3 components). 5 of 11 Phase-3 components have
+   now auto-graduated via the request log (sections-grid, data-table,
+   cv-layout, skill-bar-list, tag-chips). The 6 others used honest-
+   intent `--force` with justification (kv-list, letterhead,
+   masthead-personal, multi-party-signature-block, financial-summary,
+   clause-list).
+6. **Infra day #6 in Phase 3.** Prior infra days: Day 1 (kv-list),
+   Day 2 (letterhead), Day 5 (masthead-personal), Day 7
+   (multi-party-signature-block + kv-list 0.2.0), Day 11
+   (sections-grid + infra+recipe combo), Day 13 (data-table +
+   infra+recipe combo), Day 15 (financial-summary + infra+recipe
+   combo), Day 17 (clause-list + infra+recipe combo). Day 18 is
+   pure-infra (no recipe ship) — first since Day 7. The 2-day
+   sprint pattern was validated on Day 7 (NOC infra Day 7 → NOC
+   recipe Day 8).
+7. **Phase-3 progress: 12/14 recipes shipped (86%), 11 of 11 Phase-3
+   components built.** Day 19 forecast: ship personal-cv recipe
+   (13/14, 93%). Day 20-21 forecast: tutorial-onboarding + tutorial-
+   katib-walkthrough (both zero-new-component). Phase-3 close
+   achievable by Day 20-21. On pace for the original 21-day estimate.
+8. **AR variant deferred (thirteenth recipe coming up).** Same
+   discipline — first bilingual still pending `inputs_by_lang`
+   schema.
+
+
 
 Twelfth Phase-3 recipe migration + 8th new Phase-3 component. **Closes
 the original Day-0 component queue** with a v1-evidence-driven revision:
@@ -177,15 +322,15 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **28 components** (+1 clause-list Day 17;
-financial-summary Day 15, data-table Day 13, sections-grid Day 11,
-multi-party-signature-block Day 7, kv-list at 0.2.0,
-signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
-**19 recipes** (13 production: tutorial + business-proposal-letter +
+Engine state: **31 components** (+3 Day 18: cv-layout, skill-bar-list,
+tag-chips; clause-list Day 17; financial-summary Day 15, data-table
+Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
+kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
+at 0.2.0). **19 recipes** (13 production: tutorial + business-proposal-letter +
 personal-cover-letter + formal-noc + tutorial-how-to +
 tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
 editorial-white-paper + business-proposal-proposal + financial-invoice +
-financial-quote + **legal-mou**; 6 dev showcases). 6 core library
+financial-quote + legal-mou; 6 dev showcases). 6 core library
 modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
 skill dependencies.
 

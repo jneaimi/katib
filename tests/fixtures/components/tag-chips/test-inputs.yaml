@@ -1,0 +1,10 @@
+# Test inputs for `tag-chips` isolated render.
+inputs:
+  items:
+    - "Python"
+    - "TypeScript"
+    - "PostgreSQL"
+    - "Docker"
+    - "AWS"
+brand: null
+variant: null

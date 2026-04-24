@@ -1,0 +1,24 @@
+.katib-tag-chips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-primary);
+    font-size: 0; /* remove inline-block whitespace gaps */
+}
+
+.katib-tag-chips__chip {
+    display: inline-block;
+    padding: 2pt 7pt;
+    background: var(--tag-bg);
+    color: var(--text);
+    border-radius: 2pt;
+    font-size: 8pt;
+    font-weight: 600;
+    margin: 0 3pt 3pt 0;
+    page-break-inside: avoid;
+}
+
+/* RTL: mirror the chip margin (trailing edge spacing flips) */
+.katib-tag-chips[lang="ar"] .katib-tag-chips__chip {
+    margin: 0 0 3pt 3pt;
+}

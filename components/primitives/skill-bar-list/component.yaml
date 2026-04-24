@@ -1,0 +1,17 @@
+name: skill-bar-list
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Skill/proficiency list — named items with visual level bars (1-5 scale). Each item renders as name + horizontal bar filled to a level-driven percentage (l1=20%, l5=100%). Used for CV Languages + Core Skills sections; future portfolio/bio proficiency displays. Reusable across personal-domain recipes for any named-proficiency rendering.
+languages: [en, ar]
+requires:
+  tokens: [text, accent, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - items:
+        type: array
+        required: true
+        description: "Array of {name (required string), level (required int 1-5)} mappings. `name` is the skill label; `level` drives the bar fill percentage (1=20%, 2=40%, 3=60%, 4=80%, 5=100%)."
+page_behavior:
+  break_inside: avoid

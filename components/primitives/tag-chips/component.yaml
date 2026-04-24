@@ -1,0 +1,17 @@
+name: tag-chips
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Inline tag-pill list — rounded rectangular chips for tags, tools, technologies, keywords, or topics. Items render as inline-block pills with accent-muted background and small-font, semi-bold text. Reusable across CV Tools section, future bio/portfolio skill lists, blog post keywords, editorial metadata tags.
+languages: [en, ar]
+requires:
+  tokens: [text, tag_bg]
+  fonts: [primary]
+accepts:
+  inputs:
+    - items:
+        type: array
+        required: true
+        description: "Array of tag strings (or {text} mappings for consistency with other primitives). Each item renders as an inline-block pill with rounded corners."
+page_behavior:
+  break_inside: avoid

@@ -1,0 +1,22 @@
+# Test inputs for `cv-layout` isolated render.
+inputs:
+  sidebar_html: |
+    <div class="name-block">
+      <div class="name" style="font-size: 18pt; font-weight: 700;">Jasem Al Neaimi</div>
+      <div class="headline" style="font-size: 10pt;">Senior AI Engineer · GCC</div>
+    </div>
+    <section>
+      <h3>Contact</h3>
+      <p style="font-size: 9pt;">jasem@example.com</p>
+    </section>
+  main_html: |
+    <section>
+      <h2>Summary</h2>
+      <p>Placeholder summary text for the isolated render harness.</p>
+    </section>
+    <section>
+      <h2>Experience</h2>
+      <p>Placeholder experience content.</p>
+    </section>
+brand: null
+variant: null

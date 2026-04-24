@@ -1,0 +1,55 @@
+.katib-skill-bar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-primary);
+    color: var(--text);
+}
+
+.katib-skill-bar-list__item {
+    margin-bottom: 6pt;
+    page-break-inside: avoid;
+}
+
+.katib-skill-bar-list__name {
+    display: block;
+    font-size: 9pt;
+    font-weight: 500;
+    margin-bottom: 3pt;
+    color: var(--text);
+}
+
+.katib-skill-bar-list__level {
+    display: block;
+    height: 3pt;
+    background: var(--border);
+    border-radius: 2pt;
+    position: relative;
+    overflow: hidden;
+}
+
+.katib-skill-bar-list__level::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2pt;
+}
+
+/* Level fill percentages */
+.katib-skill-bar-list__level--l1::after { width: 20%; }
+.katib-skill-bar-list__level--l2::after { width: 40%; }
+.katib-skill-bar-list__level--l3::after { width: 60%; }
+.katib-skill-bar-list__level--l4::after { width: 80%; }
+.katib-skill-bar-list__level--l5::after { width: 100%; }
+
+/* LTR: bar fills from the leading (left) edge */
+.katib-skill-bar-list[lang="en"] .katib-skill-bar-list__level::after {
+    left: 0;
+}
+
+/* RTL: bar fills from the leading (right) edge */
+.katib-skill-bar-list[lang="ar"] .katib-skill-bar-list__level::after {
+    right: 0;
+}
