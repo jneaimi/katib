@@ -1,13 +1,5 @@
 # Katib — Bilingual PDF Document Generation
 
-> **⚠️ v2 is in alpha.** User-content plumbing and the first round of
-> recipes are shipped and tested, but APIs and recipe shapes can still
-> change before `1.0.0`. If you need stability, stay on
-> `npx @jasemal/katib@0`. If you want the v2 architecture (custom
-> recipes and components under `~/.katib/`, bilingual EN+AR,
-> auto-regenerating capabilities), `npx @jasemal/katib install` installs
-> the current alpha.
-
 [![CI](https://github.com/jneaimi/katib/actions/workflows/ci.yml/badge.svg)](https://github.com/jneaimi/katib/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square)](https://www.npmjs.com/package/@jasemal/katib)
 [![license](https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square)](LICENSE)
@@ -18,14 +10,29 @@
 One skill, bilingual (EN + AR) print-grade PDF generation for Claude Code.
 HTML + CSS → WeasyPrint → PDF.
 
+## Install
+
+```bash
+# v1 stable — safe default, no v2 architecture changes
+npx @jasemal/katib install
+
+# v2 alpha — new component architecture, custom recipes under ~/.katib/
+npx @jasemal/katib@alpha install
+```
+
+> **⚠️ v2 is in alpha.** Phase-5 user-content plumbing and the first
+> round of bilingual recipes are shipped and tested, but APIs and recipe
+> shapes can still change before `1.0.0`. `@latest` on npm stays pointed
+> at v1 (`0.20.0`); v2 ships under the `alpha` dist-tag.
+
 ---
 
 ## Where things stand
 
 | | |
 |---|---|
-| **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — install with `npx @jasemal/katib@0 install` |
-| **In development (v2):** | `1.0.0-alpha.0` — clean-canvas rebuild, component architecture |
+| **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag) |
+| **In development (v2):** | `1.0.0-alpha.1` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
 | **Archived:** | Full v1 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
 
