@@ -1,0 +1,16 @@
+<div class="katib-signature-field-block" lang="en" style="grid-template-columns: repeat({{ input.parties|length }}, 1fr);">
+{%- for party in input.parties %}
+    <div class="katib-signature-field-block__party">
+        <div class="katib-signature-field-block__label">{{ party.label }}</div>
+        {%- if party.name %}
+        <div class="katib-signature-field-block__name">{{ party.name }}</div>
+        {%- endif %}
+        {%- for field in party.fields %}
+        <div class="katib-signature-field-block__field">
+            <div class="katib-signature-field-block__field-label">{{ field }}</div>
+            <div class="katib-signature-field-block__field-line"></div>
+        </div>
+        {%- endfor %}
+    </div>
+{%- endfor %}
+</div>

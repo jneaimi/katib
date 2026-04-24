@@ -1,0 +1,36 @@
+name: signature-field-block
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Blank-field signature grid for counterparty execution — multiple parties side by side, each with a column of labeled blank input lines (Name / Title / Signature / Date). Distinct from `signature-block` (pre-filled named parties) and `multi-party-signature-block` (pre-filled multi-signatory closing). Use when a document will be printed, countersigned by hand, and returned — typical in commercial quotes, MoUs, service agreements, proposals.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, border_strong]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - parties:
+        type: array
+        required: true
+        min_items: 1
+        max_items: 3
+        description: Ordered list of `{label, name?, fields}` objects. One column per party.
+        item_schema:
+          type: object
+          properties:
+            - label:
+                type: string
+                required: true
+                description: Uppercase eyebrow label above the party (e.g., "For Party A", "For jasem | katib").
+            - name:
+                type: string
+                required: false
+                description: Bold party name rendered below the label. Leave blank for fully-blank columns.
+            - fields:
+                type: array
+                required: true
+                min_items: 1
+                max_items: 6
+                description: Ordered list of labeled blank input lines (e.g., ["Name", "Title", "Signature", "Date"]).
+page_behavior:
+  mode: atomic

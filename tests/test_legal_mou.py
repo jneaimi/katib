@@ -66,13 +66,18 @@ def test_mou_has_25_sections():
 
 
 def test_mou_component_mix():
-    """25 sections = 14 module + 7 clause-list + 4 callout."""
+    """25 sections = 13 module + 7 clause-list + 4 callout + 1 signature-field-block.
+
+    Updated for post-Phase-3 signature-field-block graduation: §25 (signatory grid)
+    migrated from inline module raw_body → dedicated signature-field-block primitive.
+    """
     r = load_recipe(RECIPE_NAME)
     from collections import Counter
     counts = Counter(s["component"] for s in r["sections"])
-    assert counts["module"] == 14
+    assert counts["module"] == 13
     assert counts["clause-list"] == 7
     assert counts["callout"] == 4
+    assert counts["signature-field-block"] == 1
 
 
 # ---------------------------------------------------------------- production proofs

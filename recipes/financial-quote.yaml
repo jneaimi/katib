@@ -146,8 +146,9 @@ sections:
           raw_body: |
             <p style="margin: 0; font-size: 9.5pt; line-height: 1.55;">VAT chargeable at prevailing UAE rates. Payments in AED unless agreed otherwise. Late payments subject to 1.5% monthly interest. Full terms on engagement letter.</p>
 
-  # 9. Acceptance — module numbered + inline 2-col signature grid (honest-intent inline pattern)
-  #    Matches Day-14 proposal sign-row — 2 dependents below threshold, raw_body acceptable.
+  # 9. Acceptance — module numbered + inline 2-col signed-line grid (pre-filled identity pattern).
+  #    Distinct from mou's blank-form signature-field-block: this is a single input line
+  #    per party with pre-filled name + caption below. Stays inline post-Phase-3 validation.
   - component: module
     variant: numbered
     inputs:

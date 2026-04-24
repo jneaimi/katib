@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T05:44:37+00:00'
+generated_at: '2026-04-24T06:22:08+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -298,7 +298,7 @@ recipes:
     - clause-list
     - module
     - module
-    - module
+    - signature-field-block
   personal-cover-letter:
     namespace: katib
     version: 0.1.0
@@ -870,6 +870,20 @@ components:
       or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
       + date + label.
     used_in_recipes: 3
+  signature-field-block:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Blank-field signature grid for counterparty execution — multiple parties side by side,
+      each with a column of labeled blank input lines (Name / Title / Signature / Date). Distinct from
+      `signature-block` (pre-filled named parties) and `multi-party-signature-block` (pre-filled multi-signatory
+      closing). Use when a document will be printed, countersigned by hand, and returned — typical in
+      commercial quotes, MoUs, service agreements, proposals.
+    used_in_recipes: 1
   skill-bar-list:
     namespace: katib
     tier: primitive

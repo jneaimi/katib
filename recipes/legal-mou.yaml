@@ -200,27 +200,14 @@ sections:
           <h2 style="text-align: center; font-size: 12pt; letter-spacing: 0.1em; text-transform: uppercase; border: 0; margin: 0 0 14pt 0; color: var(--accent); font-weight: 700;">Execution</h2>
         </div>
 
-  # 25. Signatory grid — inline 2-col blank-field signature (density block #3;
-  #     3rd consumer of inline signature-field pattern — proposal Day 14 + quote Day 16 + mou Day 17.
-  #     Ripe for Phase-4 graduation to signature-field-block primitive.)
-  - component: module
+  # 25. Signatory grid — signature-field-block primitive (1st consumer post-Phase-3 graduation;
+  #     replaces 16-line inline div grid that was duplicated across quote + mou).
+  - component: signature-field-block
     inputs:
-      raw_body: |
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20pt;">
-          <div style="border-top: 1pt solid var(--border-strong); padding-top: 14pt;">
-            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt;">For Party A</div>
-            <div style="font-size: 11pt; font-weight: 700; margin-bottom: 14pt;">jasem | katib</div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Name</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Title</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Signature</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Date</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-          </div>
-          <div style="border-top: 1pt solid var(--border-strong); padding-top: 14pt;">
-            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt;">For Party B</div>
-            <div style="font-size: 11pt; font-weight: 700; margin-bottom: 14pt;">[Party B]</div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Name</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Title</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Signature</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-            <div><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Date</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
-          </div>
-        </div>
+      parties:
+        - label: "For Party A"
+          name: "jasem | katib"
+          fields: ["Name", "Title", "Signature", "Date"]
+        - label: "For Party B"
+          name: "[Party B]"
+          fields: ["Name", "Title", "Signature", "Date"]
