@@ -20,10 +20,10 @@ npx @jasemal/katib install
 npx @jasemal/katib@alpha install
 ```
 
-> **⚠️ v2 is in alpha.** Phase-5 user-content plumbing and the first
-> round of bilingual recipes are shipped and tested, but APIs and recipe
-> shapes can still change before `1.0.0`. `@latest` on npm stays pointed
-> at v1 (`0.20.0`); v2 ships under the `alpha` dist-tag.
+> **⚠️ v2 is in alpha.** Phase 3 (layout + content primitives, AI-assisted
+> component builder, recipe migration) is shipped and tested. APIs and
+> recipe shapes can still change before `1.0.0`. `@latest` on npm stays
+> pointed at v1 (`0.20.0`); v2 ships under the `alpha` dist-tag.
 
 ---
 
@@ -32,9 +32,12 @@ npx @jasemal/katib@alpha install
 | | |
 |---|---|
 | **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag) |
-| **In development (v2):** | `1.0.0-alpha.1` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
+| **In development (v2):** | `1.0.0-alpha.2` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
 | **Archived:** | Full v1 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
+| **Component library** | 45 components · 16 primitives, 28 sections, 1 cover |
+| **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
+| **Extending** | Build new components with `/katib component new` — see [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) or the [tutorial](TUTORIAL.md) |
 
 ## Why v2 exists
 
@@ -71,8 +74,10 @@ Fresh installs seed a curated set of starter recipes into
 `~/.katib/recipes/` — they're yours from that moment on. Edit them freely;
 future `npx install` runs will never overwrite your edits.
 
-- **Fresh install** (`~/.katib/recipes/` is empty) → 15 starter recipes are
-  copied in. You can edit, delete, or fork them at will.
+- **Fresh install** (`~/.katib/recipes/` is empty) → **21 starter recipes**
+  are copied in, covering business, editorial, financial, formal, legal,
+  personal, report, and tutorial domains. You can edit, delete, or fork
+  them at will.
 - **Returning install** (any recipe already in `~/.katib/recipes/`) → the
   seed step is skipped entirely. Your changes survive.
 - **Bundled fallback** — if you delete a starter, the bundled version in the
@@ -92,6 +97,37 @@ The manifest (`seed-manifest.yaml` at the repo root) is the single source of
 truth for what gets seeded. This is the foundation for the Phase-4 share/import
 flow — recipes that live under `~/.katib/` are the ones you'll be able to
 package up and share with other Katib users.
+
+### What's in the starter library
+
+| Domain | Starter recipes |
+|---|---|
+| Business | `business-proposal-letter`, `business-proposal-one-pager`, `business-proposal-proposal` |
+| Editorial | `editorial-article`, `editorial-white-paper` |
+| Financial | `financial-invoice`, `financial-quote` |
+| Formal | `formal-authority-letter`, `formal-noc` |
+| Legal | `legal-mou`, `legal-nda`, `legal-service-agreement` |
+| Personal | `personal-bio`, `personal-cover-letter`, `personal-cv` |
+| Report | `report-progress` |
+| Tutorial | `tutorial`, `tutorial-cheatsheet`, `tutorial-handoff`, `tutorial-how-to`, `tutorial-onboarding` |
+
+Need something we don't ship? **Build it yourself with the AI-assisted
+builder** — see [TUTORIAL.md](TUTORIAL.md) for a 20-minute walkthrough.
+
+### Layout primitives
+
+Wide tables, slide decks, full-bleed covers, multi-column essays, part
+dividers, and appendices all compose from dedicated layout components
+that handle the page-geometry work for you:
+
+| Component | Use case |
+|---|---|
+| `landscape-section` | Wide data tables, horizontal timelines, wide charts |
+| `slide-frame` | 16:9 slide-deck pages with 4 variants (title / content / two-column / image-bg) |
+| `full-bleed-page` | Edge-to-edge covers and hero images with optional overlay text |
+| `two-column-page` | Newspaper / magazine editorial flow |
+| `section-divider-page` | "Part II" style atomic dividers between major sections |
+| `appendix-page` | Flowing appendix content with a running header in the top margin |
 
 ## Custom recipes & components
 
@@ -120,13 +156,24 @@ uv run scripts/recipe.py new my-proposal --namespace user \
 uv run scripts/build.py my-proposal --lang en
 ```
 
-### Create a custom component
+### Create a custom component — two paths
+
+**Path A — AI-assisted builder (recommended).** Invoke `/katib component new`
+in Claude Code and Claude walks you through an interview, generates the
+files, validates, renders a preview, and iterates on feedback. See
+[TUTORIAL.md](TUTORIAL.md) for a full walkthrough or the
+[COMPONENT-BUILDER.md playbook](COMPONENT-BUILDER.md) for reference.
+
+**Path B — manual scaffold.** If you'd rather hand-edit:
 
 ```bash
 uv run scripts/component.py new client-hero --tier section \
     --namespace user --languages en,ar \
     --description "Full-width hero with brand lockup"
 # edit ~/.katib/components/sections/client-hero/{en.html,ar.html,styles.css}
+uv run scripts/component.py validate client-hero
+uv run scripts/component.py test client-hero        # renders EN + AR preview
+uv run scripts/component.py register client-hero    # update audit + capabilities
 ```
 
 Reference it from a recipe exactly like a bundled component:
@@ -162,16 +209,18 @@ ship as `1.0.0` with a migration guide. Until then:
 
 ## Development phases
 
-v2 ships in six phases over approximately six weeks:
-
-| Phase | Scope |
-|---|---|
-| **0 — Archive + ADR** (3–5 days, **in progress**) | v1 frozen in `v1-reference/`, ADR approved, baseline measurements |
-| **1 — Core engine + primitives** (1 week) | Composer, renderer, tokens, output routing, first 8 primitives |
-| **2 — Sections + first recipe** (2 weeks) | First image-consuming sections, tutorial recipe, CLI subcommands, decision gate |
-| **3 — Recipe migration** (3 weeks) | Port v1 doc-types to v2 recipes (triaged — not all doc-types migrate) |
-| **4 — Self-improvement + sharing** (2 weeks) | Reflect, feedback, import/export |
-| **5 — v1.0.0 release** (1 week) | CHANGELOG, migration guide, npm publish, GitHub release |
+| Phase | Status | Scope |
+|---|---|---|
+| **0 — Archive + ADR** | ✅ shipped | v1 frozen in `v1-reference/`, ADRs approved, baseline measurements |
+| **1 — Core engine + primitives** | ✅ shipped | Composer, renderer, tokens, output routing, first 8 primitives |
+| **2 — Sections + first recipe** | ✅ shipped | Image-consuming sections, tutorial recipe, CLI subcommands, decision gate |
+| **3a — Layout primitives** | ✅ shipped | `landscape-section`, `slide-frame`, `full-bleed-page`, `two-column-page`, `section-divider-page`, `appendix-page` |
+| **3b — AI-assisted component builder** | ✅ shipped | `COMPONENT-BUILDER.md` playbook + `/katib component new` entry point |
+| **3c — Content primitives** | ✅ shipped | `executive-summary`, `timeline`, `citation`, `references-list`, `toc`, `metric-block` |
+| **3d — Recipe migration** | ✅ shipped | 6 new bilingual starters (legal-nda, legal-service-agreement, personal-bio, formal-authority-letter, report-progress, editorial-article) |
+| **3e — Docs + tutorial** | ✅ shipped | README polish, TUTORIAL.md, CHANGELOG, seed manifest expansion |
+| **4 — Self-improvement + sharing** | next | Reflect, feedback, import/export — `~/.katib/` content becomes shareable |
+| **5 — v1.0.0 release** | planned | Migration guide, final CHANGELOG, `@latest` moves off v0.x |
 
 ## Contributing
 
