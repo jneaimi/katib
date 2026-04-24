@@ -124,6 +124,11 @@ fi
 # ---------- 5. User directories + config ----------
 info "Setting up user directories"
 mkdir -p "$HOME/.katib/brands" \
+         "$HOME/.katib/recipes" \
+         "$HOME/.katib/components/primitives" \
+         "$HOME/.katib/components/sections" \
+         "$HOME/.katib/components/covers" \
+         "$HOME/.katib/memory" \
          "$HOME/.config/katib" \
          "$HOME/.local/share/katib/memory"
 
@@ -225,10 +230,12 @@ fi
 say ""
 say "${BOLD}${GREEN}✓ Katib installed${RESET}"
 say ""
-say "  Skill:   $SKILL_DIR"
-say "  Config:  $CONFIG_FILE"
-say "  Brands:  $HOME/.katib/brands/"
-say "  Memory:  $HOME/.local/share/katib/memory/"
+say "  Skill:      $SKILL_DIR"
+say "  Config:     $CONFIG_FILE"
+say "  Brands:     $HOME/.katib/brands/"
+say "  Recipes:    $HOME/.katib/recipes/          ${DIM}(your custom recipes live here — survive reinstall)${RESET}"
+say "  Components: $HOME/.katib/components/       ${DIM}(your custom components — survive reinstall)${RESET}"
+say "  Memory:     $HOME/.local/share/katib/memory/"
 say ""
 say "Next: restart Claude Code, then invoke ${BOLD}/katib${RESET} in any conversation."
 say ""

@@ -2,8 +2,11 @@
 # Katib uninstaller — removes the skill from ~/.claude/skills/katib/.
 #
 # By default, preserves user data:
-#   ~/.katib/           — your brand profiles
-#   ~/.config/katib/    — your user config
+#   ~/.katib/brands/              — your brand profiles + cover-preset assets
+#   ~/.katib/recipes/             — recipes you authored
+#   ~/.katib/components/          — components you authored (primitives, sections, covers)
+#   ~/.katib/memory/              — audit + graduation-gate logs for your content
+#   ~/.config/katib/              — your user config
 #   ~/.local/share/katib/memory/  — feedback + run logs
 #
 # Pass --purge to wipe those too.
@@ -37,7 +40,10 @@ if [ "$PURGE" -eq 1 ]; then
 else
   echo ""
   echo "User data preserved:"
-  echo "  ~/.katib/                     (brand profiles)"
+  echo "  ~/.katib/brands/              (brand profiles + cover presets)"
+  echo "  ~/.katib/recipes/             (your recipes)"
+  echo "  ~/.katib/components/          (your components)"
+  echo "  ~/.katib/memory/              (user-tier audit logs)"
   echo "  ~/.config/katib/              (config.yaml)"
   echo "  ~/.local/share/katib/memory/  (feedback logs)"
   echo ""

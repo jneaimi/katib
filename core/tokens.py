@@ -32,8 +32,30 @@ REPO_ROOT = CORE_DIR.parent
 BASE_TOKENS_FILE = CORE_DIR / "tokens.base.yaml"
 REPO_BRANDS_DIR = REPO_ROOT / "brands"
 
+# User-tier directory env overrides + defaults. The user tier holds content
+# authored by the installing user — recipes, components, audit files, memory.
+# It lives outside the skill folder so `npx @jasemal/katib install` can't
+# overwrite it on reinstall. Shipped (bundled) content continues to live at
+# REPO_ROOT, and the engine searches user-tier first, bundled tier second.
+#
+# Phase 1 adds the helpers only; actual read/write wiring happens in
+# Phases 2–4 per the user-content-layout ADR.
 USER_BRANDS_DIR_ENV = "KATIB_BRANDS_DIR"
 DEFAULT_USER_BRANDS_DIR = Path.home() / ".katib" / "brands"
+
+USER_RECIPES_DIR_ENV = "KATIB_RECIPES_DIR"
+DEFAULT_USER_RECIPES_DIR = Path.home() / ".katib" / "recipes"
+
+USER_COMPONENTS_DIR_ENV = "KATIB_COMPONENTS_DIR"
+DEFAULT_USER_COMPONENTS_DIR = Path.home() / ".katib" / "components"
+
+# Shared with core/request_log.py's existing `KATIB_MEMORY_DIR` env var. In
+# Phase 2 request_log.memory_dir() will delegate here so there is exactly
+# one memory directory on disk (currently they share the env but diverge on
+# default — request_log falls back to REPO_ROOT/memory, this falls back to
+# ~/.katib/memory/).
+USER_MEMORY_DIR_ENV = "KATIB_MEMORY_DIR"
+DEFAULT_USER_MEMORY_DIR = Path.home() / ".katib" / "memory"
 
 _COLOR_PATTERNS = (
     re.compile(r"^#[0-9a-fA-F]{3,8}$"),
@@ -77,6 +99,24 @@ def user_brands_dir() -> Path:
 def brand_file_path(name_or_path: str) -> Path:
     """Public accessor — resolve a brand name (or path) to its on-disk YAML."""
     return _resolve_brand_path(name_or_path)
+
+
+def user_recipes_dir() -> Path:
+    """Where user-authored recipes live. $KATIB_RECIPES_DIR overrides the default."""
+    env = os.environ.get(USER_RECIPES_DIR_ENV)
+    return Path(env).expanduser() if env else DEFAULT_USER_RECIPES_DIR
+
+
+def user_components_dir() -> Path:
+    """Where user-authored components live. $KATIB_COMPONENTS_DIR overrides."""
+    env = os.environ.get(USER_COMPONENTS_DIR_ENV)
+    return Path(env).expanduser() if env else DEFAULT_USER_COMPONENTS_DIR
+
+
+def user_memory_dir() -> Path:
+    """Where user audit + graduation-gate logs live. $KATIB_MEMORY_DIR overrides."""
+    env = os.environ.get(USER_MEMORY_DIR_ENV)
+    return Path(env).expanduser() if env else DEFAULT_USER_MEMORY_DIR
 
 
 def load_base_tokens() -> dict[str, Any]:
