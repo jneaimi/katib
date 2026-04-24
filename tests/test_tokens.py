@@ -136,3 +136,75 @@ def test_tokens_css_emits_root_block():
     assert css.rstrip().endswith("}")
     assert "--accent:" in css
     assert "--page-bg:" in css
+
+
+# ---------------------------------------------------------------- user-tier dir helpers (phase 1)
+
+from pathlib import Path  # noqa: E402  (test-file-local import for the phase-1 helpers)
+
+from core.tokens import (  # noqa: E402
+    DEFAULT_USER_BRANDS_DIR,
+    DEFAULT_USER_COMPONENTS_DIR,
+    DEFAULT_USER_MEMORY_DIR,
+    DEFAULT_USER_RECIPES_DIR,
+    user_brands_dir,
+    user_components_dir,
+    user_memory_dir,
+    user_recipes_dir,
+)
+
+
+def test_user_recipes_dir_default(monkeypatch):
+    monkeypatch.delenv("KATIB_RECIPES_DIR", raising=False)
+    assert user_recipes_dir() == DEFAULT_USER_RECIPES_DIR
+    assert user_recipes_dir() == Path.home() / ".katib" / "recipes"
+
+
+def test_user_recipes_dir_env_override(tmp_path, monkeypatch):
+    monkeypatch.setenv("KATIB_RECIPES_DIR", str(tmp_path / "custom-recipes"))
+    assert user_recipes_dir() == tmp_path / "custom-recipes"
+
+
+def test_user_recipes_dir_tilde_expansion(monkeypatch):
+    monkeypatch.setenv("KATIB_RECIPES_DIR", "~/some-dir/recipes")
+    assert user_recipes_dir() == Path.home() / "some-dir" / "recipes"
+
+
+def test_user_components_dir_default(monkeypatch):
+    monkeypatch.delenv("KATIB_COMPONENTS_DIR", raising=False)
+    assert user_components_dir() == DEFAULT_USER_COMPONENTS_DIR
+    assert user_components_dir() == Path.home() / ".katib" / "components"
+
+
+def test_user_components_dir_env_override(tmp_path, monkeypatch):
+    monkeypatch.setenv("KATIB_COMPONENTS_DIR", str(tmp_path / "custom-components"))
+    assert user_components_dir() == tmp_path / "custom-components"
+
+
+def test_user_memory_dir_default(monkeypatch):
+    monkeypatch.delenv("KATIB_MEMORY_DIR", raising=False)
+    assert user_memory_dir() == DEFAULT_USER_MEMORY_DIR
+    assert user_memory_dir() == Path.home() / ".katib" / "memory"
+
+
+def test_user_memory_dir_env_override(tmp_path, monkeypatch):
+    monkeypatch.setenv("KATIB_MEMORY_DIR", str(tmp_path / "custom-memory"))
+    assert user_memory_dir() == tmp_path / "custom-memory"
+
+
+def test_user_brands_dir_still_works(monkeypatch):
+    """Regression: the existing helper must keep its current behavior."""
+    monkeypatch.delenv("KATIB_BRANDS_DIR", raising=False)
+    assert user_brands_dir() == DEFAULT_USER_BRANDS_DIR
+
+
+def test_user_dirs_are_distinct():
+    """Brands / recipes / components / memory must resolve to different defaults
+    so they can be managed (backed up, deleted, overridden) independently."""
+    defaults = {
+        DEFAULT_USER_BRANDS_DIR,
+        DEFAULT_USER_RECIPES_DIR,
+        DEFAULT_USER_COMPONENTS_DIR,
+        DEFAULT_USER_MEMORY_DIR,
+    }
+    assert len(defaults) == 4
