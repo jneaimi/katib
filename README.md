@@ -8,6 +8,7 @@
 > auto-regenerating capabilities), `npx @jasemal/katib install` installs
 > the current alpha.
 
+[![CI](https://github.com/jneaimi/katib/actions/workflows/ci.yml/badge.svg)](https://github.com/jneaimi/katib/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square)](https://www.npmjs.com/package/@jasemal/katib)
 [![license](https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square)](LICENSE)
 ![status](https://img.shields.io/badge/v2-alpha-orange?style=flat-square)
