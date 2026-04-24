@@ -1,14 +1,15 @@
 name: legal-mou
-version: 0.1.0
+version: 0.2.0
 namespace: katib
-description: UAE bilateral MoU — centered masthead + Template Notice + 2-party callouts + 10 numbered clauses with clause-list + 2-party signature grid. First production consumer of clause-list primitive. Closes the Day-0 component queue (legal-disclaimer-strip absorbed into callout neutral; recitals-block replaced by clause-list per v1 evidence).
+description: UAE bilateral MoU — centered masthead + Template Notice + 2-party callouts + 10 numbered clauses with clause-list + 2-party signature grid. First production consumer of clause-list primitive. v0.2.0 adds EN+AR bilingual rendering via inputs_by_lang — first legal-domain recipe to ship bilingual.
 languages:
 - en
+- ar
 target_pages:
 - 2
 - 4
 page_limit: 4
-when: UAE bilateral non-binding Memorandum of Understanding. Primarily non-binding with specific binding clauses (confidentiality, governing law, costs). First v2 legal-domain recipe. EN-only; AR deferred pending inputs_by_lang schema.
+when: UAE bilateral non-binding Memorandum of Understanding. Primarily non-binding with specific binding clauses (confidentiality, governing law, costs). First v2 legal-domain recipe; bilingual EN+AR.
 keywords:
 - legal
 - mou
@@ -17,197 +18,331 @@ keywords:
 - agreement
 - uae
 - non-binding
+- bilingual
 
 sections:
   # 1. Masthead — centered inline module (density block #1: centered doc header)
+  #    raw_body differs by lang — uppercasing + letter-spacing apply only to EN.
   - component: module
-    inputs:
-      raw_body: |
-        <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
-          <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Memorandum of Understanding</div>
-          <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">MOU · [Short Purpose Title]</h1>
-          <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Non-binding statement of intent between two parties]</div>
-          <div style="font-size: 10pt; color: var(--text-tertiary);">Reference: MOU-2026-0042 · Dated 2026-04-24</div>
-        </div>
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Memorandum of Understanding</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">MOU · [Short Purpose Title]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Non-binding statement of intent between two parties]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">Reference: MOU-2026-0042 · Dated 2026-04-24</div>
+          </div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 10pt; color: var(--accent); font-weight: 700; margin-bottom: 10pt;">مذكرة تفاهم</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">مذكرة تفاهم · [عنوان مختصر للغرض]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[بيان نوايا غير ملزم بين طرفين]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">المرجع: MOU-2026-0042 · بتاريخ 2026-04-24</div>
+          </div>
 
-  # 2. Template Notice — callout neutral (5th consumer; absorbs legal-disclaimer-strip)
+  # 2. Template Notice — callout neutral (absorbs legal-disclaimer-strip)
   - component: callout
     inputs:
       tone: neutral
-      title: "Template Notice"
-      body: "This is a Katib template for a Memorandum of Understanding (MOU) between two parties. It is drafted as a primarily non-binding instrument. Specific clauses (confidentiality, exclusivity, governing law) may be drafted as binding. Have the final instrument reviewed by counsel before execution."
+    inputs_by_lang:
+      en:
+        title: "Template Notice"
+        body: "This is a Katib template for a Memorandum of Understanding (MOU) between two parties. It is drafted as a primarily non-binding instrument. Specific clauses (confidentiality, exclusivity, governing law) may be drafted as binding. Have the final instrument reviewed by counsel before execution."
+      ar:
+        title: "ملاحظة قالب"
+        body: "هذا قالب من Katib لمذكرة تفاهم بين طرفين. صيغ كمستند غير ملزم في معظم بنوده، مع بنود محددة قد تصاغ ملزمة (السرية، الحصرية، القانون الحاكم). يُنصح بمراجعة الصيغة النهائية من قبل مستشار قانوني قبل التوقيع."
 
-  # 3. §1 heading — module numbered (§1)
+  # 3. §1 heading — module numbered
   - component: module
     variant: numbered
     inputs:
       number: 1
-      title: "The Parties"
-      intro: 'This Memorandum of Understanding (the "MOU") is entered into on 2026-04-24 between:'
+    inputs_by_lang:
+      en:
+        title: "The Parties"
+        intro: 'This Memorandum of Understanding (the "MOU") is entered into on 2026-04-24 between:'
+      ar:
+        title: "الأطراف"
+        intro: 'تُبرم مذكرة التفاهم هذه ("المذكرة") بتاريخ 2026-04-24 بين:'
 
-  # 4. Party A — callout info (3rd info consumer)
+  # 4. Party A — callout info
   - component: callout
     inputs:
       tone: info
-      title: "Party A"
-      body: "jasem | katib · [Licence No.] · [Address, City, Emirate]"
+    inputs_by_lang:
+      en:
+        title: "Party A"
+        body: "jasem | katib · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "الطرف الأول"
+        body: "jasem | katib · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
 
-  # 5. Party B — callout info (4th info consumer)
+  # 5. Party B — callout info
   - component: callout
     inputs:
       tone: info
-      title: "Party B"
-      body: "[Party B Legal Name] · [Licence No.] · [Address, City, Emirate]"
+    inputs_by_lang:
+      en:
+        title: "Party B"
+        body: "[Party B Legal Name] · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "الطرف الثاني"
+        body: "[الاسم القانوني للطرف الثاني] · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
 
   # 6. §2 Background
   - component: module
     variant: numbered
     inputs:
       number: 2
-      title: "Background"
-      body: "[Two or three sentences. Describe the context in which the parties are meeting: what each party does, what common interest or opportunity has emerged, and what question this MOU intends to answer.]"
+    inputs_by_lang:
+      en:
+        title: "Background"
+        body: "[Two or three sentences. Describe the context in which the parties are meeting: what each party does, what common interest or opportunity has emerged, and what question this MOU intends to answer.]"
+      ar:
+        title: "التمهيد"
+        body: "[جملتان أو ثلاث جمل. وصف للسياق الذي يلتقي فيه الطرفان: ما يقوم به كل طرف، وما المصلحة المشتركة أو الفرصة التي نشأت، وما السؤال الذي تهدف هذه المذكرة إلى الإجابة عنه.]"
 
   # 7. §3 Purpose heading
   - component: module
     variant: numbered
     inputs:
       number: 3
-      title: "Purpose"
-      intro: "The Parties enter into this MOU for the following purpose:"
+    inputs_by_lang:
+      en:
+        title: "Purpose"
+        intro: "The Parties enter into this MOU for the following purpose:"
+      ar:
+        title: "الغرض"
+        intro: "يبرم الطرفان هذه المذكرة للغرض التالي:"
 
   # 8. §3 clauses — clause-list (FIRST PRODUCTION CONSUMER of clause-list primitive)
   - component: clause-list
-    inputs:
-      items:
-        - "To explore a potential [collaboration / partnership / joint venture / commercial arrangement] concerning [subject matter]."
-        - "To establish a framework for discussion, evaluation, and due diligence prior to any binding agreement."
-        - "To define the respective areas of responsibility and contribution each Party proposes to bring."
+    inputs_by_lang:
+      en:
+        items:
+          - "To explore a potential [collaboration / partnership / joint venture / commercial arrangement] concerning [subject matter]."
+          - "To establish a framework for discussion, evaluation, and due diligence prior to any binding agreement."
+          - "To define the respective areas of responsibility and contribution each Party proposes to bring."
+      ar:
+        items:
+          - "استكشاف [تعاون / شراكة / مشروع مشترك / ترتيب تجاري] محتمل بشأن [موضوع التعاون]."
+          - "وضع إطار للنقاش والتقييم والعناية الواجبة قبل أي اتفاق ملزم."
+          - "تحديد نطاق المسؤولية والمساهمة التي يقترح كل طرف تقديمها."
 
   # 9. §4 Scope of Cooperation heading
   - component: module
     variant: numbered
     inputs:
       number: 4
-      title: "Scope of Cooperation"
+    inputs_by_lang:
+      en:
+        title: "Scope of Cooperation"
+      ar:
+        title: "نطاق التعاون"
 
   # 10. §4 clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "The Parties shall collaborate on [specific activities, workstreams, or deliverables] during the exploratory period."
-        - "Each Party shall appoint a primary point of contact responsible for coordination."
-        - "Meetings, information exchange, and site visits shall be arranged as the Parties deem appropriate."
+    inputs_by_lang:
+      en:
+        items:
+          - "The Parties shall collaborate on [specific activities, workstreams, or deliverables] during the exploratory period."
+          - "Each Party shall appoint a primary point of contact responsible for coordination."
+          - "Meetings, information exchange, and site visits shall be arranged as the Parties deem appropriate."
+      ar:
+        items:
+          - "يتعاون الطرفان على [أنشطة أو مسارات عمل أو مخرجات محددة] خلال الفترة الاستكشافية."
+          - "يعين كل طرف نقطة اتصال رئيسية مسؤولة عن التنسيق."
+          - "تُرتَّب الاجتماعات وتبادل المعلومات والزيارات الميدانية بحسب ما يراه الطرفان مناسبًا."
 
   # 11. §5 Responsibilities — Party A heading
   - component: module
     variant: numbered
     inputs:
       number: 5
-      title: "Responsibilities"
-      intro: "Party A shall:"
+    inputs_by_lang:
+      en:
+        title: "Responsibilities"
+        intro: "Party A shall:"
+      ar:
+        title: "المسؤوليات"
+        intro: "يتعهد الطرف الأول بما يلي:"
 
   # 12. §5 Party A clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "[Specific contribution or commitment — Party A, item 1.]"
-        - "[Specific contribution — Party A, item 2.]"
-        - "[Specific contribution — Party A, item 3.]"
+    inputs_by_lang:
+      en:
+        items:
+          - "[Specific contribution or commitment — Party A, item 1.]"
+          - "[Specific contribution — Party A, item 2.]"
+          - "[Specific contribution — Party A, item 3.]"
+      ar:
+        items:
+          - "[مساهمة أو التزام محدد — الطرف الأول، البند 1.]"
+          - "[مساهمة محددة — الطرف الأول، البند 2.]"
+          - "[مساهمة محددة — الطرف الأول، البند 3.]"
 
   # 13. §5 Party B — module plain (continues §5, no number)
   - component: module
-    inputs:
-      body: "Party B shall:"
+    inputs_by_lang:
+      en:
+        body: "Party B shall:"
+      ar:
+        body: "يتعهد الطرف الثاني بما يلي:"
 
   # 14. §5 Party B clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "[Specific contribution — Party B, item 1.]"
-        - "[Specific contribution — Party B, item 2.]"
-        - "[Specific contribution — Party B, item 3.]"
+    inputs_by_lang:
+      en:
+        items:
+          - "[Specific contribution — Party B, item 1.]"
+          - "[Specific contribution — Party B, item 2.]"
+          - "[Specific contribution — Party B, item 3.]"
+      ar:
+        items:
+          - "[مساهمة محددة — الطرف الثاني، البند 1.]"
+          - "[مساهمة محددة — الطرف الثاني، البند 2.]"
+          - "[مساهمة محددة — الطرف الثاني، البند 3.]"
 
   # 15. §6 Non-Binding Nature heading
   - component: module
     variant: numbered
     inputs:
       number: 6
-      title: "Non-Binding Nature"
+    inputs_by_lang:
+      en:
+        title: "Non-Binding Nature"
+      ar:
+        title: "الطبيعة غير الملزمة"
 
-  # 16. §6 emphasis — callout neutral (6th consumer; 2nd neutral use in this recipe)
+  # 16. §6 emphasis — callout neutral (2nd neutral use in this recipe)
   - component: callout
     inputs:
       tone: neutral
-      body: "The Parties acknowledge and agree that, except for Clauses 7 (Confidentiality), 9 (Governing Law), and 10 (Costs), this MOU is <strong>non-binding</strong> and does not create any legal or equitable obligations on either Party. Any binding commitments require a separate written agreement executed by authorised representatives of both Parties."
+    inputs_by_lang:
+      en:
+        body: "The Parties acknowledge and agree that, except for Clauses 7 (Confidentiality), 9 (Governing Law), and 10 (Costs), this MOU is <strong>non-binding</strong> and does not create any legal or equitable obligations on either Party. Any binding commitments require a separate written agreement executed by authorised representatives of both Parties."
+      ar:
+        body: "يقر الطرفان ويتفقان على أن هذه المذكرة، باستثناء البنود 7 (السرية) و9 (القانون الحاكم) و10 (التكاليف)، هي <strong>غير ملزمة</strong> ولا تنشئ أي التزامات قانونية أو قضائية على أي من الطرفين. تتطلب أي التزامات ملزمة اتفاقًا خطيًا منفصلًا يوقعه ممثلون مخولون من الطرفين."
 
   # 17. §7 Confidentiality (binding) heading
   - component: module
     variant: numbered
     inputs:
       number: 7
-      title: "Confidentiality (binding)"
+    inputs_by_lang:
+      en:
+        title: "Confidentiality (binding)"
+      ar:
+        title: "السرية (ملزم)"
 
   # 18. §7 clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "Any non-public information exchanged between the Parties in connection with this MOU shall be treated as confidential."
-        - "Neither Party shall disclose such information to any third party without the prior written consent of the disclosing Party."
-        - "The confidentiality obligations in this Clause survive the termination of this MOU for a period of two (2) years."
+    inputs_by_lang:
+      en:
+        items:
+          - "Any non-public information exchanged between the Parties in connection with this MOU shall be treated as confidential."
+          - "Neither Party shall disclose such information to any third party without the prior written consent of the disclosing Party."
+          - "The confidentiality obligations in this Clause survive the termination of this MOU for a period of two (2) years."
+      ar:
+        items:
+          - "تُعامل أي معلومات غير عامة يتبادلها الطرفان في سياق هذه المذكرة على أنها سرية."
+          - "لا يجوز لأي طرف الإفصاح عن هذه المعلومات لأي طرف ثالث دون موافقة خطية مسبقة من الطرف المفصح."
+          - "تبقى التزامات السرية الواردة في هذا البند سارية بعد إنهاء المذكرة لمدة سنتين (2)."
 
   # 19. §8 Term and Termination heading
   - component: module
     variant: numbered
     inputs:
       number: 8
-      title: "Term and Termination"
+    inputs_by_lang:
+      en:
+        title: "Term and Termination"
+      ar:
+        title: "المدة والإنهاء"
 
   # 20. §8 clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "This MOU is effective from 2026-04-24 and continues for [six (6) months] unless extended by mutual written agreement."
-        - "Either Party may terminate this MOU at any time by giving [14] days' written notice to the other."
-        - "Termination shall not affect the binding clauses (Confidentiality, Governing Law, Costs), which survive."
+    inputs_by_lang:
+      en:
+        items:
+          - "This MOU is effective from 2026-04-24 and continues for [six (6) months] unless extended by mutual written agreement."
+          - "Either Party may terminate this MOU at any time by giving [14] days' written notice to the other."
+          - "Termination shall not affect the binding clauses (Confidentiality, Governing Law, Costs), which survive."
+      ar:
+        items:
+          - "تسري هذه المذكرة من تاريخ 2026-04-24 وتستمر لمدة [ستة (6) أشهر] ما لم تُمدَّد باتفاق خطي متبادل."
+          - "يحق لأي من الطرفين إنهاء هذه المذكرة في أي وقت بإشعار خطي مدته [14] يومًا إلى الطرف الآخر."
+          - "لا يؤثر الإنهاء على البنود الملزمة (السرية، القانون الحاكم، التكاليف) التي تبقى سارية."
 
   # 21. §9 Governing Law (binding) heading
   - component: module
     variant: numbered
     inputs:
       number: 9
-      title: "Governing Law (binding)"
+    inputs_by_lang:
+      en:
+        title: "Governing Law (binding)"
+      ar:
+        title: "القانون الحاكم (ملزم)"
 
   # 22. §9 clauses — clause-list
   - component: clause-list
-    inputs:
-      items:
-        - "This MOU and any dispute arising from its binding clauses shall be governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate]."
-        - "Disputes shall be resolved through good-faith negotiation. Failing resolution, they shall be referred to the courts of [Emirate] / [DIFC Courts] / [DIAC arbitration]."
+    inputs_by_lang:
+      en:
+        items:
+          - "This MOU and any dispute arising from its binding clauses shall be governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate]."
+          - "Disputes shall be resolved through good-faith negotiation. Failing resolution, they shall be referred to the courts of [Emirate] / [DIFC Courts] / [DIAC arbitration]."
+      ar:
+        items:
+          - "تخضع هذه المذكرة وأي نزاع ينشأ عن بنودها الملزمة لقوانين دولة الإمارات العربية المتحدة، كما تُطبَّق في إمارة [الإمارة]."
+          - "تُحل النزاعات عن طريق التفاوض بحسن نية. وفي حال تعذر الحل، تُحال إلى محاكم [الإمارة] / [محاكم مركز دبي المالي العالمي] / [التحكيم عبر مركز دبي الدولي للتحكيم]."
 
   # 23. §10 Costs (binding) — prose-only module numbered
   - component: module
     variant: numbered
     inputs:
       number: 10
-      title: "Costs (binding)"
-      body: "Each Party shall bear its own costs incurred in connection with this MOU, including legal fees, due-diligence costs, and travel, unless otherwise agreed in writing."
+    inputs_by_lang:
+      en:
+        title: "Costs (binding)"
+        body: "Each Party shall bear its own costs incurred in connection with this MOU, including legal fees, due-diligence costs, and travel, unless otherwise agreed in writing."
+      ar:
+        title: "التكاليف (ملزم)"
+        body: "يتحمل كل طرف تكاليفه الخاصة المتكبدة فيما يتعلق بهذه المذكرة، بما في ذلك الأتعاب القانونية وتكاليف العناية الواجبة والسفر، ما لم يُتفق خطيًا على خلاف ذلك."
 
   # 24. Execution heading (centered, inline density block #2)
   - component: module
-    inputs:
-      raw_body: |
-        <div style="margin-top: 18pt; padding-top: 14pt; border-top: 2pt solid var(--accent);">
-          <h2 style="text-align: center; font-size: 12pt; letter-spacing: 0.1em; text-transform: uppercase; border: 0; margin: 0 0 14pt 0; color: var(--accent); font-weight: 700;">Execution</h2>
-        </div>
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="margin-top: 18pt; padding-top: 14pt; border-top: 2pt solid var(--accent);">
+            <h2 style="text-align: center; font-size: 12pt; letter-spacing: 0.1em; text-transform: uppercase; border: 0; margin: 0 0 14pt 0; color: var(--accent); font-weight: 700;">Execution</h2>
+          </div>
+      ar:
+        raw_body: |
+          <div style="margin-top: 18pt; padding-top: 14pt; border-top: 2pt solid var(--accent);">
+            <h2 style="text-align: center; font-size: 13pt; border: 0; margin: 0 0 14pt 0; color: var(--accent); font-weight: 700;">التوقيع</h2>
+          </div>
 
-  # 25. Signatory grid — signature-field-block primitive (1st consumer post-Phase-3 graduation;
-  #     replaces 16-line inline div grid that was duplicated across quote + mou).
+  # 25. Signatory grid — signature-field-block primitive (1st consumer post-Phase-3 graduation).
+  #     v0.2.0: labels + field names switch by lang via inputs_by_lang.
   - component: signature-field-block
-    inputs:
-      parties:
-        - label: "For Party A"
-          name: "jasem | katib"
-          fields: ["Name", "Title", "Signature", "Date"]
-        - label: "For Party B"
-          name: "[Party B]"
-          fields: ["Name", "Title", "Signature", "Date"]
+    inputs_by_lang:
+      en:
+        parties:
+          - label: "For Party A"
+            name: "jasem | katib"
+            fields: ["Name", "Title", "Signature", "Date"]
+          - label: "For Party B"
+            name: "[Party B]"
+            fields: ["Name", "Title", "Signature", "Date"]
+      ar:
+        parties:
+          - label: "عن الطرف الأول"
+            name: "jasem | katib"
+            fields: ["الاسم", "الصفة", "التوقيع", "التاريخ"]
+          - label: "عن الطرف الثاني"
+            name: "[الطرف الثاني]"
+            fields: ["الاسم", "الصفة", "التوقيع", "التاريخ"]

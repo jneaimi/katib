@@ -3,6 +3,50 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — Phase-4 Day 2: inputs_by_lang + first bilingual recipe (2026-04-24)
+
+Cutover (`~/.claude/skills/katib -> ~/dev/katib/`) validated in production via
+first real `/katib` invocation. AR was blocked on schema; this unblocks it.
+
+### Added
+
+- **`inputs_by_lang` in recipe sectionDef** — per-language input overrides
+  merged on top of base `inputs`. Keys must be declared languages (`en`,
+  `ar`). Use when section content differs by language (titles, bodies,
+  labels, clause items, raw_body). Shared fields stay in base `inputs`.
+  2 new tests in `test_compose.py`.
+- **`legal-mou` v0.2.0 — first bilingual recipe.** All 25 sections
+  migrated to `inputs_by_lang`. Added languages: `[en, ar]`. Arabic
+  content uses formal UAE legal register (مذكرة تفاهم، الأطراف،
+  السرية، القانون الحاكم، التوقيع). Masthead + Execution headers drop
+  uppercase/letter-spacing for AR (don't apply to Arabic script).
+  signature-field-block per-party labels translated (عن الطرف الأول،
+  عن الطرف الثاني، الاسم/الصفة/التوقيع/التاريخ).
+- 2 new tests in `test_legal_mou.py` covering AR render + AR page count.
+
+### Changed
+
+- `core/compose.py` section loop merges `inputs_by_lang[lang]` on top of
+  base `inputs` before passing to template — ~5-line diff, backwards
+  compatible (sections without `inputs_by_lang` unaffected).
+
+### Tests
+
+- 937 passing (+4 from 933).
+- `/katib render a legal MoU` works end-to-end for both languages via the
+  cutover symlink. Outputs land at `~/Documents/katib/legal-mou/<slug>/`.
+
+### Unblocks
+
+This schema lights up 9 more recipes flagged as "AR deferred pending
+inputs_by_lang": formal-noc (explicitly marked "first genuinely bilingual
+recipe"), personal-cv, business-proposal-{letter,one-pager,proposal},
+financial-invoice, financial-quote, editorial-white-paper,
+tutorial-katib-walkthrough. Rollout is per-recipe, independent, no
+engine work required.
+
+---
+
 ## [Unreleased] — Phase-4 Day 1: signature-field-block primitive (2026-04-24)
 
 ### Added
