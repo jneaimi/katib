@@ -3,8 +3,9 @@
 Feeds upstream into `gate.evaluate(signals, caps)`. Pure Python, deterministic,
 no LLM. Callers (Day 10's /katib runner; ad-hoc tests; integrations) pass in
 a plain-text transcript string; sensor returns a `ContextInference` with
-signals + a human-readable summary + a log-entry draft for Day 13's
-`memory/context-inferences.jsonl` writer.
+signals + a human-readable summary + a log-entry draft consumed by
+`core.request_log.log_context_inference` which persists it to
+`memory/context-inferences.jsonl`.
 
 Scope (Day 9):
     - intent (topic)   — last-N-chars of transcript; role-prefix stripped

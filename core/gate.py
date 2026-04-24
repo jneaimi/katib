@@ -31,9 +31,10 @@ Q1 × Q2 action matrix (ADR-sanctioned paths; no path bypasses the log)
         recurring` escalates to `request-graduation`.
 
 -----------------------------------------------------------------------
-Log-entry schema (schema_version: 1) — consumed by Day 13's
-log_recipe_request. Matches v1's minimal `{ts, request, routed_to,
-reason}` shape for continuity, extended with gate-specific fields.
+Log-entry schema (schema_version: 1) — written by
+`core.request_log.log_gate_decision` and `log_recipe_request`. Matches v1's
+minimal `{ts, request, routed_to, reason}` shape for continuity, extended
+with gate-specific fields.
 
     {
         schema_version: 1,

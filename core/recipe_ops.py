@@ -153,7 +153,8 @@ class RecipeScaffoldResult:
 def _graduation_request_count(name: str) -> int:
     """Count matching entries in memory/recipe-requests.jsonl.
 
-    Returns 0 if the file doesn't exist yet (Day 13 starts writing it).
+    Returns 0 if the file doesn't exist yet (no recipe requests have been
+    logged via the `/katib` gate's graduate path or `katib log_request`).
     """
     if not REQUESTS_FILE.exists():
         return 0
@@ -284,10 +285,9 @@ def scaffold_recipe(
         if count < GRADUATION_THRESHOLD and not force:
             if not REQUESTS_FILE.exists():
                 graduation_warning = (
-                    "Graduation gate is not yet active — "
-                    f"{_display_path(REQUESTS_FILE)} does not exist "
-                    "(Day 13 will start writing it). Scaffolded without a "
-                    "request count. When the log exists, core namespace "
+                    "Graduation gate: no recipe requests logged yet at "
+                    f"{_display_path(REQUESTS_FILE)}. Scaffolded without a "
+                    "request count. Once requests accumulate, core namespace "
                     f"scaffolds will require >={GRADUATION_THRESHOLD} matching "
                     "requests or --force --justification '<reason>'."
                 )

@@ -66,7 +66,7 @@ def test_component_scaffold_warns_when_log_empty(memdir):
     try:
         result = component_ops.scaffold(name, tier="primitive", languages=["en"])
         assert result.graduation_warning is not None
-        assert "not yet active" in result.graduation_warning.lower()
+        assert "no component requests logged yet" in result.graduation_warning.lower()
     finally:
         _cleanup_component_if_exists(name)
 
