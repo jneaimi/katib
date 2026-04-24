@@ -3,7 +3,6 @@
     gap: 18pt;
     margin: 1.4em 0;
     align-items: flex-start;
-    page-break-inside: avoid;
 }
 
 .katib-two-col--image-left { flex-direction: row; }

@@ -21,4 +21,4 @@ accepts:
         required: true
         description: The message body — plain text or minimal inline HTML.
 page_behavior:
-  break_inside: avoid
+  mode: atomic

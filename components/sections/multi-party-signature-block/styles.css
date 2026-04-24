@@ -1,6 +1,5 @@
 .katib-multi-party-signature-block {
     margin: 1.5em 0;
-    page-break-inside: avoid;
 }
 
 .katib-multi-party-signature-block__heading {
@@ -24,7 +23,6 @@
     font-size: 9.5pt;
     color: var(--text-tertiary);
     padding-top: 34pt;
-    page-break-inside: avoid;
 }
 
 .katib-multi-party-signature-block--line-over .katib-multi-party-signature-block__box {

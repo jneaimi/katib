@@ -40,4 +40,4 @@ variants:
   - default
   - with-delta-badge
 page_behavior:
-  break_inside: avoid
+  mode: atomic

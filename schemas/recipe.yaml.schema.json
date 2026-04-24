@@ -82,6 +82,16 @@
           "minItems": 2,
           "maxItems": 2,
           "items": { "type": "integer", "minimum": 1 }
+        },
+        "break_before": {
+          "type": "string",
+          "enum": ["auto", "always", "avoid"],
+          "description": "Override page break before this section instance. Use 'always' for chapter starts that must begin on a fresh page."
+        },
+        "page_behavior": {
+          "type": "string",
+          "enum": ["atomic", "flowing"],
+          "description": "Override the component's declared pagination mode for this specific instance. Use sparingly — only when a flowing component (like module) wraps a short, self-contained block that must stay whole. Does not support flowing-protect-items at recipe level (that requires child selectors, which is component-author territory)."
         }
       }
     }

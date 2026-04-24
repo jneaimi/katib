@@ -3,6 +3,77 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — Post-Phase-3 hotfixes + declarative pagination (2026-04-24)
+
+Post-ship smoke tests caught three real bugs in the 22-recipe set, and
+the Acceptance-block split-across-pages issue exposed a systemic gap
+in pagination. Engine now owns pagination CSS via component metadata
+(single source of truth) instead of hand-written CSS drift.
+
+### Added
+
+- **Declarative pagination metadata** — see
+  [[adr-katib-pagination-metadata]]. `page_behavior.mode` enum on every
+  `component.yaml` (`atomic`, `flowing`, `flowing-protect-items`)
+  drives engine-emitted per-section CSS at compose time. Components
+  wrapped in `<div id="katib-section-{N}">` for deterministic scoping
+  regardless of BEM class-naming quirks.
+- **Recipe-level overrides** — `sectionDef.page_behavior: atomic|flowing`
+  and `sectionDef.break_before: auto|always|avoid` on recipe sections.
+  Rare escape hatch for when a component's default doesn't fit the
+  specific instance.
+- **Jinja pre-render of raw HTML inputs** — `core/compose.py` now
+  pre-renders `raw_body`, `sidebar_html`, `main_html` through Jinja
+  when they contain `{{`. Enables inline SVG palette interpolation
+  via `{{ colors.accent }}` / `{{ fonts.display }}` (WeasyPrint's SVG
+  parser cannot resolve CSS `var()` in SVG presentation attributes or
+  SVG-scoped `style`).
+- **`--font-mono` CSS variable** injected alongside `--font-primary`
+  and `--font-display` in `_wrap_page`. Closes a pre-existing gap that
+  caused 34 empty `font-family:` warnings across tutorial-cheatsheet,
+  tutorial-handoff, and business-proposal recipes.
+- 6 new unit tests in `tests/test_compose.py` covering atomic /
+  flowing / protect-items emission + recipe-level overrides.
+
+### Changed
+
+- **cv-layout** — switched from CSS Grid to absolutely-positioned
+  page-1-only sidebar (`overflow: hidden` clips to 297mm) with
+  `margin-left: 70mm` flow on the main column. Grid pagination left
+  sidebar content bleeding onto page 2 without its background. Tighter
+  padding (14mm/12mm/10mm/12mm) + smaller photo placeholder (34mm) so
+  the default fixture fits comfortably on one page.
+- **tutorial-katib-walkthrough** — all 3 inline SVG diagrams migrated
+  from `fill="var(--accent)"` (rendered all-black by WeasyPrint) to
+  `fill="{{ colors.accent }}"` Jinja interpolation. Two teaching-text
+  code samples wrapped in `{% raw %}` to preserve literal display.
+- **business-proposal-proposal** — Section 11 ("Acceptance") gains
+  recipe-level `page_behavior: atomic`, forcing the sign-row module
+  to stay whole. Was splitting across pages with torn signature lines.
+- **31 component.yaml files** migrated from ad-hoc `break_inside`
+  values to declarative `mode:` field. 22 atomic, 4 flowing, 5
+  flowing-protect-items.
+- **25 redundant `page-break-inside` declarations** removed from
+  component CSS. Engine is now the single source of pagination truth.
+  Module's nested rich-body rules (figure/pre/blockquote) kept — those
+  protect arbitrary HTML inside a module body and are out of scope.
+
+### Removed
+
+- Dead `.katib-section { page-break-inside: avoid }` global rule in
+  `_wrap_page`. Superseded by per-component engine emission. The rule
+  WAS actually firing for many components (section-tier templates
+  emit `katib-section` as root class) — the new id-scoped emissions
+  replace it with semantically-correct rules.
+
+### Tests
+
+- 926 passing (was 920; +6 pagination coverage tests).
+- All 22 recipes render with 0 WeasyPrint warnings.
+- Acceptance block now renders entirely on page 5 (was split 4→5).
+
+---
+
 ## [Unreleased] — v2 **Phase 3 COMPLETE** (close 2026-04-24, Day 21)
 
 **Phase 3 closed.** 15 of 15 migrated recipes shipped. 11 new

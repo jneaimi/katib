@@ -34,4 +34,4 @@ variants:
   - with-legend
   - centered-stat
 page_behavior:
-  break_inside: avoid
+  mode: atomic

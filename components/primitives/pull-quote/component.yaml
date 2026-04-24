@@ -21,4 +21,4 @@ variants:
   - rule-leading
   - large-quote
 page_behavior:
-  break_inside: avoid
+  mode: atomic

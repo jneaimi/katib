@@ -29,4 +29,6 @@ variants:
   - dense
   - bordered
 page_behavior:
-  break_inside: avoid
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-sections-grid__card

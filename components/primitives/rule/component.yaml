@@ -10,3 +10,5 @@ variants:
   - hairline
   - strong
   - double
+page_behavior:
+  mode: flowing

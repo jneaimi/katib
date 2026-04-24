@@ -166,9 +166,12 @@ sections:
       raw_body: |
         <p style="margin: 12pt 0;">All figures exclude VAT where applicable. Materials, facilitator travel, and joint certification are included. Refund policy, cancellation terms, and IP ownership are detailed in the Master Services Agreement (OFFER-26-MSA-001).</p>
 
-  # 11. Section 5 — Acceptance (module numbered + inline sign-row)
+  # 11. Section 5 — Acceptance (module numbered + inline sign-row).
+  # page_behavior: atomic — this module wraps a sign-row that must stay whole;
+  # overrides the component's default `flowing` for this instance.
   - component: module
     variant: numbered
+    page_behavior: atomic
     inputs:
       number: 5
       title: "Acceptance"

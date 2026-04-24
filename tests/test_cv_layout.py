@@ -102,12 +102,18 @@ def test_cv_layout_renders_to_pdf(tmp_path):
     assert pdf.stat().st_size > 3000
 
 
-def test_cv_layout_grid_in_styles(tmp_path):
-    """CSS grid declaration is present in rendered HTML (via inlined styles)."""
+def test_cv_layout_positioning_in_styles(tmp_path):
+    """Sidebar is absolutely positioned at 70mm width, main shifts by 70mm.
+
+    Replaces the prior CSS-grid assertion: grid-based pagination left sidebar
+    content bleeding onto page 2 without its background. Absolute-position
+    keeps the sidebar on page 1 only; main column flows across pages.
+    """
     rfile = _inline_recipe(tmp_path)
     html, _ = compose(str(rfile), "en")
-    assert "grid-template-columns: 70mm 1fr" in html
-    assert "min-height: 257mm" in html
+    assert "position: absolute" in html
+    assert "width: 70mm" in html
+    assert "margin-left: 70mm" in html
 
 
 def test_cv_layout_sidebar_styling_present(tmp_path):

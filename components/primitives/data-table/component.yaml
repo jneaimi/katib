@@ -25,4 +25,6 @@ variants:
   - bordered
   - dense
 page_behavior:
-  break_inside: auto
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-data-table tr

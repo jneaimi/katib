@@ -16,3 +16,5 @@ accepts:
 variants:
   - muted
   - accent
+page_behavior:
+  mode: flowing

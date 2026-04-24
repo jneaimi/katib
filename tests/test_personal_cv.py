@@ -192,8 +192,8 @@ def test_cv_renders_all_v1_content(tmp_path):
     # Contact labels (uppercased by sidebar CSS)
     for label in ("Email", "Phone", "Location", "Portfolio", "LinkedIn"):
         assert label.upper() in flat.upper(), f"contact label missing: {label}"
-    # Personal labels
-    for label in ("Nationality", "Visa Status", "Date of Birth"):
+    # Personal labels (Date of Birth dropped from fixture — sensitive, rarely included in modern CVs)
+    for label in ("Nationality", "Visa Status"):
         assert label.upper() in flat.upper(), f"personal label missing: {label}"
     # Sidebar section headings (uppercased by sidebar CSS)
     for heading in ("Contact", "Personal", "Languages", "Core Skills", "Tools"):
@@ -242,10 +242,16 @@ def test_cv_has_four_tag_chips_in_html():
     assert len(matches) == 4
 
 
-def test_cv_has_grid_layout_in_html():
-    """Regression guard: cv-layout grid declaration present in rendered HTML."""
+def test_cv_has_positioned_sidebar_layout_in_html():
+    """Regression guard: cv-layout uses absolute-positioned 70mm sidebar.
+
+    (Earlier versions used CSS grid; grid let sidebar content bleed onto page 2
+    with missing background. Absolute-position keeps sidebar on page 1 only,
+    main column flows.)
+    """
     html, _ = compose(RECIPE_NAME, "en")
-    assert "grid-template-columns: 70mm 1fr" in html
+    assert "position: absolute" in html
+    assert "margin-left: 70mm" in html
 
 
 def test_cv_sidebar_has_photo_slot():

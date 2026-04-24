@@ -32,4 +32,4 @@ accepts:
 variants:
   - default
 page_behavior:
-  break_inside: avoid
+  mode: atomic

@@ -26,7 +26,7 @@ sections:
   - component: cv-layout
     inputs:
       sidebar_html: |
-        <div class="cv-photo" style="width: 42mm; height: 42mm; border-radius: 50%; background: rgba(255, 255, 255, 0.15); margin: 0 auto 14pt auto; border: 3pt solid rgba(255, 255, 255, 0.25);"></div>
+        <div class="cv-photo" style="width: 34mm; height: 34mm; border-radius: 50%; background: rgba(255, 255, 255, 0.15); margin: 0 auto 10pt auto; border: 2.5pt solid rgba(255, 255, 255, 0.25);"></div>
 
         <div class="cv-name-block" style="text-align: center; margin-bottom: 16pt;">
           <div style="font-size: 18pt; font-weight: 700; line-height: 1.15; margin-bottom: 3pt;">Jasem Al Neaimi</div>
@@ -36,19 +36,19 @@ sections:
         <section>
           <h3>Contact</h3>
           <ul class="cv-contact-list" style="list-style: none; padding: 0; margin: 0;">
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35; overflow-wrap: break-word;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3; overflow-wrap: break-word;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Email</span>jasem@jneaimi.com
             </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Phone</span>[+971 50 000 0000]
             </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Location</span>[City, UAE]
             </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Portfolio</span>[website.com]
             </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">LinkedIn</span>[linkedin.com/in/handle]
             </li>
           </ul>
@@ -57,14 +57,11 @@ sections:
         <section>
           <h3>Personal</h3>
           <ul class="cv-contact-list" style="list-style: none; padding: 0; margin: 0;">
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Nationality</span>[Nationality]
             </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+            <li style="font-size: 9pt; margin-bottom: 4pt; line-height: 1.3;">
               <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Visa Status</span>[Employment / Residence / Citizen]
-            </li>
-            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
-              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Date of Birth</span>[YYYY-MM-DD]
             </li>
           </ul>
         </section>

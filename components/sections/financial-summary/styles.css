@@ -3,7 +3,6 @@
     justify-content: flex-end;
     margin: 1em 0 1.2em 0;
     font-family: var(--font-primary);
-    page-break-inside: avoid;
 }
 
 .katib-financial-summary__box {

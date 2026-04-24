@@ -14,4 +14,4 @@ accepts:
         required: true
         description: "Array of {name (required string), level (required int 1-5)} mappings. `name` is the skill label; `level` drives the bar fill percentage (1=20%, 2=40%, 3=60%, 4=80%, 5=100%)."
 page_behavior:
-  break_inside: avoid
+  mode: atomic

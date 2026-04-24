@@ -5,7 +5,6 @@
     border-radius: 3pt;
     color: var(--text);
     border: 0 solid transparent;
-    page-break-inside: avoid;
 }
 
 .katib-callout[lang="en"] { border-left-width: 3px; }

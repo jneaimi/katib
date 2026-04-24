@@ -2,7 +2,6 @@
     font-family: var(--font-display);
     margin: 1.5em 0;
     color: var(--text);
-    page-break-inside: avoid;
 }
 
 .katib-pullquote[lang="en"] { padding-left: 16pt; }

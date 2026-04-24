@@ -160,6 +160,78 @@ def _load_primitive_styles() -> list[str]:
     return out
 
 
+_RAW_HTML_INPUTS = ("raw_body", "sidebar_html", "main_html")
+
+
+def _render_raw_html_inputs(
+    inputs: dict, env: Environment, ctx: dict
+) -> dict:
+    """Pre-render Jinja in raw-HTML pass-through inputs.
+
+    WeasyPrint's SVG parser cannot resolve CSS `var()` — so inline SVG
+    palette interpolation must happen at template time. Expressions like
+    `{{ colors.accent }}` in raw_body get substituted with literal hex here.
+
+    Only rewrites the three known raw-HTML inputs, and only when `{{` is
+    present, to keep user content with literal braces untouched.
+    """
+    out = dict(inputs)
+    for key in _RAW_HTML_INPUTS:
+        val = out.get(key)
+        if isinstance(val, str) and "{{" in val:
+            out[key] = env.from_string(val).render(**ctx)
+    return out
+
+
+_AVOID_RULE = "break-inside: avoid; page-break-inside: avoid;"
+
+
+def _pagination_css_for_component(
+    comp: dict, section_idx: int, section: dict
+) -> str:
+    """Emit per-section CSS from component page_behavior + recipe overrides.
+
+    Component metadata drives default pagination. Recipe sections can override
+    `page_behavior` (atomic|flowing only) and `break_before` per-instance.
+    Returns empty string when no rules apply.
+
+    All rules are scoped to the `#katib-section-{idx}` wrapper id that the
+    compose loop emits around every section. Using the id (rather than the
+    component's BEM class) keeps the scoping deterministic — the component
+    name → class convention has exceptions (e.g., reference-strip renders
+    as .katib-references) and recipe-level overrides need unique scoping anyway.
+    """
+    pb = comp.get("page_behavior") or {}
+    mode = pb.get("mode")
+    recipe_mode = section.get("page_behavior")
+    effective_mode = recipe_mode or mode
+
+    id_sel = f"#katib-section-{section_idx}"
+    parts: list[str] = []
+
+    if effective_mode == "atomic":
+        parts.append(f"{id_sel} {{ {_AVOID_RULE} }}")
+    elif effective_mode == "flowing-protect-items":
+        for sel in pb.get("protect_items") or []:
+            parts.append(f"{id_sel} {sel} {{ {_AVOID_RULE} }}")
+
+    if "break_after" in pb:
+        val = pb["break_after"]
+        parts.append(
+            f"{id_sel} {{ break-after: {val}; page-break-after: {val}; }}"
+        )
+
+    recipe_bb = section.get("break_before")
+    comp_bb = pb.get("break_before")
+    bb = recipe_bb or comp_bb
+    if bb and bb != "auto":
+        parts.append(
+            f"{id_sel} {{ break-before: {bb}; page-break-before: {bb}; }}"
+        )
+
+    return "\n".join(parts)
+
+
 def _image_input_specs(comp: dict) -> dict[str, dict]:
     """Extract {input_name: decl} for inputs declared as `type: image`.
 
@@ -258,6 +330,7 @@ def compose(
     env = _jinja_env()
     body_parts: list[str] = []
     style_parts: list[str] = _load_primitive_styles()
+    pagination_parts: list[str] = []
     seen_non_primitive: set[str] = set()
 
     for idx, section in enumerate(recipe["sections"]):
@@ -275,6 +348,7 @@ def compose(
             inputs, image_decls, cache_dir, providers, comp_name,
             tokens=merged, lang=lang,
         )
+        inputs = _render_raw_html_inputs(inputs, env, ctx)
 
         rendered = template.render(
             **ctx,
@@ -284,8 +358,14 @@ def compose(
             component={"name": comp_name, "tier": tier, "version": comp["version"]},
         )
         body_parts.append(
+            f'<div id="katib-section-{idx}">\n'
             f"<!-- section[{idx}]: {comp_name} -->\n{rendered.rstrip()}\n"
+            f"</div>\n"
         )
+
+        pag_css = _pagination_css_for_component(comp, idx, section)
+        if pag_css:
+            pagination_parts.append(f"/* section[{idx}]: {comp_name} */\n{pag_css}")
 
         if tier != "primitive" and comp_name not in seen_non_primitive:
             seen_non_primitive.add(comp_name)
@@ -294,6 +374,13 @@ def compose(
                 style_parts.append(
                     f"/* {comp_name} */\n{styles_file.read_text(encoding='utf-8')}"
                 )
+
+    # Pagination CSS last so it wins any cascade tie with component styles.
+    if pagination_parts:
+        style_parts.append(
+            "/* --- engine-emitted pagination CSS --- */\n"
+            + "\n\n".join(pagination_parts)
+        )
 
     page_html = _wrap_page(
         body="\n".join(body_parts),
@@ -320,12 +407,14 @@ def _wrap_page(
 ) -> str:
     primary = fonts.get("primary") or "system-ui"
     display = fonts.get("display") or primary
+    mono = fonts.get("mono") or "JetBrains Mono"
     fallback = fonts.get("fallback") or "sans-serif"
     safe_title = html.escape(title, quote=True)
 
     font_vars = (
         f'    --font-primary: "{primary}", {fallback};\n'
         f'    --font-display: "{display}", {fallback};\n'
+        f'    --font-mono: "{mono}", monospace;\n'
     )
     token_css_with_fonts = token_css.replace(
         "}", font_vars + "}", 1
@@ -385,10 +474,6 @@ code {{
 
 a {{ color: var(--accent); text-decoration: none; }}
 
-.katib-section {{
-    margin-bottom: 1.4em;
-    page-break-inside: avoid;
-}}
 """.strip()
 
     return f"""<!DOCTYPE html>

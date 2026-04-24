@@ -31,3 +31,5 @@ accepts:
         required: false
         description: City or city+country line (e.g., "Dubai, UAE"). Recipe-supplied only — no brand fallback.
 variants: []
+page_behavior:
+  mode: atomic

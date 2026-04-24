@@ -20,3 +20,5 @@ accepts:
 variants:
   - filled
   - outline
+page_behavior:
+  mode: flowing

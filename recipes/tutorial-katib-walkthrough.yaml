@@ -35,7 +35,7 @@ sections:
   - component: module
     inputs:
       raw_body: |
-        <p class="lead" style="font-size: 12pt; line-height: 1.55; color: var(--text-secondary); margin: 12pt 0; font-style: italic;">Katib (<span style="font-family: var(--font-display);">كاتب</span>) is the writer — a bilingual, print-grade document generator that lives inside Claude Code. This walkthrough takes you from install to self-improvement in six modules.</p>
+        <p class="lead" style="font-size: 12pt; line-height: 1.55; color: {{ colors.text_secondary }}; margin: 12pt 0; font-style: italic;">Katib (<span style="font-family: {{ fonts.display }};">كاتب</span>) is the writer — a bilingual, print-grade document generator that lives inside Claude Code. This walkthrough takes you from install to self-improvement in six modules.</p>
 
   # 3. "What you'll learn" — objectives-box (uses the Phase-2 primitive)
   - component: objectives-box
@@ -55,10 +55,10 @@ sections:
       title: "Before you begin"
       raw_body: |
         <ul style="margin: 6pt 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.6;">
-          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>macOS or Linux with Python 3.10+ and <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">uv</code> installed.</li>
-          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Claude Code installed, with this skill registered at <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">~/.claude/skills/katib/</code>.</li>
-          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>An Obsidian vault (or any folder) set as your output root.</li>
-          <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Optional: <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">GEMINI_API_KEY</code> for image-based covers (~$0.12 per cover).</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: {{ colors.accent }}; font-weight: 700;">☐</span>macOS or Linux with Python 3.10+ and <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">uv</code> installed.</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: {{ colors.accent }}; font-weight: 700;">☐</span>Claude Code installed, with this skill registered at <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">~/.claude/skills/katib/</code>.</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: {{ colors.accent }}; font-weight: 700;">☐</span>An Obsidian vault (or any folder) set as your output root.</li>
+          <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: {{ colors.accent }}; font-weight: 700;">☐</span>Optional: <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">GEMINI_API_KEY</code> for image-based covers (~$0.12 per cover).</li>
         </ul>
 
   # ===================== MODULE 1 — Install & first render =====================
@@ -140,7 +140,7 @@ sections:
         <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/build.py one-pager \
           --lang en --title "Katib works" \
           --purpose "First render"</pre>
-        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">You should see <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">✓ business-proposal/one-pager.en · 1 page</code>. The output folder contains the PDF, the rendered source HTML, a <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">manifest.md</code>, a token snapshot, and an Obsidian-compatible <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">.katib/run.json</code>.</p>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">You should see <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">✓ business-proposal/one-pager.en · 1 page</code>. The output folder contains the PDF, the rendered source HTML, a <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">manifest.md</code>, a token snapshot, and an Obsidian-compatible <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">.katib/run.json</code>.</p>
 
   # 14. Module 1 tip callout (3rd tip consumer after tutorial-how-to + onboarding)
   - component: callout
@@ -164,42 +164,42 @@ sections:
       raw_body: |
         <figure style="margin: 14pt 0 10pt 0; padding: 0; page-break-inside: avoid; text-align: center;">
           <svg viewBox="0 0 520 300" width="520" height="300" xmlns="http://www.w3.org/2000/svg">
-            <rect x="220" y="130" width="80" height="40" rx="4" fill="var(--accent)" />
-            <text x="260" y="154" text-anchor="middle" font-family="var(--font-display)" font-size="12" font-weight="600" fill="var(--accent-on)">Katib</text>
-            <g font-family="var(--font-display)" font-size="9" fill="var(--text-secondary)">
-              <line x1="220" y1="140" x2="90" y2="30" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="10" y="18" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+            <rect x="220" y="130" width="80" height="40" rx="4" fill="{{ colors.accent }}" />
+            <text x="260" y="154" text-anchor="middle" font-family="{{ fonts.display }}" font-size="12" font-weight="600" fill="{{ colors.accent_on }}">Katib</text>
+            <g font-family="{{ fonts.display }}" font-size="9" fill="{{ colors.text_secondary }}">
+              <line x1="220" y1="140" x2="90" y2="30" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="10" y="18" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="80" y="34" text-anchor="middle" font-weight="600">business-proposal</text>
-              <line x1="220" y1="145" x2="90" y2="85" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="10" y="72" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="220" y1="145" x2="90" y2="85" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="10" y="72" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="80" y="88" text-anchor="middle" font-weight="600">tutorial</text>
-              <line x1="220" y1="150" x2="90" y2="140" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="10" y="128" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="220" y1="150" x2="90" y2="140" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="10" y="128" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="80" y="144" text-anchor="middle" font-weight="600">report</text>
-              <line x1="220" y1="155" x2="90" y2="195" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="10" y="183" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="220" y1="155" x2="90" y2="195" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="10" y="183" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="80" y="199" text-anchor="middle" font-weight="600">formal</text>
-              <line x1="220" y1="160" x2="90" y2="250" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="10" y="238" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="220" y1="160" x2="90" y2="250" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="10" y="238" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="80" y="254" text-anchor="middle" font-weight="600">personal</text>
-              <line x1="300" y1="140" x2="430" y2="30" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="370" y="18" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="300" y1="140" x2="430" y2="30" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="370" y="18" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="440" y="34" text-anchor="middle" font-weight="600">academic</text>
-              <line x1="300" y1="145" x2="430" y2="85" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="370" y="72" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="300" y1="145" x2="430" y2="85" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="370" y="72" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="440" y="88" text-anchor="middle" font-weight="600">financial</text>
-              <line x1="300" y1="150" x2="430" y2="140" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="370" y="128" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="300" y1="150" x2="430" y2="140" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="370" y="128" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="440" y="144" text-anchor="middle" font-weight="600">editorial</text>
-              <line x1="300" y1="155" x2="430" y2="195" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="370" y="183" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="300" y1="155" x2="430" y2="195" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="370" y="183" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="440" y="199" text-anchor="middle" font-weight="600">marketing-print</text>
-              <line x1="300" y1="160" x2="430" y2="250" stroke="var(--border-strong)" stroke-width="0.5"/>
-              <rect x="370" y="238" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <line x1="300" y1="160" x2="430" y2="250" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
+              <rect x="370" y="238" width="140" height="24" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.5"/>
               <text x="440" y="254" text-anchor="middle" font-weight="600">legal</text>
             </g>
           </svg>
-          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">Ten domains, each with its own palette, typography, and page-count guardrails.</figcaption>
+          <figcaption style="font-size: 8.5pt; color: {{ colors.text_tertiary }}; font-style: italic; margin-top: 4pt;">Ten domains, each with its own palette, typography, and page-count guardrails.</figcaption>
         </figure>
 
   # 17. Quick-pick table heading
@@ -277,37 +277,37 @@ sections:
     inputs:
       title: "The Jasem brand, as an example"
       raw_body: |
-        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">This document itself is rendered with the <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">jasem</code> brand — Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">This document itself is rendered with the <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">jasem</code> brand — Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
 
         <div style="display: flex; gap: 8pt; margin: 8pt 0; flex-wrap: wrap;">
-          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
             <span style="height: 22mm; display: block; background: #F59E0B;"></span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">accent</span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#F59E0B</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: {{ colors.text_tertiary }}; padding: 3pt 0; display: block; background: {{ colors.page_bg }};">accent</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: {{ colors.text_secondary }}; padding: 0 0 3pt 0; display: block; background: {{ colors.page_bg }};">#F59E0B</span>
           </figure>
-          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
             <span style="height: 22mm; display: block; background: #FB923C;"></span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">accent_2</span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FB923C</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: {{ colors.text_tertiary }}; padding: 3pt 0; display: block; background: {{ colors.page_bg }};">accent_2</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: {{ colors.text_secondary }}; padding: 0 0 3pt 0; display: block; background: {{ colors.page_bg }};">#FB923C</span>
           </figure>
-          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
             <span style="height: 22mm; display: block; background: #18181B;"></span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">text</span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#18181B</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: {{ colors.text_tertiary }}; padding: 3pt 0; display: block; background: {{ colors.page_bg }};">text</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: {{ colors.text_secondary }}; padding: 0 0 3pt 0; display: block; background: {{ colors.page_bg }};">#18181B</span>
           </figure>
-          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
             <span style="height: 22mm; display: block; background: #FAFAFA; border: 0.5pt solid #E4E4E7;"></span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">page_bg</span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FAFAFA</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: {{ colors.text_tertiary }}; padding: 3pt 0; display: block; background: {{ colors.page_bg }};">page_bg</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: {{ colors.text_secondary }}; padding: 0 0 3pt 0; display: block; background: {{ colors.page_bg }};">#FAFAFA</span>
           </figure>
-          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
             <span style="height: 22mm; display: block; background: #FEF3C7;"></span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">tag_bg</span>
-            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FEF3C7</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: {{ colors.text_tertiary }}; padding: 3pt 0; display: block; background: {{ colors.page_bg }};">tag_bg</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: {{ colors.text_secondary }}; padding: 0 0 3pt 0; display: block; background: {{ colors.page_bg }};">#FEF3C7</span>
           </figure>
         </div>
 
-        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">The YAML</h3>
+        <h3 style="font-size: 11pt; color: {{ colors.text }}; margin: 12pt 0 4pt 0; font-weight: 600;">The YAML</h3>
         <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.katib/brands/jasem.yaml</span>
         name: Jasem Al Neaimi
         name_ar: جاسم النعيمي
@@ -334,7 +334,7 @@ sections:
           primary: logos/jasem.svg
           max_height_mm: 14</pre>
 
-        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">Using it</h3>
+        <h3 style="font-size: 11pt; color: {{ colors.text }}; margin: 12pt 0 4pt 0; font-weight: 600;">Using it</h3>
         <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/build.py proposal \
           --domain business-proposal --lang en \
           --brand jasem --with-cover \
@@ -347,7 +347,7 @@ sections:
           </div>
           <div style="border-left: 3pt solid var(--callout-warn-accent); background: var(--callout-warn-bg); padding: 8pt 12pt;">
             <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-warn-accent); font-weight: 700; margin-bottom: 3pt;">Don't</div>
-            <p style="margin: 0; font-size: 9.5pt; line-height: 1.5;">Hardcode brand colours in templates. Use <code>var(--accent)</code> so brand swaps work.</p>
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.5;">Hardcode brand colours in templates. Use {% raw %}<code>var(--accent)</code>{% endraw %} so brand swaps work.</p>
           </div>
         </div>
 
@@ -381,32 +381,32 @@ sections:
           <svg viewBox="0 0 520 110" width="520" height="110" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="arr-sp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+                <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent }}"/>
               </marker>
             </defs>
-            <g font-family="var(--font-display)" font-size="11" fill="var(--text)">
-              <rect x="10" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+            <g font-family="{{ fonts.display }}" font-size="11" fill="{{ colors.text }}">
+              <rect x="10" y="30" width="110" height="50" rx="4" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="65" y="52" text-anchor="middle" font-weight="600">shot.py</text>
-              <text x="65" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">Playwright capture</text>
-              <line x1="124" y1="55" x2="150" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
-              <rect x="155" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="65" y="68" text-anchor="middle" font-size="8" fill="{{ colors.text_secondary }}">Playwright capture</text>
+              <line x1="124" y1="55" x2="150" y2="55" stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="155" y="30" width="110" height="50" rx="4" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="210" y="52" text-anchor="middle" font-weight="600">annotate.py</text>
-              <text x="210" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">arrows, labels, blur</text>
-              <line x1="269" y1="55" x2="295" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
-              <rect x="300" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="210" y="68" text-anchor="middle" font-size="8" fill="{{ colors.text_secondary }}">arrows, labels, blur</text>
+              <line x1="269" y1="55" x2="295" y2="55" stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="300" y="30" width="110" height="50" rx="4" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="355" y="52" text-anchor="middle" font-weight="600">frame.py</text>
-              <text x="355" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">browser chrome</text>
-              <line x1="414" y1="55" x2="440" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
-              <rect x="445" y="30" width="60" height="50" rx="4" fill="var(--accent)" stroke="none"/>
-              <text x="475" y="52" text-anchor="middle" font-weight="600" fill="var(--accent-on)">PDF</text>
-              <text x="475" y="68" text-anchor="middle" font-size="8" fill="var(--accent-on)">WeasyPrint</text>
+              <text x="355" y="68" text-anchor="middle" font-size="8" fill="{{ colors.text_secondary }}">browser chrome</text>
+              <line x1="414" y1="55" x2="440" y2="55" stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="445" y="30" width="60" height="50" rx="4" fill="{{ colors.accent }}" stroke="none"/>
+              <text x="475" y="52" text-anchor="middle" font-weight="600" fill="{{ colors.accent_on }}">PDF</text>
+              <text x="475" y="68" text-anchor="middle" font-size="8" fill="{{ colors.accent_on }}">WeasyPrint</text>
             </g>
           </svg>
-          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">shot → annotate → frame → embedded in template via auto-discovery.</figcaption>
+          <figcaption style="font-size: 8.5pt; color: {{ colors.text_tertiary }}; font-style: italic; margin-top: 4pt;">shot → annotate → frame → embedded in template via auto-discovery.</figcaption>
         </figure>
 
-        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">Inline diagrams</h3>
-        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">Diagrams are inline SVG embedded directly in the template. WeasyPrint renders SVG natively, so they stay crisp at any print DPI, text is selectable, and colours can pick up the active brand via <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">var(--accent)</code> interpolation. <em>Every diagram in this very document is authored this way.</em></p>
+        <h3 style="font-size: 11pt; color: {{ colors.text }}; margin: 12pt 0 4pt 0; font-weight: 600;">Inline diagrams</h3>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">Diagrams are inline SVG embedded directly in the template. WeasyPrint renders SVG natively, so they stay crisp at any print DPI, text is selectable, and colours can pick up the active brand via {% raw %}<code style="background: #EFE5D6; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">{{ colors.accent }}</code>{% endraw %} interpolation. <em>Every diagram in this very document is authored this way.</em></p>
 
   # 26. Module 4 info callout — "When to use what"
   - component: callout
@@ -442,34 +442,34 @@ sections:
           <svg viewBox="0 0 520 220" width="520" height="220" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-                <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+                <path d="M0,0 L10,5 L0,10 z" fill="{{ colors.accent }}"/>
               </marker>
             </defs>
-            <g font-family="var(--font-display)" font-size="10" fill="var(--text)">
-              <rect x="10" y="90" width="100" height="40" rx="4" fill="var(--accent-2)"/>
-              <text x="60" y="108" text-anchor="middle" font-weight="600" fill="var(--text)">build.py</text>
-              <text x="60" y="122" text-anchor="middle" font-size="8" fill="var(--text)">render PDF</text>
-              <rect x="180" y="12" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+            <g font-family="{{ fonts.display }}" font-size="10" fill="{{ colors.text }}">
+              <rect x="10" y="90" width="100" height="40" rx="4" fill="{{ colors.accent_2 }}"/>
+              <text x="60" y="108" text-anchor="middle" font-weight="600" fill="{{ colors.text }}">build.py</text>
+              <text x="60" y="122" text-anchor="middle" font-size="8" fill="{{ colors.text }}">render PDF</text>
+              <rect x="180" y="12" width="140" height="34" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="250" y="28" text-anchor="middle" font-family="monospace" font-size="9">runs.jsonl</text>
-              <text x="250" y="40" text-anchor="middle" font-size="7" fill="var(--text-secondary)">one line per render</text>
-              <rect x="180" y="94" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="250" y="40" text-anchor="middle" font-size="7" fill="{{ colors.text_secondary }}">one line per render</text>
+              <rect x="180" y="94" width="140" height="34" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="250" y="110" text-anchor="middle" font-family="monospace" font-size="9">feedback.jsonl</text>
-              <text x="250" y="122" text-anchor="middle" font-size="7" fill="var(--text-secondary)">user corrections</text>
-              <rect x="180" y="176" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="250" y="122" text-anchor="middle" font-size="7" fill="{{ colors.text_secondary }}">user corrections</text>
+              <rect x="180" y="176" width="140" height="34" rx="3" fill="{{ colors.page_bg }}" stroke="{{ colors.border_strong }}" stroke-width="0.75"/>
               <text x="250" y="192" text-anchor="middle" font-family="monospace" font-size="9">domain-requests.jsonl</text>
-              <text x="250" y="204" text-anchor="middle" font-size="7" fill="var(--text-secondary)">routing mismatches</text>
-              <line x1="114" y1="105" x2="180" y2="30"  stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
-              <line x1="114" y1="110" x2="180" y2="110" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
-              <line x1="114" y1="115" x2="180" y2="190" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
-              <rect x="380" y="90" width="120" height="40" rx="4" fill="var(--accent)"/>
-              <text x="440" y="108" text-anchor="middle" font-weight="600" fill="var(--accent-on)">reflect.py</text>
-              <text x="440" y="122" text-anchor="middle" font-size="8" fill="var(--accent-on)">cluster + propose</text>
-              <line x1="324" y1="30"  x2="380" y2="102" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
-              <line x1="324" y1="110" x2="380" y2="110" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
-              <line x1="324" y1="190" x2="380" y2="118" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
+              <text x="250" y="204" text-anchor="middle" font-size="7" fill="{{ colors.text_secondary }}">routing mismatches</text>
+              <line x1="114" y1="105" x2="180" y2="30"  stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-r)"/>
+              <line x1="114" y1="110" x2="180" y2="110" stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-r)"/>
+              <line x1="114" y1="115" x2="180" y2="190" stroke="{{ colors.accent }}" stroke-width="1" marker-end="url(#arr-r)"/>
+              <rect x="380" y="90" width="120" height="40" rx="4" fill="{{ colors.accent }}"/>
+              <text x="440" y="108" text-anchor="middle" font-weight="600" fill="{{ colors.accent_on }}">reflect.py</text>
+              <text x="440" y="122" text-anchor="middle" font-size="8" fill="{{ colors.accent_on }}">cluster + propose</text>
+              <line x1="324" y1="30"  x2="380" y2="102" stroke="{{ colors.border_strong }}" stroke-width="0.75" marker-end="url(#arr-r)"/>
+              <line x1="324" y1="110" x2="380" y2="110" stroke="{{ colors.border_strong }}" stroke-width="0.75" marker-end="url(#arr-r)"/>
+              <line x1="324" y1="190" x2="380" y2="118" stroke="{{ colors.border_strong }}" stroke-width="0.75" marker-end="url(#arr-r)"/>
             </g>
           </svg>
-          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">Passive capture → reflect proposes — never applies. Apply manually after review.</figcaption>
+          <figcaption style="font-size: 8.5pt; color: {{ colors.text_tertiary }}; font-style: italic; margin-top: 4pt;">Passive capture → reflect proposes — never applies. Apply manually after review.</figcaption>
         </figure>
 
   # 30. Proposal types heading

@@ -23,4 +23,4 @@ variants:
   - bullet
   - numbered
 page_behavior:
-  break_inside: avoid
+  mode: atomic

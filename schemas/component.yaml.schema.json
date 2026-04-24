@@ -86,6 +86,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["atomic", "flowing", "flowing-protect-items"],
+          "description": "atomic = never split across pages (engine emits break-inside: avoid on root). flowing = split freely. flowing-protect-items = container may split; declared child selectors stay whole."
+        },
+        "protect_items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "CSS selectors (relative to component root) to protect when mode=flowing-protect-items. Ignored for other modes."
+        },
         "break_before": { "type": "string", "enum": ["auto", "always", "avoid"] },
         "break_after":  { "type": "string", "enum": ["auto", "always", "avoid"] },
         "break_inside": { "type": "string", "enum": ["auto", "avoid"] },

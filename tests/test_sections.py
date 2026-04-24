@@ -57,7 +57,7 @@ def test_showcase_recipe_renders_ar(tmp_path):
 def test_front_matter_page_break_declared():
     c = load_component("front-matter")
     assert c["page_behavior"]["break_after"] == "always"
-    assert c["page_behavior"]["break_inside"] == "avoid"
+    assert c["page_behavior"]["mode"] == "atomic"
 
 
 def test_objectives_box_requires_items():

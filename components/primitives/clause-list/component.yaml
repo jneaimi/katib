@@ -18,4 +18,6 @@ accepts:
         required: false
         description: "Starting counter value (default 1). Use to continue numbering across split clause-lists (e.g. §5 Responsibilities Party A ends at 3; Party B starts at 4 only if numbering should continue — usually each section resets)."
 page_behavior:
-  break_inside: auto
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-clause-list__item

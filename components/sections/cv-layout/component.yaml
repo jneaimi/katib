@@ -18,4 +18,4 @@ accepts:
         required: true
         description: "Trusted HTML content for the main column (1fr wide, light background). Typically contains Summary + Experience + Education + Selected Projects sections."
 page_behavior:
-  break_inside: avoid
+  mode: atomic

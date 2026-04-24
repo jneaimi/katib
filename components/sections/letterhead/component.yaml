@@ -33,3 +33,5 @@ accepts:
 variants:
   - formal
   - commercial
+page_behavior:
+  mode: atomic

@@ -37,5 +37,5 @@ variants:
   - plain
   - numbered
 page_behavior:
+  mode: flowing
   break_before: auto
-  break_inside: auto
