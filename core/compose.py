@@ -254,6 +254,47 @@ def _image_input_specs(comp: dict) -> dict[str, dict]:
     return out
 
 
+def _resolve_brand_preset(
+    value: dict,
+    tokens: dict | None,
+    comp_name: str,
+    slot_name: str,
+) -> dict:
+    """Pre-resolve the `brand-preset` meta-source by substituting the stored
+    preset spec. Returns the original value unchanged for other sources.
+
+    A brand-preset spec looks like:
+        {source: brand-preset, name: <preset-name>, alt_text?: "..."}
+
+    It is expanded to whatever the brand profile stored under
+    `covers.<preset-name>` — typically `{source: user-file, path: ...}`.
+    Alt text on the recipe-level spec wins over the preset's stored alt.
+    """
+    if not isinstance(value, dict) or value.get("source") != "brand-preset":
+        return value
+    preset_name = value.get("name")
+    if not preset_name or not isinstance(preset_name, str):
+        raise ComposeError(
+            f"{comp_name}.{slot_name}: source 'brand-preset' requires a 'name' field"
+        )
+    covers = (tokens or {}).get("covers") or {}
+    if not covers:
+        raise ComposeError(
+            f"{comp_name}.{slot_name}: brand-preset {preset_name!r} referenced but "
+            f"no brand with cover presets is active (did you pass --brand?)"
+        )
+    preset = covers.get(preset_name)
+    if not preset:
+        raise ComposeError(
+            f"{comp_name}.{slot_name}: brand preset {preset_name!r} not defined "
+            f"(available: {sorted(covers)})"
+        )
+    resolved_spec = dict(preset)
+    if value.get("alt_text"):
+        resolved_spec["alt_text"] = value["alt_text"]
+    return resolved_spec
+
+
 def _resolve_image_slots(
     inputs: dict,
     image_decls: dict[str, dict],
@@ -283,6 +324,8 @@ def _resolve_image_slots(
                 f"component {comp_name!r}: input {slot_name!r} is type:image; "
                 f"expected dict {{'source': '...', ...}}, got {type(value).__name__}"
             )
+        # Pre-resolve the brand-preset meta-source → real provider spec.
+        value = _resolve_brand_preset(value, tokens, comp_name, slot_name)
         if value.get("source") == "inline-svg":
             value = dict(value)
             if "colors" not in value and palette:
@@ -332,6 +375,7 @@ def compose(
     style_parts: list[str] = _load_primitive_styles()
     pagination_parts: list[str] = []
     seen_non_primitive: set[str] = set()
+    resolved_images: list[dict] = []
 
     for idx, section in enumerate(recipe["sections"]):
         comp_name = section["component"]
@@ -352,6 +396,19 @@ def compose(
             inputs, image_decls, cache_dir, providers, comp_name,
             tokens=merged, lang=lang,
         )
+        for slot_name in image_decls:
+            if slot_name in inputs and isinstance(inputs[slot_name], dict) \
+                    and "resolved_path" in inputs[slot_name]:
+                resolved_images.append({
+                    "section_idx": idx,
+                    "component": comp_name,
+                    "tier": tier,
+                    "slot": slot_name,
+                    "source": inputs[slot_name].get("source"),
+                    "resolved_path": inputs[slot_name].get("resolved_path"),
+                    "content_hash": inputs[slot_name].get("content_hash"),
+                    "alt": inputs[slot_name].get("alt"),
+                })
         inputs = _render_raw_html_inputs(inputs, env, ctx)
 
         rendered = template.render(
@@ -396,7 +453,13 @@ def compose(
         title=recipe.get("description") or recipe["name"],
     )
 
-    return page_html, {"recipe": recipe, "tokens": merged, "ctx": ctx}
+    return page_html, {
+        "recipe": recipe,
+        "tokens": merged,
+        "ctx": ctx,
+        "brand": brand,
+        "resolved_images": resolved_images,
+    }
 
 
 def _wrap_page(

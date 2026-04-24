@@ -43,6 +43,9 @@ _COLOR_PATTERNS = (
 )
 _LOGO_EXTENSIONS = {".png", ".jpg", ".jpeg", ".svg"}
 _LOGO_HEIGHT_RANGE = (1, 200)
+_COVER_EXTENSIONS = {".png", ".jpg", ".jpeg", ".svg"}
+_COVER_SOURCES = {"user-file", "inline-svg"}
+_COVER_NAME_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
 
 
 class TokenError(ValueError):
@@ -64,6 +67,16 @@ def _validate_color(key: str, val: Any) -> str:
 def _user_brands_dir() -> Path:
     env = os.environ.get(USER_BRANDS_DIR_ENV)
     return Path(env).expanduser() if env else DEFAULT_USER_BRANDS_DIR
+
+
+def user_brands_dir() -> Path:
+    """Public accessor — where user brand files and sidecar asset dirs live."""
+    return _user_brands_dir()
+
+
+def brand_file_path(name_or_path: str) -> Path:
+    """Public accessor — resolve a brand name (or path) to its on-disk YAML."""
+    return _resolve_brand_path(name_or_path)
 
 
 def load_base_tokens() -> dict[str, Any]:
@@ -137,7 +150,69 @@ def load_brand(name_or_path: str | None) -> dict[str, Any] | None:
                 f"[{_LOGO_HEIGHT_RANGE[0]}, {_LOGO_HEIGHT_RANGE[1]}]"
             )
 
+    covers = data.get("covers")
+    if covers is not None:
+        _validate_covers(covers, path)
+
     return data
+
+
+def _validate_covers(covers: Any, brand_path: Path) -> None:
+    """Validate and resolve the optional `covers:` map on a brand profile.
+
+    Shape:
+        covers:
+          <name>:
+            source: user-file | inline-svg
+            path: relative-or-absolute       # required for user-file
+            svg: "<svg>...</svg>"              # required for inline-svg
+            alt_text: "..."                   # optional
+
+    `user-file` paths are resolved relative to the brand file's directory
+    (same contract as logo.primary) and mutated in-place to an absolute
+    string so downstream consumers don't need to re-resolve.
+    """
+    if not isinstance(covers, dict):
+        raise TokenError(f"{brand_path}: `covers` must be a mapping of preset-name → spec")
+    for name, spec in covers.items():
+        if not isinstance(name, str) or not _COVER_NAME_RE.match(name):
+            raise TokenError(
+                f"{brand_path}: covers key {name!r} must match [a-z0-9][a-z0-9_-]*"
+            )
+        if not isinstance(spec, dict):
+            raise TokenError(
+                f"{brand_path}: covers.{name} must be a mapping, got {type(spec).__name__}"
+            )
+        source = spec.get("source")
+        if source not in _COVER_SOURCES:
+            raise TokenError(
+                f"{brand_path}: covers.{name}.source must be one of "
+                f"{sorted(_COVER_SOURCES)}, got {source!r}"
+            )
+        if source == "user-file":
+            rel = spec.get("path")
+            if not rel or not isinstance(rel, str):
+                raise TokenError(
+                    f"{brand_path}: covers.{name}.path is required for source 'user-file'"
+                )
+            cover_path = Path(rel).expanduser()
+            if not cover_path.is_absolute():
+                cover_path = brand_path.parent / cover_path
+            if not cover_path.exists():
+                raise TokenError(
+                    f"{brand_path}: covers.{name}.path not found at {cover_path}"
+                )
+            if cover_path.suffix.lower() not in _COVER_EXTENSIONS:
+                raise TokenError(
+                    f"{brand_path}: covers.{name}.path {cover_path.suffix!r} not in "
+                    f"{sorted(_COVER_EXTENSIONS)}"
+                )
+            spec["path"] = str(cover_path.resolve())
+        elif source == "inline-svg":
+            if not spec.get("svg") or not isinstance(spec.get("svg"), str):
+                raise TokenError(
+                    f"{brand_path}: covers.{name}.svg is required for source 'inline-svg'"
+                )
 
 
 def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
