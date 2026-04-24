@@ -228,7 +228,7 @@ def test_t6_audit_gate_refuses_hand_added_component(tmp_path):
     try:
         component_ops.scaffold(name, tier="primitive", languages=["en"])
         # Strip audit entries for this component — simulate hand-added state
-        audit_file = REPO_ROOT / "memory" / "component-audit.jsonl"
+        audit_file = component_ops.AUDIT_FILE
         original = audit_file.read_text("utf-8") if audit_file.exists() else ""
         try:
             cleaned = "\n".join(

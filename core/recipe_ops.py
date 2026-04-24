@@ -28,19 +28,42 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from core.tokens import user_memory_dir
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = REPO_ROOT / "components"
 RECIPES_DIR = REPO_ROOT / "recipes"
 SCHEMAS_DIR = REPO_ROOT / "schemas"
-MEMORY_DIR = REPO_ROOT / "memory"
-AUDIT_FILE = MEMORY_DIR / "recipe-audit.jsonl"
-REQUESTS_FILE = MEMORY_DIR / "recipe-requests.jsonl"   # Day 13 will start writing this
 DIST_DIR = REPO_ROOT / "dist"
+
+# User-tier audit + requests paths (Phase 2). Recipe YAMLs still land
+# under bundled RECIPES_DIR — scaffold-write migration is Phase 3, which
+# must also wire the two-tier read side at the same time (lint_all_recipes,
+# validate, compose's load_recipe). Evaluated at import time; tests that
+# need to redirect should `monkeypatch.setattr` the module attribute (or
+# use the `isolated_user_dirs` fixture from conftest).
+MEMORY_DIR = user_memory_dir()
+AUDIT_FILE = MEMORY_DIR / "recipe-audit.jsonl"
+REQUESTS_FILE = MEMORY_DIR / "recipe-requests.jsonl"
 
 TIER_DIRS = ("primitives", "sections", "covers")
 LANG_ENUM = ("en", "ar", "bilingual")
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
+
+
+def _display_path(p: Path) -> str:
+    """Render a path as REPO_ROOT-relative when possible, absolute otherwise.
+
+    After Phase 2 the user tier lives outside REPO_ROOT, so `.relative_to`
+    raises `ValueError` for those paths. This helper gives a readable
+    string for both tiers without leaking full home-dir prefixes when the
+    file is bundled.
+    """
+    try:
+        return str(p.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(p)
 
 GRADUATION_THRESHOLD = 3
 
@@ -214,7 +237,7 @@ def scaffold_recipe(
     rpath = _recipe_path(name)
     if rpath.exists():
         raise ValueError(
-            f"recipe {name!r} already exists at {rpath.relative_to(REPO_ROOT)}"
+            f"recipe {name!r} already exists at {_display_path(rpath)}"
         )
 
     graduation_warning: str | None = None
@@ -224,7 +247,7 @@ def scaffold_recipe(
             if not REQUESTS_FILE.exists():
                 graduation_warning = (
                     "Graduation gate is not yet active — "
-                    f"memory/recipe-requests.jsonl does not exist "
+                    f"{_display_path(REQUESTS_FILE)} does not exist "
                     "(Day 13 will start writing it). Scaffolded without a "
                     "request count. When the log exists, core namespace "
                     f"scaffolds will require >={GRADUATION_THRESHOLD} matching "
@@ -272,7 +295,7 @@ def scaffold_recipe(
     return RecipeScaffoldResult(
         recipe=name,
         namespace=namespace,
-        path=str(rpath.relative_to(REPO_ROOT)),
+        path=_display_path(rpath),
         graduation_warning=graduation_warning,
         audit_entry=audit_entry,
     )
@@ -341,7 +364,7 @@ def validate_recipe_full(
         raise ValueError(f"recipe {name!r} not found at {rpath}")
 
     result = RecipeValidationResult(
-        recipe=name, path=str(rpath.relative_to(REPO_ROOT))
+        recipe=name, path=_display_path(rpath)
     )
 
     # 1. Schema

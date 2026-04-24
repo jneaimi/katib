@@ -32,7 +32,7 @@ def test_scaffold_creates_yaml(throwaway_name):
         description="Test recipe",
         keywords=["test", "smoke"],
     )
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     assert rpath.exists()
     data = yaml.safe_load(rpath.read_text())
     assert data["name"] == throwaway_name
@@ -117,7 +117,7 @@ def test_validate_missing_recipe():
 
 def test_validate_detects_unknown_component(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["sections"].append({"component": "nonexistent-component-xyz"})
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))
@@ -137,7 +137,7 @@ def test_validate_detects_unsupported_lang(throwaway_name):
 
 def test_validate_detects_bad_variant(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     # Find cover-page section, inject an invalid variant
     for section in data["sections"]:
@@ -158,7 +158,7 @@ def test_validate_warns_on_missing_keywords(throwaway_name):
 
 def test_validate_detects_inverted_target_pages(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["target_pages"] = [10, 3]
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))
@@ -170,7 +170,7 @@ def test_validate_detects_inverted_target_pages(throwaway_name):
 def test_validate_fuzzy_suggests_component(throwaway_name):
     """Typos in component names should get a 'did you mean' suggestion."""
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["sections"].append({"component": "cover-pag"})   # typo of cover-page
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))
@@ -221,7 +221,7 @@ def test_render_recipe_missing():
 
 def test_register_refuses_broken_recipe(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["sections"].append({"component": "nonexistent-xyz"})
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))
@@ -263,7 +263,7 @@ def test_share_produces_tarball(throwaway_name, tmp_path):
 
 def test_share_refuses_broken_recipe(throwaway_name, tmp_path):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["sections"].append({"component": "nonexistent-xyz"})
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))
