@@ -1,0 +1,12 @@
+# Test inputs for `signature-field-block` isolated render.
+# Used by `katib component test signature-field-block`.
+inputs:
+  parties:
+    - label: "For Party A"
+      name: "jasem | katib"
+      fields: ["Name", "Title", "Signature", "Date"]
+    - label: "For Party B"
+      name: "[Party B Legal Name]"
+      fields: ["Name", "Title", "Signature", "Date"]
+brand: null
+variant: null

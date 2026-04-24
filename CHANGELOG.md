@@ -3,6 +3,47 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — Phase-4 Day 1: signature-field-block primitive (2026-04-24)
+
+### Added
+
+- **`signature-field-block` primitive** — blank-field signature grid for
+  counterparty execution. N parties side-by-side (1–3), each column with
+  uppercase eyebrow label, optional bold party name, and ordered labeled
+  input lines (Name / Title / Signature / Date). Atomic by default.
+  Distinct from sibling `signature-block` (pre-filled named signatory)
+  and `multi-party-signature-block` (pre-filled multi-signatory closing).
+  7 primitive unit tests covering 1–3 party grids + RTL.
+
+### Changed
+
+- **`legal-mou.yaml` §25** migrated from 18-line inline raw_body div grid
+  to `signature-field-block` component. Atomic behavior now inherited
+  from the primitive's declared `mode: atomic` (instead of implicit via
+  inline markup). 16 lines of YAML saved per consumer.
+
+### Audit discipline
+
+- **Below 2-dep honest-intent threshold (1 verified consumer: mou §25).**
+  Extraction justified in `memory/component-audit.jsonl` on abstraction
+  value + primitive-first discipline for legal-domain growth. Second dep
+  expected as nda / service-agreement / engagement-letter land.
+- Validation caught two scope-refinements mid-flight that the earlier
+  Phase-3 log had overstated:
+  - `formal-noc` uses `multi-party-signature-block`, not a hand-rolled
+    sign-row (not a dep).
+  - `business-proposal-proposal` §5 and `financial-quote` §3 each use a
+    different sign-row pattern (simple 3-col signed-line, pre-filled
+    signed-line) that is semantically distinct from the mou form-grid.
+    Both stay inline rather than forcing variant overfit on the primitive.
+
+### Tests
+
+- 933 passing (was 926; +7 signature-field-block unit tests).
+- All 22 recipes render with 0 WeasyPrint warnings.
+
+---
+
 ## [Unreleased] — Post-Phase-3 hotfixes + declarative pagination (2026-04-24)
 
 Post-ship smoke tests caught three real bugs in the 22-recipe set, and

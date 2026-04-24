@@ -1,0 +1,51 @@
+.katib-signature-field-block {
+    display: grid;
+    gap: 20pt;
+    margin: 1.4em 0 0.8em 0;
+    color: var(--text);
+}
+
+.katib-signature-field-block__party {
+    border-top: 1pt solid var(--border-strong);
+    padding-top: 14pt;
+}
+
+.katib-signature-field-block__label {
+    font-size: 8pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 700;
+    margin-bottom: 6pt;
+}
+
+.katib-signature-field-block__name {
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    margin-bottom: 14pt;
+    color: var(--text);
+}
+
+.katib-signature-field-block__field {
+    margin-bottom: 10pt;
+}
+
+.katib-signature-field-block__field:last-child {
+    margin-bottom: 0;
+}
+
+.katib-signature-field-block__field-label {
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    margin-bottom: 2pt;
+}
+
+.katib-signature-field-block__field-line {
+    border-bottom: 0.5pt solid var(--text);
+    height: 18pt;
+}
+
+/* RTL: labels and lines flow naturally via the grid and block-level text-align;
+   no physical property flips needed because everything is block-level within
+   the column. The column order follows reading direction (grid + lang). */
