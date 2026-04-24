@@ -1,0 +1,266 @@
+name: report-progress
+version: 0.1.0
+namespace: katib
+description: Project progress report — exec summary, headline metrics, timeline of milestones, findings narrative, next-period focus, and optional appendix. Composes the full Phase-3c content library into a production-ready report. Bilingual EN+AR.
+languages:
+- en
+- ar
+target_pages:
+- 3
+- 6
+page_limit: 8
+when: Quarterly/monthly project progress report for sponsors, boards, or stakeholders. Uses exec-summary, metric-block, and timeline to convey status at a glance, then narrative sections for detail.
+keywords:
+- report
+- progress
+- status
+- milestone
+- executive-summary
+- timeline
+- bilingual
+
+sections:
+  # 1. Masthead
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Progress Report</div>
+            <h1 style="font-size: 24pt; margin: 0 0 6pt 0; font-weight: 600; color: var(--text);">[Project Name] · Q[N] 2026</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Reporting period] · Prepared for [audience]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">Report: PR-2026-Q[N] · Dated 2026-04-25</div>
+          </div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 10pt; color: var(--accent); font-weight: 700; margin-bottom: 10pt;">تقرير تقدم</div>
+            <h1 style="font-size: 24pt; margin: 0 0 6pt 0; font-weight: 600; color: var(--text);">[اسم المشروع] · الربع [N] 2026</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[فترة التقرير] · مُعَدّ لـ [الجمهور]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">التقرير: PR-2026-Q[N] · بتاريخ 25 أبريل 2026</div>
+          </div>
+
+  # 2. Executive summary — the board-level takeaway
+  - component: executive-summary
+    inputs_by_lang:
+      en:
+        eyebrow: "EXECUTIVE SUMMARY"
+        title: "At a glance"
+        intro: "Three things a reader should take away before diving into the detail."
+        items:
+          - label: "Status"
+            body: "On track — all [N] committed milestones delivered for the period, with [M] slipped to next quarter."
+          - label: "Headline"
+            body: "[The single most important thing that happened — good or bad]"
+          - label: "Watch"
+            body: "[The one risk or decision point the reader needs to know about]"
+        footer: "See Sections 2-4 for metrics, timeline, and findings."
+      ar:
+        eyebrow: "الملخص التنفيذي"
+        title: "نظرة عامة"
+        intro: "ثلاثة أمور يجب أن يأخذها القارئ قبل الدخول في التفاصيل."
+        items:
+          - label: "الوضع"
+            body: "على المسار — تم تسليم جميع مراحل الفترة البالغة [N]، مع تأجيل [M] إلى الربع القادم."
+          - label: "العنوان الرئيسي"
+            body: "[الحدث الأهم في هذه الفترة — إيجابي أو سلبي]"
+          - label: "ما يستوجب الانتباه"
+            body: "[المخاطر أو نقاط القرار التي يحتاج القارئ إلى معرفتها]"
+        footer: "انظر الأقسام 2-4 للاطلاع على المقاييس والجدول الزمني والنتائج."
+
+  # 3. Metrics band — inline-block metric-blocks
+  - component: module
+    inputs_by_lang:
+      en:
+        eyebrow: "SECTION II"
+        title: "Key metrics"
+        intro: "Progress-period headline numbers. Deltas compare to prior period unless noted."
+      ar:
+        eyebrow: "القسم الثاني"
+        title: "المقاييس الرئيسية"
+        intro: "الأرقام الرئيسية لفترة التقرير. الفروقات مقارنة بالفترة السابقة ما لم يُذكر خلاف ذلك."
+
+  - component: metric-block
+    inputs_by_lang:
+      en:
+        label: "Milestones delivered"
+        value: "[N]"
+        unit: "of [total]"
+        delta: "+[N]"
+        delta_direction: up
+        note: "vs. plan"
+      ar:
+        label: "المراحل المُنجزة"
+        value: "[N]"
+        unit: "من [الإجمالي]"
+        delta: "+[N]"
+        delta_direction: up
+        note: "مقارنة بالخطة"
+
+  - component: metric-block
+    inputs_by_lang:
+      en:
+        label: "Budget utilization"
+        value: "[%]"
+        unit: "%"
+        delta: "[±%]"
+        delta_direction: neutral
+        note: "of allocated spend"
+      ar:
+        label: "استغلال الميزانية"
+        value: "[%]"
+        unit: "٪"
+        delta: "[±%]"
+        delta_direction: neutral
+        note: "من المبلغ المخصص"
+
+  - component: metric-block
+    inputs_by_lang:
+      en:
+        label: "Open risks"
+        value: "[N]"
+        delta: "[+/- N]"
+        delta_direction: down
+        note: "vs. last period"
+      ar:
+        label: "المخاطر المفتوحة"
+        value: "[N]"
+        delta: "[+/- N]"
+        delta_direction: down
+        note: "مقارنة بالفترة السابقة"
+
+  - component: metric-block
+    inputs_by_lang:
+      en:
+        label: "Stakeholder satisfaction"
+        value: "[N]"
+        unit: "/ 10"
+        delta: "+[N]"
+        delta_direction: up
+        note: "from Q[N-1] survey"
+      ar:
+        label: "رضا الأطراف المعنية"
+        value: "[N]"
+        unit: "/ 10"
+        delta: "+[N]"
+        delta_direction: up
+        note: "من استطلاع الربع السابق"
+
+  # 4. Timeline of milestones
+  - component: timeline
+    inputs_by_lang:
+      en:
+        eyebrow: "SECTION III"
+        title: "Milestone delivery"
+        events:
+          - date: "[Month]"
+            title: "[Milestone 1 name]"
+            body: "[1-line description of what was delivered and why it mattered]"
+            status: done
+          - date: "[Month]"
+            title: "[Milestone 2 name]"
+            body: "[1-line description]"
+            status: done
+          - date: "[Month]"
+            title: "[Milestone 3 name — in flight]"
+            body: "[Where things stand; any unblock needed]"
+            status: active
+          - date: "[Month]"
+            title: "[Milestone 4 name — upcoming]"
+            body: "[What it depends on; expected delivery]"
+            status: upcoming
+      ar:
+        eyebrow: "القسم الثالث"
+        title: "تسليم المراحل"
+        events:
+          - date: "[الشهر]"
+            title: "[اسم المرحلة 1]"
+            body: "[وصف مختصر لما تم تسليمه ولماذا كان مهماً]"
+            status: done
+          - date: "[الشهر]"
+            title: "[اسم المرحلة 2]"
+            body: "[وصف من سطر واحد]"
+            status: done
+          - date: "[الشهر]"
+            title: "[اسم المرحلة 3 — قيد التنفيذ]"
+            body: "[الوضع الحالي؛ أي عوائق تحتاج إلى رفع]"
+            status: active
+          - date: "[الشهر]"
+            title: "[اسم المرحلة 4 — قادمة]"
+            body: "[التبعيات؛ التسليم المتوقع]"
+            status: upcoming
+
+  # 5. Findings narrative
+  - component: module
+    inputs_by_lang:
+      en:
+        eyebrow: "SECTION IV"
+        title: "Findings"
+        body: "[Narrative paragraphs on what went well, what didn't, and what the team learned. 2-4 short paragraphs; avoid jargon. Lead with impact, not activity.]"
+      ar:
+        eyebrow: "القسم الرابع"
+        title: "النتائج"
+        body: "[فقرات روائية حول ما سار بشكل جيد، وما لم يسر كذلك، وما تعلمه الفريق. من 2 إلى 4 فقرات قصيرة؛ تجنب المصطلحات التقنية. ابدأ بالأثر لا بالنشاط.]"
+
+  # 6. Risks and mitigations
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Risks and mitigations"
+        body: "Open items that could affect next-period delivery:"
+      ar:
+        title: "المخاطر وإجراءات التخفيف"
+        body: "البنود المفتوحة التي قد تؤثر على تسليم الفترة القادمة:"
+
+  - component: kv-list
+    variant: boxed
+    inputs_by_lang:
+      en:
+        items:
+          - {term: "[Risk 1]", value: "[Impact] · [Mitigation]"}
+          - {term: "[Risk 2]", value: "[Impact] · [Mitigation]"}
+          - {term: "[Risk 3]", value: "[Impact] · [Mitigation]"}
+      ar:
+        items:
+          - {term: "[المخاطرة 1]", value: "[الأثر] · [التخفيف]"}
+          - {term: "[المخاطرة 2]", value: "[الأثر] · [التخفيف]"}
+          - {term: "[المخاطرة 3]", value: "[الأثر] · [التخفيف]"}
+
+  # 7. Next period focus
+  - component: module
+    inputs_by_lang:
+      en:
+        eyebrow: "SECTION V"
+        title: "Next period focus"
+        body: "Top priorities for the next reporting cycle:"
+      ar:
+        eyebrow: "القسم الخامس"
+        title: "أولويات الفترة القادمة"
+        body: "أهم الأولويات لدورة التقرير القادمة:"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "[Priority 1 — concrete deliverable with owner and date]"
+          - "[Priority 2 — concrete deliverable with owner and date]"
+          - "[Priority 3 — concrete deliverable with owner and date]"
+      ar:
+        items:
+          - "[الأولوية 1 — تسليم محدد مع المسؤول والتاريخ]"
+          - "[الأولوية 2 — تسليم محدد مع المسؤول والتاريخ]"
+          - "[الأولوية 3 — تسليم محدد مع المسؤول والتاريخ]"
+
+  # 8. Closing / contact
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="margin-top: 24pt; padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 10pt; color: var(--text-secondary); text-align: center;">
+            <strong>[Your name / Project lead]</strong> · [email@example.com] · Prepared 2026-04-25
+          </div>
+      ar:
+        raw_body: |
+          <div style="margin-top: 24pt; padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 11pt; color: var(--text-secondary); text-align: center;">
+            <strong>[اسمك / مدير المشروع]</strong> · [email@example.com] · أُعِدّ في 25 أبريل 2026
+          </div>

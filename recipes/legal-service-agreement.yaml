@@ -1,0 +1,287 @@
+name: legal-service-agreement
+version: 0.1.0
+namespace: katib
+description: UAE bilateral Service Agreement — masthead + Template Notice + 2-party callouts + 12 numbered clauses + 2-party signature grid. Covers scope, fees, term, liability, IP, termination, and governing law. Bilingual EN+AR.
+languages:
+- en
+- ar
+target_pages:
+- 3
+- 5
+page_limit: 6
+when: UAE bilateral service-provider agreement. Consulting, professional services, contracted work. Starter template — replace scope, fee schedule, and term to match the engagement.
+keywords:
+- legal
+- service-agreement
+- consulting
+- services
+- contract
+- uae
+- bilingual
+
+sections:
+  # 1. Masthead
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Service Agreement</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">Service Agreement · [Project Name]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Scope of services provided by Party A to Party B]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">Reference: SA-2026-0001 · Dated 2026-04-25</div>
+          </div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 10pt; color: var(--accent); font-weight: 700; margin-bottom: 10pt;">اتفاقية تقديم خدمات</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">اتفاقية تقديم خدمات · [اسم المشروع]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[نطاق الخدمات المقدمة من الطرف الأول إلى الطرف الثاني]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">المرجع: SA-2026-0001 · بتاريخ 2026-04-25</div>
+          </div>
+
+  # 2. Template Notice
+  - component: callout
+    inputs:
+      tone: neutral
+    inputs_by_lang:
+      en:
+        title: "Template Notice"
+        body: "This is a Katib starter template for a mutual Service Agreement. Review with counsel before execution. The fee schedule (Section 4), term (Section 5), and liability caps (Section 8) are placeholders — negotiate and replace before signing."
+      ar:
+        title: "ملاحظة قالب"
+        body: "هذا قالب من Katib لاتفاقية تقديم خدمات. يُنصح بمراجعة الصيغة النهائية من قبل مستشار قانوني قبل التوقيع. جدول الأتعاب (البند 4)، ومدة السريان (البند 5)، وحدود المسؤولية (البند 8) مجرد نماذج — تفاوض واستبدلها قبل التوقيع."
+
+  # 3. §1 Parties
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+    inputs_by_lang:
+      en:
+        title: "The Parties"
+        intro: 'This Service Agreement (the "Agreement") is entered into on 2026-04-25 between:'
+      ar:
+        title: "الأطراف"
+        intro: 'تُبرم اتفاقية تقديم الخدمات هذه ("الاتفاقية") بتاريخ 2026-04-25 بين:'
+
+  - component: callout
+    inputs:
+      tone: info
+    inputs_by_lang:
+      en:
+        title: "Service Provider (Party A)"
+        body: "[Company Name] · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "مقدم الخدمة (الطرف الأول)"
+        body: "[اسم الشركة] · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
+
+  - component: callout
+    inputs:
+      tone: info
+    inputs_by_lang:
+      en:
+        title: "Client (Party B)"
+        body: "[Client Name] · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "العميل (الطرف الثاني)"
+        body: "[اسم العميل] · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
+
+  # 4. §2 Scope
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+    inputs_by_lang:
+      en:
+        title: "Scope of Services"
+        body: "Party A shall provide the following services to Party B (the \"Services\"):"
+      ar:
+        title: "نطاق الخدمات"
+        body: "يتولى الطرف الأول تقديم الخدمات التالية للطرف الثاني (\"الخدمات\"):"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "[Deliverable 1 — concrete output with acceptance criteria]"
+          - "[Deliverable 2 — concrete output with acceptance criteria]"
+          - "[Deliverable 3 — concrete output with acceptance criteria]"
+          - "[Any excluded activities — spell out what's NOT in scope]"
+      ar:
+        items:
+          - "[المخرج الأول — ناتج محدد مع معايير القبول]"
+          - "[المخرج الثاني — ناتج محدد مع معايير القبول]"
+          - "[المخرج الثالث — ناتج محدد مع معايير القبول]"
+          - "[أي أنشطة مستثناة — حدد ما هو خارج النطاق]"
+
+  # 5. §3 Standards of Performance
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+    inputs_by_lang:
+      en:
+        title: "Standards of Performance"
+        body: "Party A shall perform the Services with professional skill, care, and diligence consistent with industry standards. Party A shall comply with all applicable laws and regulations of the United Arab Emirates."
+      ar:
+        title: "معايير الأداء"
+        body: "يلتزم الطرف الأول بتقديم الخدمات بمهارة مهنية وعناية وجدية تتفق مع معايير الصناعة. كما يلتزم الطرف الأول بالتقيد بجميع القوانين واللوائح المعمول بها في دولة الإمارات العربية المتحدة."
+
+  # 6. §4 Fees
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+    inputs_by_lang:
+      en:
+        title: "Fees and Payment"
+        body: "Party B shall pay Party A fees for the Services as follows:"
+      ar:
+        title: "الأتعاب والسداد"
+        body: "يقوم الطرف الثاني بسداد أتعاب الطرف الأول عن الخدمات على النحو التالي:"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "Total fee: [AED amount] exclusive of VAT, payable in [milestone schedule]"
+          - "Invoicing: within [7] days of each milestone completion"
+          - "Payment terms: net [30] days from invoice receipt"
+          - "Late payment: 2% per month on overdue amounts"
+          - "Expenses: pre-approved out-of-pocket expenses reimbursed at cost"
+      ar:
+        items:
+          - "إجمالي الأتعاب: [مبلغ بالدرهم] قبل ضريبة القيمة المضافة، يُسدد وفق [جدول المراحل]"
+          - "إصدار الفواتير: خلال [7] أيام من إنجاز كل مرحلة"
+          - "شروط السداد: صافي [30] يوماً من تاريخ استلام الفاتورة"
+          - "السداد المتأخر: 2٪ شهرياً على المبالغ المتأخرة"
+          - "المصروفات: تُسترد المصروفات المعتمدة مسبقاً بسعر التكلفة"
+
+  # 7. §5 Term and Termination
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+    inputs_by_lang:
+      en:
+        title: "Term and Termination"
+        body: "This Agreement commences on the Effective Date and continues until completion of the Services or [12] months, whichever is earlier. Either party may terminate with 30 days' written notice for convenience, or immediately for material breach uncured within 14 days of written notice."
+      ar:
+        title: "المدة والإنهاء"
+        body: "تبدأ هذه الاتفاقية من تاريخ النفاذ وتستمر حتى اكتمال الخدمات أو مدة [12] شهراً، أيهما أسبق. يحق لأي طرف إنهاء الاتفاقية بإشعار خطي مدته 30 يوماً لراحته، أو إنهاؤها فوراً في حالة إخلال جوهري لم يُعالج خلال 14 يوماً من الإشعار الخطي."
+
+  # 8. §6 Intellectual Property
+  - component: module
+    variant: numbered
+    inputs:
+      number: 6
+    inputs_by_lang:
+      en:
+        title: "Intellectual Property"
+        body: "Each party retains ownership of its pre-existing intellectual property. On full payment, Party A assigns to Party B all right, title, and interest in the deliverables created specifically for Party B under this Agreement. Party A retains the right to use general know-how, skills, and experience gained during the engagement."
+      ar:
+        title: "الملكية الفكرية"
+        body: "يحتفظ كل طرف بملكية حقوقه الفكرية السابقة. عند السداد الكامل، يتنازل الطرف الأول للطرف الثاني عن جميع الحقوق والملكية والمصالح في المخرجات التي أُنشئت خصيصاً للطرف الثاني بموجب هذه الاتفاقية. يحتفظ الطرف الأول بحق استخدام المعرفة العامة والمهارات والخبرات المكتسبة خلال فترة التعاقد."
+
+  # 9. §7 Confidentiality
+  - component: module
+    variant: numbered
+    inputs:
+      number: 7
+    inputs_by_lang:
+      en:
+        title: "Confidentiality"
+        body: "Each party shall treat all non-public information received from the other as confidential, use it solely for the purposes of this Agreement, and return or destroy it on request. Confidentiality obligations survive termination for three (3) years."
+      ar:
+        title: "السرية"
+        body: "يلتزم كل طرف بمعاملة جميع المعلومات غير العامة المستلمة من الطرف الآخر كمعلومات سرية، واستخدامها فقط لأغراض هذه الاتفاقية، وإعادتها أو إتلافها عند الطلب. تبقى التزامات السرية سارية لمدة ثلاث (3) سنوات بعد الإنهاء."
+
+  # 10. §8 Limitation of Liability
+  - component: module
+    variant: numbered
+    inputs:
+      number: 8
+    inputs_by_lang:
+      en:
+        title: "Limitation of Liability"
+        body: "To the maximum extent permitted by UAE law, each party's total liability under this Agreement shall not exceed the total fees paid or payable by Party B under this Agreement. Neither party shall be liable for indirect, consequential, or lost-profits damages. This clause does not exclude liability for gross negligence, willful misconduct, or death or personal injury."
+      ar:
+        title: "تحديد المسؤولية"
+        body: "بأقصى حد يسمح به القانون الإماراتي، لا تتجاوز المسؤولية الإجمالية لأي طرف بموجب هذه الاتفاقية مجموع الأتعاب المدفوعة أو المستحقة من الطرف الثاني. لا يُسأل أي طرف عن الأضرار غير المباشرة أو التبعية أو فوات الربح. لا يستثني هذا البند المسؤولية عن الإهمال الجسيم أو السوء المتعمد أو الوفاة أو الإصابة الشخصية."
+
+  # 11. §9 Indemnity
+  - component: module
+    variant: numbered
+    inputs:
+      number: 9
+    inputs_by_lang:
+      en:
+        title: "Indemnity"
+        body: "Party A shall indemnify Party B against third-party claims arising from Party A's negligence or breach of this Agreement. Party B shall indemnify Party A against third-party claims arising from Party B's use of the deliverables outside the agreed scope."
+      ar:
+        title: "التعويض"
+        body: "يلتزم الطرف الأول بتعويض الطرف الثاني عن مطالبات الغير الناشئة عن إهمال الطرف الأول أو إخلاله بهذه الاتفاقية. يلتزم الطرف الثاني بتعويض الطرف الأول عن مطالبات الغير الناشئة عن استخدام الطرف الثاني للمخرجات خارج النطاق المتفق عليه."
+
+  # 12. §10 Force Majeure
+  - component: module
+    variant: numbered
+    inputs:
+      number: 10
+    inputs_by_lang:
+      en:
+        title: "Force Majeure"
+        body: "Neither party shall be liable for delay or failure caused by events beyond reasonable control, including natural disasters, acts of government, labor disputes, or failure of utilities. The affected party shall notify promptly and resume performance when the event ends."
+      ar:
+        title: "القوة القاهرة"
+        body: "لا يُسأل أي طرف عن التأخير أو الإخفاق الناتج عن أحداث خارجة عن السيطرة المعقولة، بما في ذلك الكوارث الطبيعية، والإجراءات الحكومية، والنزاعات العمالية، أو انقطاع المرافق. على الطرف المتأثر الإخطار فوراً واستئناف التنفيذ عند انتهاء الحدث."
+
+  # 13. §11 Governing Law
+  - component: module
+    variant: numbered
+    inputs:
+      number: 11
+    inputs_by_lang:
+      en:
+        title: "Governing Law and Jurisdiction"
+        body: "This Agreement is governed by the laws of the United Arab Emirates. Any dispute shall be referred to the exclusive jurisdiction of the courts of [Emirate]."
+      ar:
+        title: "القانون الحاكم والاختصاص القضائي"
+        body: "تخضع هذه الاتفاقية لقوانين دولة الإمارات العربية المتحدة. يُحال أي نزاع إلى الاختصاص القضائي الحصري لمحاكم [الإمارة]."
+
+  # 14. §12 General
+  - component: module
+    variant: numbered
+    inputs:
+      number: 12
+    inputs_by_lang:
+      en:
+        title: "General Provisions"
+        body: "This Agreement is the complete understanding of the parties and supersedes any prior discussions. Amendments must be in writing and signed by both parties. If any provision is held invalid, the remaining provisions continue in effect. Notices shall be sent to the addresses above."
+      ar:
+        title: "أحكام عامة"
+        body: "تُمثل هذه الاتفاقية التفاهم الكامل بين الطرفين وتحل محل أي مناقشات سابقة. يجب أن تكون التعديلات خطية وموقعة من الطرفين. إذا اعتُبر أي بند باطلاً، تظل البنود المتبقية سارية. تُرسل الإشعارات إلى العناوين المذكورة أعلاه."
+
+  # 15. Signatures
+  - component: signature-field-block
+    inputs_by_lang:
+      en:
+        parties:
+          - role: "For the Service Provider"
+            name_label: "Name"
+            title_label: "Title"
+            date_label: "Date"
+          - role: "For the Client"
+            name_label: "Name"
+            title_label: "Title"
+            date_label: "Date"
+      ar:
+        parties:
+          - role: "عن مقدم الخدمة"
+            name_label: "الاسم"
+            title_label: "المسمى الوظيفي"
+            date_label: "التاريخ"
+          - role: "عن العميل"
+            name_label: "الاسم"
+            title_label: "المسمى الوظيفي"
+            date_label: "التاريخ"

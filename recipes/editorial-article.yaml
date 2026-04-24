@@ -1,0 +1,110 @@
+name: editorial-article
+version: 0.1.0
+namespace: katib
+description: Long-form editorial article — hero title + byline + lead + two-column body flow + inline numbered citations + references-list at the end. For opinion pieces, long reads, analysis essays. Demonstrates the citation + references-list pairing. Bilingual EN+AR.
+languages:
+- en
+- ar
+target_pages:
+- 2
+- 4
+page_limit: 6
+when: Long-form article or essay — publication-style layout with a single hero title, lead paragraph, two-column body, and numbered references. Use for opinion pieces, research essays, thought-leadership content.
+keywords:
+- editorial
+- article
+- essay
+- long-read
+- opinion
+- citations
+- bilingual
+
+sections:
+  # 1. Hero (front-matter) — title + byline + lead above the fold
+  - component: front-matter
+    inputs_by_lang:
+      en:
+        eyebrow: "ESSAY"
+        title: "[Your article title]"
+        subtitle: "[One-sentence deck that tells the reader why they should care — should be specific, not generic]"
+      ar:
+        eyebrow: "مقال"
+        title: "[عنوان مقالك]"
+        subtitle: "[سطر واحد يشرح للقارئ لماذا يجب أن يهتم — يجب أن يكون محدداً لا عاماً]"
+
+  # 2. Byline
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="margin: -6pt 0 18pt 0; padding-bottom: 10pt; border-bottom: 0.5pt solid var(--border); font-size: 10pt; color: var(--text-secondary); font-style: italic;">
+            By [Your Name] · [City / Publication] · 2026-04-25 · [Approximate word count or reading time]
+          </div>
+      ar:
+        raw_body: |
+          <div style="margin: -6pt 0 18pt 0; padding-bottom: 10pt; border-bottom: 0.5pt solid var(--border); font-size: 11pt; color: var(--text-secondary);">
+            بقلم [اسمك] · [المدينة / المنشور] · 25 أبريل 2026 · [عدد الكلمات التقريبي أو وقت القراءة]
+          </div>
+
+  # 3. Two-column body with inline citations
+  - component: two-column-page
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <p>[Opening paragraph — pull the reader in with a specific image, a concrete anecdote, or a surprising fact. Avoid abstract openers.]</p>
+          <p>[Second paragraph — establish the stakes. Why is this worth reading? Connect to something the reader already cares about.]</p>
+          <p>[Third paragraph — introduce your main argument or the thing you're investigating. Be specific. Reference a source if you're making a factual claim<sup class="katib-citation">[1]</sup>.]</p>
+          <blockquote class="span-cols">[A pull-quote that crystallizes the central argument — 12-20 words, memorable, sharable]</blockquote>
+          <p>[Development paragraph — evidence, counterargument, nuance. This is where most articles earn their keep. Cite primary sources where you have them<sup class="katib-citation">[2]</sup>.]</p>
+          <p>[Another development paragraph — bring in a second angle or objection, and address it directly. The reader should feel your respect for opposing views.]</p>
+          <p>[Synthesis paragraph — what changes if you're right? What should a thoughtful reader do with this argument?]</p>
+          <p>[Closing paragraph — land the point. Don't summarize. Return to the opening image or anecdote with new weight, or leave the reader with a concrete question<sup class="katib-citation">[3]</sup>.]</p>
+      ar:
+        raw_body: |
+          <p>[فقرة الافتتاح — اجذب القارئ بصورة محددة أو حادثة ملموسة أو حقيقة مفاجئة. تجنب المقدمات المجردة.]</p>
+          <p>[الفقرة الثانية — حدد الرهانات. لماذا يستحق هذا المقال القراءة؟ اربطه بشيء يهتم به القارئ بالفعل.]</p>
+          <p>[الفقرة الثالثة — قدّم فكرتك الرئيسية أو ما تبحث فيه. كن محدداً. استشهد بمصدر إن كنت تقدم ادعاءً واقعياً<sup class="katib-citation">[1]</sup>.]</p>
+          <blockquote class="span-cols">[اقتباس بارز يلخص الفكرة المحورية — من 12 إلى 20 كلمة، مؤثر وقابل للمشاركة]</blockquote>
+          <p>[فقرة تطويرية — أدلة، حجة مضادة، تفاصيل دقيقة. هنا تكسب المقالات قيمتها. استشهد بمصادر أولية حيثما أمكن<sup class="katib-citation">[2]</sup>.]</p>
+          <p>[فقرة تطويرية أخرى — قدّم زاوية ثانية أو اعتراضاً وعالجه مباشرة. يجب أن يشعر القارئ باحترامك للآراء المخالفة.]</p>
+          <p>[فقرة التركيب — ماذا سيتغير إذا كنت على حق؟ ماذا ينبغي للقارئ المتأمل أن يفعل بهذه الحجة؟]</p>
+          <p>[فقرة الختام — انزل بالفكرة. لا تلخص. عُد إلى الصورة الافتتاحية أو الحادثة بوزن جديد، أو اترك القارئ مع سؤال ملموس<sup class="katib-citation">[3]</sup>.]</p>
+
+  # 4. References
+  - component: references-list
+    variant: default
+    inputs_by_lang:
+      en:
+        title: "References"
+        entries:
+          - authors: "[Author, A.]"
+            year: "[YYYY]"
+            title: "[Source title — book, paper, interview, news item]"
+            source: "[Publisher or outlet]"
+            url: "[optional URL]"
+          - authors: "[Author, B.]"
+            year: "[YYYY]"
+            title: "[Source title]"
+            source: "[Publisher or outlet]"
+          - authors: "[Author, C.]"
+            year: "[YYYY]"
+            title: "[Source title]"
+            source: "[Publisher or outlet]"
+            url: "[optional URL]"
+      ar:
+        title: "المراجع"
+        entries:
+          - authors: "[المؤلف، أ.]"
+            year: "[YYYY]"
+            title: "[عنوان المصدر — كتاب، بحث، مقابلة، خبر]"
+            source: "[دار النشر أو الجهة]"
+            url: "[رابط اختياري]"
+          - authors: "[المؤلف، ب.]"
+            year: "[YYYY]"
+            title: "[عنوان المصدر]"
+            source: "[دار النشر أو الجهة]"
+          - authors: "[المؤلف، ج.]"
+            year: "[YYYY]"
+            title: "[عنوان المصدر]"
+            source: "[دار النشر أو الجهة]"
+            url: "[رابط اختياري]"

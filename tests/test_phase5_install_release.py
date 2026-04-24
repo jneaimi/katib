@@ -179,6 +179,13 @@ def test_seed_manifest_entries_all_exist_in_bundled_tier():
         assert path.exists(), f"seed manifest lists {name!r} but {path} doesn't exist"
 
 
+def _manifest_recipe_count() -> int:
+    """Source-of-truth for the expected seed count. Read the manifest
+    once instead of hardcoding — the recipe list grows every phase."""
+    data = yaml.safe_load(MANIFEST.read_text(encoding="utf-8"))
+    return len(data.get("recipes") or [])
+
+
 def test_seed_list_command_shows_manifest(tmp_path):
     """`scripts/seed.py list` must report every manifest entry with a
     correct seeded/absent status."""
@@ -191,7 +198,9 @@ def test_seed_list_command_shows_manifest(tmp_path):
     assert r.returncode == 0, r.stderr
     data = json.loads(r.stdout)
     assert data["user_tier"] == str(recipes_dir)
-    assert len(data["items"]) >= 15, "expected at least 15 starter recipes in the manifest"
+    expected = _manifest_recipe_count()
+    assert len(data["items"]) == expected, \
+        f"list should report exactly {expected} manifest entries, got {len(data['items'])}"
     assert all(not item["seeded"] for item in data["items"]), \
         "list of empty user tier reported items as seeded"
 
@@ -208,8 +217,9 @@ def test_seed_refresh_populates_empty_user_tier(tmp_path):
     assert r.returncode == 0, r.stderr
     data = json.loads(r.stdout)
     seeded = [x for x in data["results"] if x["action"] == "seeded"]
-    assert len(seeded) == 15, \
-        f"expected all 15 recipes seeded, got {len(seeded)}: {data['results']}"
+    expected = _manifest_recipe_count()
+    assert len(seeded) == expected, \
+        f"expected all {expected} recipes seeded, got {len(seeded)}: {data['results']}"
 
     # On-disk state matches bundled content byte-for-byte for a spot-check recipe.
     assert (recipes_dir / "tutorial.yaml").read_bytes() == \
@@ -219,7 +229,7 @@ def test_seed_refresh_populates_empty_user_tier(tmp_path):
     log_file = memory_dir / "seed-events.jsonl"
     assert log_file.exists()
     events = [json.loads(ln) for ln in log_file.read_text().splitlines() if ln.strip()]
-    assert len(events) == 15
+    assert len(events) == expected
     assert {e["recipe"] for e in events} == {r["recipe"] for r in seeded}
 
 

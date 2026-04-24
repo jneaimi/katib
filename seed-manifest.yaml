@@ -22,16 +22,30 @@
 version: 1
 
 recipes:
+  # Business
   - business-proposal-letter
   - business-proposal-one-pager
   - business-proposal-proposal
+  # Editorial
+  - editorial-article
   - editorial-white-paper
+  # Financial
   - financial-invoice
   - financial-quote
+  # Formal
+  - formal-authority-letter
   - formal-noc
+  # Legal
   - legal-mou
+  - legal-nda
+  - legal-service-agreement
+  # Personal
+  - personal-bio
   - personal-cover-letter
   - personal-cv
+  # Report
+  - report-progress
+  # Tutorial
   - tutorial
   - tutorial-cheatsheet
   - tutorial-handoff
