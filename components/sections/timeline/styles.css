@@ -1,0 +1,175 @@
+.katib-timeline {
+    margin: 1em 0;
+}
+
+.katib-timeline__head {
+    margin-bottom: 10pt;
+    padding-bottom: 4pt;
+    border-bottom: 0.5pt solid var(--border);
+}
+
+.katib-timeline__eyebrow {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10pt;
+}
+
+.katib-timeline__title {
+    font-family: var(--font-display);
+    font-size: 15pt;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__title {
+    font-size: 17pt;
+    line-height: 1.4;
+    letter-spacing: 0;
+}
+
+.katib-timeline__events {
+    list-style: none;
+    padding: 0;
+    margin: 10pt 0 0 0;
+    position: relative;
+}
+
+/* Connecting rail — runs behind the nodes on the left edge (right for RTL). */
+.katib-timeline__events::before {
+    content: "";
+    position: absolute;
+    top: 6pt;
+    bottom: 6pt;
+    left: 22pt;
+    width: 1pt;
+    background: var(--border);
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__events::before {
+    left: auto;
+    right: 22pt;
+}
+
+.katib-timeline__event {
+    position: relative;
+    padding: 4pt 0 10pt 40pt;
+    min-height: 24pt;
+    page-break-inside: avoid;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__event {
+    padding: 4pt 40pt 10pt 0;
+}
+
+/* Node — the dot on the rail at each event's line */
+.katib-timeline__node {
+    position: absolute;
+    top: 6pt;
+    left: 18pt;
+    width: 9pt;
+    height: 9pt;
+    border-radius: 50%;
+    background: var(--page-bg);
+    border: 2pt solid var(--text-tertiary);
+    box-sizing: border-box;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__node {
+    left: auto;
+    right: 18pt;
+}
+
+.katib-timeline__event--done .katib-timeline__node {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.katib-timeline__event--active .katib-timeline__node {
+    background: var(--page-bg);
+    border-color: var(--accent);
+    border-width: 3pt;
+}
+
+.katib-timeline__event--upcoming .katib-timeline__node {
+    background: var(--page-bg);
+    border-color: var(--text-tertiary);
+}
+
+.katib-timeline__event-date {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 2pt;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__event-date {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10pt;
+    font-weight: 700;
+}
+
+.katib-timeline__event--done .katib-timeline__event-date {
+    color: var(--accent);
+}
+
+.katib-timeline__event--active .katib-timeline__event-date {
+    color: var(--accent);
+}
+
+.katib-timeline__event-title {
+    font-family: var(--font-display);
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 2pt 0;
+    line-height: 1.3;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__event-title {
+    font-size: 13pt;
+    line-height: 1.4;
+}
+
+.katib-timeline__event-text {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 48em;
+}
+
+.katib-timeline[lang="ar"] .katib-timeline__event-text {
+    font-size: 11pt;
+    line-height: 1.7;
+}
+
+/* Compact variant — denser rail, smaller typography. Good for dense reports. */
+.katib-timeline--compact .katib-timeline__event {
+    padding: 2pt 0 6pt 36pt;
+}
+
+.katib-timeline--compact[lang="ar"] .katib-timeline__event {
+    padding: 2pt 36pt 6pt 0;
+}
+
+.katib-timeline--compact .katib-timeline__event-title { font-size: 10.5pt; }
+.katib-timeline--compact .katib-timeline__event-text { font-size: 9pt; }
+.katib-timeline--compact .katib-timeline__node { width: 7pt; height: 7pt; }

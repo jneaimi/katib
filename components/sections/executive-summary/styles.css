@@ -1,0 +1,121 @@
+.katib-exec-summary {
+    margin: 1em 0 1.4em 0;
+    padding: 14pt 18pt 14pt 18pt;
+    background: var(--page-bg);
+    border-left: 3pt solid var(--accent);
+    break-inside: avoid;
+}
+
+.katib-exec-summary[lang="ar"] {
+    border-left: 0;
+    border-right: 3pt solid var(--accent);
+}
+
+.katib-exec-summary--bordered {
+    border: 1pt solid var(--border);
+    border-left: 3pt solid var(--accent);
+}
+
+.katib-exec-summary--bordered[lang="ar"] {
+    border-left: 1pt solid var(--border);
+    border-right: 3pt solid var(--accent);
+}
+
+.katib-exec-summary__eyebrow {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6pt;
+}
+
+.katib-exec-summary[lang="ar"] .katib-exec-summary__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10pt;
+}
+
+.katib-exec-summary__title {
+    font-family: var(--font-display);
+    font-size: 16pt;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0 0 6pt 0;
+    letter-spacing: -0.01em;
+}
+
+.katib-exec-summary[lang="ar"] .katib-exec-summary__title {
+    font-size: 18pt;
+    line-height: 1.4;
+    letter-spacing: 0;
+}
+
+.katib-exec-summary__intro {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    margin: 0 0 10pt 0;
+    line-height: 1.5;
+    max-width: 48em;
+}
+
+.katib-exec-summary__items {
+    list-style: none;
+    padding: 0;
+    margin: 10pt 0 0 0;
+}
+
+.katib-exec-summary__item {
+    margin: 0 0 6pt 0;
+    padding: 0;
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.5;
+    color: var(--text);
+    page-break-inside: avoid;
+}
+
+.katib-exec-summary__item-label {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 6pt;
+}
+
+.katib-exec-summary[lang="ar"] .katib-exec-summary__item-label {
+    margin-right: 0;
+    margin-left: 6pt;
+}
+
+.katib-exec-summary__item-label::after {
+    content: " —";
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.katib-exec-summary[lang="ar"] .katib-exec-summary__item-label::after {
+    content: " —";
+}
+
+.katib-exec-summary__item-body {
+    font-family: var(--font-primary);
+    color: var(--text);
+}
+
+.katib-exec-summary__footer {
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text-secondary);
+    margin: 12pt 0 0 0;
+    padding-top: 8pt;
+    border-top: 0.5pt solid var(--border);
+    font-style: italic;
+}
+
+.katib-exec-summary[lang="ar"] .katib-exec-summary__footer {
+    font-style: normal;
+    font-size: 10.5pt;
+}

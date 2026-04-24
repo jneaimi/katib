@@ -1,0 +1,90 @@
+.katib-references-list {
+    margin: 1.2em 0;
+    padding-top: 8pt;
+    border-top: 1pt solid var(--border);
+}
+
+.katib-references-list__title {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 10pt 0;
+    letter-spacing: -0.01em;
+}
+
+.katib-references-list[lang="ar"] .katib-references-list__title {
+    font-size: 16pt;
+    letter-spacing: 0;
+}
+
+.katib-references-list__entries {
+    list-style: decimal;
+    padding-left: 1.8em;
+    margin: 0;
+    counter-reset: ref;
+}
+
+.katib-references-list[lang="ar"] .katib-references-list__entries {
+    padding-left: 0;
+    padding-right: 1.8em;
+}
+
+.katib-references-list__entry {
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text);
+    margin: 0 0 6pt 0;
+    line-height: 1.45;
+    padding-left: 0.3em;
+    page-break-inside: avoid;
+}
+
+.katib-references-list[lang="ar"] .katib-references-list__entry {
+    font-size: 10.5pt;
+    line-height: 1.7;
+    padding-left: 0;
+    padding-right: 0.3em;
+}
+
+.katib-references-list__authors {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.katib-references-list__year {
+    color: var(--text-secondary);
+}
+
+.katib-references-list__title-text {
+    font-style: italic;
+    color: var(--text);
+}
+
+.katib-references-list[lang="ar"] .katib-references-list__title-text {
+    font-style: normal;
+    font-weight: 600;
+}
+
+.katib-references-list__source {
+    color: var(--text-secondary);
+}
+
+.katib-references-list__url {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 8.5pt;
+    color: var(--accent);
+    word-break: break-all;
+}
+
+/* Compact variant — tighter leading, smaller font, for long lists */
+.katib-references-list--compact .katib-references-list__entry {
+    font-size: 9pt;
+    margin-bottom: 4pt;
+    line-height: 1.35;
+}
+
+.katib-references-list--compact[lang="ar"] .katib-references-list__entry {
+    font-size: 10pt;
+    line-height: 1.55;
+}

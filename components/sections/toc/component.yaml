@@ -1,0 +1,27 @@
+name: toc
+tier: section
+version: 0.1.0
+namespace: katib
+description: Table of contents with entry text + dotted leader + page number. Recipes provide explicit entries (label + level + page) — recipes know their own structure better than any auto-generation pass. Supports up to 3 nesting levels.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - title:
+        type: string
+        required: false
+        default: Contents
+        description: Section heading. Defaults to "Contents" (EN) / "المحتويات" (AR — override in recipe).
+    - entries:
+        type: array
+        required: true
+        description: Ordered list of TOC entries. Each entry — {label, page, level?}. Level is 1, 2, or 3 (default 1). Page is a string or int (e.g. "iv", "12", "A-3").
+variants:
+  - default
+  - bordered
+page_behavior:
+  mode: atomic
+  break_before: auto
+  break_after: always

@@ -1,0 +1,10 @@
+.katib-citation {
+    font-family: var(--font-primary);
+    font-size: 0.72em;
+    font-weight: 600;
+    color: var(--accent);
+    vertical-align: super;
+    line-height: 1;
+    padding: 0 1pt;
+    white-space: nowrap;
+}

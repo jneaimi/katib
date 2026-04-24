@@ -1,0 +1,21 @@
+name: citation
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Inline numbered citation marker — superscript number that points at a references-list entry. For academic, editorial, legal. Pairs with the references-list section (same doc).
+languages: [en, ar]
+requires:
+  tokens: [accent]
+  fonts: [primary]
+accepts:
+  inputs:
+    - number:
+        type: int
+        required: true
+        description: The citation number (1, 2, 3, ...) — matches the references-list entry order.
+    - ref:
+        type: string
+        required: false
+        description: Optional short identifier slug — useful if the recipe generates internal hash anchors later (Phase 3d+). Unused in rendering today.
+page_behavior:
+  mode: flowing

@@ -1,0 +1,28 @@
+name: references-list
+tier: section
+version: 0.1.0
+namespace: katib
+description: Numbered bibliography section. Pairs with the citation primitive — each entry corresponds to a citation number in the body (e.g. [1] in text → entry 1 here). For academic, editorial, legal docs. Supports one of the three major citation styles via variant — Chicago (author-first), APA (year-first), or a generic minimal style.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - title:
+        type: string
+        required: false
+        default: References
+        description: Section heading. Defaults to "References" (EN) / "المراجع" (AR — override in recipe).
+    - entries:
+        type: array
+        required: true
+        description: Ordered list of references. Each entry — {authors, year, title, source, url?}. Rendered with the number as the left column.
+variants:
+  - default
+  - compact
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-references-list__entry
+  break_before: auto

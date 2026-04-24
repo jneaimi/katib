@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T20:48:05+00:00'
+generated_at: '2026-04-24T21:07:06+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -548,6 +548,41 @@ recipes:
     - slide-frame
     - slide-frame
     - appendix-page
+  phase-3c-content-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 3c content-primitives showcase — toc + executive-summary + metric-block + timeline
+      + citation + references-list composed in one document. Proves the content library integrates cleanly
+      alongside the Phase 3a layout primitives.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 5
+    - 8
+    page_limit: 10
+    when: Smoke render for the Phase 3c content components. Report-style composition — TOC, exec summary,
+      metrics band, timeline, referenced body text, bibliography.
+    keywords:
+    - phase-3
+    - showcase
+    - content
+    - toc
+    - executive-summary
+    - timeline
+    - metric
+    - citation
+    - references
+    sections_shape:
+    - toc
+    - executive-summary
+    - module
+    - metric-block
+    - metric-block
+    - metric-block
+    - timeline
+    - module
+    - references-list
   tutorial-cheatsheet:
     namespace: katib
     version: 0.1.0
@@ -741,6 +776,17 @@ components:
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
     used_in_recipes: 11
+  citation:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Inline numbered citation marker — superscript number that points at a references-list
+      entry. For academic, editorial, legal. Pairs with the references-list section (same doc).
+    used_in_recipes: 0
   clause-list:
     namespace: katib
     tier: primitive
@@ -822,7 +868,7 @@ components:
     - inline
     description: Key-metric display — label + value + optional delta. For dashboards, executive summaries,
       and report hero rows. Renders inline-block so multiple metrics lay out side-by-side without ceremony.
-    used_in_recipes: 0
+    used_in_recipes: 1
   pull-quote:
     namespace: katib
     tier: primitive
@@ -993,6 +1039,20 @@ components:
       (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural
       shape; future reuse expected for portfolio and profile pages.
     used_in_recipes: 1
+  executive-summary:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - bordered
+    description: Key takeaways box for the top of reports, proposals, and white-papers. Header + 2-4 labeled
+      bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent
+      rail for visual separation from regular flow.
+    used_in_recipes: 1
   financial-summary:
     namespace: katib
     tier: section
@@ -1099,7 +1159,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 16
+    used_in_recipes: 17
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1138,6 +1198,21 @@ components:
     - tagged
     description: Compact list of further-reading references or source citations.
     used_in_recipes: 2
+  references-list:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - compact
+    description: Numbered bibliography section. Pairs with the citation primitive — each entry corresponds
+      to a citation number in the body (e.g. [1] in text → entry 1 here). For academic, editorial, legal
+      docs. Supports one of the three major citation styles via variant — Chicago (author-first), APA
+      (year-first), or a generic minimal style.
+    used_in_recipes: 1
   section-divider-page:
     namespace: katib
     tier: section
@@ -1195,6 +1270,35 @@ components:
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
     used_in_recipes: 5
+  timeline:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - compact
+    description: Vertical event list with a connecting rail. Each event has a date, title, optional body,
+      and status (done | active | upcoming — controls node tint). For progress reports, project plans,
+      onboarding sequences, company histories. Rail flips to right side for RTL so the reading order is
+      date-left → content-right in EN and date-right → content-left in AR.
+    used_in_recipes: 1
+  toc:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    - bordered
+    description: Table of contents with entry text + dotted leader + page number. Recipes provide explicit
+      entries (label + level + page) — recipes know their own structure better than any auto-generation
+      pass. Supports up to 3 nesting levels.
+    used_in_recipes: 1
   tutorial-step:
     namespace: katib
     tier: section
