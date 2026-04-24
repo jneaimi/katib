@@ -65,9 +65,11 @@ def test_handoff_has_no_cover_page():
 
 
 def test_handoff_section_ordering():
+    """Updated for Phase-4 Day 3 code-block migration: Runbook module split into
+    header + 2 code-blocks (Deploy + Rollback) + timing/health checks module."""
     r = load_recipe(RECIPE_NAME)
     sections = r["sections"]
-    assert len(sections) == 11
+    assert len(sections) == 14
     components = [s["component"] for s in sections]
     assert components == [
         "module",       # 1. header
@@ -76,7 +78,10 @@ def test_handoff_section_ordering():
         "module",       # 4. what shipped
         "module",       # 5. architecture
         "callout",      # 6. key decision (info)
-        "module",       # 7. runbook
+        "module",       # 7. runbook header
+        "code-block",   # 7a. Deploy commands (inline variant)
+        "code-block",   # 7b. Rollback command (inline variant)
+        "module",       # 7c. rollback timing + health checks
         "module",       # 8. known issues
         "module",       # 9. contacts
         "module",       # 10. next steps
@@ -196,8 +201,9 @@ def test_handoff_renders_all_v1_content(tmp_path):
     assert "eventual consistency" in flat
     # Runbook
     assert "Runbook" in flat
-    assert "Deploy" in flat
-    assert "Rollback" in flat
+    # code-block labels get uppercased via CSS text-transform
+    assert "Deploy" in flat or "DEPLOY" in flat
+    assert "Rollback" in flat or "ROLLBACK" in flat
     assert "Health checks" in flat
     assert "git push origin main" in flat
     assert "/healthz" in flat

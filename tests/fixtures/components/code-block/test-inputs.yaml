@@ -1,0 +1,11 @@
+# Test inputs for `code-block` isolated render.
+# Used by `katib component test code-block`.
+inputs:
+  label: "~/.katib/brands/example.yaml"
+  code: |
+    <span class="katib-code-block__comment"># brand identity</span>
+    name: Example Brand
+    accent: "#1F3A68"
+    lang_default: en
+brand: null
+variant: terminal

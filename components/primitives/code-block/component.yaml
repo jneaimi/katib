@@ -1,0 +1,24 @@
+name: code-block
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Preformatted code / shell-command block. Two variants — `terminal` (dark zinc background, for CLI samples and install sequences) and `inline` (theme-aware light, for single-command references). Accepts raw code content via `code` input (Jinja-safe — recipes may embed comment spans). Use for any monospace code, config snippet, or CLI block. Distinct from `callout` (prose) and `kv-list` (structured pairs).
+languages: [en, ar]
+requires:
+  tokens: [text, tag_bg]
+  fonts: [mono]
+accepts:
+  inputs:
+    - code:
+        type: string
+        required: true
+        description: Code content. Raw HTML permitted for inline comment spans (e.g., `<span class="katib-code-block__comment"># note</span>`).
+    - label:
+        type: string
+        required: false
+        description: Optional filename or label rendered above the block (e.g., "~/.config/katib/config.yaml").
+variants:
+  - terminal
+  - inline
+page_behavior:
+  mode: atomic

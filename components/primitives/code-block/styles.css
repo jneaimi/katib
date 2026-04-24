@@ -1,0 +1,53 @@
+.katib-code-block {
+    margin: 8pt 0;
+}
+
+.katib-code-block__label {
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 4pt;
+}
+
+.katib-code-block__pre {
+    font-family: var(--font-mono);
+    white-space: pre-wrap;
+    margin: 0;
+    border-radius: 4pt;
+    direction: ltr;
+}
+
+.katib-code-block__pre code {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    background: transparent;
+    padding: 0;
+}
+
+/* Terminal variant — dark zinc, for CLI / install / config samples */
+.katib-code-block--terminal .katib-code-block__pre {
+    background: #27272A;
+    color: #FAFAFA;
+    font-size: 8.5pt;
+    line-height: 1.5;
+    padding: 10pt 12pt;
+}
+
+/* Comment-span helper for terminal variant — recipes use this class for inline
+   comments in code samples. Zinc-400 keeps the visual hierarchy. */
+.katib-code-block--terminal .katib-code-block__comment {
+    color: #A1A1AA;
+}
+
+/* Inline variant — theme-aware light, for single-command references */
+.katib-code-block--inline .katib-code-block__pre {
+    background: var(--tag-bg);
+    color: var(--text);
+    font-size: 9pt;
+    line-height: 1.45;
+    padding: 8pt 10pt;
+}

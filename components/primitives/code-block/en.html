@@ -1,0 +1,7 @@
+{%- set effective_variant = variant or 'terminal' %}
+<div class="katib-code-block katib-code-block--{{ effective_variant }}" lang="en">
+{%- if input.label %}
+    <div class="katib-code-block__label">{{ input.label }}</div>
+{%- endif %}
+    <pre class="katib-code-block__pre"><code>{{ input.code | safe }}</code></pre>
+</div>
