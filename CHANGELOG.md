@@ -3,6 +3,26 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — cover-page full-bleed hotfix (2026-04-24)
+
+### Fixed
+
+- **`cover-page` image-backed variants** (`image-background`,
+  `neural-cartography`) — background image was restricted to the A4
+  content area (170×253mm), leaving visible `@page` margin around all
+  four edges instead of bleeding to the physical page. Same root cause
+  and same fix pattern as the cv-layout page-break issue: the cover's
+  absolutely-positioned bg sat inside the 20mm `@page` margin.
+  `.katib-cover--has-image` now uses `margin: -20mm` + compensating
+  `padding: 38mm 36mm` + `min-height: 297mm` to reach the physical
+  edges while keeping title/subtitle at their original inset.
+
+Verified end-to-end by rasterizing page 1 after a Gemini-sourced
+neural-cartography render at 72dpi — image extends to 595.3×841.9pt
+(exact A4 mediabox).
+
+---
+
 ## [Unreleased] — Phase-4 Day 3: code-block primitive (2026-04-24)
 
 ### Added
