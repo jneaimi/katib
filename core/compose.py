@@ -33,6 +33,7 @@ from core.tokens import (
     merge_tokens,
     render_context,
     tokens_css,
+    user_recipes_dir,
 )
 
 CORE_DIR = Path(__file__).resolve().parent
@@ -53,14 +54,28 @@ def _load_schema(name: str) -> dict:
 
 
 def load_recipe(name_or_path: str) -> dict:
+    """Load a recipe by name or path. Searches user tier first, bundled second.
+
+    `name_or_path` can be either a bare recipe name (resolved through the
+    two-tier search) or a full file path (used directly).
+    """
     p = Path(name_or_path).expanduser()
     if p.suffix in (".yaml", ".yml") and p.exists():
         path = p
     else:
-        path = RECIPES_DIR / f"{name_or_path}.yaml"
-        if not path.exists():
+        user_path = user_recipes_dir() / f"{name_or_path}.yaml"
+        bundled_path = RECIPES_DIR / f"{name_or_path}.yaml"
+        if user_path.exists():
+            path = user_path
+        elif bundled_path.exists():
+            path = bundled_path
+        else:
             raise FileNotFoundError(
-                f"recipe {name_or_path!r} not found (looked at {path})"
+                f"recipe {name_or_path!r} not found. Tried:\n"
+                f"  user tier:    {user_path}\n"
+                f"  bundled tier: {bundled_path}\n"
+                f"Run `uv run scripts/recipe.py new {name_or_path} --namespace user` "
+                f"to scaffold one."
             )
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     validator = Draft202012Validator(_load_schema("recipe.yaml.schema.json"))

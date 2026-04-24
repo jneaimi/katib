@@ -28,20 +28,22 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from core.tokens import user_memory_dir
+from core.tokens import user_memory_dir, user_recipes_dir
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = REPO_ROOT / "components"
+# Two-tier recipe layout (Phase 3):
+#   RECIPES_DIR      = bundled (shipped with the skill)
+#   USER_RECIPES_DIR = user-authored content in ~/.katib/recipes/
+# User tier takes precedence on lookup; scaffold always writes to user tier.
 RECIPES_DIR = REPO_ROOT / "recipes"
+USER_RECIPES_DIR = user_recipes_dir()
 SCHEMAS_DIR = REPO_ROOT / "schemas"
 DIST_DIR = REPO_ROOT / "dist"
 
-# User-tier audit + requests paths (Phase 2). Recipe YAMLs still land
-# under bundled RECIPES_DIR — scaffold-write migration is Phase 3, which
-# must also wire the two-tier read side at the same time (lint_all_recipes,
-# validate, compose's load_recipe). Evaluated at import time; tests that
-# need to redirect should `monkeypatch.setattr` the module attribute (or
-# use the `isolated_user_dirs` fixture from conftest).
+# User-tier audit + requests paths (Phase 2). Evaluated at import time;
+# tests that need to redirect should `monkeypatch.setattr` the module
+# attribute (or use the `isolated_user_dirs` fixture from conftest).
 MEMORY_DIR = user_memory_dir()
 AUDIT_FILE = MEMORY_DIR / "recipe-audit.jsonl"
 REQUESTS_FILE = MEMORY_DIR / "recipe-requests.jsonl"
@@ -82,7 +84,33 @@ def _load_recipe_yaml(path: Path) -> dict:
 
 
 def _recipe_path(name: str) -> Path:
+    """Path to an existing recipe — user tier first, bundled fallback.
+
+    Returns the first match on disk. If neither tier has the file,
+    returns the *bundled* path (the historical default) so callers
+    that handle non-existence themselves see a stable value. Use
+    `_find_recipe()` when you want `None` for missing recipes.
+    """
+    user_path = USER_RECIPES_DIR / f"{name}.yaml"
+    if user_path.exists():
+        return user_path
     return RECIPES_DIR / f"{name}.yaml"
+
+
+def _find_recipe(name: str) -> Path | None:
+    """Resolve a recipe name to a path or None. User tier preferred."""
+    user_path = USER_RECIPES_DIR / f"{name}.yaml"
+    if user_path.exists():
+        return user_path
+    bundled = RECIPES_DIR / f"{name}.yaml"
+    if bundled.exists():
+        return bundled
+    return None
+
+
+def _user_scaffold_path(name: str) -> Path:
+    """Where a new user-scaffolded recipe is written."""
+    return USER_RECIPES_DIR / f"{name}.yaml"
 
 
 def _all_component_names() -> dict[str, Path]:
@@ -234,10 +262,20 @@ def scaffold_recipe(
         if lang not in LANG_ENUM:
             raise ValueError(f"language {lang!r} not in {list(LANG_ENUM)}")
 
-    rpath = _recipe_path(name)
+    # Dual-tier existence check. A user recipe with the same name as a
+    # bundled recipe would silently shadow at load time — we refuse at
+    # scaffold time unless --force is passed.
+    rpath = _user_scaffold_path(name)
     if rpath.exists():
         raise ValueError(
             f"recipe {name!r} already exists at {_display_path(rpath)}"
+        )
+    bundled_rpath = RECIPES_DIR / f"{name}.yaml"
+    if bundled_rpath.exists() and not force:
+        raise ValueError(
+            f"recipe {name!r} already exists in the bundled tier at "
+            f"{_display_path(bundled_rpath)}. User recipes cannot shadow "
+            f"bundled recipes without --force --justification '<reason>'."
         )
 
     graduation_warning: str | None = None
@@ -267,7 +305,7 @@ def scaffold_recipe(
     description = description or f"TODO: describe {name}."
     keywords = keywords or []
 
-    RECIPES_DIR.mkdir(parents=True, exist_ok=True)
+    USER_RECIPES_DIR.mkdir(parents=True, exist_ok=True)
     yaml_text = _scaffold_recipe_yaml(
         name=name,
         namespace=namespace,
@@ -741,14 +779,30 @@ def bundle_share_recipe(
 def lint_all_recipes(
     *, content_lint: bool = True, strict: bool = False
 ) -> list[RecipeValidationResult]:
+    """Lint every recipe in both user and bundled tiers.
+
+    User tier is processed first so user recipes that shadow bundled names
+    win (bundled version is suppressed). `validate_recipe_full` routes
+    through `_find_recipe()` which also prefers user tier — so a shadowed
+    bundled recipe is not double-linted.
+    """
     results: list[RecipeValidationResult] = []
-    if not RECIPES_DIR.exists():
-        return results
-    for rfile in sorted(RECIPES_DIR.glob("*.yaml")):
-        name = rfile.stem
-        results.append(
-            validate_recipe_full(name, content_lint=content_lint, strict=strict)
-        )
+    seen: set[str] = set()
+    if USER_RECIPES_DIR.exists():
+        for rfile in sorted(USER_RECIPES_DIR.glob("*.yaml")):
+            name = rfile.stem
+            seen.add(name)
+            results.append(
+                validate_recipe_full(name, content_lint=content_lint, strict=strict)
+            )
+    if RECIPES_DIR.exists():
+        for rfile in sorted(RECIPES_DIR.glob("*.yaml")):
+            name = rfile.stem
+            if name in seen:
+                continue  # user tier shadowed this bundled recipe
+            results.append(
+                validate_recipe_full(name, content_lint=content_lint, strict=strict)
+            )
     return results
 
 

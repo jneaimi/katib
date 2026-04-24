@@ -30,12 +30,34 @@ from core.brand_presets import (  # noqa: E402
 from core.compose import compose  # noqa: E402
 from core.output import resolve_document_folder  # noqa: E402
 from core.render import render_to_pdf  # noqa: E402
+from core.tokens import user_memory_dir, user_recipes_dir  # noqa: E402
 
 COMPONENTS_DIR = REPO_ROOT / "components"
 RECIPES_DIR = REPO_ROOT / "recipes"
-AUDIT_FILE = REPO_ROOT / "memory" / "component-audit.jsonl"
-RECIPE_AUDIT_FILE = REPO_ROOT / "memory" / "recipe-audit.jsonl"
+# Audit files live in BOTH tiers (Phase 3). Bundled content ships its
+# audit alongside; user content's audit lives under `user_memory_dir()`.
+# The gate below reads the union so bundled components + user recipes
+# can coexist. `AUDIT_FILE` / `RECIPE_AUDIT_FILE` are kept as the
+# primary (user-tier) path for backwards compatibility with tests that
+# monkeypatch them; the bundled counterpart is `BUNDLED_*_AUDIT_FILE`.
+BUNDLED_AUDIT_FILE = REPO_ROOT / "memory" / "component-audit.jsonl"
+BUNDLED_RECIPE_AUDIT_FILE = REPO_ROOT / "memory" / "recipe-audit.jsonl"
+AUDIT_FILE = user_memory_dir() / "component-audit.jsonl"
+RECIPE_AUDIT_FILE = user_memory_dir() / "recipe-audit.jsonl"
 TIER_DIRS = ("primitives", "sections", "covers")
+
+
+def _display_path(p: Path) -> str:
+    """Render path as REPO_ROOT-relative if inside, absolute otherwise.
+
+    User-tier paths under ~/.katib/ are outside REPO_ROOT so
+    `.relative_to(REPO_ROOT)` raises. This helper lets audit error
+    messages show a readable path for both tiers.
+    """
+    try:
+        return str(p.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(p)
 
 
 class AuditError(RuntimeError):
@@ -55,44 +77,56 @@ def _on_disk_components() -> set[str]:
 
 
 def _audit_entries() -> set[str]:
+    """Union of audited component names across bundled + user tiers."""
     out: set[str] = set()
-    if not AUDIT_FILE.exists():
-        return out
-    for line in AUDIT_FILE.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
+    for audit_path in (BUNDLED_AUDIT_FILE, AUDIT_FILE):
+        if not audit_path.exists():
             continue
-        try:
-            entry = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        name = entry.get("component")
-        if name:
-            out.add(name)
+        for line in audit_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            name = entry.get("component")
+            if name:
+                out.add(name)
     return out
 
 
 def _on_disk_recipes() -> set[str]:
-    if not RECIPES_DIR.exists():
-        return set()
-    return {p.stem for p in RECIPES_DIR.glob("*.yaml")}
+    """Union of recipe names present in either bundled or user tier.
+
+    The audit gate must see user-tier recipes too — otherwise a user who
+    scaffolds a recipe gets no audit check (silent), and removing a
+    bundled recipe's audit entry goes undetected.
+    """
+    names: set[str] = set()
+    for d in (RECIPES_DIR, user_recipes_dir()):
+        if d.exists():
+            names.update(p.stem for p in d.glob("*.yaml"))
+    return names
 
 
 def _recipe_audit_entries() -> set[str]:
-    if not RECIPE_AUDIT_FILE.exists():
-        return set()
+    """Union of audited recipe names across bundled + user tiers."""
     out: set[str] = set()
-    for line in RECIPE_AUDIT_FILE.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
+    for audit_path in (BUNDLED_RECIPE_AUDIT_FILE, RECIPE_AUDIT_FILE):
+        if not audit_path.exists():
             continue
-        try:
-            entry = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        name = entry.get("recipe")
-        if name:
-            out.add(name)
+        for line in audit_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            name = entry.get("recipe")
+            if name:
+                out.add(name)
     return out
 
 
@@ -107,7 +141,7 @@ def check_audit() -> None:
             "Component(s) present on disk without an audit entry:\n"
             f"    {names}\n"
             "Every component under components/ must have a matching entry "
-            f"in {AUDIT_FILE.relative_to(REPO_ROOT)}.\n"
+            f"in {_display_path(AUDIT_FILE)}.\n"
             "Either remove the component or seed an audit entry.\n"
             "(Use `uv run scripts/component.py new <name>` to handle this automatically.)"
         )
@@ -121,7 +155,7 @@ def check_audit() -> None:
             "Recipe(s) present on disk without an audit entry:\n"
             f"    {names}\n"
             "Every recipe under recipes/ must have a matching entry "
-            f"in {RECIPE_AUDIT_FILE.relative_to(REPO_ROOT)}.\n"
+            f"in {_display_path(RECIPE_AUDIT_FILE)}.\n"
             "Either remove the recipe or seed an audit entry.\n"
             "(Use `uv run scripts/recipe.py new <name>` to handle this automatically.)"
         )

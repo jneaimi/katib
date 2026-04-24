@@ -24,6 +24,9 @@ SCHEMA_VERSION = 1
 
 TIER_DIRS = ("primitives", "sections", "covers")
 
+sys.path.insert(0, str(REPO_ROOT))
+from core.tokens import user_recipes_dir  # noqa: E402
+
 
 def _load_yaml(p: Path) -> dict:
     return yaml.safe_load(p.read_text(encoding="utf-8")) or {}
@@ -54,27 +57,37 @@ def collect_components() -> dict[str, dict]:
 
 
 def collect_recipes(components: dict[str, dict]) -> dict[str, dict]:
+    """Collect recipes from bundled AND user tiers. User-tier recipes with
+    the same name as a bundled recipe shadow the bundled one (last-wins
+    since user tier is processed second).
+    """
     out: dict[str, dict] = {}
-    if not RECIPES_DIR.exists():
-        return out
-    for rfile in sorted(RECIPES_DIR.glob("*.yaml")):
-        r = _load_yaml(rfile)
-        name = r["name"]
-        sections_shape = [s["component"] for s in r.get("sections", [])]
-        out[name] = {
-            "namespace": r.get("namespace", "katib"),
-            "version": r.get("version"),
-            "description": r.get("description", ""),
-            "languages": r.get("languages", []),
-            "target_pages": r.get("target_pages"),
-            "page_limit": r.get("page_limit"),
-            "when": r.get("when"),
-            "keywords": r.get("keywords", []),
-            "sections_shape": sections_shape,
-        }
-        for cname in set(sections_shape):
-            if cname in components:
-                components[cname]["used_in_recipes"] += 1
+    recipe_dirs = [d for d in (RECIPES_DIR, user_recipes_dir()) if d.exists()]
+    seen: set[str] = set()
+    for rdir in recipe_dirs:
+        for rfile in sorted(rdir.glob("*.yaml")):
+            r = _load_yaml(rfile)
+            name = r["name"]
+            sections_shape = [s["component"] for s in r.get("sections", [])]
+            out[name] = {
+                "namespace": r.get("namespace", "katib"),
+                "version": r.get("version"),
+                "description": r.get("description", ""),
+                "languages": r.get("languages", []),
+                "target_pages": r.get("target_pages"),
+                "page_limit": r.get("page_limit"),
+                "when": r.get("when"),
+                "keywords": r.get("keywords", []),
+                "sections_shape": sections_shape,
+            }
+            # Only count component-usage once per recipe name to avoid
+            # double-counting when a user recipe shadows a bundled one.
+            if name in seen:
+                continue
+            seen.add(name)
+            for cname in set(sections_shape):
+                if cname in components:
+                    components[cname]["used_in_recipes"] += 1
     return out
 
 

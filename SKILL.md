@@ -277,6 +277,28 @@ newer than the cached index.
 | `ERROR: Component(s) present on disk without an audit entry` | A component was hand-added without going through `katib component new` | Either remove the component or add a bootstrap entry to `memory/component-audit.jsonl`. See `scripts/build.py:check_audit`. |
 | `ERROR: required image input 'X' not supplied by recipe` | Recipe section expects an image slot that wasn't filled | Add the image spec under `inputs` with `{source, path}` (or `{source: gemini, prompt}`, etc.) |
 | `gemini: GEMINI_API_KEY not set` | Recipe references `source: gemini` but env var missing | Set the key, OR switch the recipe's image to `source: user-file`/`inline-svg`, OR narrow the component's `sources_accepted` to exclude gemini |
+| `recipe '<name>' not found. Tried: ...` | Recipe isn't present in either tier | The error names both paths checked — bundled `<skill>/recipes/<name>.yaml` and user `~/.katib/recipes/<name>.yaml`. Scaffold one with `uv run scripts/recipe.py new <name> --namespace user`. |
+| `recipe '<name>' already exists in the bundled tier ... cannot shadow bundled recipes without --force` | User tried to scaffold a name that ships with the skill | Pick a different name, OR pass `--force --justification '<why>'` if the intent is to customize a bundled template (audited). |
+
+## Where user content lives
+
+Katib separates **user content** from **bundled content** so `npx install` never
+clobbers your work:
+
+| Tier | Path | Source |
+|---|---|---|
+| Bundled recipes | `~/.claude/skills/katib/recipes/` | Ships with the skill |
+| Bundled components | `~/.claude/skills/katib/components/` | Ships with the skill |
+| User recipes | `~/.katib/recipes/` | Created by `katib recipe new` |
+| User brands | `~/.katib/brands/` | Your brand profiles + cover presets |
+| Audit + gate logs | `~/.katib/memory/` | Graduation and governance state |
+
+Env var overrides (for testing / isolation): `KATIB_RECIPES_DIR`,
+`KATIB_COMPONENTS_DIR`, `KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR`.
+
+When resolving a recipe name, the engine checks the user tier first, then
+bundled. Scaffolding always writes to the user tier. User components are
+not yet supported — only user recipes (that reference bundled components).
 
 ## What this skill does NOT do
 

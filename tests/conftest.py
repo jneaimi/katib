@@ -46,12 +46,21 @@ def isolated_user_dirs(tmp_path, monkeypatch):
     monkeypatch.setenv("KATIB_BRANDS_DIR", str(brands))
 
     from core import component_ops, recipe_ops
-    monkeypatch.setattr(recipe_ops, "RECIPES_DIR", recipes)
+    # RECIPES_DIR stays bundled (the real repo/recipes dir); USER_RECIPES_DIR
+    # is the tier that redirects to tmp_path.
+    monkeypatch.setattr(recipe_ops, "USER_RECIPES_DIR", recipes)
     monkeypatch.setattr(recipe_ops, "MEMORY_DIR", memory)
     monkeypatch.setattr(recipe_ops, "AUDIT_FILE", memory / "recipe-audit.jsonl")
     monkeypatch.setattr(recipe_ops, "REQUESTS_FILE", memory / "recipe-requests.jsonl")
     monkeypatch.setattr(component_ops, "MEMORY_DIR", memory)
     monkeypatch.setattr(component_ops, "AUDIT_FILE", memory / "component-audit.jsonl")
     monkeypatch.setattr(component_ops, "REQUESTS_FILE", memory / "component-requests.jsonl")
+
+    # build.py captures its own module-level constants at import time.
+    # In-process tests that call build.main() need the redirects too;
+    # subprocess tests pick up the env vars directly and don't need this.
+    import scripts.build as build_mod
+    monkeypatch.setattr(build_mod, "AUDIT_FILE", memory / "component-audit.jsonl")
+    monkeypatch.setattr(build_mod, "RECIPE_AUDIT_FILE", memory / "recipe-audit.jsonl")
 
     return tmp_path

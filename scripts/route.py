@@ -86,7 +86,11 @@ def _ensure_capabilities_fresh() -> tuple[dict, list[str]]:
     """
     notes: list[str] = []
     newest_source = 0.0
-    for d in (RECIPES_DIR, COMPONENTS_DIR):
+    # Include the user-tier recipes dir so user-scaffolded recipes trigger
+    # a capabilities regen (Phase 3 — `generate_capabilities.py` reads both).
+    from core.tokens import user_recipes_dir  # local import, avoids cycles
+    watched = (RECIPES_DIR, COMPONENTS_DIR, user_recipes_dir())
+    for d in watched:
         if not d.exists():
             continue
         for p in d.rglob("*.yaml"):
