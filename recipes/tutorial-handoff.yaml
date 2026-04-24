@@ -58,18 +58,33 @@ sections:
       title: "Key decision"
       body: "We deliberately chose eventual consistency for notifications so the write path stays fast even during downstream outages. Don't reverse this without revisiting the original ADR."
 
-  # 7. Runbook — module raw_body with h3 + pre/code blocks
+  # 7. Runbook — header module followed by code-block primitives + health checks.
+  #    Phase-4 Day 3: inline <pre> blocks migrated to code-block variant: inline.
   - component: module
     inputs:
       title: "Runbook"
-      raw_body: |
-        <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Deploy</h3>
-        <pre style="background: var(--tag-bg); padding: 8pt 10pt; border-radius: 3pt; font-family: var(--font-mono); font-size: 9pt; line-height: 1.45; color: var(--text); margin: 4pt 0 10pt 0; white-space: pre-wrap;"><code>git push origin main
-        # CI runs, then promotes automatically to staging
-        # Promote to production via the deploy tool</code></pre>
 
-        <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Rollback</h3>
-        <pre style="background: var(--tag-bg); padding: 8pt 10pt; border-radius: 3pt; font-family: var(--font-mono); font-size: 9pt; line-height: 1.45; color: var(--text); margin: 4pt 0 6pt 0; white-space: pre-wrap;"><code>deploy rollback --service &lt;name&gt; --to-version &lt;previous-sha&gt;</code></pre>
+  # 7a. Deploy code block
+  - component: code-block
+    variant: inline
+    inputs:
+      label: "Deploy"
+      code: |
+        git push origin main
+        # CI runs, then promotes automatically to staging
+        # Promote to production via the deploy tool
+
+  # 7b. Rollback code block + timing note
+  - component: code-block
+    variant: inline
+    inputs:
+      label: "Rollback"
+      code: "deploy rollback --service &lt;name&gt; --to-version &lt;previous-sha&gt;"
+
+  # 7c. Rollback timing + Health checks
+  - component: module
+    inputs:
+      raw_body: |
         <p style="margin: 0 0 10pt 0;">Rollback completes in under two minutes. Customer-facing errors usually clear within a minute of the rollback finishing.</p>
 
         <h3 style="font-size: 11pt; font-weight: 700; color: var(--text); margin: 10pt 0 4pt 0;">Health checks</h3>

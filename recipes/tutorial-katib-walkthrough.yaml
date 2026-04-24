@@ -93,15 +93,16 @@ sections:
       body: "Katib ships two ways. Clone the repo and run the bundled installer, or install via npm if you prefer a one-liner."
 
   # 9. Step 1 code block (density pattern: code block)
-  - component: module
+  - component: code-block
+    variant: terminal
     inputs:
-      raw_body: |
-        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># Option A — installer</span>
+      code: |
+        <span class="katib-code-block__comment"># Option A — installer</span>
         git clone https://github.com/jneaimi/katib.git
         cd katib &amp;&amp; bash install.sh
 
-        <span style="color: #A1A1AA;"># Option B — npm</span>
-        npm i -g @jasemal/katib &amp;&amp; katib install</pre>
+        <span class="katib-code-block__comment"># Option B — npm</span>
+        npm i -g @jasemal/katib &amp;&amp; katib install
 
   # 10. Step 2
   - component: tutorial-step
@@ -111,10 +112,11 @@ sections:
       body: "Copy the example config and tell Katib where to put generated documents. The memory.location key is where reflect.py reads its logs from."
 
   # 11. Step 2 code block
-  - component: module
+  - component: code-block
+    variant: terminal
     inputs:
-      raw_body: |
-        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.config/katib/config.yaml</span>
+      label: "~/.config/katib/config.yaml"
+      code: |
         output:
           destination: vault
           vault_path: ~/vault/content/katib
@@ -124,7 +126,7 @@ sections:
 
         identity:
           author_name: "Jasem Al Neaimi"
-          company: "TridenITS"</pre>
+          company: "TridenITS"
 
   # 12. Step 3
   - component: tutorial-step
@@ -490,15 +492,16 @@ sections:
           value: "A doc_type in styles.json that rendered zero times in the window. Candidate for deprecation — confirm before removing."
 
   # 32. Typical session code block
-  - component: module
+  - component: code-block
+    variant: terminal
     inputs:
-      title: "Typical session"
-      raw_body: |
-        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/reflect.py                       <span style="color: #A1A1AA;"># last 30 days</span>
-        uv run scripts/reflect.py --since 7d             <span style="color: #A1A1AA;"># narrow</span>
-        uv run scripts/reflect.py --domain tutorial      <span style="color: #A1A1AA;"># filter</span>
-        uv run scripts/reflect.py --propose              <span style="color: #A1A1AA;"># write Markdown proposal file</span>
-        uv run scripts/reflect.py --json                 <span style="color: #A1A1AA;"># for scripting</span></pre>
+      label: "Typical session"
+      code: |
+        uv run scripts/reflect.py                       <span class="katib-code-block__comment"># last 30 days</span>
+        uv run scripts/reflect.py --since 7d             <span class="katib-code-block__comment"># narrow</span>
+        uv run scripts/reflect.py --domain tutorial      <span class="katib-code-block__comment"># filter</span>
+        uv run scripts/reflect.py --propose              <span class="katib-code-block__comment"># write Markdown proposal file</span>
+        uv run scripts/reflect.py --json                 <span class="katib-code-block__comment"># for scripting</span>
 
   # 33. Pull-quote — reflect is read-only (3RD PRODUCTION CONSUMER of pull-quote)
   - component: pull-quote

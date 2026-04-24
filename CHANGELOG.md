@@ -3,6 +3,46 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — Phase-4 Day 3: code-block primitive (2026-04-24)
+
+### Added
+
+- **`code-block` primitive** — preformatted code / shell-command block
+  with two variants: `terminal` (dark zinc, 8.5pt mono, for CLI / install /
+  config samples) and `inline` (theme-aware light `tag_bg`, 9pt mono,
+  for single-command references). Accepts raw HTML in `code` for inline
+  comment spans via `katib-code-block__comment` helper class. Atomic by
+  default (never splits across pages). RTL-aware: code content always
+  renders LTR regardless of document direction. 11 unit tests.
+
+### Changed
+
+- **`tutorial-katib-walkthrough`** — 3 standalone inline `<pre>` modules
+  (install commands, config.yaml, reflect session) migrated to
+  code-block. ~14 lines of inline styling saved per migration. Mixed
+  raw_body modules (palette swatches, Do/Don't with embedded pre)
+  left intact — restructuring them is separate work.
+- **`tutorial-handoff` §7 Runbook** — split from one mixed module into
+  header module + 2 inline code-blocks (Deploy, Rollback) + trailing
+  timing/health-checks module. Net 14 sections (was 11). Proves
+  code-block's inline variant in production + validates section split
+  pattern for handoff-style docs.
+
+### Audit discipline
+
+- **2 consumers, honest-intent threshold met.** tutorial-katib-walkthrough
+  (3 instances) + tutorial-handoff (2 instances) = 5 total. Below the
+  3-dep auto-graduation line; extraction justified by instance density
+  and identical inline-styling pattern across consumers. Logged in
+  `component-audit.jsonl`.
+
+### Tests
+
+- 948 passing (+11 from 937).
+- All 22 recipes render with 0 WeasyPrint warnings.
+
+---
+
 ## [Unreleased] — Phase-4 Day 2: inputs_by_lang + first bilingual recipe (2026-04-24)
 
 Cutover (`~/.claude/skills/katib -> ~/dev/katib/`) validated in production via

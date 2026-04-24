@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T06:59:08+00:00'
+generated_at: '2026-04-24T07:15:16+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -567,6 +567,9 @@ recipes:
     - module
     - callout
     - module
+    - code-block
+    - code-block
+    - module
     - module
     - module
     - module
@@ -639,9 +642,9 @@ recipes:
     - objectives-box
     - module
     - tutorial-step
-    - module
+    - code-block
     - tutorial-step
-    - module
+    - code-block
     - tutorial-step
     - module
     - callout
@@ -662,7 +665,7 @@ recipes:
     - module
     - module
     - kv-list
-    - module
+    - code-block
     - pull-quote
     - module
     - objectives-box
@@ -791,6 +794,22 @@ components:
       (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain
       body uses numbered-clause lists, not WHEREAS preambles.
     used_in_recipes: 1
+  code-block:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - terminal
+    - inline
+    description: Preformatted code / shell-command block. Two variants — `terminal` (dark zinc background,
+      for CLI samples and install sequences) and `inline` (theme-aware light, for single-command references).
+      Accepts raw code content via `code` input (Jinja-safe — recipes may embed comment spans). Use for
+      any monospace code, config snippet, or CLI block. Distinct from `callout` (prose) and `kv-list`
+      (structured pairs).
+    used_in_recipes: 2
   data-table:
     namespace: katib
     tier: primitive
