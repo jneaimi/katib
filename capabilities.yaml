@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T03:39:43+00:00'
+generated_at: '2026-04-24T03:54:15+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -605,6 +605,80 @@ recipes:
     - module
     - module
     - whats-next
+  tutorial-katib-walkthrough:
+    namespace: katib
+    version: 0.1.0
+    description: Comprehensive katib walkthrough — cover + preface + 7 modules (Install, Domains, Brand
+      profiles, Composition, Reflect, Vault, Appendix) + Summary/What's-next. Fifteenth and final Phase-3
+      recipe — CLOSES THE PHASE-3 MIGRATE LIST. Largest recipe by section count (~42 sections, beats mou's
+      25). Zero new components.
+    languages:
+    - en
+    target_pages:
+    - 8
+    - 16
+    page_limit: 16
+    when: Self-documenting tutorial describing katib's full architecture — install, domains, brand profiles,
+      covers, diagrams, reflect loop, vault integration, CLI cheatsheet. EN-only; AR deferred pending
+      inputs_by_lang schema. Content is v1-specific placeholder — Phase-4 task to make content v2-accurate.
+    keywords:
+    - tutorial
+    - katib
+    - walkthrough
+    - onboarding
+    - reference
+    - brand
+    - reflect
+    - vault
+    sections_shape:
+    - cover-page
+    - module
+    - objectives-box
+    - module
+    - module
+    - objectives-box
+    - module
+    - tutorial-step
+    - module
+    - tutorial-step
+    - module
+    - tutorial-step
+    - module
+    - callout
+    - module
+    - module
+    - module
+    - data-table
+    - callout
+    - module
+    - objectives-box
+    - module
+    - module
+    - kv-list
+    - module
+    - callout
+    - module
+    - objectives-box
+    - module
+    - module
+    - kv-list
+    - module
+    - pull-quote
+    - module
+    - objectives-box
+    - kv-list
+    - kv-list
+    - module
+    - callout
+    - kv-list
+    - kv-list
+    - pull-quote
+    - module
+    - sections-grid
+    - kv-list
+    - kv-list
+    - module
+    - module
   tutorial-onboarding:
     namespace: katib
     version: 0.1.0
@@ -702,7 +776,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 11
+    used_in_recipes: 12
   clause-list:
     namespace: katib
     tier: primitive
@@ -731,7 +805,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 5
+    used_in_recipes: 6
   eyebrow:
     namespace: katib
     tier: primitive
@@ -767,7 +841,7 @@ components:
     - rule-leading
     - large-quote
     description: Emphasized blockquote — larger text with accent rule and optional attribution.
-    used_in_recipes: 2
+    used_in_recipes: 3
   rule:
     namespace: katib
     tier: primitive
@@ -936,7 +1010,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 4
+    used_in_recipes: 5
   letterhead:
     namespace: katib
     tier: section
@@ -977,7 +1051,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 15
+    used_in_recipes: 16
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1003,7 +1077,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 4
+    used_in_recipes: 5
   reference-strip:
     namespace: katib
     tier: section
@@ -1029,7 +1103,7 @@ components:
     description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
-    used_in_recipes: 5
+    used_in_recipes: 6
   summary:
     namespace: katib
     tier: section
@@ -1050,7 +1124,7 @@ components:
     variants: []
     description: Numbered tutorial step — step circle + title + description + optional screenshot. Screenshots
       are factual; gemini source is deliberately excluded.
-    used_in_recipes: 3
+    used_in_recipes: 4
   two-column-image-text:
     namespace: katib
     tier: section
@@ -1090,4 +1164,4 @@ components:
     - neural-cartography
     description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background
       (user-file/url full-bleed), neural-cartography (Gemini-generated).
-    used_in_recipes: 5
+    used_in_recipes: 6

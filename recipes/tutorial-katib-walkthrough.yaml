@@ -1,0 +1,715 @@
+name: tutorial-katib-walkthrough
+version: 0.1.0
+namespace: katib
+description: Comprehensive katib walkthrough — cover + preface + 7 modules (Install, Domains, Brand profiles, Composition, Reflect, Vault, Appendix) + Summary/What's-next. Fifteenth and final Phase-3 recipe — CLOSES THE PHASE-3 MIGRATE LIST. Largest recipe by section count (~42 sections, beats mou's 25). Zero new components.
+languages:
+- en
+target_pages:
+- 8
+- 16
+page_limit: 16
+when: Self-documenting tutorial describing katib's full architecture — install, domains, brand profiles, covers, diagrams, reflect loop, vault integration, CLI cheatsheet. EN-only; AR deferred pending inputs_by_lang schema. Content is v1-specific placeholder — Phase-4 task to make content v2-accurate.
+keywords:
+- tutorial
+- katib
+- walkthrough
+- onboarding
+- reference
+- brand
+- reflect
+- vault
+
+sections:
+  # ===================== COVER + PREFACE =====================
+
+  # 1. Cover — minimalist-typographic (5th production use of this variant)
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: The Complete Walkthrough
+      title: Katib — the writer, end to end
+      subtitle: From install to self-improvement in six modules
+      reference_code: TUT-KATIB-001
+
+  # 2. Preface lead paragraph
+  - component: module
+    inputs:
+      raw_body: |
+        <p class="lead" style="font-size: 12pt; line-height: 1.55; color: var(--text-secondary); margin: 12pt 0; font-style: italic;">Katib (<span style="font-family: var(--font-display);">كاتب</span>) is the writer — a bilingual, print-grade document generator that lives inside Claude Code. This walkthrough takes you from install to self-improvement in six modules.</p>
+
+  # 3. "What you'll learn" — objectives-box (uses the Phase-2 primitive)
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "What you'll learn"
+      items:
+        - "Install Katib and render your first PDF in under five minutes."
+        - "Pick the right domain, doc type, cover, and layout for any deliverable."
+        - "Apply your personal brand so every document looks like yours."
+        - "Embed print-grade diagrams, screenshots, and inline charts."
+        - "Let Katib learn from your corrections via reflect.py."
+
+  # 4. "Before you begin" checklist (density block #1: inline checklist pattern)
+  - component: module
+    inputs:
+      title: "Before you begin"
+      raw_body: |
+        <ul style="margin: 6pt 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.6;">
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>macOS or Linux with Python 3.10+ and <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">uv</code> installed.</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Claude Code installed, with this skill registered at <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">~/.claude/skills/katib/</code>.</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>An Obsidian vault (or any folder) set as your output root.</li>
+          <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Optional: <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">GEMINI_API_KEY</code> for image-based covers (~$0.12 per cover).</li>
+        </ul>
+
+  # ===================== MODULE 1 — Install & first render =====================
+
+  # 5. Module 1 header
+  - component: module
+    inputs:
+      eyebrow: "Module 1 · Foundations"
+      title: "Install & first render"
+      intro: "Five minutes from zero to a branded PDF. You'll install the skill, configure output paths, and render a one-pager so you have proof the pipeline works end-to-end."
+
+  # 6. Module 1 objectives
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Install Katib via the shipped installer or from npm."
+        - "Create a user config at ~/.config/katib/config.yaml."
+        - "Render the one-pager sample and inspect the output folder."
+
+  # 7. Steps heading
+  - component: module
+    inputs:
+      title: "Steps"
+
+  # 8. Step 1 — tutorial-step (3rd production consumer)
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "Install the skill"
+      body: "Katib ships two ways. Clone the repo and run the bundled installer, or install via npm if you prefer a one-liner."
+
+  # 9. Step 1 code block (density pattern: code block)
+  - component: module
+    inputs:
+      raw_body: |
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># Option A — installer</span>
+        git clone https://github.com/jneaimi/katib.git
+        cd katib &amp;&amp; bash install.sh
+
+        <span style="color: #A1A1AA;"># Option B — npm</span>
+        npm i -g @jasemal/katib &amp;&amp; katib install</pre>
+
+  # 10. Step 2
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "Configure output & identity"
+      body: "Copy the example config and tell Katib where to put generated documents. The memory.location key is where reflect.py reads its logs from."
+
+  # 11. Step 2 code block
+  - component: module
+    inputs:
+      raw_body: |
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.config/katib/config.yaml</span>
+        output:
+          destination: vault
+          vault_path: ~/vault/content/katib
+
+        memory:
+          location: ~/.local/share/katib/memory
+
+        identity:
+          author_name: "Jasem Al Neaimi"
+          company: "TridenITS"</pre>
+
+  # 12. Step 3
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "Render the hello-world"
+      body: "Render a business-proposal one-pager. On first run uv resolves Katib's PEP-723 deps automatically."
+
+  # 13. Step 3 code block + output confirmation
+  - component: module
+    inputs:
+      raw_body: |
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/build.py one-pager \
+          --lang en --title "Katib works" \
+          --purpose "First render"</pre>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">You should see <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">✓ business-proposal/one-pager.en · 1 page</code>. The output folder contains the PDF, the rendered source HTML, a <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">manifest.md</code>, a token snapshot, and an Obsidian-compatible <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">.katib/run.json</code>.</p>
+
+  # 14. Module 1 tip callout (3rd tip consumer after tutorial-how-to + onboarding)
+  - component: callout
+    inputs:
+      tone: tip
+      title: "Tip"
+      body: "Set <code>KATIB_OUTPUT_ROOT=/tmp/scratch</code> before a render to send output to a scratch path — handy when iterating on templates. For real client work, pass <code>--project &lt;client-slug&gt;</code> so output lands under <code>projects/&lt;slug&gt;/outputs/</code> and inherits client-specific governance. Full story in Module 6."
+
+  # ===================== MODULE 2 — The ten domains =====================
+
+  # 15. Module 2 header
+  - component: module
+    inputs:
+      eyebrow: "Module 2 · Taxonomy"
+      title: "The ten domains"
+      intro: "Every document you'll ever build with Katib routes into one of ten domains. Each domain carries its own palette, typographic discipline, page-count guardrails, and reference-code prefixes."
+
+  # 16. Domain taxonomy diagram (density pattern: inline SVG)
+  - component: module
+    inputs:
+      raw_body: |
+        <figure style="margin: 14pt 0 10pt 0; padding: 0; page-break-inside: avoid; text-align: center;">
+          <svg viewBox="0 0 520 300" width="520" height="300" xmlns="http://www.w3.org/2000/svg">
+            <rect x="220" y="130" width="80" height="40" rx="4" fill="var(--accent)" />
+            <text x="260" y="154" text-anchor="middle" font-family="var(--font-display)" font-size="12" font-weight="600" fill="var(--accent-on)">Katib</text>
+            <g font-family="var(--font-display)" font-size="9" fill="var(--text-secondary)">
+              <line x1="220" y1="140" x2="90" y2="30" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="10" y="18" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="80" y="34" text-anchor="middle" font-weight="600">business-proposal</text>
+              <line x1="220" y1="145" x2="90" y2="85" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="10" y="72" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="80" y="88" text-anchor="middle" font-weight="600">tutorial</text>
+              <line x1="220" y1="150" x2="90" y2="140" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="10" y="128" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="80" y="144" text-anchor="middle" font-weight="600">report</text>
+              <line x1="220" y1="155" x2="90" y2="195" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="10" y="183" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="80" y="199" text-anchor="middle" font-weight="600">formal</text>
+              <line x1="220" y1="160" x2="90" y2="250" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="10" y="238" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="80" y="254" text-anchor="middle" font-weight="600">personal</text>
+              <line x1="300" y1="140" x2="430" y2="30" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="370" y="18" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="440" y="34" text-anchor="middle" font-weight="600">academic</text>
+              <line x1="300" y1="145" x2="430" y2="85" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="370" y="72" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="440" y="88" text-anchor="middle" font-weight="600">financial</text>
+              <line x1="300" y1="150" x2="430" y2="140" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="370" y="128" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="440" y="144" text-anchor="middle" font-weight="600">editorial</text>
+              <line x1="300" y1="155" x2="430" y2="195" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="370" y="183" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="440" y="199" text-anchor="middle" font-weight="600">marketing-print</text>
+              <line x1="300" y1="160" x2="430" y2="250" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <rect x="370" y="238" width="140" height="24" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.5"/>
+              <text x="440" y="254" text-anchor="middle" font-weight="600">legal</text>
+            </g>
+          </svg>
+          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">Ten domains, each with its own palette, typography, and page-count guardrails.</figcaption>
+        </figure>
+
+  # 17. Quick-pick table heading
+  - component: module
+    inputs:
+      title: "Quick-pick table"
+
+  # 18. Domains data-table (8TH PRODUCTION CONSUMER — streak continues)
+  - component: data-table
+    inputs:
+      columns:
+        - label: "User signal"
+        - label: "Domain"
+        - label: "Doc types"
+      rows:
+        - - "Commercial offer, SOW"
+          - "business-proposal"
+          - "proposal, one-pager, letter"
+        - - "How-to, onboarding, handoff"
+          - "tutorial"
+          - "how-to, cheatsheet, tutorial, onboarding, handoff"
+        - - "Research, audit, annual"
+          - "report"
+          - "research, progress, annual, audit"
+        - - "NOC, authority, circular"
+          - "formal"
+          - "noc, government-letter, circular, authority-letter"
+        - - "CV, cover letter, bio"
+          - "personal"
+          - "cv, cover-letter, bio"
+        - - "Syllabus, assignment, research proposal"
+          - "academic"
+          - "syllabus, assignment-brief, lecture-notes, research-proposal"
+        - - "Invoice, quote, statement"
+          - "financial"
+          - "invoice, quote, statement, financial-summary"
+        - - "White paper, article, op-ed"
+          - "editorial"
+          - "white-paper, article, op-ed, case-study"
+        - - "Sell sheet, pitch deck"
+          - "marketing-print"
+          - "sell-sheet, product-brief, capability-statement, slide-deck"
+        - - "Agreement, MOU, NDA"
+          - "legal"
+          - "service-agreement, mou, nda, engagement-letter"
+
+  # 19. Module 2 info callout — "How routing works"
+  - component: callout
+    inputs:
+      tone: info
+      title: "How routing works"
+      body: "When you say <em>\"make me a proposal\"</em>, Katib matches the keyword to <code>business-proposal</code>. Unknown doc types route to the closest match and get logged to <code>domain-requests.jsonl</code> so <code>reflect.py</code> can flag candidates for new domains later."
+
+  # ===================== MODULE 3 — Brand profiles =====================
+
+  # 20. Module 3 header
+  - component: module
+    inputs:
+      eyebrow: "Module 3 · Identity"
+      title: "Brand profiles — make it look like you"
+      intro: "Every Katib render respects a four-layer cascade: domain tokens → brand profile → CLI flags → inline overrides. A brand profile is a single YAML file that swaps colours, fonts, author name, and logo without touching any template."
+
+  # 21. Module 3 objectives
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Write a brand profile YAML at ~/.katib/brands/<name>.yaml."
+        - "Pass --brand <name> to any render."
+        - "Understand what falls back to the domain default when the brand omits a field."
+
+  # 22. Jasem brand intro + palette + YAML + CLI + do/don't (density pattern: mixed inline)
+  - component: module
+    inputs:
+      title: "The Jasem brand, as an example"
+      raw_body: |
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">This document itself is rendered with the <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">jasem</code> brand — Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
+
+        <div style="display: flex; gap: 8pt; margin: 8pt 0; flex-wrap: wrap;">
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+            <span style="height: 22mm; display: block; background: #F59E0B;"></span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">accent</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#F59E0B</span>
+          </figure>
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+            <span style="height: 22mm; display: block; background: #FB923C;"></span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">accent_2</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FB923C</span>
+          </figure>
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+            <span style="height: 22mm; display: block; background: #18181B;"></span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">text</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#18181B</span>
+          </figure>
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+            <span style="height: 22mm; display: block; background: #FAFAFA; border: 0.5pt solid #E4E4E7;"></span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">page_bg</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FAFAFA</span>
+          </figure>
+          <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid var(--border); border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
+            <span style="height: 22mm; display: block; background: #FEF3C7;"></span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7.5pt; color: var(--text-tertiary); padding: 3pt 0; display: block; background: var(--page-bg);">tag_bg</span>
+            <span style="font-family: var(--font-mono, monospace); font-size: 7pt; color: var(--text-secondary); padding: 0 0 3pt 0; display: block; background: var(--page-bg);">#FEF3C7</span>
+          </figure>
+        </div>
+
+        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">The YAML</h3>
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.katib/brands/jasem.yaml</span>
+        name: Jasem Al Neaimi
+        name_ar: جاسم النعيمي
+
+        identity:
+          author_name: Jasem Al Neaimi
+          email: jasem@jneaimi.com
+
+        colors:
+          accent:            "#F59E0B"   <span style="color: #A1A1AA;"># amber</span>
+          accent_secondary:  "#FB923C"   <span style="color: #A1A1AA;"># orange</span>
+          page_bg:           "#FAFAFA"
+          text:              "#18181B"
+
+        fonts:
+          en:
+            primary: "Newsreader"
+            fallback: "Georgia, 'Times New Roman', serif"
+          ar:
+            primary: "Cairo"
+            fallback: "Amiri, 'Traditional Arabic', serif"
+
+        logo:
+          primary: logos/jasem.svg
+          max_height_mm: 14</pre>
+
+        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">Using it</h3>
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/build.py proposal \
+          --domain business-proposal --lang en \
+          --brand jasem --with-cover \
+          --title "Observability SOW"</pre>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin: 10pt 0;">
+          <div style="border-left: 3pt solid var(--callout-tip-accent); background: var(--callout-tip-bg); padding: 8pt 12pt;">
+            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-tip-accent); font-weight: 700; margin-bottom: 3pt;">Do</div>
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.5;">Omit fields you want to inherit from the domain default — partial brands are fine.</p>
+          </div>
+          <div style="border-left: 3pt solid var(--callout-warn-accent); background: var(--callout-warn-bg); padding: 8pt 12pt;">
+            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--callout-warn-accent); font-weight: 700; margin-bottom: 3pt;">Don't</div>
+            <p style="margin: 0; font-size: 9.5pt; line-height: 1.5;">Hardcode brand colours in templates. Use <code>var(--accent)</code> so brand swaps work.</p>
+          </div>
+        </div>
+
+  # ===================== MODULE 4 — Covers, layouts, diagrams, screenshots =====================
+
+  # 23. Module 4 header
+  - component: module
+    inputs:
+      eyebrow: "Module 4 · Composition"
+      title: "Covers, layouts, diagrams, screenshots"
+      intro: "Katib ships three cover engines, two interior layouts, print-native inline SVG diagrams, and a full screenshot pipeline for tutorials. This module is the composition cheatsheet."
+
+  # 24. Cover styles — kv-list (first consumer in this heavy-kv-list recipe)
+  - component: kv-list
+    inputs:
+      heading: "Cover styles"
+      items:
+        - term: "minimalist-typographic"
+          value: "Free, deterministic, CSS-only. Editorial domains, formal letters, personal docs."
+        - term: "neural-cartography"
+          value: "Gemini Nano Banana 2. ~$0.12/cover. Institutional weight — proposals, formal."
+        - term: "friendly-illustration"
+          value: "Gemini Nano Banana 2. ~$0.12/cover. Warm & approachable — tutorials (the one on this document's cover)."
+
+  # 25. Screenshot pipeline diagram + inline diagrams prose (density pattern: inline SVG)
+  - component: module
+    inputs:
+      title: "Screenshot pipeline"
+      raw_body: |
+        <figure style="margin: 14pt 0 10pt 0; padding: 0; page-break-inside: avoid; text-align: center;">
+          <svg viewBox="0 0 520 110" width="520" height="110" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-sp" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+            <g font-family="var(--font-display)" font-size="11" fill="var(--text)">
+              <rect x="10" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="65" y="52" text-anchor="middle" font-weight="600">shot.py</text>
+              <text x="65" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">Playwright capture</text>
+              <line x1="124" y1="55" x2="150" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="155" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="210" y="52" text-anchor="middle" font-weight="600">annotate.py</text>
+              <text x="210" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">arrows, labels, blur</text>
+              <line x1="269" y1="55" x2="295" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="300" y="30" width="110" height="50" rx="4" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="355" y="52" text-anchor="middle" font-weight="600">frame.py</text>
+              <text x="355" y="68" text-anchor="middle" font-size="8" fill="var(--text-secondary)">browser chrome</text>
+              <line x1="414" y1="55" x2="440" y2="55" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-sp)"/>
+              <rect x="445" y="30" width="60" height="50" rx="4" fill="var(--accent)" stroke="none"/>
+              <text x="475" y="52" text-anchor="middle" font-weight="600" fill="var(--accent-on)">PDF</text>
+              <text x="475" y="68" text-anchor="middle" font-size="8" fill="var(--accent-on)">WeasyPrint</text>
+            </g>
+          </svg>
+          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">shot → annotate → frame → embedded in template via auto-discovery.</figcaption>
+        </figure>
+
+        <h3 style="font-size: 11pt; color: var(--text); margin: 12pt 0 4pt 0; font-weight: 600;">Inline diagrams</h3>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">Diagrams are inline SVG embedded directly in the template. WeasyPrint renders SVG natively, so they stay crisp at any print DPI, text is selectable, and colours can pick up the active brand via <code style="background: var(--tag-bg); padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">var(--accent)</code> interpolation. <em>Every diagram in this very document is authored this way.</em></p>
+
+  # 26. Module 4 info callout — "When to use what"
+  - component: callout
+    inputs:
+      tone: info
+      title: "When to use what"
+      body: "Inline SVG for architecture, data-flows, and charts — print-grade. /diagram skill (Excalidraw) for expressive or hand-sketched content, but those rasterise for print. PNG screenshots go through the shot → annotate → frame pipeline."
+
+  # ===================== MODULE 5 — Reflect =====================
+
+  # 27. Module 5 header
+  - component: module
+    inputs:
+      eyebrow: "Module 5 · Self-improvement"
+      title: "Reflect — let Katib learn from you"
+      intro: "Every successful render appends one line to runs.jsonl. Every correction you log writes to feedback.jsonl. Doc types that don't fit land in domain-requests.jsonl. reflect.py reads all three and surfaces actionable proposals — read-only by design."
+
+  # 28. Module 5 objectives
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Understand the three passive-capture logs."
+        - "Run reflect.py with time windows and domain filters."
+        - "Know when the ≥3× threshold triggers each proposal type."
+
+  # 29. Reflect data flow + threshold chart (density pattern: inline SVG)
+  - component: module
+    inputs:
+      raw_body: |
+        <figure style="margin: 14pt 0 10pt 0; padding: 0; page-break-inside: avoid; text-align: center;">
+          <svg viewBox="0 0 520 220" width="520" height="220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/>
+              </marker>
+            </defs>
+            <g font-family="var(--font-display)" font-size="10" fill="var(--text)">
+              <rect x="10" y="90" width="100" height="40" rx="4" fill="var(--accent-2)"/>
+              <text x="60" y="108" text-anchor="middle" font-weight="600" fill="var(--text)">build.py</text>
+              <text x="60" y="122" text-anchor="middle" font-size="8" fill="var(--text)">render PDF</text>
+              <rect x="180" y="12" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="250" y="28" text-anchor="middle" font-family="monospace" font-size="9">runs.jsonl</text>
+              <text x="250" y="40" text-anchor="middle" font-size="7" fill="var(--text-secondary)">one line per render</text>
+              <rect x="180" y="94" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="250" y="110" text-anchor="middle" font-family="monospace" font-size="9">feedback.jsonl</text>
+              <text x="250" y="122" text-anchor="middle" font-size="7" fill="var(--text-secondary)">user corrections</text>
+              <rect x="180" y="176" width="140" height="34" rx="3" fill="var(--page-bg)" stroke="var(--border-strong)" stroke-width="0.75"/>
+              <text x="250" y="192" text-anchor="middle" font-family="monospace" font-size="9">domain-requests.jsonl</text>
+              <text x="250" y="204" text-anchor="middle" font-size="7" fill="var(--text-secondary)">routing mismatches</text>
+              <line x1="114" y1="105" x2="180" y2="30"  stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
+              <line x1="114" y1="110" x2="180" y2="110" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
+              <line x1="114" y1="115" x2="180" y2="190" stroke="var(--accent)" stroke-width="1" marker-end="url(#arr-r)"/>
+              <rect x="380" y="90" width="120" height="40" rx="4" fill="var(--accent)"/>
+              <text x="440" y="108" text-anchor="middle" font-weight="600" fill="var(--accent-on)">reflect.py</text>
+              <text x="440" y="122" text-anchor="middle" font-size="8" fill="var(--accent-on)">cluster + propose</text>
+              <line x1="324" y1="30"  x2="380" y2="102" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
+              <line x1="324" y1="110" x2="380" y2="110" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
+              <line x1="324" y1="190" x2="380" y2="118" stroke="var(--border-strong)" stroke-width="0.75" marker-end="url(#arr-r)"/>
+            </g>
+          </svg>
+          <figcaption style="font-size: 8.5pt; color: var(--text-tertiary); font-style: italic; margin-top: 4pt;">Passive capture → reflect proposes — never applies. Apply manually after review.</figcaption>
+        </figure>
+
+  # 30. Proposal types heading
+  - component: module
+    inputs:
+      title: "The three proposal types"
+      body: "Each fires only when a pattern recurs ≥3 times inside the active time window (default 30 days). Below three, noise; at three, signal."
+
+  # 31. Proposal types — kv-list
+  - component: kv-list
+    inputs:
+      items:
+        - term: "string-swap"
+          value: "Same before→after correction repeats in one domain/lang. Audit templates + references/writing.<lang>.md."
+        - term: "new-domain-candidate"
+          value: "Repeated requests routed to the same closest-match domain. Consider a new doc_type or a new domain."
+        - term: "unused-doc-type"
+          value: "A doc_type in styles.json that rendered zero times in the window. Candidate for deprecation — confirm before removing."
+
+  # 32. Typical session code block
+  - component: module
+    inputs:
+      title: "Typical session"
+      raw_body: |
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/reflect.py                       <span style="color: #A1A1AA;"># last 30 days</span>
+        uv run scripts/reflect.py --since 7d             <span style="color: #A1A1AA;"># narrow</span>
+        uv run scripts/reflect.py --domain tutorial      <span style="color: #A1A1AA;"># filter</span>
+        uv run scripts/reflect.py --propose              <span style="color: #A1A1AA;"># write Markdown proposal file</span>
+        uv run scripts/reflect.py --json                 <span style="color: #A1A1AA;"># for scripting</span></pre>
+
+  # 33. Pull-quote — reflect is read-only (3RD PRODUCTION CONSUMER of pull-quote)
+  - component: pull-quote
+    inputs:
+      text: "reflect.py is read-only by design. It does not edit templates, tokens, or references. You apply changes manually after reviewing the proposal — that's what keeps the skill from drifting on weak signal."
+
+  # ===================== MODULE 6 — Vault integration =====================
+
+  # 34. Module 6 header
+  - component: module
+    inputs:
+      eyebrow: "Module 6 · Vault integration"
+      title: "Governed by design"
+      intro: "Katib is a vault-API-first client. Every render validates against the target zone's governance before a single page of PDF is produced, and writes through Soul Hub so the vault stays consistent across projects. You don't opt in to this — it's how the skill works out of the box."
+
+  # 35. Module 6 objectives
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Module objectives"
+      items:
+        - "Know where your output lands based on --project."
+        - "Choose the right KATIB_VAULT_MODE for interactive work, CI, and offline tests."
+        - "Read Katib's exit codes and act on each one."
+        - "Use the five vault-admin scripts — audit, migrate, recover, reconcile, repair."
+
+  # 36. Project routing — kv-list
+  - component: kv-list
+    inputs:
+      heading: "Project routing"
+      items:
+        - term: "--project katib (default)"
+          value: "~/vault/content/katib/<domain>/<slug>/ — governed by content/katib/CLAUDE.md. Use for skill-internal samples and self-documentation like this walkthrough."
+        - term: "--project <any other slug>"
+          value: "~/vault/projects/<slug>/outputs/<domain>/<slug>/ — governed by projects/CLAUDE.md and any projects/<slug>/CLAUDE.md override. Use for real client work."
+
+  # 37. Mode matrix — kv-list
+  - component: kv-list
+    inputs:
+      heading: "The mode matrix"
+      items:
+        - term: "api (default)"
+          value: "POST the manifest to Soul Hub. If Soul Hub is unreachable, fall back to a direct filesystem write tagged katib-fallback so reconciliation can replay the write later. Best for interactive work."
+        - term: "strict"
+          value: "API only — any network failure raises VaultNetworkError and exits with a non-zero code. Use in CI where silent fallback would hide a real configuration problem."
+        - term: "fs"
+          value: "Skip the API entirely; write directly to disk via atomic temp-file-then-replace. Pre-render governance check is skipped by design. Use for render-only harnesses that need to stay offline."
+
+  # 38. Pre-render governance prose
+  - component: module
+    inputs:
+      title: "Pre-render governance"
+      body: "Before any PDF is rendered, Katib fetches the target zone's governance via GET /api/vault/zones/<path> and validates the proposed manifest against the contract: allowed types, required fields, naming pattern, tag shape. If the zone would reject the write, the build exits 4 with a readable error — no PDF render, no orphan folder."
+
+  # 39. Why-it-matters info callout
+  - component: callout
+    inputs:
+      tone: info
+      title: "Why this matters"
+      body: "Rendering a 12-page proposal only to discover the target zone disallows <code>type: output</code> is exactly the waste this check prevents. Disable it with <code>--no-strict-governance</code> when developing against a zone whose CLAUDE.md you know is stale."
+
+  # 40. Five vault-admin scripts — kv-list
+  - component: kv-list
+    inputs:
+      heading: "The five vault-admin scripts"
+      items:
+        - term: "audit_vault.py"
+          value: "Read-only walker. Reports governance drift across every Katib manifest in the vault. Text summary by default, --json for tooling, --report for a Markdown note, --summary for a one-line CI gate."
+        - term: "migrate_vault.py"
+          value: "Proposes and (with --execute) applies retroactive fixes — rebuilds tags, updates katib_version, relocates folders to match current routing. Dry-run by default."
+        - term: "recover_vault.py"
+          value: "Disaster-recovery tool. Finds folders with .katib/run.json but no manifest.md, reconstructs the manifest from the run log + HTML source. Idempotent on a healthy vault."
+        - term: "reconcile_fallbacks.py"
+          value: "Walks the vault for manifests tagged katib-fallback and re-POSTs each through Soul Hub, stripping the tag on success. Run this when Soul Hub has been unreachable during a batch render."
+        - term: "repair_manifest_links.py"
+          value: "Sweeps every manifest body for stale rebuild paths (left behind by folder relocations) and every content/index.md wikilink that points at a moved folder. Idempotent."
+
+  # 41. Exit-code contract — kv-list
+  - component: kv-list
+    inputs:
+      heading: "Exit-code contract"
+      items:
+        - term: "0"
+          value: "Success — manifest written via API or FS."
+        - term: "1"
+          value: "Generic render failure (template missing, bad input)."
+        - term: "2"
+          value: "Verification failure (placeholder text, font issue, page overflow at verify time)."
+        - term: "3"
+          value: "Page-limit exceeded (hard limit from styles.json)."
+        - term: "4"
+          value: "Governance rejection — pre-render check failed or API returned 4xx. Fix the manifest or the zone's CLAUDE.md."
+        - term: "5"
+          value: "Network failure in strict mode, or HTTP 409 conflict. Retry or resolve manually."
+
+  # 42. CI tip pull-quote (4th pull-quote use — heaviest single-recipe deployment)
+  - component: pull-quote
+    inputs:
+      text: "Running CI? Pair KATIB_VAULT_MODE=strict with audit_vault.py --summary after every build. Strict mode catches configuration drift at write time; the summary audit catches drift that accumulates across runs."
+
+  # ===================== MODULE 7 / APPENDIX — Command cheatsheet =====================
+
+  # 43. Module 7 header
+  - component: module
+    inputs:
+      eyebrow: "Module 7 · Appendix"
+      title: "Command cheatsheet"
+      intro: "Everything Katib ships as a CLI, in one place."
+
+  # 44. 20-card cheat-grid — sections-grid dense cols=2 (6th sections-grid consumer)
+  - component: sections-grid
+    variant: dense
+    inputs:
+      columns: 2
+      items:
+        - title: "Render a doc"
+          body: "build.py <doc-type> --domain <d> --lang <l> --brand <name>"
+        - title: "Render + cover"
+          body: "Add --with-cover --cover <style>. Requires GEMINI_API_KEY."
+        - title: "Co-locate EN+AR"
+          body: "Pass the same --slug to both renders."
+        - title: "Verify an output"
+          body: "build.py --verify <folder>"
+        - title: "Lint templates"
+          body: "build.py --check — fast, no render."
+        - title: "List brands"
+          body: "build.py --list-brands"
+        - title: "Generate cover"
+          body: "cover.py --domain <d> --style <s> --out <path>"
+        - title: "Screenshot"
+          body: "shot.py web <url> --out <path>"
+        - title: "Annotate"
+          body: "annotate.py <png> --arrow x,y --label \"...\""
+        - title: "Frame"
+          body: "frame.py <png> --style browser-safari"
+        - title: "Reflect"
+          body: "reflect.py [--since Nd] [--domain <d>] [--propose] [--json]"
+        - title: "Log feedback"
+          body: "feedback.py add --before ... --after ... --domain ... --lang ..."
+        - title: "Audit vault"
+          body: "audit_vault.py [--summary | --verbose | --json | --report]"
+        - title: "Migrate vault"
+          body: "migrate_vault.py [--execute [--yes]] — dry-run default."
+        - title: "Recover vault"
+          body: "recover_vault.py [--execute] — rebuild orphaned manifests."
+        - title: "Reconcile fallbacks"
+          body: "reconcile_fallbacks.py [--execute [--yes]]"
+        - title: "Repair links"
+          body: "repair_manifest_links.py [--execute [--yes]]"
+        - title: "Add a domain"
+          body: "add_domain.py <name> --doc-types ..."
+        - title: "Install fonts"
+          body: "install_fonts.py — fetch the seven OFL fonts Katib depends on."
+        - title: "Test suite"
+          body: "test-all · test-tutorial · test-brand · test-alt-bundles · test-images · test-feedback — 12 harnesses."
+
+  # 45. Environment variables — kv-list
+  - component: kv-list
+    inputs:
+      heading: "Environment variables"
+      items:
+        - term: "KATIB_OUTPUT_ROOT"
+          value: "Override output root — useful for scratch renders."
+        - term: "KATIB_VAULT_ROOT"
+          value: "Override vault root (default: $HOME/vault). Used by all admin scripts."
+        - term: "KATIB_VAULT_MODE"
+          value: "api (default) · strict (CI) · fs (offline)."
+        - term: "KATIB_VAULT_TIMEOUT"
+          value: "HTTP timeout in seconds for vault API calls (default 10)."
+        - term: "SOUL_HUB_URL"
+          value: "Base URL for the vault API (default http://localhost:2400)."
+        - term: "KATIB_SLUG_OVERRIDE"
+          value: "Force a specific slug for the next render (or use --slug)."
+        - term: "KATIB_IMAGE_MODEL"
+          value: "Override Gemini cover model (default nano-banana-2)."
+        - term: "KATIB_DEBUG=1"
+          value: "Verbose build output."
+        - term: "GEMINI_API_KEY"
+          value: "Required for image-based covers."
+
+  # 46. File layout — kv-list
+  - component: kv-list
+    inputs:
+      heading: "File layout you should know"
+      items:
+        - term: "domains/<d>/"
+          value: "tokens.json + styles.json + templates/*.{en,ar}.html."
+        - term: "styles/layouts/"
+          value: "Shared CSS (classic, workbook, cheatsheet)."
+        - term: "brands/"
+          value: "Shipped brand profiles. User profiles live at ~/.katib/brands/."
+        - term: "scripts/"
+          value: "build.py, cover.py, shot.py, annotate.py, frame.py, reflect.py, memory.py."
+        - term: "references/"
+          value: "Design, writing, production, diagrams, screenshots guides — loaded per spec tier."
+
+  # ===================== CLOSING =====================
+
+  # 47. Summary
+  - component: module
+    inputs:
+      title: "Summary"
+      body: "You now have the full loop: install, route to a domain, pick a doc type, apply a brand, embed diagrams and screenshots, and let reflect.py surface patterns as you accumulate usage. Katib is deliberately opinionated — that's what makes the output printable without you thinking about design decisions on every render."
+
+  # 48. What's next
+  - component: module
+    inputs:
+      title: "What's next"
+      raw_body: |
+        <ul style="margin: 6pt 0; padding-left: 22pt; font-size: 10.5pt; line-height: 1.55;">
+          <li style="margin-bottom: 4pt;">Render a real deliverable — your first client proposal, or a tutorial you've been putting off.</li>
+          <li style="margin-bottom: 4pt;">Write a second brand profile for a client and hand them ready-to-print drafts.</li>
+          <li>After ten or twenty renders, run reflect.py and see which patterns surface — that's how Katib learns what <em>you</em> need.</li>
+        </ul>
