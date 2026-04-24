@@ -1,7 +1,5 @@
 .katib-module {
     margin: 1.5em 0 1.2em 0;
-    page-break-inside: auto;
-    page-break-before: auto;
 }
 
 .katib-module__head {
@@ -97,7 +95,6 @@
     border-collapse: collapse;
     margin: 0.8em 0;
     font-size: 10pt;
-    page-break-inside: auto;
 }
 
 .katib-module__body--rich thead { display: table-header-group; }

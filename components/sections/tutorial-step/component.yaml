@@ -33,4 +33,4 @@ accepts:
         type: string
         required: false
 page_behavior:
-  break_inside: avoid
+  mode: atomic

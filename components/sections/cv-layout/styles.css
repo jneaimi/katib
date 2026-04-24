@@ -1,21 +1,31 @@
 .katib-cv-layout {
-    display: grid;
-    grid-template-columns: 70mm 1fr;
-    min-height: 257mm; /* A4 height (297mm) minus default @page margins (20mm top + 20mm bottom) */
-    margin: -20mm;     /* pull the layout to the page edges under default @page margins */
+    /* Page-1 sidebar + multi-page main column. Sidebar is absolutely positioned
+       and clips to the first page so identity info renders once; main flows
+       across pages for longer CVs. */
+    position: relative;
+    margin: -20mm;
     font-family: var(--font-primary);
     color: var(--text);
 }
 
 .katib-cv-layout__sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70mm;
+    height: 297mm;
     background: var(--accent);
     color: var(--accent-on);
-    padding: 20mm 14mm 15mm 14mm;
+    padding: 14mm 12mm 10mm 12mm;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .katib-cv-layout__main {
-    background: transparent;
+    margin-left: 70mm;
     padding: 20mm 16mm 15mm 16mm;
+    min-height: 297mm;
+    background: transparent;
     color: var(--text);
 }
 
@@ -33,7 +43,7 @@
 }
 
 .katib-cv-layout__sidebar section {
-    margin-bottom: 14pt;
+    margin-bottom: 9pt;
 }
 
 /* Main-column headings */

@@ -15,7 +15,6 @@
     font-size: 8pt;
     font-weight: 600;
     margin: 0 3pt 3pt 0;
-    page-break-inside: avoid;
 }
 
 /* RTL: mirror the chip margin (trailing edge spacing flips) */

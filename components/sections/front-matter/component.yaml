@@ -30,5 +30,5 @@ accepts:
         required: false
         description: Short code rendered in monospace at the end of the meta strip.
 page_behavior:
+  mode: atomic
   break_after: always
-  break_inside: avoid

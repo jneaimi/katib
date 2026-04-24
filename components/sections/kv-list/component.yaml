@@ -23,3 +23,8 @@ variants:
   - dense
   - spacious
   - boxed
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-kv-list__term
+    - .katib-kv-list__value

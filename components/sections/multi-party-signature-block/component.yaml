@@ -20,3 +20,5 @@ accepts:
 variants:
   - line-over
   - minimal
+page_behavior:
+  mode: atomic

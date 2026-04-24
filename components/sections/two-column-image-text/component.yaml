@@ -37,4 +37,4 @@ variants:
   - image-right
   - image-top
 page_behavior:
-  break_inside: avoid
+  mode: atomic

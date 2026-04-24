@@ -14,4 +14,4 @@ accepts:
         required: true
         description: "Array of tag strings (or {text} mappings for consistency with other primitives). Each item renders as an inline-block pill with rounded corners."
 page_behavior:
-  break_inside: avoid
+  mode: atomic

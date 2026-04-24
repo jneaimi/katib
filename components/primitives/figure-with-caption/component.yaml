@@ -25,4 +25,4 @@ variants:
   - full-width
   - inset
 page_behavior:
-  break_inside: avoid
+  mode: atomic

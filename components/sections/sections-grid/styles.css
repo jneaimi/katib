@@ -31,7 +31,6 @@
 .katib-sections-grid__grid--cols-4 { grid-template-columns: repeat(4, 1fr); }
 
 .katib-sections-grid__card {
-    page-break-inside: avoid;
 }
 
 .katib-sections-grid__card-eyebrow {

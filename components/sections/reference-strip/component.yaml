@@ -22,3 +22,7 @@ accepts:
 variants:
   - flat
   - tagged
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-references__item

@@ -26,4 +26,4 @@ accepts:
         required: false
         description: Bulleted takeaways.
 page_behavior:
-  break_inside: avoid
+  mode: atomic
