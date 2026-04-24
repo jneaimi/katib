@@ -125,7 +125,8 @@ class ScaffoldResult:
 def _graduation_request_count(name: str) -> int:
     """Count matching entries in memory/component-requests.jsonl.
 
-    Returns 0 if the file doesn't exist yet (Day 13 starts writing it).
+    Returns 0 if the file doesn't exist yet (no component requests have been
+    logged via `katib log_request` or the graduation gate in `/katib`).
     """
     if not REQUESTS_FILE.exists():
         return 0
@@ -285,17 +286,16 @@ def scaffold(
                 f"component {name!r} already exists at {_display_path(existing)}"
             )
 
-    # Graduation check — soft-pass until Day 13's requests log exists.
+    # Graduation check — soft-pass until the requests log has enough entries.
     graduation_warning: str | None = None
     if namespace == "katib":
         count = _graduation_request_count(name)
         if count < GRADUATION_THRESHOLD and not force:
             if not REQUESTS_FILE.exists():
                 graduation_warning = (
-                    "Graduation gate is not yet active — "
-                    f"{_display_path(REQUESTS_FILE)} does not exist "
-                    "(Day 13 will start writing it). Scaffolded without a "
-                    f"request count. When the log exists, core namespace "
+                    "Graduation gate: no component requests logged yet at "
+                    f"{_display_path(REQUESTS_FILE)}. Scaffolded without a "
+                    f"request count. Once requests accumulate, core namespace "
                     f"scaffolds will require >={GRADUATION_THRESHOLD} matching "
                     f"requests or --force --justification '<reason>'."
                 )

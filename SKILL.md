@@ -253,8 +253,10 @@ Show `message` to the user. Don't retry automatically. Common codes:
 - **Always show inferred signals** before rendering. User can say "no, use
   different brand/language" and we re-route.
 - **No path bypasses the log.** `route.py resolve` emits `log_entry` dicts
-  for every gate decision. Day 13's writer consumes them; until then the
-  agent can show a one-line "[logged for reflect]" note.
+  for every gate decision and writes them to `~/.katib/memory/gate-decisions.jsonl`
+  via `core.request_log.log_gate_decision`. Context inferences go to
+  `context-inferences.jsonl`; graduated recipe requests go to `recipe-requests.jsonl`.
+  The agent does not need to echo anything — persistence is automatic.
 - **No hand-edits to `capabilities.yaml`**, `component-audit.jsonl`, or any
   file under `components/` or `recipes/` during `/katib` execution.
   Governance is enforced by the CLI + build-time audit gate.

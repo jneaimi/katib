@@ -62,7 +62,7 @@ def test_scaffold_graduation_warning_when_log_missing(throwaway_name, tmp_path, 
     assert not ops.REQUESTS_FILE.exists()
     result = ops.scaffold_recipe(throwaway_name, languages=["en"])
     assert result.graduation_warning is not None
-    assert "not yet active" in result.graduation_warning.lower()
+    assert "no recipe requests logged yet" in result.graduation_warning.lower()
 
 
 def test_scaffold_rejects_existing_recipe():
