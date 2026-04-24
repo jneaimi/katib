@@ -53,3 +53,5 @@
 {"component": "two-column-page", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:24:13+00:00", "from_graduation": null, "note": "Registered by katib component register"}
 {"component": "section-divider-page", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:26:05+00:00", "from_graduation": null, "note": "Registered by katib component register"}
 {"component": "appendix-page", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:27:40+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "metric-block", "tier": "primitive", "namespace": "katib", "action": "scaffold", "at": "2026-04-24T20:45:51+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
+{"component": "metric-block", "tier": "primitive", "namespace": "katib", "action": "register", "at": "2026-04-24T20:47:25+00:00", "from_graduation": null, "note": "Registered by katib component register"}

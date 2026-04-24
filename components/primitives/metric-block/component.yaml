@@ -1,0 +1,41 @@
+name: metric-block
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Key-metric display — label + value + optional delta. For dashboards, executive summaries, and report hero rows. Renders inline-block so multiple metrics lay out side-by-side without ceremony.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border, callout_warn_accent, callout_danger_accent]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - label:
+        type: string
+        required: true
+        description: Metric name (e.g. "Revenue", "Active users", "الإيرادات").
+    - value:
+        type: string
+        required: true
+        description: The headline number or short phrase (e.g. "3.1M", "94%", "ثابت"). Accept string not float so recipes control formatting.
+    - unit:
+        type: string
+        required: false
+        description: Short unit label rendered beside the value (e.g. "AED", "users", "%"). Ignored if value already contains the unit.
+    - delta:
+        type: string
+        required: false
+        description: Optional change figure (e.g. "+18%", "-2.4pp"). Color tint follows delta_direction.
+    - delta_direction:
+        type: string
+        required: false
+        default: neutral
+        description: "up | down | neutral — controls the tint of the delta badge."
+    - note:
+        type: string
+        required: false
+        description: Short context line below the value (e.g. "vs. 2025 H1", "against target").
+variants:
+  - stacked
+  - inline
+page_behavior:
+  mode: flowing

@@ -18,6 +18,9 @@ description: |
 | `/katib <prose>` | Use the prose as the transcript. |
 | `/katib --recipe X --lang Y --brand Z [--slug S]` | Explicit override — skips sensor/gate, renders directly. |
 | `/katib --recipe X` (partial flags) | Mix: explicit recipe, other signals inferred from context. |
+| `/katib component new [name]` | Enter the AI-assisted component builder — see `COMPONENT-BUILDER.md` for the full playbook. |
+| `/katib component list` | Show existing components grouped by tier (read `capabilities.yaml`). |
+| `/katib recipe new [name]` | Scaffold a new recipe (`scripts/recipe.py new`). Same shape as `component new` but simpler — just YAML, no Jinja/CSS. |
 
 ## The one loop
 
@@ -264,6 +267,33 @@ Show `message` to the user. Don't retry automatically. Common codes:
   `reasons[]` for observability.
 - **`/katib` with a fresh session and no prose** → go straight to step 3d
   (`ask_intent`).
+
+## Component creation mode (`/katib component new`)
+
+When the user invokes `/katib component new [name]` — or asks in plain
+prose to "build a component", "create a [X] block that shows [Y]", or
+describes a visual element not in `capabilities.yaml` — **pivot to the
+builder playbook in `COMPONENT-BUILDER.md`**.
+
+Quick summary of that flow (full detail in the guide):
+
+1. **Interview (5 questions)** — name, tier, languages, inputs, closest
+   exemplar. Use `AskUserQuestion` with all five in one call when possible.
+2. **Scaffold** — `uv run scripts/component.py new <name> --tier <T> --namespace user --languages en,ar --description "..."`.
+3. **Generate** — read the exemplar component's 4 files, mirror its
+   patterns, fill in `component.yaml`, `en.html`, `ar.html`, `styles.css`,
+   `README.md`.
+4. **Validate** — `uv run scripts/component.py validate <name>`. Fix
+   errors; trim unused tokens from `requires.tokens`.
+5. **Preview** — `uv run scripts/component.py test <name>`. Renders
+   standalone EN + AR PDFs. Show the user the paths and warning count.
+6. **Iterate** — user feedback → edit → re-validate → re-preview.
+7. **Register** — on approval, `uv run scripts/component.py register <name>`.
+   Updates audit + `capabilities.yaml`.
+
+**The builder is the lowest-risk way for users to extend Katib**.
+Components land in `~/.katib/components/` (user tier), survive reinstall,
+and can be shared with other users under Phase 4's share/import flow.
 
 ## Fresh-install sanity
 
