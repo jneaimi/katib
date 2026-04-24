@@ -1,0 +1,103 @@
+/* A divider page uses the default portrait @page — no named rule
+   needed. The atomic behavior comes from page_behavior: always
+   breaking before and after in the composer. */
+
+.katib-divider {
+    min-height: 247mm;  /* A4 portrait usable area, minus the 20mm base margin */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+.katib-divider__content {
+    max-width: 140mm;
+}
+
+.katib-divider__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 14pt;
+}
+
+.katib-divider[lang="ar"] .katib-divider__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12pt;
+}
+
+.katib-divider__part-number {
+    font-family: var(--font-display);
+    font-size: 96pt;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+    margin: 0;
+    letter-spacing: -0.03em;
+}
+
+.katib-divider[lang="ar"] .katib-divider__part-number {
+    font-size: 96pt;
+    letter-spacing: 0;
+}
+
+.katib-divider__rule {
+    width: 60mm;
+    height: 2pt;
+    background: var(--accent);
+    margin: 16pt auto 20pt auto;
+}
+
+.katib-divider__title {
+    font-family: var(--font-display);
+    font-size: 32pt;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.katib-divider[lang="ar"] .katib-divider__title {
+    font-size: 34pt;
+    letter-spacing: 0;
+    line-height: 1.35;
+}
+
+.katib-divider__subtitle {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 14pt 0 0 0;
+    line-height: 1.45;
+}
+
+.katib-divider__overview {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    color: var(--text-secondary);
+    margin: 20pt auto 0 auto;
+    line-height: 1.6;
+    max-width: 34em;
+}
+
+/* Minimal variant — just title + subtitle, no big number block */
+.katib-divider--minimal .katib-divider__part-number,
+.katib-divider--minimal .katib-divider__rule {
+    display: none;
+}
+
+.katib-divider--minimal .katib-divider__title {
+    font-size: 40pt;
+}
+
+.katib-divider--minimal[lang="ar"] .katib-divider__title {
+    font-size: 42pt;
+}

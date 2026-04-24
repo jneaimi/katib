@@ -1,0 +1,187 @@
+/* 16:9 slide frame — A4 landscape sized. The aspect ratio isn't exactly
+   16:9 (A4 landscape is 297×210mm, ~1.414:1) but it's close enough that
+   content laid out for a 16:9 presenter will flow cleanly. For true
+   16:9, recipe authors can override with `@page slide { size: 254mm 143mm }`
+   in their own CSS — that's an intentional escape hatch, not a default. */
+@page slide {
+    size: A4 landscape;
+    margin: 18mm;
+}
+
+.katib-slide-frame {
+    page: slide;
+    /* Fill the slide page — min-height ensures a short slide still
+       vertically distributes its content rather than clumping at the top. */
+    min-height: 174mm;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Eyebrow — small labels like "01 · INTRODUCTION" */
+.katib-slide-frame__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12pt;
+}
+
+.katib-slide-frame[lang="ar"] .katib-slide-frame__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+/* Titles are large — this is a slide, not a document heading */
+.katib-slide-frame__title {
+    font-family: var(--font-display);
+    font-size: 34pt;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+    max-width: 20em;
+}
+
+.katib-slide-frame[lang="ar"] .katib-slide-frame__title {
+    font-size: 36pt;
+    letter-spacing: 0;
+    line-height: 1.35;
+}
+
+.katib-slide-frame__subtitle {
+    font-family: var(--font-primary);
+    font-size: 15pt;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 12pt 0 0 0;
+    line-height: 1.4;
+    max-width: 34em;
+}
+
+/* Content body — bullet points, short paragraphs, figures */
+.katib-slide-frame__body {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    line-height: 1.55;
+    color: var(--text);
+    margin-top: auto;
+    padding-top: 14pt;
+}
+
+.katib-slide-frame__body ul,
+.katib-slide-frame__body ol {
+    margin: 0.4em 0;
+    padding-left: 1.2em;
+}
+
+.katib-slide-frame[lang="ar"] .katib-slide-frame__body ul,
+.katib-slide-frame[lang="ar"] .katib-slide-frame__body ol {
+    padding-left: 0;
+    padding-right: 1.2em;
+}
+
+.katib-slide-frame__body li {
+    margin: 0.4em 0;
+}
+
+/* Two-column slide — primary content + supporting illustration/stat block */
+.katib-slide-frame__two-col {
+    display: flex;
+    gap: 18mm;
+    margin-top: 14pt;
+    flex: 1;
+}
+
+.katib-slide-frame__col {
+    flex: 1;
+    font-family: var(--font-primary);
+    font-size: 13pt;
+    line-height: 1.5;
+}
+
+.katib-slide-frame__col--primary {
+    color: var(--text);
+}
+
+.katib-slide-frame__col--secondary {
+    color: var(--text-secondary);
+    padding-left: 14pt;
+    border-left: 2pt solid var(--accent);
+}
+
+.katib-slide-frame[lang="ar"] .katib-slide-frame__col--secondary {
+    padding-left: 0;
+    padding-right: 14pt;
+    border-left: 0;
+    border-right: 2pt solid var(--accent);
+}
+
+/* Image-background variant — full slide bg image with scrim for legibility */
+.katib-slide-frame--has-image {
+    color: #ffffff;
+}
+
+.katib-slide-frame__bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.katib-slide-frame__bg svg {
+    width: 100%;
+    height: 100%;
+}
+
+.katib-slide-frame__scrim {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.55), rgba(0,0,0,0.15));
+    z-index: 1;
+}
+
+.katib-slide-frame--has-image .katib-slide-frame__eyebrow,
+.katib-slide-frame--has-image .katib-slide-frame__title,
+.katib-slide-frame--has-image .katib-slide-frame__subtitle {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+}
+
+.katib-slide-frame--has-image .katib-slide-frame__eyebrow {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.katib-slide-frame--has-image .katib-slide-frame__subtitle {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+/* Title-only variant — center the title block vertically */
+.katib-slide-frame--title-only {
+    justify-content: center;
+}
+
+.katib-slide-frame--title-only .katib-slide-frame__title {
+    font-size: 42pt;
+    max-width: 22em;
+}
+
+.katib-slide-frame[lang="ar"].katib-slide-frame--title-only .katib-slide-frame__title {
+    font-size: 44pt;
+}

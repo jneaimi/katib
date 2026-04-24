@@ -1,0 +1,31 @@
+name: landscape-section
+tier: section
+version: 0.1.0
+namespace: katib
+description: Wraps content in a landscape-oriented page. Use for wide data tables, timelines, horizontal charts, or any content that overflows A4 portrait. Forces a page break before and after so the landscape page stands alone in the flow.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the heading (e.g. "APPENDIX A", "WIDE VIEW").
+    - title:
+        type: string
+        required: false
+        description: Heading at the top of the landscape page. Omit for chart-only pages.
+    - intro:
+        type: string
+        required: false
+        description: One-paragraph caption under the title.
+    - raw_body:
+        type: string
+        required: true
+        description: Trusted HTML body. Tables, charts, wide figures. NOT auto-escaped — only use for recipe-authored content.
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

@@ -1,0 +1,21 @@
+<section class="katib-section katib-two-col" lang="en">
+{%- if input.eyebrow or input.title or input.byline or input.lead %}
+    <header class="katib-two-col__head">
+{%- if input.eyebrow %}
+        <div class="katib-eyebrow katib-eyebrow--accent katib-two-col__eyebrow" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-two-col__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.byline %}
+        <p class="katib-two-col__byline">{{ input.byline }}</p>
+{%- endif %}
+{%- if input.lead %}
+        <p class="katib-two-col__lead">{{ input.lead }}</p>
+{%- endif %}
+    </header>
+{%- endif %}
+    <div class="katib-two-col__body">
+        {{ input.raw_body | safe }}
+    </div>
+</section>

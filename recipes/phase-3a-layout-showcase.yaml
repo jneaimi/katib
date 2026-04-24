@@ -1,0 +1,154 @@
+name: phase-3a-layout-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 3a layout-primitives showcase — exercises all six layout components in one document to prove they compose cleanly. Order + page count serves as the integration test for Phase 3a.
+languages: [en, ar]
+target_pages: [7, 10]
+page_limit: 12
+when: Smoke render for the Phase 3a layout primitives. Each section opens with a portrait module describing what follows, then renders the layout component itself.
+keywords: [phase-3, showcase, layout, landscape, slide, full-bleed, two-column, divider, appendix]
+
+sections:
+  # --- Portrait intro ---
+  - component: module
+    inputs:
+      eyebrow: "PHASE 3A"
+      title: "Layout primitives"
+      intro: |
+        This document exercises all six layout components in one render
+        — landscape-section, slide-frame, full-bleed-page, two-column-page,
+        section-divider-page, and appendix-page. Each appears in context
+        so you can see how they interact with surrounding portrait flow.
+
+  # --- Section divider (atomic, full page) ---
+  - component: section-divider-page
+    variant: numeric
+    inputs:
+      eyebrow: "PART"
+      part_number: "I"
+      title: "Wide data"
+      subtitle: "Landscape pages for tables that don't fit portrait."
+
+  # --- Landscape page with a wide table ---
+  - component: landscape-section
+    inputs:
+      eyebrow: "APPENDIX PREVIEW"
+      title: "Quarterly revenue by region"
+      intro: "Sample data showing how a 6-column table flows cleanly on a landscape A4 page."
+      raw_body: |
+        <table>
+          <thead>
+            <tr>
+              <th>Region</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>YoY</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>UAE</td><td>2.10M</td><td>2.41M</td><td>2.72M</td><td>3.14M</td><td>+18.0%</td></tr>
+            <tr><td>KSA</td><td>1.80M</td><td>1.95M</td><td>2.30M</td><td>2.80M</td><td>+14.5%</td></tr>
+            <tr><td>Qatar</td><td>0.92M</td><td>1.05M</td><td>1.18M</td><td>1.44M</td><td>+11.2%</td></tr>
+            <tr><td>Kuwait</td><td>0.78M</td><td>0.84M</td><td>1.02M</td><td>1.21M</td><td>+9.8%</td></tr>
+            <tr><td>Oman</td><td>0.55M</td><td>0.62M</td><td>0.74M</td><td>0.88M</td><td>+7.4%</td></tr>
+            <tr><td>Bahrain</td><td>0.42M</td><td>0.47M</td><td>0.53M</td><td>0.64M</td><td>+5.9%</td></tr>
+          </tbody>
+        </table>
+
+  # --- Portrait bridge ---
+  - component: module
+    inputs:
+      title: "Back to portrait"
+      body: |
+        The landscape page stands alone — surrounding content stays
+        portrait. The next block demonstrates the editorial two-column
+        flow.
+
+  # --- Two-column editorial flow ---
+  - component: two-column-page
+    inputs:
+      eyebrow: "ESSAY"
+      title: "Why componentized"
+      byline: "Katib engineering notes"
+      lead: "Every v2 template is assembled, not authored. That constraint forces consistency."
+      raw_body: |
+        <p>The original templates were monolithic HTML with sample
+        content hardcoded into the markup. Changing one visual
+        convention meant editing every file.</p>
+        <p>The component-first architecture inverts that. Each visible
+        element is a reusable component with a narrow contract. Recipes
+        pick components by name and pass inputs.</p>
+        <blockquote class="span-cols">
+          "Components are the library; recipes are just sample
+          compositions."
+        </blockquote>
+        <p>The two-column layout you're reading now is itself a single
+        component. The surrounding portrait pages came through the
+        default flow; this section's `column-count: 2` CSS takes over.</p>
+        <p>Long articles span multiple pages naturally. The text flows
+        from left column to right, then to the next page's left column,
+        then right — just like a newspaper.</p>
+
+  # --- Slide-frame deck (3 slides) ---
+  - component: section-divider-page
+    variant: minimal
+    inputs:
+      title: "Deck preview"
+      subtitle: "Three slides from a presentation, rendered inline."
+
+  - component: slide-frame
+    variant: title-only
+    inputs:
+      eyebrow: "KEYNOTE"
+      title: "Bilingual print for the AI era"
+      subtitle: "Why the next generation of documents is composable."
+
+  - component: slide-frame
+    variant: content
+    inputs:
+      eyebrow: "01 · THE PROBLEM"
+      title: "Templates don't scale."
+      raw_body: |
+        <ul>
+          <li>Hardcoded sample content corrupts skill updates.</li>
+          <li>Each new doc-type adds entropy instead of reuse.</li>
+          <li>Bilingual handling gets duplicated everywhere.</li>
+        </ul>
+
+  - component: slide-frame
+    variant: two-column
+    inputs:
+      eyebrow: "02 · THE FIX"
+      title: "Composable components."
+      raw_body: |
+        <p>Every visible element is a reusable component. Doc-types
+        become YAML recipes that reference components by name.</p>
+      raw_body_secondary: |
+        <p><strong>One slide, one page.</strong></p>
+        <p>One component, many slides.</p>
+
+  # --- Appendix block (with running header) ---
+  - component: appendix-page
+    inputs:
+      label: "Appendix A"
+      eyebrow: "SUPPORTING MATERIAL"
+      title: "Page-behavior reference"
+      intro: |
+        Quick reference table of every layout primitive's
+        page_behavior declaration.
+      raw_body: |
+        <table>
+          <thead>
+            <tr><th>Component</th><th>Mode</th><th>Break before</th><th>Break after</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>landscape-section</td><td>atomic</td><td>always</td><td>always</td></tr>
+            <tr><td>slide-frame</td><td>atomic</td><td>always</td><td>always</td></tr>
+            <tr><td>full-bleed-page</td><td>atomic</td><td>always</td><td>always</td></tr>
+            <tr><td>two-column-page</td><td>flowing</td><td>auto</td><td>auto</td></tr>
+            <tr><td>section-divider-page</td><td>atomic</td><td>always</td><td>always</td></tr>
+            <tr><td>appendix-page</td><td>flowing</td><td>always</td><td>auto</td></tr>
+          </tbody>
+        </table>
+        <h3>Notes</h3>
+        <p>Atomic components always occupy exactly one page and never
+        split. Flowing components can span multiple pages. Appendix is
+        the only flowing component that forces a break before it — the
+        reader expects a clear transition into supporting material.</p>

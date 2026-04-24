@@ -1,0 +1,19 @@
+{%- set v = variant or 'numeric' %}
+<section class="katib-section katib-divider katib-divider--{{ v }}" lang="ar" dir="rtl">
+    <div class="katib-divider__content">
+{%- if input.eyebrow %}
+        <div class="katib-divider__eyebrow" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if v == 'numeric' and input.part_number %}
+        <div class="katib-divider__part-number">{{ input.part_number }}</div>
+        <div class="katib-divider__rule"></div>
+{%- endif %}
+        <h2 class="katib-divider__title">{{ input.title }}</h2>
+{%- if input.subtitle %}
+        <p class="katib-divider__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+{%- if input.overview %}
+        <p class="katib-divider__overview">{{ input.overview }}</p>
+{%- endif %}
+    </div>
+</section>

@@ -1,0 +1,19 @@
+<section class="katib-section katib-appendix" lang="en">
+    <div class="katib-appendix__running-label">{{ input.label or 'Appendix' }}</div>
+{%- if input.eyebrow or input.title or input.intro %}
+    <header class="katib-appendix__head">
+{%- if input.eyebrow %}
+        <div class="katib-eyebrow katib-eyebrow--accent katib-appendix__eyebrow" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-appendix__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.intro %}
+        <p class="katib-appendix__intro">{{ input.intro }}</p>
+{%- endif %}
+    </header>
+{%- endif %}
+    <div class="katib-appendix__body">
+        {{ input.raw_body | safe }}
+    </div>
+</section>

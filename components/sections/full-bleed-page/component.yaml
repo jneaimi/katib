@@ -1,0 +1,44 @@
+name: full-bleed-page
+tier: section
+version: 0.1.0
+namespace: katib
+description: A single page with zero margins — for full-bleed photography, chapter-opener images, infographics that extend to the sheet edge. Caption + optional overlay text render inside the image area with a legibility scrim. Atomic — one page, never splits.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, inline-svg]
+        description: Full-page image. URL, user-supplied file, or inline SVG.
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label overlaid on the image (e.g. "CHAPTER ONE").
+    - title:
+        type: string
+        required: false
+        description: Large title overlaid on the image. Wraps to multiple lines as needed.
+    - subtitle:
+        type: string
+        required: false
+        description: Smaller secondary line below the title.
+    - caption:
+        type: string
+        required: false
+        description: Caption rendered in the bottom strip — photo credit, source, or context.
+    - position:
+        type: string
+        required: false
+        default: center
+        description: Where overlay text sits. One of top-left, top-right, center, bottom-left, bottom-right.
+variants:
+  - image-only
+  - with-overlay
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

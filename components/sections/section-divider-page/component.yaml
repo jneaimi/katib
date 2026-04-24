@@ -1,0 +1,39 @@
+name: section-divider-page
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  "Part II" style divider — a full page that marks a major section boundary in a long document. Large part number + title + optional subtitle, centered typography. Use between acts in a white-paper, chapters in a report, or phases in a proposal. Atomic, always on its own page.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - part_number:
+        type: string
+        required: false
+        description: Roman numeral, number, or label (e.g. "II", "02", "PART TWO"). Rendered very large in accent color.
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the part number (e.g. "SECTION", "CHAPTER").
+    - title:
+        type: string
+        required: true
+        description: Section or part title.
+    - subtitle:
+        type: string
+        required: false
+        description: Supporting line under the title.
+    - overview:
+        type: string
+        required: false
+        description: Short orientation paragraph explaining what's in this part.
+variants:
+  - numeric
+  - minimal
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

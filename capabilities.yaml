@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T14:46:18+00:00'
+generated_at: '2026-04-24T20:32:38+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -513,6 +513,41 @@ recipes:
     - chart-bar
     - chart-sparkline
     - summary
+  phase-3a-layout-showcase:
+    namespace: katib
+    version: 0.1.0
+    description: Phase 3a layout-primitives showcase — exercises all six layout components in one document
+      to prove they compose cleanly. Order + page count serves as the integration test for Phase 3a.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 7
+    - 10
+    page_limit: 12
+    when: Smoke render for the Phase 3a layout primitives. Each section opens with a portrait module describing
+      what follows, then renders the layout component itself.
+    keywords:
+    - phase-3
+    - showcase
+    - layout
+    - landscape
+    - slide
+    - full-bleed
+    - two-column
+    - divider
+    - appendix
+    sections_shape:
+    - module
+    - section-divider-page
+    - landscape-section
+    - module
+    - two-column-page
+    - section-divider-page
+    - slide-frame
+    - slide-frame
+    - slide-frame
+    - appendix-page
   tutorial-cheatsheet:
     namespace: katib
     version: 0.1.0
@@ -879,6 +914,21 @@ components:
       text. Reusable across CV Tools section, future bio/portfolio skill lists, blog post keywords, editorial
       metadata tags.
     used_in_recipes: 0
+  appendix-page:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: 'Appendix content with a distinct running header. Uses a named @page rule that emits
+      "Appendix" (localized) in the top margin, so the reader always knows which section they''re in.
+      Flows across multiple pages — appendix material is usually long-form (raw data, supporting references,
+      derivations). Always starts on a new page.
+
+      '
+    used_in_recipes: 1
   chart-bar:
     namespace: katib
     tier: section
@@ -955,6 +1005,20 @@ components:
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
     used_in_recipes: 5
+  full-bleed-page:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - image-only
+    - with-overlay
+    description: A single page with zero margins — for full-bleed photography, chapter-opener images,
+      infographics that extend to the sheet edge. Caption + optional overlay text render inside the image
+      area with a legibility scrim. Atomic — one page, never splits.
+    used_in_recipes: 0
   kv-list:
     namespace: katib
     tier: section
@@ -970,6 +1034,18 @@ components:
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
     used_in_recipes: 4
+  landscape-section:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Wraps content in a landscape-oriented page. Use for wide data tables, timelines, horizontal
+      charts, or any content that overflows A4 portrait. Forces a page break before and after so the landscape
+      page stands alone in the flow.
+    used_in_recipes: 1
   letterhead:
     namespace: katib
     tier: section
@@ -1010,7 +1086,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 15
+    used_in_recipes: 16
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1049,6 +1125,22 @@ components:
     - tagged
     description: Compact list of further-reading references or source citations.
     used_in_recipes: 2
+  section-divider-page:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - numeric
+    - minimal
+    description: '"Part II" style divider — a full page that marks a major section boundary in a long
+      document. Large part number + title + optional subtitle, centered typography. Use between acts in
+      a white-paper, chapters in a report, or phases in a proposal. Atomic, always on its own page.
+
+      '
+    used_in_recipes: 1
   sections-grid:
     namespace: katib
     tier: section
@@ -1063,6 +1155,23 @@ components:
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
     used_in_recipes: 5
+  slide-frame:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - title-only
+    - content
+    - two-column
+    - image-background
+    description: Single 16:9 landscape page sized for slide-deck content — keynote, talk slides, pitch
+      frames. Each slide is atomic (one slide = one page). Use multiple slide-frame sections in a row
+      to build a full deck. Variants — title-only, content, two-column, image-background — cover the common
+      slide layouts.
+    used_in_recipes: 1
   summary:
     namespace: katib
     tier: section
@@ -1097,6 +1206,19 @@ components:
     - image-top
     description: Side-by-side image + text block. Most flexible image-consuming section — accepts user-supplied,
       url, Gemini-generated, or screenshot sources.
+    used_in_recipes: 1
+  two-column-page:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Newspaper/magazine-style two-column text flow. Content flows across the two columns within
+      a page, and across multiple pages if the body is long. Title spans both columns as a header band.
+      Best for editorial essays, long-form articles, or long primary-source excerpts where a single column
+      feels lonely.
     used_in_recipes: 1
   whats-next:
     namespace: katib

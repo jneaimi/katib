@@ -1,0 +1,152 @@
+/* Zero-margin named page for true edge-to-edge content. The base @page
+   rule ships 20mm margin; this override brings it to zero for any
+   element with `page: full-bleed`. */
+@page full-bleed {
+    size: A4;
+    margin: 0;
+}
+
+.katib-full-bleed {
+    page: full-bleed;
+    position: relative;
+    /* A4 is 210×297mm. Min-height hits the full page so WeasyPrint
+       doesn't short-layout the section when content is thin. */
+    min-height: 297mm;
+    width: 210mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #000;  /* in case image doesn't resolve, avoids white flash */
+}
+
+.katib-full-bleed__image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.katib-full-bleed__image svg {
+    width: 100%;
+    height: 100%;
+}
+
+.katib-full-bleed__scrim {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(180deg,
+        rgba(0,0,0,0.35) 0%,
+        rgba(0,0,0,0.15) 40%,
+        rgba(0,0,0,0.55) 100%);
+    z-index: 1;
+}
+
+.katib-full-bleed__overlay {
+    position: absolute;
+    z-index: 2;
+    padding: 30mm;
+    color: #ffffff;
+    max-width: 150mm;
+}
+
+/* Overlay position modifiers — pick where the title block sits */
+.katib-full-bleed--pos-top-left .katib-full-bleed__overlay {
+    top: 0;
+    left: 0;
+}
+.katib-full-bleed--pos-top-right .katib-full-bleed__overlay {
+    top: 0;
+    right: 0;
+    text-align: end;
+}
+.katib-full-bleed--pos-center .katib-full-bleed__overlay {
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    max-width: 170mm;
+}
+.katib-full-bleed--pos-bottom-left .katib-full-bleed__overlay {
+    bottom: 20mm;
+    left: 0;
+}
+.katib-full-bleed--pos-bottom-right .katib-full-bleed__overlay {
+    bottom: 20mm;
+    right: 0;
+    text-align: end;
+}
+
+.katib-full-bleed__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 14pt;
+}
+
+.katib-full-bleed[lang="ar"] .katib-full-bleed__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12pt;
+}
+
+.katib-full-bleed__title {
+    font-family: var(--font-display);
+    font-size: 44pt;
+    font-weight: 700;
+    line-height: 1.05;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.015em;
+}
+
+.katib-full-bleed[lang="ar"] .katib-full-bleed__title {
+    font-size: 46pt;
+    letter-spacing: 0;
+    line-height: 1.3;
+}
+
+.katib-full-bleed__subtitle {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 16pt 0 0 0;
+    line-height: 1.4;
+    max-width: 30em;
+}
+
+/* Caption strip at the bottom — used for photo credits and sources */
+.katib-full-bleed__caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: 4mm 12mm;
+    font-family: var(--font-primary);
+    font-size: 8pt;
+    color: rgba(255, 255, 255, 0.78);
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.katib-full-bleed[lang="ar"] .katib-full-bleed__caption {
+    font-size: 9pt;
+    text-align: right;
+}
+
+/* Image-only variant — no overlay, no scrim */
+.katib-full-bleed--image-only .katib-full-bleed__scrim,
+.katib-full-bleed--image-only .katib-full-bleed__overlay {
+    display: none;
+}
