@@ -210,7 +210,7 @@ sections:
             <tr><td>5</td><td>Evaluate</td><td>Human</td><td>Final decisions: revenue split, delivery model, governing law, signature process.</td></tr>
             <tr><td>6</td><td>Apply</td><td>AI</td><td>Drafted a full 14-clause MOU with UAE-compliant structure.</td></tr>
             <tr><td>7</td><td>Understand</td><td>AI</td><td>Explained every clause in plain language — what each one commits to and where the risk sits.</td></tr>
-            <tr><td>8</td><td>Remember</td><td>AI</td><td>Saved the final document, the research, and the reasoning trail to the knowledge vault.</td></tr>
+            <tr><td>8</td><td>Remember</td><td>AI</td><td>Saved the final document, the research, and the reasoning trail into a durable notes archive.</td></tr>
           </tbody>
         </table>
 
@@ -250,7 +250,7 @@ sections:
     inputs:
       heading: "What's next"
       items:
-        - "Keep the six questions within arm's reach — a sticky note, a vault note, a saved prompt."
+        - "Keep the six questions within arm's reach — a sticky note, a pinned doc, a saved prompt."
         - "On the next non-trivial task, force yourself to answer questions 1, 3, and 5 before writing a single prompt."
         - 'When you feel the urge to say "just build it" to an AI — that is the trust boundary talking. Cross it on purpose, not by accident.'
 

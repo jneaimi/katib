@@ -90,6 +90,11 @@ def _ensure_capabilities_fresh() -> tuple[dict, list[str]]:
         if not d.exists():
             continue
         for p in d.rglob("*.yaml"):
+            # Skip WIP/scratch paths (any `_`-prefixed directory component).
+            # These are excluded from capabilities generation so their
+            # mtimes shouldn't trigger a regen either.
+            if any(part.startswith("_") for part in p.relative_to(d).parts):
+                continue
             mtime = p.stat().st_mtime
             if mtime > newest_source:
                 newest_source = mtime

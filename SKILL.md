@@ -188,10 +188,7 @@ newer than the cached index.
 
 - Does not navigate, open, or list output files. PDFs land at
   `~/Documents/katib/<recipe>/<slug>/<name>.<lang>.pdf` (or
-  `$KATIB_OUTPUT_ROOT`). Use Finder / Explorer / Soul Hub file-explorer for
-  that.
-- Does not talk to any knowledge vault. If you want the PDF in your vault,
-  move it yourself post-render.
-- Does not depend on `/think`, `/arabic`, `/prebuild`, or any other skill.
-  The decision gate, content lint, and context sensor are all self-contained
-  Katib-native routines.
+  `$KATIB_OUTPUT_ROOT`). Use your OS file explorer to view them.
+- Does not depend on any other Claude Code skill. The decision gate,
+  content lint, and context sensor are all self-contained Katib-native
+  routines.
