@@ -324,6 +324,11 @@ def _resolve_image_slots(
                 f"component {comp_name!r}: input {slot_name!r} is type:image; "
                 f"expected dict {{'source': '...', ...}}, got {type(value).__name__}"
             )
+        # Capture what the RECIPE said before meta-source substitution runs.
+        # This lets downstream tooling (e.g., build.py --json) distinguish
+        # "user wrote source: brand-preset" from a user-file render, even
+        # though the engine resolves both via the same underlying path.
+        recipe_source = value.get("source")
         # Pre-resolve the brand-preset meta-source → real provider spec.
         value = _resolve_brand_preset(value, tokens, comp_name, slot_name)
         if value.get("source") == "inline-svg":
@@ -346,6 +351,7 @@ def _resolve_image_slots(
             "content_hash": img.content_hash,
             "alt": img.alt_hint or value.get("alt_text") or "",
             "source": value.get("source"),
+            "recipe_source": recipe_source,
             "spec": value,
         }
     return resolved
@@ -405,6 +411,7 @@ def compose(
                     "tier": tier,
                     "slot": slot_name,
                     "source": inputs[slot_name].get("source"),
+                    "recipe_source": inputs[slot_name].get("recipe_source"),
                     "resolved_path": inputs[slot_name].get("resolved_path"),
                     "content_hash": inputs[slot_name].get("content_hash"),
                     "alt": inputs[slot_name].get("alt"),
