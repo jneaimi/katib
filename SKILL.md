@@ -89,14 +89,108 @@ Inferred: <summary>
 Reasons: <one or two bullets from reasons[]>
 ```
 
-Then:
+Then invoke `build.py` with `--json` so the agent can parse a structured
+receipt and decide whether to offer a post-render save:
 
 ```bash
-uv run scripts/build.py <recipe> --lang <lang> [--brand <brand>] [--slug <slug>]
+uv run scripts/build.py <recipe> --lang <lang> [--brand <brand>] [--slug <slug>] --json
 ```
 
-Report the output PDF path on success. If `build.py` exits non-zero, show
-the stderr message as-is (it's already user-friendly).
+The JSON receipt has shape:
+
+```json
+{
+  "pdf": "/abs/path/out.pdf",
+  "bytes": 12345,
+  "cover": {
+    "rendered": true | false,
+    "source": "gemini" | "user-file" | "inline-svg" | "brand-preset" | null,
+    "preset_saveable": true | false
+  }
+}
+```
+
+Report the output PDF path on success. If `build.py` exits non-zero, the
+receipt will contain an `error` key — show its value verbatim.
+
+#### 3a-post. Post-render save offer (cover presets)
+
+When a render succeeded AND `--brand` was set AND `cover.preset_saveable`
+is `true`, offer the user an interactive save via AUQ. This lets the user
+capture a freshly-rendered cover (Gemini, user-file) as a reusable preset
+on the brand so future recipes can reference it as
+`source: brand-preset, name: <name>`.
+
+**Skip the offer silently when:**
+- `cover.preset_saveable` is `false` (no cover, already a preset, or
+  inline-svg with no file on disk)
+- `--brand` was not on the render (nothing to save against)
+- The session is non-interactive (AUQ will fail gracefully; don't retry)
+
+**Ask this AUQ (one question, two options):**
+
+```python
+AskUserQuestion(questions=[{
+    "header": "Save cover?",                       # ≤12 chars
+    "question": (
+        "This render used a brand cover image. "
+        "Save it as a reusable preset on the '<brand>' profile?"
+    ),
+    "multiSelect": False,
+    "options": [
+        {"label": "yes-<suggestion>",
+         "description": "Save as '<suggestion>'. You can pick a different name next."},
+        {"label": "no",
+         "description": "Don't save."},
+    ],
+}])
+```
+
+Where `<suggestion>` is `<recipe-slug>-cover` with any non-`[a-z0-9_-]`
+chars stripped. E.g., `legal-mou` → `legal-mou-cover`.
+
+**If the user picks `no`:** done. Do not ask again this turn.
+
+**If the user picks `yes-<suggestion>`:** ask in plain text:
+
+```
+Preset name? (press Enter to use "<suggestion>", or type a new name —
+must match [a-z0-9][a-z0-9_-]*)
+```
+
+Validate the answer against `^[a-z0-9][a-z0-9_-]*$` before invoking the
+CLI — if invalid, say so and re-ask. Blank input means use the suggestion.
+
+Then call:
+
+```bash
+uv run scripts/build.py <recipe> --lang <lang> --brand <brand> \
+    --save-cover-preset <chosen-name> --json
+```
+
+This re-invokes `build.py`; the PDF is regenerated but expensive image
+work (Gemini calls, screenshots) hits the content-hash cache and is not
+repeated. The save itself is a file copy into
+`~/.katib/brands/<brand>-assets/covers/` plus a `ruamel.yaml` edit on the
+brand profile (comments + ordering preserved).
+
+**If the save JSON reports `preset_saved.error` containing
+"already has cover preset":** the name collides. Ask inline:
+
+```
+Preset '<chosen-name>' already exists on '<brand>'. Overwrite? [y/N]
+```
+
+If `y`: re-run the same command with `--force`. Any other answer: report
+"Skipped — keep the existing preset." and end the offer.
+
+**On success** (`preset_saved.name` present): report:
+
+```
+Saved cover preset '<name>' → <path>
+```
+
+Do NOT loop the offer. One attempt per render.
 
 #### 3b. `action: "present_candidates"` (MEDIUM confidence)
 

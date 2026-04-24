@@ -390,10 +390,12 @@ def test_find_cover_image_none_when_no_cover_tier():
 
 def test_build_cli_save_requires_brand(tmp_path):
     """--save-cover-preset without --brand exits 1."""
+    # Use any valid recipe name — the brand check happens before the recipe
+    # is loaded, so the recipe never needs to exist in this path.
     result = subprocess.run(
         [
             sys.executable, "scripts/build.py",
-            "tutorial-katib-walkthrough", "--lang", "en",
+            "dummy", "--lang", "en",
             "--save-cover-preset", "x",
             "--skip-audit-check",
             "--out", str(tmp_path / "out.pdf"),
@@ -404,3 +406,221 @@ def test_build_cli_save_requires_brand(tmp_path):
     )
     assert result.returncode == 1
     assert "requires --brand" in result.stderr
+
+
+# ---------------------------------------------------------------- Day-5: --json receipt
+
+
+def _prep_live_render_sandbox(tmp_path: Path) -> tuple[Path, Path]:
+    """Stand up a sandbox brand + recipe that renders a cover from a
+    user-file image. Returns (brand_yaml, recipe_yaml)."""
+    img = _tiny_png(tmp_path / "hero.png")
+    brand = tmp_path / "sandbox.yaml"
+    brand.write_text(
+        yaml.safe_dump({"name": "Sandbox", "colors": {"accent": "#112233"}}),
+        encoding="utf-8",
+    )
+    recipe = tmp_path / "recipe.yaml"
+    recipe.write_text(
+        "name: day5-receipt\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en]\n"
+        "sections:\n"
+        "  - component: cover-page\n"
+        "    variant: image-background\n"
+        "    inputs:\n"
+        "      eyebrow: Test\n"
+        "      title: Receipt Smoke\n"
+        "      subtitle: Verifying --json output.\n"
+        "      reference_code: D5-001\n"
+        "      image:\n"
+        f"        source: user-file\n"
+        f"        path: {img}\n",
+        encoding="utf-8",
+    )
+    return brand, recipe
+
+
+def _run_build(
+    tmp_path: Path,
+    brand_dir: Path,
+    *args: str,
+) -> tuple[int, dict | None, str]:
+    """Run build.py and return (returncode, parsed_json_or_none, raw_stdout)."""
+    env = {**__import__("os").environ, "KATIB_BRANDS_DIR": str(brand_dir)}
+    result = subprocess.run(
+        [sys.executable, "scripts/build.py", *args],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    stdout = result.stdout.strip()
+    parsed: dict | None = None
+    try:
+        parsed = __import__("json").loads(stdout)
+    except (__import__("json").JSONDecodeError, ValueError):
+        parsed = None
+    return result.returncode, parsed, stdout
+
+
+def test_json_receipt_valid_shape_with_saveable_cover(tmp_path):
+    """`--json` emits a single well-formed JSON object with `preset_saveable: true`
+    for a recipe that rendered a user-file cover."""
+    brand, recipe = _prep_live_render_sandbox(tmp_path)
+    out_pdf = tmp_path / "out.pdf"
+    rc, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en", "--brand", "sandbox",
+        "--skip-audit-check", "--json", "--out", str(out_pdf),
+    )
+    assert rc == 0
+    assert payload is not None
+    assert payload["pdf"] == str(out_pdf.resolve())
+    assert payload["bytes"] > 0
+    assert payload["cover"]["rendered"] is True
+    assert payload["cover"]["source"] == "user-file"
+    assert payload["cover"]["preset_saveable"] is True
+    assert "preset_saved" not in payload  # didn't ask to save
+
+
+def test_json_receipt_no_cover_recipe(tmp_path):
+    """`--json` on a recipe without a cover reports `rendered: false` and
+    `preset_saveable: false`."""
+    recipe = tmp_path / "no-cover.yaml"
+    recipe.write_text(
+        "name: no-cover-smoke\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en]\n"
+        "sections:\n"
+        "  - component: module\n"
+        "    inputs:\n"
+        "      title: Hello\n"
+        "      body: Body only.\n",
+        encoding="utf-8",
+    )
+    out_pdf = tmp_path / "out.pdf"
+    rc, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en",
+        "--skip-audit-check", "--json", "--out", str(out_pdf),
+    )
+    assert rc == 0
+    assert payload is not None
+    assert payload["cover"] == {
+        "rendered": False,
+        "source": None,
+        "preset_saveable": False,
+    }
+
+
+def test_json_receipt_save_success(tmp_path):
+    """`--json --save-cover-preset` on success includes `preset_saved.name` and path."""
+    brand, recipe = _prep_live_render_sandbox(tmp_path)
+    out_pdf = tmp_path / "out.pdf"
+    rc, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en", "--brand", "sandbox",
+        "--skip-audit-check", "--json", "--save-cover-preset", "launch",
+        "--out", str(out_pdf),
+    )
+    assert rc == 0
+    assert payload is not None
+    assert payload["preset_saved"]["name"] == "launch"
+    saved_path = Path(payload["preset_saved"]["path"])
+    assert saved_path.exists()
+    assert saved_path.name == "launch.png"
+
+
+def test_json_receipt_save_collision_reports_error(tmp_path):
+    """`--json --save-cover-preset` on name collision returns exit 1 and
+    `preset_saved.error`, but `pdf` is still reported (render succeeded)."""
+    brand, recipe = _prep_live_render_sandbox(tmp_path)
+    out_pdf = tmp_path / "out.pdf"
+    # Seed: save once so the second attempt collides.
+    rc1, _, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en", "--brand", "sandbox",
+        "--skip-audit-check", "--json", "--save-cover-preset", "dup",
+        "--out", str(out_pdf),
+    )
+    assert rc1 == 0
+    rc2, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en", "--brand", "sandbox",
+        "--skip-audit-check", "--json", "--save-cover-preset", "dup",
+        "--out", str(out_pdf),
+    )
+    assert rc2 == 1
+    assert payload is not None
+    assert "pdf" in payload  # render succeeded before save failed
+    assert "already has cover preset" in payload["preset_saved"]["error"]
+
+
+def test_json_receipt_brand_preset_source_not_saveable(tmp_path):
+    """A render using `source: brand-preset` is NOT saveable — it's already a
+    stored preset, nothing new to save."""
+    img = _tiny_png(tmp_path / "sandbox-assets" / "covers" / "existing.png")
+    brand = tmp_path / "sandbox.yaml"
+    brand.write_text(
+        yaml.safe_dump({
+            "name": "Sandbox",
+            "colors": {"accent": "#112233"},
+            "covers": {
+                "existing": {
+                    "source": "user-file",
+                    "path": "sandbox-assets/covers/existing.png",
+                }
+            },
+        }),
+        encoding="utf-8",
+    )
+    recipe = tmp_path / "recipe.yaml"
+    recipe.write_text(
+        "name: preset-consumer\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en]\n"
+        "sections:\n"
+        "  - component: cover-page\n"
+        "    variant: image-background\n"
+        "    inputs:\n"
+        "      eyebrow: Re-use\n"
+        "      title: Consuming a saved preset\n"
+        "      subtitle: Not saveable.\n"
+        "      reference_code: D5-002\n"
+        "      image:\n"
+        "        source: brand-preset\n"
+        "        name: existing\n",
+        encoding="utf-8",
+    )
+    out_pdf = tmp_path / "out.pdf"
+    rc, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        str(recipe), "--lang", "en", "--brand", "sandbox",
+        "--skip-audit-check", "--json", "--out", str(out_pdf),
+    )
+    assert rc == 0
+    assert payload is not None
+    # The resolver substitutes brand-preset with the stored user-file spec for
+    # provider dispatch. `recipe_source` preserves what the recipe actually
+    # wrote, so the receipt correctly suppresses the save offer for a render
+    # that's re-using an already-saved preset.
+    assert payload["cover"]["rendered"] is True
+    assert payload["cover"]["source"] == "user-file"
+    assert payload["cover"]["preset_saveable"] is False
+
+
+def test_json_receipt_error_before_render(tmp_path):
+    """Errors raised before the render (missing recipe) emit JSON with `error`."""
+    rc, payload, _ = _run_build(
+        tmp_path, tmp_path,
+        "/nonexistent/recipe.yaml", "--lang", "en",
+        "--skip-audit-check", "--json",
+    )
+    assert rc == 1
+    assert payload is not None
+    assert "error" in payload
+    assert "pdf" not in payload
