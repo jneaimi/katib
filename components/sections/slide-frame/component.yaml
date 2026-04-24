@@ -1,0 +1,45 @@
+name: slide-frame
+tier: section
+version: 0.1.0
+namespace: katib
+description: Single 16:9 landscape page sized for slide-deck content — keynote, talk slides, pitch frames. Each slide is atomic (one slide = one page). Use multiple slide-frame sections in a row to build a full deck. Variants — title-only, content, two-column, image-background — cover the common slide layouts.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the slide title (e.g. "01 · INTRODUCTION").
+    - title:
+        type: string
+        required: false
+        description: Slide headline. Required for title-only and content variants.
+    - subtitle:
+        type: string
+        required: false
+        description: Secondary line under the title.
+    - raw_body:
+        type: string
+        required: false
+        description: Trusted HTML body — bullet points, figures, quotes. Required for content and two-column variants (acts as the main column for two-column).
+    - raw_body_secondary:
+        type: string
+        required: false
+        description: Secondary column HTML — only used by the two-column variant.
+    - image:
+        type: image
+        required: false
+        sources_accepted: [user-file, url, inline-svg]
+        description: Full-bleed slide background — only used by image-background variant.
+variants:
+  - title-only
+  - content
+  - two-column
+  - image-background
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

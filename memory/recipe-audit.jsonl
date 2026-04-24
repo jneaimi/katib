@@ -36,3 +36,4 @@
 {"recipe": "tutorial-katib-walkthrough", "namespace": "katib", "action": "scaffold", "at": "2026-04-24T03:48:04+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib recipe new"}
 {"recipe": "tutorial-katib-walkthrough", "namespace": "katib", "action": "register", "at": "2026-04-24T03:52:25+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "tutorial-katib-walkthrough", "namespace": "katib", "action": "archive", "at": "2026-04-24T13:00:00+00:00", "note": "Moved to recipes/_wip/ — v1-placeholder content (Soul Hub/vault integration module, stale tool names) not v2-accurate. Excluded from capabilities generation until rewritten."}
+{"recipe": "phase-3a-layout-showcase", "namespace": "katib", "action": "register", "at": "2026-04-24T20:28:34+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}

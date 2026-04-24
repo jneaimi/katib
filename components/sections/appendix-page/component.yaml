@@ -1,0 +1,37 @@
+name: appendix-page
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Appendix content with a distinct running header. Uses a named @page rule that emits "Appendix" (localized) in the top margin, so the reader always knows which section they're in. Flows across multiple pages — appendix material is usually long-form (raw data, supporting references, derivations). Always starts on a new page.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - label:
+        type: string
+        required: false
+        default: Appendix
+        description: Running-header text shown in the top margin of every appendix page (e.g. "Appendix A", "ملحق").
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the appendix title on the opening page.
+    - title:
+        type: string
+        required: true
+        description: Appendix title (e.g. "Raw Interview Transcripts", "Technical Derivations").
+    - intro:
+        type: string
+        required: false
+        description: Short paragraph under the title explaining what's in this appendix.
+    - raw_body:
+        type: string
+        required: true
+        description: Trusted HTML body — tables, code, references, long-form prose. Flows across as many pages as needed.
+page_behavior:
+  mode: flowing
+  break_before: always
+  break_after: auto

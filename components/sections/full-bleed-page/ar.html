@@ -1,0 +1,28 @@
+{%- set v = variant or 'with-overlay' %}
+{%- set pos = input.position or 'center' %}
+{%- set has_overlay = v == 'with-overlay' and (input.eyebrow or input.title or input.subtitle) %}
+{%- set img = input.image %}
+<section class="katib-section katib-full-bleed katib-full-bleed--{{ v }} katib-full-bleed--pos-{{ pos }}" lang="ar" dir="rtl">
+{%- if img and img.resolved_svg %}
+    <div class="katib-full-bleed__image">{{ img.resolved_svg | safe }}</div>
+{%- elif img and img.resolved_path %}
+    <img class="katib-full-bleed__image" src="{{ img.resolved_path }}" alt="{{ input.caption or '' }}">
+{%- endif %}
+{%- if has_overlay %}
+    <div class="katib-full-bleed__scrim"></div>
+    <div class="katib-full-bleed__overlay">
+{%- if input.eyebrow %}
+        <div class="katib-full-bleed__eyebrow" lang="ar">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-full-bleed__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.subtitle %}
+        <p class="katib-full-bleed__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </div>
+{%- endif %}
+{%- if input.caption %}
+    <div class="katib-full-bleed__caption" lang="ar">{{ input.caption }}</div>
+{%- endif %}
+</section>

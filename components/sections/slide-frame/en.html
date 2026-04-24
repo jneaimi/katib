@@ -1,0 +1,30 @@
+{%- set v = variant or 'content' %}
+{%- set is_bg = v == 'image-background' %}
+{%- set img = input.image %}
+<section class="katib-section katib-slide-frame katib-slide-frame--{{ v }}{% if is_bg %} katib-slide-frame--has-image{% endif %}" lang="en">
+{%- if is_bg and img and (img.resolved_path or img.resolved_svg) %}
+{%- if img.resolved_svg %}
+    <div class="katib-slide-frame__bg">{{ img.resolved_svg | safe }}</div>
+{%- else %}
+    <img class="katib-slide-frame__bg" src="{{ img.resolved_path }}" alt="">
+{%- endif %}
+    <div class="katib-slide-frame__scrim"></div>
+{%- endif %}
+{%- if input.eyebrow %}
+    <div class="katib-slide-frame__eyebrow" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-slide-frame__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.subtitle %}
+    <p class="katib-slide-frame__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+{%- if v == 'two-column' %}
+    <div class="katib-slide-frame__two-col">
+        <div class="katib-slide-frame__col katib-slide-frame__col--primary">{{ input.raw_body | safe }}</div>
+        <div class="katib-slide-frame__col katib-slide-frame__col--secondary">{{ input.raw_body_secondary | safe }}</div>
+    </div>
+{%- elif v == 'content' and input.raw_body %}
+    <div class="katib-slide-frame__body">{{ input.raw_body | safe }}</div>
+{%- endif %}
+</section>

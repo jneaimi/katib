@@ -1,0 +1,35 @@
+name: two-column-page
+tier: section
+version: 0.1.0
+namespace: katib
+description: Newspaper/magazine-style two-column text flow. Content flows across the two columns within a page, and across multiple pages if the body is long. Title spans both columns as a header band. Best for editorial essays, long-form articles, or long primary-source excerpts where a single column feels lonely.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Category label above the title (e.g. "ESSAY", "LONG READ").
+    - title:
+        type: string
+        required: false
+        description: Article title. Spans both columns as a header.
+    - byline:
+        type: string
+        required: false
+        description: Author / dateline beneath the title.
+    - lead:
+        type: string
+        required: false
+        description: Deck paragraph rendered in a larger font, above the two-column flow.
+    - raw_body:
+        type: string
+        required: true
+        description: Trusted HTML article body. Flows as two columns. Paragraphs, inline figures, pull-quotes all supported.
+page_behavior:
+  mode: flowing
+  break_before: auto
+  break_after: auto

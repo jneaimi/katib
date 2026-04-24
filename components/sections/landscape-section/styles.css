@@ -1,0 +1,85 @@
+/* Named @page rule — any element with `page: landscape` opts into this.
+   WeasyPrint respects CSS Paged Media level-3 named pages. Every
+   landscape page gets its own A4 landscape sheet with the same margin
+   as the base portrait page, so running content lives in the same
+   spatial band and doesn't need bespoke margin overrides. */
+@page landscape {
+    size: A4 landscape;
+    margin: 20mm;
+}
+
+.katib-landscape-section {
+    /* The key switch — assigns this section to the named landscape page. */
+    page: landscape;
+}
+
+.katib-landscape-section__head {
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 0.5pt solid var(--border);
+}
+
+.katib-landscape-section__title {
+    font-family: var(--font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0.3em 0 0.15em 0;
+    line-height: 1.2;
+}
+
+.katib-landscape-section[lang="ar"] .katib-landscape-section__title {
+    font-size: 20pt;
+    line-height: 1.4;
+}
+
+.katib-landscape-section__intro {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 60em;
+}
+
+.katib-landscape-section__body {
+    /* Give tables, charts, figures the full landscape width. The parent
+       @page controls the page size; body just fills whatever's available. */
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+/* Wide tables are the primary use case — apply the same row-level
+   break-protection conventions as the standalone data-table primitive so
+   long tables flow cleanly across multiple landscape pages. */
+.katib-landscape-section__body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+}
+
+.katib-landscape-section__body tr { page-break-inside: avoid; }
+
+.katib-landscape-section__body th,
+.katib-landscape-section__body td {
+    padding: 4pt 8pt;
+    border-bottom: 0.5pt solid var(--border);
+    text-align: start;
+    vertical-align: top;
+}
+
+.katib-landscape-section__body th {
+    font-weight: 700;
+    color: var(--text);
+    border-bottom-width: 1pt;
+    border-bottom-color: var(--accent);
+}
+
+/* Figures + charts span the usable width automatically. */
+.katib-landscape-section__body img,
+.katib-landscape-section__body svg {
+    max-width: 100%;
+    height: auto;
+}

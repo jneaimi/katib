@@ -1,0 +1,123 @@
+/* Named appendix page. The running header in the top margin is set by
+   a `running(appendix-label)` element — WeasyPrint supports the CSS
+   Generated Content for Paged Media `position: running()` pattern. The
+   `<div class="katib-appendix__running-label">` inside the component
+   gets promoted into the @top-right margin box and repeats on every
+   appendix page. */
+@page appendix {
+    size: A4;
+    margin: 22mm 20mm 20mm 20mm;
+
+    @top-right {
+        content: element(appendix-label);
+        font-family: var(--font-display);
+        font-size: 8.5pt;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+    }
+}
+
+.katib-appendix {
+    page: appendix;
+}
+
+.katib-appendix__running-label {
+    position: running(appendix-label);
+}
+
+.katib-appendix[lang="ar"] .katib-appendix__running-label {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.katib-appendix__head {
+    margin: 0 0 6mm 0;
+    padding-bottom: 3mm;
+    border-bottom: 1pt solid var(--border);
+}
+
+.katib-appendix__eyebrow {
+    margin-bottom: 6pt;
+}
+
+.katib-appendix__title {
+    font-family: var(--font-display);
+    font-size: 22pt;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 4pt 0 4pt 0;
+    letter-spacing: -0.01em;
+}
+
+.katib-appendix[lang="ar"] .katib-appendix__title {
+    font-size: 24pt;
+    line-height: 1.4;
+    letter-spacing: 0;
+}
+
+.katib-appendix__intro {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 50em;
+}
+
+/* Appendix body — long-form prose, tables, code. */
+.katib-appendix__body {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.katib-appendix__body h3 {
+    font-family: var(--font-display);
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 1.2em 0 0.3em 0;
+    break-after: avoid;
+}
+
+.katib-appendix__body table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 0.5em 0;
+}
+
+.katib-appendix__body tr { page-break-inside: avoid; }
+
+.katib-appendix__body th,
+.katib-appendix__body td {
+    padding: 4pt 8pt;
+    border-bottom: 0.5pt solid var(--border);
+    text-align: start;
+    vertical-align: top;
+}
+
+.katib-appendix__body th {
+    font-weight: 700;
+    color: var(--text);
+    border-bottom-width: 1pt;
+    border-bottom-color: var(--accent);
+}
+
+.katib-appendix__body pre,
+.katib-appendix__body code {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 9pt;
+}
+
+.katib-appendix__body pre {
+    background: rgba(0, 0, 0, 0.04);
+    padding: 8pt 10pt;
+    border-radius: 2pt;
+    white-space: pre-wrap;
+    margin: 0.6em 0;
+}
