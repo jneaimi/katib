@@ -90,11 +90,12 @@ def test_env_override_routes_memory_dir(tmp_path, monkeypatch):
     monkeypatch.setattr(recipe_ops, "AUDIT_FILE", custom_memory / "recipe-audit.jsonl")
     monkeypatch.setattr(recipe_ops, "REQUESTS_FILE", custom_memory / "recipe-requests.jsonl")
 
-    # Isolate recipe scaffold target too so we don't touch bundled recipes/
+    # Isolate user-tier scaffold target too so we don't touch the real
+    # ~/.katib/recipes/ (Phase 3: scaffold writes to USER_RECIPES_DIR).
     custom_recipes = tmp_path / "custom-recipes"
     custom_recipes.mkdir()
     monkeypatch.setenv("KATIB_RECIPES_DIR", str(custom_recipes))
-    monkeypatch.setattr(recipe_ops, "RECIPES_DIR", custom_recipes)
+    monkeypatch.setattr(recipe_ops, "USER_RECIPES_DIR", custom_recipes)
 
     name = "phase2-env-override-smoke"
     recipe_ops.scaffold_recipe(
