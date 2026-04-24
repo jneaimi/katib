@@ -1,0 +1,17 @@
+{%- set v = variant or 'stacked' %}
+{%- set dd = input.delta_direction or 'neutral' %}
+<div class="katib-metric-block katib-metric-block--{{ v }}" lang="ar" dir="rtl">
+    <div class="katib-metric-block__label">{{ input.label }}</div>
+    <div class="katib-metric-block__value-row">
+        <span class="katib-metric-block__value">{{ input.value }}</span>
+{%- if input.unit %}
+        <span class="katib-metric-block__unit">{{ input.unit }}</span>
+{%- endif %}
+{%- if input.delta %}
+        <span class="katib-metric-block__delta katib-metric-block__delta--{{ dd }}">{{ input.delta }}</span>
+{%- endif %}
+    </div>
+{%- if input.note %}
+    <div class="katib-metric-block__note">{{ input.note }}</div>
+{%- endif %}
+</div>

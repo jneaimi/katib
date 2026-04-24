@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T20:32:38+00:00'
+generated_at: '2026-04-24T20:48:05+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -809,6 +809,19 @@ components:
     - full-width
     - inset
     description: Image with optional caption below — core visual primitive.
+    used_in_recipes: 0
+  metric-block:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - stacked
+    - inline
+    description: Key-metric display — label + value + optional delta. For dashboards, executive summaries,
+      and report hero rows. Renders inline-block so multiple metrics lay out side-by-side without ceremony.
     used_in_recipes: 0
   pull-quote:
     namespace: katib
