@@ -1,0 +1,9 @@
+# Test inputs for `clause-list` isolated render.
+# Used by `katib component test clause-list`.
+inputs:
+  items:
+    - "Any non-public information exchanged between the Parties shall be treated as confidential."
+    - "Neither Party shall disclose such information to any third party without prior written consent."
+    - "The confidentiality obligations survive termination for a period of two (2) years."
+brand: null
+variant: null

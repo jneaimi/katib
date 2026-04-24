@@ -1,0 +1,11 @@
+<section class="katib-clause-list-wrap" lang="ar" dir="rtl">
+<ol class="katib-clause-list" lang="ar" dir="rtl"{% if input.start %} start="{{ input.start }}" style="counter-reset: clause {{ input.start - 1 }};"{% endif %}>
+{%- for item in input.items %}
+{%- if item is mapping %}
+    <li class="katib-clause-list__item">{{ item.text }}</li>
+{%- else %}
+    <li class="katib-clause-list__item">{{ item }}</li>
+{%- endif %}
+{%- endfor %}
+</ol>
+</section>

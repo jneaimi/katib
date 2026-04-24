@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-23T21:46:18+00:00'
+generated_at: '2026-04-24T03:01:00+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -248,6 +248,56 @@ recipes:
     - module
     - module
     - multi-party-signature-block
+    - module
+  legal-mou:
+    namespace: katib
+    version: 0.1.0
+    description: UAE bilateral MoU — centered masthead + Template Notice + 2-party callouts + 10 numbered
+      clauses with clause-list + 2-party signature grid. First production consumer of clause-list primitive.
+      Closes the Day-0 component queue (legal-disclaimer-strip absorbed into callout neutral; recitals-block
+      replaced by clause-list per v1 evidence).
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 4
+    page_limit: 4
+    when: UAE bilateral non-binding Memorandum of Understanding. Primarily non-binding with specific binding
+      clauses (confidentiality, governing law, costs). First v2 legal-domain recipe. EN-only; AR deferred
+      pending inputs_by_lang schema.
+    keywords:
+    - legal
+    - mou
+    - memorandum
+    - understanding
+    - agreement
+    - uae
+    - non-binding
+    sections_shape:
+    - module
+    - callout
+    - module
+    - callout
+    - callout
+    - module
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - callout
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - module
     - module
   personal-cover-letter:
     namespace: katib
@@ -574,7 +624,21 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 9
+    used_in_recipes: 10
+  clause-list:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Numbered legal-clause list — ordered list (ol) with counter-based decimal numbering in
+      accent color. Used for MoU clauses, NDA provisions, service-agreement sections, and any numbered
+      legal-body structure where clause references must render prominently. Items are plain-text strings
+      (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain
+      body uses numbered-clause lists, not WHEREAS preambles.
+    used_in_recipes: 1
   data-table:
     namespace: katib
     tier: primitive
@@ -795,7 +859,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 13
+    used_in_recipes: 14
   multi-party-signature-block:
     namespace: katib
     tier: section

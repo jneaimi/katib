@@ -5,6 +5,157 @@ All notable changes to Katib are documented here. Format loosely follows
 
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
 
+### Added (Phase 3 Day 17 — `clause-list` primitive + `legal/mou` recipe ship; Day-0 queue closed; legal domain opens)
+
+Twelfth Phase-3 recipe migration + 8th new Phase-3 component. **Closes
+the original Day-0 component queue** with a v1-evidence-driven revision:
+the planned `recitals-block` is retired (v1 legal domain uses numbered
+clauses, not WHEREAS preambles); `clause-list` takes its place. The
+planned `legal-disclaimer-strip` is formally absorbed into `callout
+neutral` (Template Notice block).
+
+- **`components/primitives/clause-list/`** (new) — primitive-tier
+  ordered-list with counter-based decimal numbering in accent color.
+  Inputs: `items: [string]` (array of clause strings; also accepts
+  `{text}` mappings for primitive consistency with data-table) +
+  optional `start` (counter continuation). No variants — shape is
+  stable across all 4 legal-domain v1 templates. Token contract:
+  `text, accent`. RTL handling: lang-scoped physical properties flip
+  the `::before` number from left to right (no `padding-inline-start`
+  reliance — WeasyPrint has gaps in logical-property support within
+  `::before` pseudo-element contexts). Validator wrap pattern
+  (`<section class="katib-clause-list-wrap" lang=...>`) reuses the
+  data-table Day-13 precedent for primitives whose natural root
+  element isn't accepted by the `_ROOT_LANG_RE` regex.
+- **`recipes/legal-mou.yaml`** (new) — 25-section bilateral MoU:
+  1. `module` raw_body — centered masthead (density block #1:
+     kicker + title + subtitle + reference line).
+  2. `callout` **neutral** — Template Notice (5th neutral consumer;
+     **absorbs legal-disclaimer-strip** per Day-15 ADR prediction).
+  3. `module` numbered (§1) — "The Parties" heading + intro.
+  4. `callout` **info** — Party A (3rd info consumer).
+  5. `callout` **info** — Party B (4th info consumer).
+  6-23. Alternating `module numbered` + `clause-list` pairs for
+     §2 Background (prose only), §3 Purpose, §4 Scope, §5
+     Responsibilities (Party A then Party B — Party B continues §5
+     via `module plain` without re-incrementing), §6 Non-Binding
+     (with `callout neutral` emphasis block — 6th neutral consumer),
+     §7 Confidentiality, §8 Term, §9 Governing Law, §10 Costs
+     (prose only).
+  24. `module` raw_body — Execution section header (density block #2).
+  25. `module` raw_body — inline 2-col signatory grid with 4 blank
+     fields per party (density block #3; 3rd consumer of the inline
+     signature-field pattern after proposal Day 14 + quote Day 16
+     — ripe for Phase-4 graduation to `signature-field-block`
+     primitive, 3 dependents meets auto-threshold).
+  Content adapted from `v1-reference/domains/legal/templates/
+  mou.en.html`. Placeholder prose preserved.
+- **HEAVIEST `module numbered` deployment ever** — 10 uses in one
+  recipe (§1-§10). Prior records: white-paper Day 13 (6 consecutive
+  chapters), proposal Day 14 (5 sections). Zero component revisions
+  needed — the variant scales from 5-chapter to 10-section shapes.
+- **clause-list: 7 uses, 20 total items** — `{3, 3, 3, 3, 3, 3, 2}`
+  pattern across §3, §4, §5-A, §5-B, §7, §8, §9.
+- **Rendered output: 4 pages, 0 WeasyPrint warnings.** `target_pages:
+  [2, 4]`, `page_limit: 4`. Within target.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 density-convention inline blocks** (masthead + Execution header +
+  signature grid) — under NOC's ceiling of 4.
+- **3 clause-list component-requests logged** (mou, nda,
+  service-agreement — the 2 Deferred legal recipes provide
+  future-graduation pressure). **3 legal-mou recipe-requests logged.**
+- **Audit + capabilities:** component + recipe register entries +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 17)
+
+- **`tests/test_clause_list.py`** (new, 13 tests): schema-loads,
+  items-required, token-contract, no-variants, renders-EN (3 items),
+  renders-AR (dir=rtl), renders-to-pdf-EN, renders-to-pdf-AR,
+  start-attribute-when-set (regression guard for counter
+  continuation), no-start-when-unset (regression guard — only the
+  inline override style should be absent; the base CSS rule always
+  applies), items-render-as-li-elements, wrap-section-has-lang-attr
+  (data-table precedent), items-accept-mapping-form (primitive
+  consistency with data-table).
+- **`tests/test_legal_mou.py`** (new, 24 tests): schema-loads,
+  en-only, page-targets [2, 4], 25-section count, component-mix
+  (14 module + 7 clause-list + 4 callout), first-clause-list-
+  consumer (regression guard for 7 uses + 20 total items),
+  heaviest-module-numbered-deployment (regression guard for 10
+  consecutive §-numbers 1-10), uses-two-callout-info-blocks
+  (regression guard for Party A/B), uses-two-callout-neutral-blocks
+  (regression guard for Template Notice + Non-Binding emphasis),
+  costs-section-has-no-clause-list (§10 is prose-only per v1 —
+  validates evidence-driven clause-list usage, not mechanical),
+  validates-clean, validates-strict-clean, renders-EN (4 marker
+  classes), pdf-within-target-pages (2-4 accepted), renders-all-v1-
+  content (40+ distinct phrases), seven-clause-list-elements-in-html
+  (regression), twenty-clause-list-items-in-html (regression),
+  ten-numbered-modules-in-html (regression), two-info-callouts-in-html,
+  two-neutral-callouts-in-html, in-capabilities, audit-entry-exists,
+  clause-list-in-capabilities, clause-list-audit-entry-exists.
+- **Regression sweep:** 818/818 passing (was 781, +37: 13 clause-list
+  + 24 mou). Zero WeasyPrint warnings across all 22 render paths.
+
+### Architecture decisions (Phase 3 Day 17)
+
+1. **Day-0 component queue formally closed.** 8 components originally
+   planned (kv-list, letterhead, masthead-personal,
+   multi-party-signature-block, financial-summary, recitals-block,
+   legal-disclaimer-strip, and later-added sections-grid + data-table).
+   Final state: 7 built (kv-list, letterhead, masthead-personal,
+   multi-party-signature-block, sections-grid, data-table,
+   financial-summary, clause-list = 8 counting clause-list) + 1
+   absorbed (legal-disclaimer-strip → callout neutral). recitals-block
+   retired on v1 evidence. Plus 2 auto-graduated Phase-3 bonus
+   components.
+2. **recitals-block retired on v1 evidence.** v1 mou.en.html does NOT
+   use WHEREAS preambles. It uses `<ol class="clauses">` numbered
+   legal-clause lists — 7 instances in MoU alone. The Day-0 plan
+   assumed a shape that wasn't actually in v1. v1-read discipline
+   (codified Day 10) caught this before scaffolding the wrong
+   component. Architecture plans must yield to evidence.
+3. **legal-disclaimer-strip absorbed into callout neutral.**
+   Day-15 ADR predicted this; Day 17 confirms. The Template Notice
+   block uses `callout neutral` with `title: "Template Notice"` —
+   no new component needed. Evolving callout 0.2.0 (neutral addition)
+   proved to be the correct abstraction.
+4. **clause-list chosen as primitive, not section.** Numbered-clause
+   lists are atomic content primitives (like data-table), not
+   page-level structural elements (like module or financial-summary).
+   Tier matches the semantics.
+5. **module numbered scales to 10-section deployment.** Prior records:
+   white-paper Day 13 (6 consecutive chapters), proposal Day 14 (5).
+   MoU Day 17 (10 sections — §1 through §10). The variant's design
+   holds from chapter-prose to heading-only shapes without revision.
+   This is the Phase-2 design investment paying off at scale.
+6. **Signature-field pattern ripe for Phase-4 graduation.** 3 recipes
+   now use the inline blank-field signature grid (proposal Day 14,
+   quote Day 16, mou Day 17). 3 dependents meets the auto-graduation
+   threshold. Semantically distinct from multi-party-signature-block
+   v0.1.0 (which accepts pre-filled `{name, title, email}` data —
+   the "these are the signatories" shape vs. the "fill these in when
+   signing" shape). Phase-4 candidate: `signature-field-block`.
+7. **First legal-domain recipe shipped.** 1 of 4 legal v1 templates
+   migrated (mou). The other 3 (nda, service-agreement,
+   engagement-letter) stay in v1-reference per Phase-3 triage —
+   but clause-list is now ready to serve them when pulled into
+   Phase 4+. 25 internal clause-list instances across the 4 legal
+   templates = strong future graduation pressure.
+8. **7th zero-new-variant day for existing components** — no callout
+   tones, module variants, or sections-grid column counts added.
+   The library is shape-stable at Day 17.
+9. **Pace tracking.** 12 recipes / 17 days = 0.71/day. Holding.
+   2 recipes remaining (CV 2-day sprint + 2 tutorial recipes = 4
+   work-days). Tracking to Day 20-21 close with buffer.
+10. **AR variant deferred (twelfth recipe in a row).** First
+    bilingual remains deferred pending `inputs_by_lang` schema
+    (Open Item #5). Not a discipline break — NOC was designated
+    first bilingual, MoU could follow in Phase 4.
+
+
+
 **Phase 3 kicked off.** Open Item #4 (migration triage) resolved
 2026-04-23 — 14 recipes on the migrate list. Component queue revised
 three times during Phase 3: 5 (Day 0) → 6 (Day 2, discovered
@@ -26,25 +177,35 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **27 components** (financial-summary Day 15, data-table
-Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
-kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
-at 0.2.0). **18 recipes** (12 production: tutorial +
-business-proposal-letter + personal-cover-letter + formal-noc +
-tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
-business-proposal-one-pager + editorial-white-paper +
-business-proposal-proposal + financial-invoice +
-**financial-quote**; 6 dev showcases). 6 core library modules, 5
-CLIs, 4 memory streams, 4 image providers, 0 external skill
-dependencies.
+Engine state: **28 components** (+1 clause-list Day 17;
+financial-summary Day 15, data-table Day 13, sections-grid Day 11,
+multi-party-signature-block Day 7, kv-list at 0.2.0,
+signature-block at 0.2.0, module at 0.3.0, callout at 0.2.0).
+**19 recipes** (13 production: tutorial + business-proposal-letter +
+personal-cover-letter + formal-noc + tutorial-how-to +
+tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
+editorial-white-paper + business-proposal-proposal + financial-invoice +
+financial-quote + **legal-mou**; 6 dev showcases). 6 core library
+modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
+skill dependencies.
 
 **Business-proposal domain complete** (Day 14) — all 3 recipes
 shipped: letter (Day 4), one-pager (Day 12), proposal (Day 14).
 **Financial domain complete** (Day 16) — both recipes shipped:
-invoice (Day 15), quote (Day 16).
+invoice (Day 15), quote (Day 16). **Legal domain 25% complete**
+(Day 17) — mou shipped; nda, service-agreement, engagement-letter
+stay in v1-reference per Phase-3 triage.
 
-**Not shippable as a v1 replacement yet** — v2 has 12 production
-recipes; Phase 3 ports 3 more over the next ~5 days. Keep v1
+**Day-0 component queue closed (Day 17)** — 8 originally-planned
+components accounted for: 7 built (kv-list, letterhead,
+masthead-personal, multi-party-signature-block, sections-grid,
+data-table, financial-summary, clause-list) + 1 absorbed
+(legal-disclaimer-strip → callout neutral). recitals-block retired
+on v1 evidence (legal domain uses numbered clauses, not WHEREAS
+preambles).
+
+**Not shippable as a v1 replacement yet** — v2 has 13 production
+recipes; Phase 3 ports 2 more over the next ~4 days. Keep v1
 installed as the daily global skill until the cutover.
 
 ### Added (Phase 3 Day 16 — `financial/quote` recipe ship; financial domain complete)
