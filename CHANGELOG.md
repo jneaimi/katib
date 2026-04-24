@@ -3,9 +3,241 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
+## [Unreleased] — v2 **Phase 3 COMPLETE** (close 2026-04-24, Day 21)
 
-### Added (Phase 3 Day 20 — `tutorial/onboarding` recipe ship; Day-13 data-table triage prediction fulfilled)
+**Phase 3 closed.** 15 of 15 migrated recipes shipped. 11 new
+components + 4 Phase-2 evolutions. 920 tests passing. Zero WeasyPrint
+warnings across 25 render paths. Tutorial domain complete; business-
+proposal + financial + personal domains complete; legal domain 25%
+(3 recipes Deferred). Ready to tag as `v2.0.0-phase-3` and push to
+origin/main.
+
+### Added (Phase 3 Day 21 — `tutorial/katib-walkthrough` recipe ship; **PHASE 3 CLOSES AT 15/15**)
+
+**FIFTEENTH AND FINAL Phase-3 recipe.** Largest by section count
+(48 sections — beats mou's 25). Zero new components. Closes the
+Phase-3 triage list.
+
+- **`recipes/tutorial-katib-walkthrough.yaml`** (new) — comprehensive
+  self-documenting katib walkthrough:
+  - **Cover + preface**: cover-page minimalist-typographic (5th use) +
+    lead paragraph + `objectives-box` ("What you'll learn") + inline
+    checklist ("Before you begin").
+  - **Module 1 — Install & first render**: 3 `tutorial-step` (3rd
+    consumer) interleaved with inline code blocks for installer/
+    config YAML/CLI sample + `callout tip` (KATIB_OUTPUT_ROOT tip).
+  - **Module 2 — The ten domains**: inline SVG taxonomy diagram +
+    `data-table` (**8TH production consumer** — domains quick-pick
+    with 3 cols × 10 rows) + `callout info` ("How routing works").
+  - **Module 3 — Brand profiles**: `objectives-box` + inline Jasem-
+    brand palette swatches (5 colors) + brand YAML code + CLI usage
+    + inline Do/Don't block.
+  - **Module 4 — Covers/diagrams/screenshots**: `kv-list` (cover
+    styles) + inline SVG screenshot pipeline + `callout info`
+    ("When to use what").
+  - **Module 5 — Reflect**: `objectives-box` + inline SVG reflect
+    data-flow diagram + `kv-list` (3 proposal types) + inline CLI
+    code + `pull-quote` (3RD PRODUCTION CONSUMER — "reflect.py is
+    read-only" marker).
+  - **Module 6 — Vault integration**: `objectives-box` + `kv-list`
+    (project routing) + `kv-list` (mode matrix) + `callout info`
+    ("Why this matters") + `kv-list` (5 admin scripts) + `kv-list`
+    (exit codes) + `pull-quote` (CI strict-mode marker).
+  - **Module 7 — Command cheatsheet**: `sections-grid` dense cols=2
+    with **20 cheat-cards** (6TH sections-grid consumer, LARGEST
+    items count ever) + `kv-list` (env vars) + `kv-list` (file
+    layout).
+  - **Closing**: Summary + What's next ul.
+  Content adapted from `v1-reference/domains/tutorial/templates/
+  katib-walkthrough.en.html`. Placeholder prose preserved (content
+  references v1 CLI — Phase-4 task to rewrite for v2 architecture).
+- **Rendered output: 14 pages, 0 WeasyPrint warnings.** `target_pages:
+  [8, 16]`, `page_limit: 16`. Within target.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **HEAVIEST kv-list deployment** — 8 uses (Modules 4/5/6/7). Prior
+  max: 0 per recipe (kv-list wasn't used in legal/financial). Now
+  the utility kv primitive is thoroughly validated.
+- **3rd production consumer of pull-quote** (Phase-2 tutorial + white-
+  paper Day 13 + walkthrough Day 21). 2 uses in this recipe alone.
+- **5 inline density pattern groups** — SVG diagrams (3), code blocks
+  (5+), palette swatches (1 group of 5), objectives-box (wait, that's
+  a real component), Do/Don't block, checklists. Above NOC's 4 but
+  acceptable given self-documenting nature — codified as the extreme
+  density case.
+- **Audit + capabilities:** recipe register entry +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 21)
+
+- **`tests/test_tutorial_katib_walkthrough.py`** (new, 25 tests):
+  schema-loads, en-only, page-targets [8, 16], large-section-count
+  (regression: >=40), component-mix, **eighth-data-table-consumer**
+  (regression: 3 cols × 10 rows domains table), third-tutorial-step-
+  consumer, **heaviest-kv-list-deployment** (regression: >=8 uses),
+  third-pull-quote-consumer (regression: 2 uses), cover-minimalist-
+  typographic, sections-grid-dense-cheat-cards (regression: 20
+  items), seven-module-headers (regression: Module 1-7 eyebrow
+  pattern), uses-objectives-box, validates-clean, validates-strict-
+  clean, renders-EN (7 marker classes), pdf-within-target-pages,
+  renders-all-v1-content (40+ distinct phrases), has-three-inline-
+  svg-diagrams (regression), has-multiple-code-blocks (regression
+  >=5 <pre>), has-cheat-grid-twenty-cards (regression), has-palette-
+  swatches (regression: 5 hex colors), in-capabilities, audit-
+  entry-exists, **phase-3-close-marker-all-fifteen-recipes-in-
+  capabilities** (gate test: all 15 Phase-3 recipes present).
+- **Regression sweep:** 920/920 passing (was 895, +25). Zero
+  WeasyPrint warnings across all 25 render paths.
+
+### Phase 3 Summary
+
+**Closed 2026-04-24 on Day 21** — matches original ~21-day estimate.
+
+**Recipes migrated: 15/15 (100%)** via 15 ship days across 4 weeks.
+
+Day-by-day:
+
+| Day | Recipe | Component work | Commit |
+|-----|--------|----------------|--------|
+| 4 | business-proposal-letter | — | `8f4...` (first recipe) |
+| 6 | personal-cover-letter | masthead-personal + callout 0.2.0 Day 5 | `1073839` |
+| 8 | formal-noc | multi-party-signature-block + kv-list 0.2.0 Day 7 | `65b10a4` |
+| 9 | tutorial-how-to | — | `ad26298` |
+| 10 | tutorial-handoff (pivot day) | — | `23e55a7` |
+| 11 | tutorial-cheatsheet | **sections-grid** (infra+recipe combo) | `6a92f8b` |
+| 12 | business-proposal-one-pager | — | `e48aaba` |
+| 13 | editorial-white-paper | **data-table** (infra+recipe combo) | `326c4c7` |
+| 14 | business-proposal-proposal | — | `ca2baf1` |
+| 15 | financial-invoice | **financial-summary** (infra+recipe combo) | `70dce46` |
+| 16 | financial-quote | — | `19fdd54` |
+| 17 | legal-mou | **clause-list** (infra+recipe combo) | `342acb3` |
+| 18 | CV infra sprint day 1 | **cv-layout + skill-bar-list + tag-chips** (3 parallel) | `adcbe59` |
+| 19 | personal-cv | — | `ccb8df1` |
+| 20 | tutorial-onboarding | — | `66a1ba7` |
+| 21 | tutorial-katib-walkthrough | — | (this commit) |
+
+**Components delivered:**
+
+Day-0 queue (original 7 slots → 8 after Day-2 queue revision):
+1. ✅ `kv-list` Day 1 (now v0.2.0 after Day-7 boxed variant)
+2. ✅ `letterhead` Day 2
+3. ✅ `masthead-personal` Day 5 (honest-intent graduation)
+4. ✅ `multi-party-signature-block` Day 7
+5. ✅ `financial-summary` Day 15 (honest-intent graduation)
+6. ❌ **`recitals-block` RETIRED Day 17** on v1 evidence (replaced
+   by clause-list — legal domain uses numbered clauses, not WHEREAS
+   preambles)
+7. 🔄 **`legal-disclaimer-strip` ABSORBED Day 17** into callout
+   neutral (Template Notice block)
+8. ✅ `clause-list` Day 17 (replaces recitals-block)
+
+Phase-3 post-queue additions (auto-graduated via request log):
+9. ✅ `sections-grid` Day 11 (first auto-graduation — 3 deps)
+10. ✅ `data-table` Day 13 (second auto-graduation — 4 deps; 7-day
+    horizon prediction fulfilled Day 20)
+11. ✅ `cv-layout` Day 18 (auto-graduated, 3 deps)
+12. ✅ `skill-bar-list` Day 18 (auto-graduated, 3 deps)
+13. ✅ `tag-chips` Day 18 (auto-graduated, 3 deps)
+
+Phase-3 component evolutions (4):
+- `signature-block` 0.1.0 → 0.2.0 (Day 3): organization + location +
+  recipient variant
+- `module` 0.2.0 → 0.3.0 (Day 3): title optional for continuous prose
+- `callout` 0.1.0 → 0.2.0 (Day 5): neutral tone for non-status
+  highlights
+- `kv-list` 0.1.0 → 0.2.0 (Day 7): boxed variant for field-summary
+  blocks
+
+**Total engine state:**
+- **31 components** (11 new Phase-3 + Phase-2 library; 4 at evolved
+  versions)
+- **22 recipes** (16 production; 6 dev showcases — unchanged from
+  Phase-2 close)
+- **920 tests** (+402 from Phase-2's 518 — 77% growth)
+- **0 WeasyPrint warnings** across 25 render paths
+- **49 commits ahead of `origin/main`** — ready to push + tag
+
+**Phase-3 forecasts fulfilled:**
+
+1. **Original 21-day estimate met** (Day 21 close).
+2. **14-15 recipe triage list** (CHANGELOG said 14; enumerated 15).
+   Actual: 15 shipped.
+3. **Day-13 data-table triage prediction** (onboarding = 3-col
+   text-only windows dependent) — fulfilled Day 20 at 7-day horizon.
+4. **24-hour ship discipline** (infra day → recipe day +1) — 4
+   consecutive applications validated the pattern as operational
+   mode.
+5. **Day-10 v1-read discipline** caught recitals-block plan
+   mismatch on Day 17 before scaffolding. Architecture plans
+   yielded to evidence.
+6. **Day-15 ADR prediction** (legal-disclaimer-strip absorbed into
+   callout neutral) — confirmed Day 17.
+7. **Day-17 ADR prediction** (Days 20-21 zero-new-component) —
+   confirmed Day 20 + Day 21.
+
+**Phase-3 patterns codified:**
+
+1. **Request-driven graduation** (≥3 verified dependents = auto-
+   graduate; 2 = honest-intent --force + justification). 5 of 11
+   Phase-3 components auto-graduated; 6 via honest-intent.
+2. **24-hour ship discipline** for infra+recipe combos.
+3. **v1-read before scaffolding** (Day-10 codification).
+4. **Raw-HTML inputs abstraction** — scales from module's 1 density
+   block (Phase 2) → legal-mou 3 (Day 17) → cv-layout hosting
+   entire sidebar + main (Days 18-19).
+5. **Primitive styles auto-load** (Phase-2 feature exercised for
+   the first time Day 19).
+6. **Section-divider via module eyebrow** (codified Day 20).
+7. **Repeated-pattern density convention** — identical-pattern
+   repeated blocks count as 1 semantic density block per group.
+8. **Domain-completion pattern** — all recipes within a domain
+   ship within 2-3 days of each other (business-proposal Day 14,
+   financial Day 16, personal Day 19, tutorial Day 21).
+
+**Phase-4 roster (deferred):**
+
+- **`signature-field-block` primitive** — 3 verified dependents
+  (proposal Day 14, quote Day 16, mou Day 17 inline signature
+  grids). Meets auto-graduation threshold.
+- **`code-block` primitive** — 10+ internal uses in walkthrough
+  alone; tutorials will want it; deferred from Day 21.
+- **`cv-layout` photo input evolution** — v0.2.0 adds `photo` input
+  accepting registered brand image assets (brand_fields
+  integration).
+- **`inputs_by_lang` recipe schema** (Open Item #5) — first
+  bilingual recipe unblocks NOC, MoU AR variants.
+- **Legal domain backfill** — nda, service-agreement, engagement-
+  letter (currently Deferred in v1-reference). 18 clause-list
+  instances ready to graduate clause-list usage.
+- **Content rewrite for katib-walkthrough** — v1 CLI references
+  need v2-accurate content.
+- **Phase-4 cover variants** — business-proposal, formal, editorial
+  styles beyond minimalist-typographic.
+
+### Architecture decisions (Phase 3 Day 21)
+
+1. **Zero-new-component forecast held at Day 21** — 2nd consecutive
+   zero-new-component day closes Phase 3 on original estimate.
+2. **kv-list heaviest deployment ever** — 8 uses in one recipe.
+   Validates kv-list as the workhorse primitive for reference-style
+   documentation.
+3. **pull-quote 3rd consumer after 13 days of silence** — Phase-2
+   tutorial + white-paper Day 13 + walkthrough Day 21. Same pattern
+   as tutorial-step's 2nd-consumer-after-11-days (Day 20) and
+   letterhead commercial's 13-day-wait-before-invoice (Day 15).
+   Patient primitives earn their keep.
+4. **Phase-3 close gate test** — `test_phase_3_close_marker_all_
+   fifteen_recipes_in_capabilities` asserts all 15 recipes present.
+   Institutional memory captured in test form.
+5. **Content-v1-accuracy vs structure-fidelity trade-off
+   documented.** Walkthrough content references v1 CLI
+   (build.py, scripts/, etc.) — placeholder-preservation
+   convention applied consistently across Phase 3. Phase-4 rewrite
+   to make content v2-accurate flagged.
+6. **AR variant deferred fifteenth recipe in a row.** 15/15
+   consistency. First bilingual pending `inputs_by_lang` schema
+   (Open Item #5).
+
+
 
 Fourteenth Phase-3 recipe migration. **Zero-new-component day** — composes the existing library into the densest tutorial recipe shipped. **The Day-13 data-table triage prediction materializes**: data-table was built Day 13 with onboarding listed as a verified dependent ("3-col text-only windows" — 30/60/90-day milestone table). 7-day build-to-consumer gap. Validates the Phase-3 "triage-driven graduation" pattern operating over week-long horizons.
 
@@ -573,12 +805,13 @@ Engine state: **31 components** (cv-layout + skill-bar-list + tag-chips
 Day 18; clause-list Day 17; financial-summary Day 15, data-table
 Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
 kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
-at 0.2.0). **21 recipes** (+1 tutorial-onboarding Day 20; 15 production:
+at 0.2.0). **22 recipes** (+1 tutorial-katib-walkthrough Day 21; 16 production:
 tutorial + business-proposal-letter + personal-cover-letter +
 formal-noc + tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
 business-proposal-one-pager + editorial-white-paper +
 business-proposal-proposal + financial-invoice + financial-quote +
-legal-mou + personal-cv + **tutorial-onboarding**; 6 dev showcases). 6 core library
+legal-mou + personal-cv + tutorial-onboarding +
+**tutorial-katib-walkthrough**; 6 dev showcases). 6 core library
 modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
 skill dependencies.
 
