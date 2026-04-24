@@ -33,6 +33,7 @@ from core.tokens import (
     merge_tokens,
     render_context,
     tokens_css,
+    user_components_dir,
     user_recipes_dir,
 )
 
@@ -88,16 +89,23 @@ def load_recipe(name_or_path: str) -> dict:
 
 
 def _resolve_component_dir(name: str) -> Path:
-    for tier_dirname in TIER_DIRS.values():
-        candidate = COMPONENTS_DIR / tier_dirname / name
-        if (candidate / "component.yaml").exists():
-            return candidate
+    """Resolve a component by name across user + bundled tiers. User tier is
+    searched first so user components shadow bundled ones (same precedent
+    as recipe resolution)."""
+    user_root = user_components_dir()
+    for base in (user_root, COMPONENTS_DIR):
+        for tier_dirname in TIER_DIRS.values():
+            candidate = base / tier_dirname / name
+            if (candidate / "component.yaml").exists():
+                return candidate
+    tried = [
+        f"{base / t / name}/component.yaml"
+        for base in (user_root, COMPONENTS_DIR)
+        for t in TIER_DIRS.values()
+    ]
     raise FileNotFoundError(
-        f"component {name!r} not found under {COMPONENTS_DIR}. "
-        f"Expected one of: "
-        + ", ".join(
-            f"{COMPONENTS_DIR / t / name}/component.yaml" for t in TIER_DIRS.values()
-        )
+        f"component {name!r} not found. Tried:\n  "
+        + "\n  ".join(tried)
     )
 
 
@@ -132,8 +140,17 @@ def _check_component_supports_lang(comp: dict, lang: str) -> None:
 
 
 def _jinja_env() -> Environment:
+    # Two-root loader: user tier first (so user templates shadow bundled),
+    # bundled tier second. The user root is only added to the loader list
+    # when it exists — an empty/missing user dir should not influence
+    # Jinja's template resolution behaviour.
+    user_root = user_components_dir()
+    loader_paths: list[str] = []
+    if user_root.exists():
+        loader_paths.append(str(user_root))
+    loader_paths.append(str(COMPONENTS_DIR))
     env = Environment(
-        loader=FileSystemLoader(str(COMPONENTS_DIR)),
+        loader=FileSystemLoader(loader_paths),
         undefined=Undefined,
         autoescape=select_autoescape(enabled_extensions=("html", "htm"), default=True),
         keep_trailing_newline=True,
@@ -161,15 +178,28 @@ def _jinja_env() -> Environment:
 
 
 def _load_primitive_styles() -> list[str]:
-    primitives_dir = COMPONENTS_DIR / "primitives"
-    if not primitives_dir.exists():
-        return []
+    """Collect primitive CSS from both tiers. When a user primitive shadows
+    a bundled one (same name), only the user CSS is emitted — loading both
+    would risk selectors fighting each other unpredictably. Deterministic
+    name-sorted output."""
+    # Collect dir-per-name across both tiers. User wins on collision.
+    primitives: dict[str, Path] = {}
+    bundled_dir = COMPONENTS_DIR / "primitives"
+    user_dir = user_components_dir() / "primitives"
+    if bundled_dir.exists():
+        for pdir in bundled_dir.iterdir():
+            if (pdir / "component.yaml").exists():
+                primitives[pdir.name] = pdir
+    if user_dir.exists():
+        for pdir in user_dir.iterdir():
+            if (pdir / "component.yaml").exists():
+                primitives[pdir.name] = pdir  # user shadows bundled
     out: list[str] = []
-    for pdir in sorted(primitives_dir.iterdir()):
-        styles_file = pdir / "styles.css"
+    for name in sorted(primitives):
+        styles_file = primitives[name] / "styles.css"
         if styles_file.exists():
             out.append(
-                f"/* primitive: {pdir.name} */\n"
+                f"/* primitive: {name} */\n"
                 f"{styles_file.read_text(encoding='utf-8')}"
             )
     return out

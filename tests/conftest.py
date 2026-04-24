@@ -46,12 +46,13 @@ def isolated_user_dirs(tmp_path, monkeypatch):
     monkeypatch.setenv("KATIB_BRANDS_DIR", str(brands))
 
     from core import component_ops, recipe_ops
-    # RECIPES_DIR stays bundled (the real repo/recipes dir); USER_RECIPES_DIR
-    # is the tier that redirects to tmp_path.
+    # RECIPES_DIR / COMPONENTS_DIR stay bundled (the real repo paths);
+    # USER_RECIPES_DIR / USER_COMPONENTS_DIR are the tiers that redirect.
     monkeypatch.setattr(recipe_ops, "USER_RECIPES_DIR", recipes)
     monkeypatch.setattr(recipe_ops, "MEMORY_DIR", memory)
     monkeypatch.setattr(recipe_ops, "AUDIT_FILE", memory / "recipe-audit.jsonl")
     monkeypatch.setattr(recipe_ops, "REQUESTS_FILE", memory / "recipe-requests.jsonl")
+    monkeypatch.setattr(component_ops, "USER_COMPONENTS_DIR", components)
     monkeypatch.setattr(component_ops, "MEMORY_DIR", memory)
     monkeypatch.setattr(component_ops, "AUDIT_FILE", memory / "component-audit.jsonl")
     monkeypatch.setattr(component_ops, "REQUESTS_FILE", memory / "component-requests.jsonl")

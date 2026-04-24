@@ -7,7 +7,6 @@
 #   ~/.katib/components/          — components you authored (primitives, sections, covers)
 #   ~/.katib/memory/              — audit + graduation-gate logs for your content
 #   ~/.config/katib/              — your user config
-#   ~/.local/share/katib/memory/  — feedback + run logs
 #
 # Pass --purge to wipe those too.
 
@@ -45,7 +44,6 @@ else
   echo "  ~/.katib/components/          (your components)"
   echo "  ~/.katib/memory/              (user-tier audit logs)"
   echo "  ~/.config/katib/              (config.yaml)"
-  echo "  ~/.local/share/katib/memory/  (feedback logs)"
   echo ""
   echo "Re-run with --purge to wipe these too."
 fi

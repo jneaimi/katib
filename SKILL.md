@@ -279,6 +279,8 @@ newer than the cached index.
 | `gemini: GEMINI_API_KEY not set` | Recipe references `source: gemini` but env var missing | Set the key, OR switch the recipe's image to `source: user-file`/`inline-svg`, OR narrow the component's `sources_accepted` to exclude gemini |
 | `recipe '<name>' not found. Tried: ...` | Recipe isn't present in either tier | The error names both paths checked — bundled `<skill>/recipes/<name>.yaml` and user `~/.katib/recipes/<name>.yaml`. Scaffold one with `uv run scripts/recipe.py new <name> --namespace user`. |
 | `recipe '<name>' already exists in the bundled tier ... cannot shadow bundled recipes without --force` | User tried to scaffold a name that ships with the skill | Pick a different name, OR pass `--force --justification '<why>'` if the intent is to customize a bundled template (audited). |
+| `component '<name>' not found. Tried: ...` | Component referenced by a recipe isn't in either tier | The error lists every tier × dir checked. Scaffold with `uv run scripts/component.py new <name> --tier section --namespace user`, or fix the typo in the recipe's `sections[].component`. |
+| `component '<name>' already exists in the bundled tier ... User components cannot shadow bundled components without --force` | User tried to scaffold a name that ships with the skill | Pick a different name, OR pass `--force --justification '<why>'` to intentionally override a bundled component (audited). |
 
 ## Where user content lives
 
@@ -290,15 +292,17 @@ clobbers your work:
 | Bundled recipes | `~/.claude/skills/katib/recipes/` | Ships with the skill |
 | Bundled components | `~/.claude/skills/katib/components/` | Ships with the skill |
 | User recipes | `~/.katib/recipes/` | Created by `katib recipe new` |
+| User components | `~/.katib/components/` | Created by `katib component new --namespace user` |
 | User brands | `~/.katib/brands/` | Your brand profiles + cover presets |
 | Audit + gate logs | `~/.katib/memory/` | Graduation and governance state |
 
 Env var overrides (for testing / isolation): `KATIB_RECIPES_DIR`,
 `KATIB_COMPONENTS_DIR`, `KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR`.
 
-When resolving a recipe name, the engine checks the user tier first, then
-bundled. Scaffolding always writes to the user tier. User components are
-not yet supported — only user recipes (that reference bundled components).
+When resolving a recipe or component name, the engine checks the user tier
+first, then bundled — so a user override with the same name silently wins.
+Scaffolding always writes to the user tier (for `--namespace user`) and
+refuses to shadow a bundled name without `--force --justification '<why>'`.
 
 ## What this skill does NOT do
 

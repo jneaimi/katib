@@ -129,8 +129,7 @@ mkdir -p "$HOME/.katib/brands" \
          "$HOME/.katib/components/sections" \
          "$HOME/.katib/components/covers" \
          "$HOME/.katib/memory" \
-         "$HOME/.config/katib" \
-         "$HOME/.local/share/katib/memory"
+         "$HOME/.config/katib"
 
 # Seed brands/example.yaml if missing
 if [ ! -f "$HOME/.katib/brands/example.yaml" ]; then
@@ -161,7 +160,7 @@ output:
   always_create_manifest: true
 
 memory:
-  location: ~/.local/share/katib/memory
+  location: ~/.katib/memory
   per_domain_rollup: true
 
 identity:
@@ -235,7 +234,7 @@ say "  Config:     $CONFIG_FILE"
 say "  Brands:     $HOME/.katib/brands/"
 say "  Recipes:    $HOME/.katib/recipes/          ${DIM}(your custom recipes live here — survive reinstall)${RESET}"
 say "  Components: $HOME/.katib/components/       ${DIM}(your custom components — survive reinstall)${RESET}"
-say "  Memory:     $HOME/.local/share/katib/memory/"
+say "  Memory:     $HOME/.katib/memory/"
 say ""
 say "Next: restart Claude Code, then invoke ${BOLD}/katib${RESET} in any conversation."
 say ""
