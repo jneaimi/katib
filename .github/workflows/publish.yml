@@ -1,0 +1,125 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "v*"
+
+# Don't cancel an in-flight publish if another tag lands quickly.
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  # Required for `npm publish --provenance` to mint an OIDC token that
+  # cryptographically links the tarball to this repo + commit.
+  id-token: write
+
+jobs:
+  # Re-run the test suite against the exact commit the tag points to.
+  # Main-branch CI has probably already run, but the tag may point at an
+  # older commit, or main may have drifted. Publishing with no test
+  # guarantee is how bad versions end up on npm.
+  test:
+    name: test (python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install WeasyPrint system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libpango-1.0-0 \
+            libpangoft2-1.0-0 \
+            libcairo2 \
+            libgdk-pixbuf-2.0-0 \
+            libffi-dev
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --all-extras
+
+      - name: Run tests
+        env:
+          GEMINI_API_KEY: ""
+        run: uv run pytest -q
+
+  publish:
+    name: publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Verify tag matches package.json version
+        # The tag is source-of-truth for "what version is being published,"
+        # package.json is source-of-truth for what npm actually publishes.
+        # If they disagree, the push was a mistake — stop.
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(jq -r .version package.json)"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} resolves to ${TAG_VERSION} but package.json says ${PKG_VERSION}."
+            echo "Fix the drift (bump package.json or retag) and re-push."
+            exit 1
+          fi
+          echo "Tag and package.json agree on version ${PKG_VERSION}"
+
+      - name: Compute dist-tag from version
+        # 1.0.0        → latest
+        # 1.0.0-alpha.2 → alpha
+        # 1.0.0-beta.3  → beta
+        # 1.0.0-rc.1    → rc
+        id: dist_tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$VERSION" == *-* ]]; then
+            PRERELEASE="${VERSION#*-}"
+            TAG="${PRERELEASE%%.*}"
+          else
+            TAG="latest"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Publishing ${VERSION} under dist-tag: ${TAG}"
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm publish \
+            --tag "${{ steps.dist_tag.outputs.tag }}" \
+            --provenance \
+            --access public
+
+      - name: Verify published dist-tags
+        run: npm view @jasemal/katib dist-tags
+
+      - name: Summary
+        run: |
+          {
+            echo "### Published to npm"
+            echo ""
+            echo "- **Package:** \`@jasemal/katib\`"
+            echo "- **Version:** \`${GITHUB_REF_NAME#v}\`"
+            echo "- **Dist-tag:** \`${{ steps.dist_tag.outputs.tag }}\`"
+            echo "- **Install:** \`npx @jasemal/katib@${{ steps.dist_tag.outputs.tag }} install\`"
+          } >> "$GITHUB_STEP_SUMMARY"
