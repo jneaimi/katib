@@ -82,9 +82,14 @@
 /* ---- Image-backed variants (image-background, neural-cartography) ---- */
 
 .katib-cover--has-image {
+    /* Full-bleed: pull out of the @page 20mm margin so the image reaches the
+       physical page edges, and compensate with equivalent internal padding
+       so the title/subtitle keep their original inset from the page edge. */
     position: relative;
     overflow: hidden;
-    padding: 18mm 16mm;
+    margin: -20mm;
+    padding: 38mm 36mm;
+    min-height: 297mm;
     box-sizing: border-box;
 }
 
