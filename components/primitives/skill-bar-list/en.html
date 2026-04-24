@@ -1,0 +1,10 @@
+<section class="katib-skill-bar-list-wrap" lang="en">
+<ul class="katib-skill-bar-list" lang="en">
+{%- for item in input.items %}
+    <li class="katib-skill-bar-list__item">
+        <span class="katib-skill-bar-list__name">{{ item.name }}</span>
+        <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l{{ item.level }}"></span>
+    </li>
+{%- endfor %}
+</ul>
+</section>
