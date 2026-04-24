@@ -3,6 +3,139 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.0-alpha.2] — Phase 3: layout, builder, content, recipes, docs (2026-04-25)
+
+Phase 3 closes the gap from "engine + first recipes" to "complete
+component library + AI-extensible + real starter coverage". Eleven new
+components, six new bilingual starter recipes, the AI-assisted
+component-builder playbook, and a fresh-installer that seeds 21
+starters into `~/.katib/recipes/` on first run.
+
+### Added — Phase 3a: layout primitives (commit `cb960bf`)
+
+Six section-tier components that control page geometry and flow.
+All use the existing schema unchanged — layout work happens in named
+`@page` CSS rules + `page:` property.
+
+- **`landscape-section`** — wraps content in an A4 landscape page via
+  named `@page landscape { size: A4 landscape; }`. For wide tables,
+  horizontal timelines, wide charts. Atomic page-behavior with
+  `break_before: always` and `break_after: always`.
+- **`slide-frame`** — 16:9-style landscape slides for deck-style
+  content. Four variants: `title-only`, `content`, `two-column`,
+  `image-background`. Chain multiple in one recipe for a full deck.
+- **`full-bleed-page`** — zero-margin A4 page for edge-to-edge images
+  and chapter openers. 5 overlay positions (`top-left`, `top-right`,
+  `center`, `bottom-left`, `bottom-right`) + optional caption strip.
+- **`two-column-page`** — newspaper/magazine flow via CSS
+  `column-count: 2`. Title + byline + lead span both columns; body
+  flows across columns and pages. Includes `span-cols` escape hatch
+  for pull-quotes and wide figures.
+- **`section-divider-page`** — "Part II" style atomic page between
+  major sections. `numeric` variant (big part number + rule + title)
+  or `minimal` variant (oversized title only).
+- **`appendix-page`** — appendix content with a distinct running header
+  in the `@top-right` margin via WeasyPrint's
+  `position: running()` + `element()` pattern. Flows across pages.
+
+Phase-3a showcase recipe (`phase-3a-layout-showcase`) composes all
+six in one 9-page document as the integration acceptance test.
+
+### Added — Phase 3b: AI-assisted component builder (commit `5bd9545`)
+
+- **`COMPONENT-BUILDER.md`** — 7-step playbook Claude follows when the
+  user invokes `/katib component new`. Interview → scaffold → generate
+  → validate → preview → iterate → register. No new executables — the
+  intelligence lives in the guide, the existing CLI does the
+  deterministic work.
+- **SKILL.md entry point** — new `component new` invocation in the top-
+  level table + dedicated "Component creation mode" section.
+- **Exemplar picker** — the builder suggests 3 structurally-similar
+  existing components to anchor generation on.
+- **Pitfall cheat sheet** — codifies bugs hit during Phase 3a
+  (`inset` unsupported, `description`-input name clash, hardcoded
+  colors) so future runs avoid them.
+- **6 integrity tests** — the guide stays honest: CLI subcommand refs
+  must resolve, exemplar components must exist, known pitfalls must
+  remain documented.
+
+### Added — Phase 3c: content primitives (commits `5bd9545`, `362a8f2`)
+
+Six content components for report-style documents, all built via the
+Phase 3b playbook.
+
+- **`metric-block`** (primitive) — label + value + optional unit +
+  delta badge (up/down/neutral tints) + optional note. Inline-block
+  layout so multiple metrics lay side-by-side.
+- **`executive-summary`** (section) — key-takeaways box with eyebrow,
+  title, intro, labeled items, footer. Left-accent rail (right for
+  RTL). `default` and `bordered` variants.
+- **`timeline`** (section) — vertical event list with connecting rail
+  and status-tinted nodes (`done` / `active` / `upcoming`). Rail
+  flips to right-edge for RTL. `default` and `compact` variants.
+- **`citation`** (primitive) — inline superscript `[N]` marker
+  pairing with `references-list`.
+- **`references-list`** (section) — numbered bibliography with
+  `authors`/`year`/`title`/`source`/`url` fields. `default` and
+  `compact` variants.
+- **`toc`** (section) — table of contents with dotted leader + 3-level
+  nesting + string/int page numbers. `default` and `bordered` variants.
+
+Phase-3c showcase recipe (`phase-3c-content-showcase`) exercises all
+six in a report-style composition.
+
+### Added — Phase 3d: recipe migration (commit `0592b76`)
+
+Six v1 doc-types ported as bilingual v2 starters:
+
+- **`legal-nda`** — UAE mutual NDA with 9 numbered clauses + 2-party
+  signature grid. Parallels legal-mou.
+- **`legal-service-agreement`** — richer UAE service agreement with
+  12 clauses covering scope, fees, IP, liability, indemnity,
+  governing law.
+- **`personal-bio`** — 1-2 page professional bio (masthead-personal +
+  narrative + current-work + recognition + contact footer).
+- **`formal-authority-letter`** — UAE authorization letter with
+  letterhead formal + doc marker + authorizer/agent details (kv-list
+  boxed) + scope of authority (clause-list) + validity + single-
+  party signature.
+- **`report-progress`** — project progress report showcasing the full
+  Phase-3c content library (executive-summary + 4 metric-blocks +
+  timeline + kv-list + clause-list).
+- **`editorial-article`** — long-form article demonstrating the
+  citation + references-list pairing via two-column-page body.
+
+### Added — Phase 3e: docs + tutorial (this release)
+
+- **`TUTORIAL.md`** — 20-minute walkthrough of building a custom
+  `testimonial` component with the AI-assisted builder.
+- **README.md expansion** — current component count (28), starter
+  count (21), library-by-domain table, layout-primitives table,
+  updated phase status.
+- **Development-phases table** — refreshed to reflect actual ship
+  status (3a-3e shipped; 4 next).
+
+### Changed
+
+- `seed-manifest.yaml` grows from 15 → 21 starters (adds the 6
+  Phase-3d recipes). Fresh installs now seed `~/.katib/recipes/`
+  with a full cross-domain library.
+- README starter-count references updated throughout.
+- Phase-3b `test_seed_refresh_populates_empty_user_tier` refactored
+  to derive the expected count from the manifest dynamically —
+  adding a starter no longer requires touching the test.
+- `package.json` version bumped to `1.0.0-alpha.2`.
+
+### Counts at end of Phase 3
+
+| | |
+|---|---|
+| Components | 45 (16 primitives, 28 sections, 1 cover) |
+| Recipes shipped | 22 (21 starters + tutorial internals) |
+| Test suite | 1047+ passing on Python 3.11 + 3.12 |
+| Domain coverage | 8 of 10 v1 domains — business, editorial, financial, formal, legal, personal, report, tutorial |
+| Deliberately out of scope for 1.0.0 | academic + marketing (user/community territory via AI builder) |
+
 ## [Unreleased] — Phase-5: user content layout (2026-04-24)
 
 Separates **user content** from **bundled content** so `npx install`
