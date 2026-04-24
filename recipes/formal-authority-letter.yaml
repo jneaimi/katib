@@ -1,0 +1,171 @@
+name: formal-authority-letter
+version: 0.1.0
+namespace: katib
+description: UAE authorization letter — formal letterhead + doc-marker + authorizer/agent details + scope of authority clause-list + validity + authorizer signature. For letting a representative act on your behalf (collect documents, open accounts, sign specific papers). Bilingual EN+AR.
+languages:
+- en
+- ar
+target_pages:
+- 1
+- 2
+page_limit: 2
+when: UAE authorization letter — when a principal (individual or company) needs to empower an agent to act on their behalf for a specific, time-limited purpose. Government dealings, bank errands, document collection, courier authorizations.
+keywords:
+- formal
+- authorization
+- authority-letter
+- power-of-attorney
+- agent
+- uae
+- bilingual
+
+sections:
+  # 1. Letterhead
+  - component: letterhead
+    variant: formal
+    inputs_by_lang:
+      en:
+        company: "[Your Name or Company]"
+        reference_code: "AUTH/2026/001"
+        date: "25 April 2026"
+      ar:
+        company: "[اسمك أو اسم شركتك]"
+        reference_code: "AUTH/2026/001"
+        date: "25 أبريل 2026"
+
+  # 2. Doc marker
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; font-size: 11pt; font-weight: 700; letter-spacing: 0.14em; color: var(--accent); margin: 12pt 0 10pt 0; padding: 6pt 0; border-top: 0.5pt solid var(--border); border-bottom: 0.5pt solid var(--border);">LETTER OF AUTHORIZATION</div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; font-size: 13pt; font-weight: 700; color: var(--accent); margin: 12pt 0 10pt 0; padding: 6pt 0; border-top: 0.5pt solid var(--border); border-bottom: 0.5pt solid var(--border);">خطاب تفويض</div>
+
+  # 3. Opener
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; font-size: 13pt; font-weight: 700; letter-spacing: 0.1em; margin: 10pt 0 14pt 0; color: var(--text);">TO WHOM IT MAY CONCERN</div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; font-size: 14pt; font-weight: 700; margin: 10pt 0 14pt 0; color: var(--text);">إلى من يهمه الأمر</div>
+
+  # 4. Opening statement
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <p style="text-align: justify;">I, the undersigned, hereby authorize the person named below to act on my behalf for the specific purpose and scope described in this letter.</p>
+      ar:
+        raw_body: |
+          <p style="text-align: justify;">أقر أنا الموقع أدناه بتفويض الشخص المذكور أدناه بالنيابة عني للغرض والنطاق المحددين في هذا الخطاب.</p>
+
+  # 5. Authorizer details
+  - component: kv-list
+    variant: boxed
+    inputs_by_lang:
+      en:
+        items:
+          - {term: "Authorizer (Principal)", value: "[Full name / Company name]"}
+          - {term: "Emirates ID / Licence", value: "[784-YYYY-NNNNNNN-N or Licence No.]"}
+          - {term: "Nationality / Jurisdiction", value: "[Nationality or Emirate]"}
+          - {term: "Address", value: "[Address, City, Emirate]"}
+          - {term: "Contact", value: "[Phone] · [email@example.com]"}
+      ar:
+        items:
+          - {term: "المُفوِّض (الأصيل)", value: "[الاسم الكامل / اسم الشركة]"}
+          - {term: "الهوية الإماراتية / الرخصة", value: "[784-YYYY-NNNNNNN-N أو رقم الرخصة]"}
+          - {term: "الجنسية / الجهة", value: "[الجنسية أو الإمارة]"}
+          - {term: "العنوان", value: "[العنوان، المدينة، الإمارة]"}
+          - {term: "التواصل", value: "[الهاتف] · [email@example.com]"}
+
+  # 6. Authorized agent details
+  - component: kv-list
+    variant: boxed
+    inputs_by_lang:
+      en:
+        items:
+          - {term: "Authorized Agent", value: "[Full name as per passport / Emirates ID]"}
+          - {term: "Relationship", value: "[Relationship to authorizer — e.g., employee, spouse, attorney]"}
+          - {term: "Emirates ID", value: "[784-YYYY-NNNNNNN-N]"}
+          - {term: "Passport No.", value: "[Passport number — if non-resident]"}
+          - {term: "Contact", value: "[Phone] · [email@example.com]"}
+      ar:
+        items:
+          - {term: "الوكيل المُفوَّض", value: "[الاسم الكامل كما في جواز السفر / الهوية الإماراتية]"}
+          - {term: "صلة القرابة أو العلاقة", value: "[العلاقة بالمُفوِّض — مثال: موظف، زوج/زوجة، محامٍ]"}
+          - {term: "الهوية الإماراتية", value: "[784-YYYY-NNNNNNN-N]"}
+          - {term: "رقم الجواز", value: "[رقم الجواز — للمقيمين في الخارج]"}
+          - {term: "التواصل", value: "[الهاتف] · [email@example.com]"}
+
+  # 7. Scope of authority
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Scope of authority"
+        body: "The authorized agent is empowered to perform the following acts on my behalf, and no others:"
+      ar:
+        title: "نطاق التفويض"
+        body: "يُفوَّض الوكيل المذكور أعلاه بأداء الأعمال التالية بالنيابة عني، دون سواها:"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "[Specific act 1 — e.g., collect documents from Department of X]"
+          - "[Specific act 2 — e.g., sign receipt for courier package]"
+          - "[Specific act 3 — e.g., submit application Form Y to Authority Z]"
+          - "Any ancillary acts strictly necessary to complete the above — but nothing beyond the specified scope"
+      ar:
+        items:
+          - "[الفعل المحدد 1 — مثال: استلام المستندات من دائرة X]"
+          - "[الفعل المحدد 2 — مثال: التوقيع على استلام طرد بريدي]"
+          - "[الفعل المحدد 3 — مثال: تقديم الطلب Y إلى جهة Z]"
+          - "أي أفعال تبعية لازمة لإتمام ما ورد أعلاه، دون تجاوز النطاق المحدد"
+
+  # 8. Validity period
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; margin: 14pt 0; padding: 8pt 14pt; border: 0.5pt dashed var(--border-strong); font-size: 10pt; color: var(--text-secondary);">This authorization is valid from <strong style="color: var(--text);">[YYYY-MM-DD]</strong> to <strong style="color: var(--text);">[YYYY-MM-DD]</strong>, or until revoked in writing, whichever is sooner.</div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; margin: 14pt 0; padding: 8pt 14pt; border: 0.5pt dashed var(--border-strong); font-size: 11pt; color: var(--text-secondary);">هذا التفويض ساري من <strong style="color: var(--text);">[YYYY-MM-DD]</strong> إلى <strong style="color: var(--text);">[YYYY-MM-DD]</strong>، أو حتى إلغائه خطياً، أيهما أسبق.</div>
+
+  # 9. Closing statement
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <p style="margin: 14pt 0;">The authorized agent shall present a copy of this letter along with original identification when acting on my behalf. I remain responsible for the acts performed by the agent within the scope of this authorization. This letter may be revoked at any time by written notice.</p>
+      ar:
+        raw_body: |
+          <p style="margin: 14pt 0;">على الوكيل المُفوَّض إبراز نسخة من هذا الخطاب مع الهوية الأصلية عند التصرف بالنيابة عني. أبقى مسؤولاً عن الأفعال التي يقوم بها الوكيل في حدود هذا التفويض. يجوز إلغاء هذا الخطاب في أي وقت بإشعار خطي.</p>
+
+  # 10. Signature — authorizer only
+  - component: multi-party-signature-block
+    inputs_by_lang:
+      en:
+        parties:
+          - name: "[Authorizer full name]"
+            title: "Authorizer / Principal"
+            email: "[email@example.com]"
+      ar:
+        parties:
+          - name: "[الاسم الكامل للمُفوِّض]"
+            title: "المُفوِّض / الأصيل"
+            email: "[email@example.com]"
+
+  # 11. Footer
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <p style="margin-top: 16pt; padding-top: 8pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary); text-align: center;">This authorization is issued by the signatory above. Unauthorized use, extension of scope, or reproduction is prohibited. Revocation takes effect on written notice to the agent.</p>
+      ar:
+        raw_body: |
+          <p style="margin-top: 16pt; padding-top: 8pt; border-top: 0.5pt solid var(--border); font-size: 9pt; color: var(--text-tertiary); text-align: center;">صدر هذا التفويض من الموقع أعلاه. يُحظر الاستخدام غير المصرح به، أو توسيع النطاق، أو إعادة الإنتاج. يصبح الإلغاء نافذاً بإشعار خطي للوكيل.</p>

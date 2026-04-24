@@ -1,0 +1,248 @@
+name: legal-nda
+version: 0.1.0
+namespace: katib
+description: UAE mutual Non-Disclosure Agreement — centered masthead + Template Notice + 2-party callouts + 9 numbered clauses with clause-list + 2-party signature grid. Bilingual EN+AR. Follows the same component shape as legal-mou — structural consistency across the legal domain is intentional.
+languages:
+- en
+- ar
+target_pages:
+- 2
+- 4
+page_limit: 4
+when: UAE mutual Non-Disclosure Agreement. Standard confidentiality obligations for discussions between two parties. Starter template — replace party info, definitions, and term before executing.
+keywords:
+- legal
+- nda
+- confidentiality
+- non-disclosure
+- agreement
+- uae
+- bilingual
+
+sections:
+  # 1. Masthead
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Non-Disclosure Agreement</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">NDA · [Short Purpose Title]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Mutual confidentiality agreement between two parties]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">Reference: NDA-2026-0001 · Dated 2026-04-25</div>
+          </div>
+      ar:
+        raw_body: |
+          <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+            <div style="font-size: 10pt; color: var(--accent); font-weight: 700; margin-bottom: 10pt;">اتفاقية عدم إفصاح</div>
+            <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">اتفاقية عدم إفصاح · [عنوان مختصر للغرض]</h1>
+            <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[اتفاقية سرية متبادلة بين طرفين]</div>
+            <div style="font-size: 10pt; color: var(--text-tertiary);">المرجع: NDA-2026-0001 · بتاريخ 2026-04-25</div>
+          </div>
+
+  # 2. Template Notice
+  - component: callout
+    inputs:
+      tone: neutral
+    inputs_by_lang:
+      en:
+        title: "Template Notice"
+        body: "This is a Katib starter template for a mutual Non-Disclosure Agreement between two parties. Review with counsel before execution. Adjust the term (Section 6), governing jurisdiction (Section 9), and exclusions (Section 5) to match your transaction."
+      ar:
+        title: "ملاحظة قالب"
+        body: "هذا قالب من Katib لاتفاقية عدم إفصاح متبادلة بين طرفين. يُنصح بمراجعة الصيغة النهائية من قبل مستشار قانوني قبل التوقيع. عدّل مدة السريان (البند 6)، والقانون الحاكم (البند 9)، والاستثناءات (البند 5) بما يناسب المعاملة."
+
+  # 3. §1 The Parties
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+    inputs_by_lang:
+      en:
+        title: "The Parties"
+        intro: 'This Non-Disclosure Agreement (the "Agreement") is entered into on 2026-04-25 between:'
+      ar:
+        title: "الأطراف"
+        intro: 'تُبرم اتفاقية عدم الإفصاح هذه ("الاتفاقية") بتاريخ 2026-04-25 بين:'
+
+  - component: callout
+    inputs:
+      tone: info
+    inputs_by_lang:
+      en:
+        title: "Party A (Disclosing / Receiving)"
+        body: "[Company Name] · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "الطرف الأول (المُفصح / المتلقي)"
+        body: "[اسم الشركة] · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
+
+  - component: callout
+    inputs:
+      tone: info
+    inputs_by_lang:
+      en:
+        title: "Party B (Disclosing / Receiving)"
+        body: "[Counterparty Name] · [Licence No.] · [Address, City, Emirate]"
+      ar:
+        title: "الطرف الثاني (المُفصح / المتلقي)"
+        body: "[اسم الطرف المقابل] · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
+
+  # 4. §2 Purpose
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+    inputs_by_lang:
+      en:
+        title: "Purpose"
+        body: "The Parties wish to explore a potential business relationship (the \"Purpose\") and may disclose confidential information to one another. This Agreement governs the protection and use of such information."
+      ar:
+        title: "الغرض"
+        body: "يرغب الطرفان في استكشاف علاقة عمل محتملة (\"الغرض\")، وقد يتبادلان معلومات سرية في هذا الإطار. تحكم هذه الاتفاقية حماية واستخدام تلك المعلومات."
+
+  # 5. §3 Confidential Information — clause-list
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+    inputs_by_lang:
+      en:
+        title: "Definition of Confidential Information"
+        body: '"Confidential Information" means any information disclosed by one party (the "Discloser") to the other (the "Recipient"), including but not limited to:'
+      ar:
+        title: "تعريف المعلومات السرية"
+        body: 'تعني "المعلومات السرية" أي معلومات يُفصح عنها طرف ("المُفصح") للطرف الآخر ("المتلقي")، بما في ذلك على سبيل المثال لا الحصر:'
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "Business plans, strategies, forecasts, and market research"
+          - "Technical information, source code, designs, and specifications"
+          - "Customer and supplier lists, pricing, and commercial terms"
+          - "Financial statements, projections, and unpublished results"
+          - "Any information marked \"confidential\" or reasonably understood to be confidential"
+      ar:
+        items:
+          - "خطط العمل والاستراتيجيات والتوقعات وأبحاث السوق"
+          - "المعلومات التقنية والكود المصدري والتصاميم والمواصفات"
+          - "قوائم العملاء والموردين والتسعير والشروط التجارية"
+          - "البيانات المالية والتوقعات والنتائج غير المنشورة"
+          - "أي معلومات موسومة \"سرية\" أو يُفهم بشكل معقول أنها سرية"
+
+  # 6. §4 Obligations
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+    inputs_by_lang:
+      en:
+        title: "Obligations of the Recipient"
+        body: "Each Recipient shall:"
+      ar:
+        title: "التزامات المتلقي"
+        body: "يلتزم كل متلقٍّ بما يلي:"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "Keep all Confidential Information strictly confidential and not disclose it to any third party without the Discloser's prior written consent"
+          - "Use Confidential Information solely for the Purpose and not for any competitive or commercial advantage"
+          - "Apply the same standard of care it uses to protect its own confidential information, and in no event less than reasonable care"
+          - "Limit access to Confidential Information to employees, advisors, and agents who need to know for the Purpose and are bound by similar confidentiality obligations"
+      ar:
+        items:
+          - "الحفاظ على سرية جميع المعلومات السرية وعدم إفشائها لأي طرف ثالث دون موافقة خطية مسبقة من المُفصح"
+          - "استخدام المعلومات السرية لأغراض الغرض فقط وليس لأي ميزة تنافسية أو تجارية"
+          - "تطبيق نفس درجة العناية المستخدمة لحماية معلوماته السرية الخاصة، وبما لا يقل عن العناية المعقولة"
+          - "قصر الوصول إلى المعلومات السرية على الموظفين والمستشارين والوكلاء الذين يحتاجون إلى المعرفة للغرض والملتزمين بالتزامات سرية مماثلة"
+
+  # 7. §5 Exclusions
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+    inputs_by_lang:
+      en:
+        title: "Exclusions"
+        body: "Confidential Information does not include information that: (a) was publicly known before disclosure; (b) becomes publicly known after disclosure through no fault of the Recipient; (c) was known to the Recipient prior to disclosure without confidentiality obligation; (d) is independently developed by the Recipient without use of Confidential Information; or (e) is rightfully received from a third party without confidentiality obligation."
+      ar:
+        title: "الاستثناءات"
+        body: "لا تشمل المعلومات السرية ما يلي: (أ) ما كان معروفاً للعموم قبل الإفصاح؛ (ب) ما أصبح معروفاً للعموم بعد الإفصاح دون خطأ من المتلقي؛ (ج) ما كان معروفاً للمتلقي قبل الإفصاح دون التزام سرية؛ (د) ما يُطوَّر بشكل مستقل من قبل المتلقي دون استخدام المعلومات السرية؛ أو (هـ) ما يُتلقى بشكل مشروع من طرف ثالث دون التزام سرية."
+
+  # 8. §6 Term
+  - component: module
+    variant: numbered
+    inputs:
+      number: 6
+    inputs_by_lang:
+      en:
+        title: "Term"
+        body: "This Agreement takes effect on the date first written above and remains in force for three (3) years. Confidentiality obligations with respect to Confidential Information disclosed during the term survive for five (5) years from the date of disclosure, or indefinitely for trade secrets."
+      ar:
+        title: "مدة السريان"
+        body: "تسري هذه الاتفاقية من تاريخ التوقيع أعلاه، وتبقى سارية لمدة ثلاث (3) سنوات. تستمر التزامات السرية فيما يتعلق بالمعلومات السرية المُفصح عنها خلال المدة لمدة خمس (5) سنوات من تاريخ الإفصاح، أو بلا حد زمني للأسرار التجارية."
+
+  # 9. §7 Remedies
+  - component: module
+    variant: numbered
+    inputs:
+      number: 7
+    inputs_by_lang:
+      en:
+        title: "Remedies"
+        body: "The Parties acknowledge that unauthorized disclosure may cause irreparable harm for which monetary damages alone may be inadequate. In addition to any other available remedies, the Discloser shall be entitled to seek injunctive relief to prevent or restrain unauthorized use or disclosure."
+      ar:
+        title: "سبل الانتصاف"
+        body: "يقر الطرفان بأن الإفصاح غير المصرح به قد يسبب ضرراً لا يمكن جبره، وقد لا تكون التعويضات المالية وحدها كافية. بالإضافة إلى أي سبل انتصاف أخرى متاحة، يحق للمُفصح المطالبة بأوامر قضائية زجرية لمنع أو تقييد الاستخدام أو الإفصاح غير المصرح به."
+
+  # 10. §8 Return of Materials
+  - component: module
+    variant: numbered
+    inputs:
+      number: 8
+    inputs_by_lang:
+      en:
+        title: "Return or Destruction of Materials"
+        body: "Upon the Discloser's written request or upon termination of this Agreement, the Recipient shall promptly return or destroy all Confidential Information in its possession and certify such return or destruction in writing."
+      ar:
+        title: "إعادة أو إتلاف المواد"
+        body: "بناءً على طلب خطي من المُفصح أو عند إنهاء هذه الاتفاقية، يقوم المتلقي فوراً بإعادة أو إتلاف جميع المعلومات السرية في حوزته، ويُقر بذلك خطياً."
+
+  # 11. §9 Governing Law
+  - component: module
+    variant: numbered
+    inputs:
+      number: 9
+    inputs_by_lang:
+      en:
+        title: "Governing Law and Jurisdiction"
+        body: "This Agreement is governed by the laws of the United Arab Emirates. Any dispute arising out of or relating to this Agreement shall be submitted to the exclusive jurisdiction of the courts of [Emirate]."
+      ar:
+        title: "القانون الحاكم والاختصاص القضائي"
+        body: "تخضع هذه الاتفاقية لقوانين دولة الإمارات العربية المتحدة. يُحال أي نزاع ينشأ عن أو يتعلق بهذه الاتفاقية إلى الاختصاص القضائي الحصري لمحاكم [الإمارة]."
+
+  # 12. Signatures — 2-party blank signature grid
+  - component: signature-field-block
+    inputs_by_lang:
+      en:
+        parties:
+          - role: "For Party A"
+            name_label: "Name"
+            title_label: "Title"
+            date_label: "Date"
+          - role: "For Party B"
+            name_label: "Name"
+            title_label: "Title"
+            date_label: "Date"
+      ar:
+        parties:
+          - role: "عن الطرف الأول"
+            name_label: "الاسم"
+            title_label: "المسمى الوظيفي"
+            date_label: "التاريخ"
+          - role: "عن الطرف الثاني"
+            name_label: "الاسم"
+            title_label: "المسمى الوظيفي"
+            date_label: "التاريخ"

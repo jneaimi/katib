@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T21:07:06+00:00'
+generated_at: '2026-04-24T21:25:19+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -114,6 +114,35 @@ recipes:
     - data-table
     - module
     - module
+  editorial-article:
+    namespace: katib
+    version: 0.1.0
+    description: Long-form editorial article — hero title + byline + lead + two-column body flow + inline
+      numbered citations + references-list at the end. For opinion pieces, long reads, analysis essays.
+      Demonstrates the citation + references-list pairing. Bilingual EN+AR.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 2
+    - 4
+    page_limit: 6
+    when: Long-form article or essay — publication-style layout with a single hero title, lead paragraph,
+      two-column body, and numbered references. Use for opinion pieces, research essays, thought-leadership
+      content.
+    keywords:
+    - editorial
+    - article
+    - essay
+    - long-read
+    - opinion
+    - citations
+    - bilingual
+    sections_shape:
+    - front-matter
+    - module
+    - two-column-page
+    - references-list
   editorial-white-paper:
     namespace: katib
     version: 0.1.0
@@ -215,6 +244,43 @@ recipes:
     - financial-summary
     - sections-grid
     - module
+  formal-authority-letter:
+    namespace: katib
+    version: 0.1.0
+    description: UAE authorization letter — formal letterhead + doc-marker + authorizer/agent details
+      + scope of authority clause-list + validity + authorizer signature. For letting a representative
+      act on your behalf (collect documents, open accounts, sign specific papers). Bilingual EN+AR.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: UAE authorization letter — when a principal (individual or company) needs to empower an agent
+      to act on their behalf for a specific, time-limited purpose. Government dealings, bank errands,
+      document collection, courier authorizations.
+    keywords:
+    - formal
+    - authorization
+    - authority-letter
+    - power-of-attorney
+    - agent
+    - uae
+    - bilingual
+    sections_shape:
+    - letterhead
+    - module
+    - module
+    - module
+    - kv-list
+    - kv-list
+    - module
+    - clause-list
+    - module
+    - module
+    - multi-party-signature-block
+    - module
   formal-noc:
     namespace: katib
     version: 0.1.0
@@ -299,6 +365,120 @@ recipes:
     - module
     - module
     - signature-field-block
+  legal-nda:
+    namespace: katib
+    version: 0.1.0
+    description: UAE mutual Non-Disclosure Agreement — centered masthead + Template Notice + 2-party callouts
+      + 9 numbered clauses with clause-list + 2-party signature grid. Bilingual EN+AR. Follows the same
+      component shape as legal-mou — structural consistency across the legal domain is intentional.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 2
+    - 4
+    page_limit: 4
+    when: UAE mutual Non-Disclosure Agreement. Standard confidentiality obligations for discussions between
+      two parties. Starter template — replace party info, definitions, and term before executing.
+    keywords:
+    - legal
+    - nda
+    - confidentiality
+    - non-disclosure
+    - agreement
+    - uae
+    - bilingual
+    sections_shape:
+    - module
+    - callout
+    - module
+    - callout
+    - callout
+    - module
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - module
+    - module
+    - module
+    - module
+    - signature-field-block
+  legal-service-agreement:
+    namespace: katib
+    version: 0.1.0
+    description: UAE bilateral Service Agreement — masthead + Template Notice + 2-party callouts + 12
+      numbered clauses + 2-party signature grid. Covers scope, fees, term, liability, IP, termination,
+      and governing law. Bilingual EN+AR.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 3
+    - 5
+    page_limit: 6
+    when: UAE bilateral service-provider agreement. Consulting, professional services, contracted work.
+      Starter template — replace scope, fee schedule, and term to match the engagement.
+    keywords:
+    - legal
+    - service-agreement
+    - consulting
+    - services
+    - contract
+    - uae
+    - bilingual
+    sections_shape:
+    - module
+    - callout
+    - module
+    - callout
+    - callout
+    - module
+    - clause-list
+    - module
+    - module
+    - clause-list
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - signature-field-block
+  personal-bio:
+    namespace: katib
+    version: 0.1.0
+    description: Short professional bio — masthead + narrative + highlight bullets. For speaker pages,
+      press kits, about-me pages, panel introductions. Bilingual EN+AR. Pairs with personal-cv for fuller
+      background.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: One-page professional bio. Use when a CV is too long and a LinkedIn blurb too short — speaker
+      introductions, press kits, panel bios, keynote handouts.
+    keywords:
+    - personal
+    - bio
+    - biography
+    - about
+    - speaker
+    - press-kit
+    - bilingual
+    sections_shape:
+    - masthead-personal
+    - module
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
   personal-cover-letter:
     namespace: katib
     version: 0.1.0
@@ -583,6 +763,44 @@ recipes:
     - timeline
     - module
     - references-list
+  report-progress:
+    namespace: katib
+    version: 0.1.0
+    description: Project progress report — exec summary, headline metrics, timeline of milestones, findings
+      narrative, next-period focus, and optional appendix. Composes the full Phase-3c content library
+      into a production-ready report. Bilingual EN+AR.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 3
+    - 6
+    page_limit: 8
+    when: Quarterly/monthly project progress report for sponsors, boards, or stakeholders. Uses exec-summary,
+      metric-block, and timeline to convey status at a glance, then narrative sections for detail.
+    keywords:
+    - report
+    - progress
+    - status
+    - milestone
+    - executive-summary
+    - timeline
+    - bilingual
+    sections_shape:
+    - module
+    - executive-summary
+    - module
+    - metric-block
+    - metric-block
+    - metric-block
+    - metric-block
+    - timeline
+    - module
+    - module
+    - kv-list
+    - module
+    - clause-list
+    - module
   tutorial-cheatsheet:
     namespace: katib
     version: 0.1.0
@@ -775,7 +993,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 11
+    used_in_recipes: 13
   citation:
     namespace: katib
     tier: primitive
@@ -800,7 +1018,7 @@ components:
       legal-body structure where clause references must render prominently. Items are plain-text strings
       (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain
       body uses numbered-clause lists, not WHEREAS preambles.
-    used_in_recipes: 1
+    used_in_recipes: 6
   code-block:
     namespace: katib
     tier: primitive
@@ -868,7 +1086,7 @@ components:
     - inline
     description: Key-metric display — label + value + optional delta. For dashboards, executive summaries,
       and report hero rows. Renders inline-block so multiple metrics lay out side-by-side without ceremony.
-    used_in_recipes: 1
+    used_in_recipes: 2
   pull-quote:
     namespace: katib
     tier: primitive
@@ -922,7 +1140,7 @@ components:
       `signature-block` (pre-filled named parties) and `multi-party-signature-block` (pre-filled multi-signatory
       closing). Use when a document will be printed, countersigned by hand, and returned — typical in
       commercial quotes, MoUs, service agreements, proposals.
-    used_in_recipes: 1
+    used_in_recipes: 3
   skill-bar-list:
     namespace: katib
     tier: primitive
@@ -1052,7 +1270,7 @@ components:
     description: Key takeaways box for the top of reports, proposals, and white-papers. Header + 2-4 labeled
       bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent
       rail for visual separation from regular flow.
-    used_in_recipes: 1
+    used_in_recipes: 2
   financial-summary:
     namespace: katib
     tier: section
@@ -1077,7 +1295,7 @@ components:
     variants: []
     description: Title-first title-page section. Eyebrow, title, subtitle, hairline rule, meta strip (author/date/ref).
       Lighter than a full cover-page.
-    used_in_recipes: 5
+    used_in_recipes: 6
   full-bleed-page:
     namespace: katib
     tier: section
@@ -1106,7 +1324,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 4
+    used_in_recipes: 6
   landscape-section:
     namespace: katib
     tier: section
@@ -1132,7 +1350,7 @@ components:
     description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
-    used_in_recipes: 4
+    used_in_recipes: 5
   masthead-personal:
     namespace: katib
     tier: section
@@ -1144,7 +1362,7 @@ components:
     description: Personal-identity masthead — name + tagline on leading side, contact stack (email, phone,
       location) on trailing side. Bottom accent rule. For personal-brand documents (cover-letter, CV,
       bio). Distinct from `letterhead` (which is for organizational/company identity).
-    used_in_recipes: 1
+    used_in_recipes: 2
   module:
     namespace: katib
     tier: section
@@ -1159,7 +1377,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 17
+    used_in_recipes: 23
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1173,7 +1391,7 @@ components:
     description: Multi-party signature grid — side-by-side signature boxes for formal documents (NOC,
       MOU, contracts). Each party has name + optional title + optional email. Responsive grid auto-flows
       based on party count (2+ parties supported).
-    used_in_recipes: 1
+    used_in_recipes: 2
   objectives-box:
     namespace: katib
     tier: section
@@ -1212,7 +1430,7 @@ components:
       to a citation number in the body (e.g. [1] in text → entry 1 here). For academic, editorial, legal
       docs. Supports one of the three major citation styles via variant — Chicago (author-first), APA
       (year-first), or a generic minimal style.
-    used_in_recipes: 1
+    used_in_recipes: 2
   section-divider-page:
     namespace: katib
     tier: section
@@ -1284,7 +1502,7 @@ components:
       and status (done | active | upcoming — controls node tint). For progress reports, project plans,
       onboarding sequences, company histories. Rail flips to right side for RTL so the reading order is
       date-left → content-right in EN and date-right → content-left in AR.
-    used_in_recipes: 1
+    used_in_recipes: 2
   toc:
     namespace: katib
     tier: section
@@ -1336,7 +1554,7 @@ components:
       a page, and across multiple pages if the body is long. Title spans both columns as a header band.
       Best for editorial essays, long-form articles, or long primary-source excerpts where a single column
       feels lonely.
-    used_in_recipes: 1
+    used_in_recipes: 2
   whats-next:
     namespace: katib
     tier: section

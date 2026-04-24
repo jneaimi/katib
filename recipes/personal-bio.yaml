@@ -1,0 +1,101 @@
+name: personal-bio
+version: 0.1.0
+namespace: katib
+description: Short professional bio — masthead + narrative + highlight bullets. For speaker pages, press kits, about-me pages, panel introductions. Bilingual EN+AR. Pairs with personal-cv for fuller background.
+languages:
+- en
+- ar
+target_pages:
+- 1
+- 2
+page_limit: 2
+when: One-page professional bio. Use when a CV is too long and a LinkedIn blurb too short — speaker introductions, press kits, panel bios, keynote handouts.
+keywords:
+- personal
+- bio
+- biography
+- about
+- speaker
+- press-kit
+- bilingual
+
+sections:
+  # 1. Masthead — personal identity
+  - component: masthead-personal
+    inputs_by_lang:
+      en:
+        eyebrow: "BIOGRAPHY"
+        name: "[Your Name]"
+        title: "[Your title — e.g. Founder, Signal Forge]"
+        location: "[City, Country]"
+      ar:
+        eyebrow: "السيرة الذاتية"
+        name: "[اسمك]"
+        title: "[مسماك الوظيفي — مثال: مؤسس، Signal Forge]"
+        location: "[المدينة، الدولة]"
+
+  # 2. Narrative bio — long-form paragraph
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "About"
+        body: "[Your bio — 2-4 paragraphs of narrative voice. What you do, what you're known for, how you got here. Write in the third person for formal contexts (press kits, panel intros); first person for personal pages. Keep it specific — avoid generic phrases like 'passionate about innovation'. Lead with what you actually build or research.]"
+      ar:
+        title: "نبذة"
+        body: "[سيرتك الذاتية — من 2 إلى 4 فقرات بصوت روائي. ما تقوم به، ما تُعرف به، كيف وصلت إلى هنا. اكتب بضمير الغائب في السياقات الرسمية (الملفات الصحفية، تقديم الجلسات)، وبضمير المتكلم في الصفحات الشخصية. اجعل النص محدداً — تجنب العبارات العامة مثل \"شغوف بالابتكار\". ابدأ بما تبنيه أو تبحث فيه فعلياً.]"
+
+  # 3. Current roles / work
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Current work"
+      ar:
+        title: "العمل الحالي"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "[Role · Company · Scope — one-line description of impact]"
+          - "[Role · Company · Scope — one-line description of impact]"
+          - "[Role · Company · Scope — one-line description of impact]"
+      ar:
+        items:
+          - "[الدور · الشركة · النطاق — وصف من سطر واحد للأثر]"
+          - "[الدور · الشركة · النطاق — وصف من سطر واحد للأثر]"
+          - "[الدور · الشركة · النطاق — وصف من سطر واحد للأثر]"
+
+  # 4. Speaking / writing / recognition
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Recognition"
+      ar:
+        title: "التقدير"
+
+  - component: clause-list
+    inputs_by_lang:
+      en:
+        items:
+          - "[Notable talk / conference — venue, year]"
+          - "[Published piece — outlet, year]"
+          - "[Award / recognition — organization, year]"
+      ar:
+        items:
+          - "[محاضرة بارزة / مؤتمر — المكان، السنة]"
+          - "[مقال منشور — الجهة، السنة]"
+          - "[جائزة / تقدير — المنظمة، السنة]"
+
+  # 5. Contact footer
+  - component: module
+    inputs_by_lang:
+      en:
+        raw_body: |
+          <div style="margin-top: 20pt; padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 10pt; color: var(--text-secondary);">
+            <strong>Contact:</strong> [email@example.com] · [website.com] · [LinkedIn / Twitter / @handle]
+          </div>
+      ar:
+        raw_body: |
+          <div style="margin-top: 20pt; padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 10pt; color: var(--text-secondary);">
+            <strong>التواصل:</strong> [email@example.com] · [website.com] · [لينكد إن / تويتر / @المعرّف]
+          </div>

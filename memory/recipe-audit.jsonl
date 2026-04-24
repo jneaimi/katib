@@ -38,3 +38,9 @@
 {"recipe": "tutorial-katib-walkthrough", "namespace": "katib", "action": "archive", "at": "2026-04-24T13:00:00+00:00", "note": "Moved to recipes/_wip/ — v1-placeholder content (Soul Hub/vault integration module, stale tool names) not v2-accurate. Excluded from capabilities generation until rewritten."}
 {"recipe": "phase-3a-layout-showcase", "namespace": "katib", "action": "register", "at": "2026-04-24T20:28:34+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
 {"recipe": "phase-3c-content-showcase", "namespace": "katib", "action": "register", "at": "2026-04-24T21:02:52+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "legal-nda", "namespace": "katib", "action": "register", "at": "2026-04-24T21:16:29+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "personal-bio", "namespace": "katib", "action": "register", "at": "2026-04-24T21:17:16+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "legal-service-agreement", "namespace": "katib", "action": "register", "at": "2026-04-24T21:18:39+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "formal-authority-letter", "namespace": "katib", "action": "register", "at": "2026-04-24T21:19:58+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "report-progress", "namespace": "katib", "action": "register", "at": "2026-04-24T21:21:02+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
+{"recipe": "editorial-article", "namespace": "katib", "action": "register", "at": "2026-04-24T21:21:52+00:00", "from_graduation": null, "note": "Registered by katib recipe register"}
