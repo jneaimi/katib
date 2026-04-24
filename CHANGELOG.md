@@ -5,7 +5,129 @@ All notable changes to Katib are documented here. Format loosely follows
 
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
 
-### Added (Phase 3 Day 18 — CV infrastructure sprint day 1: `cv-layout` + `skill-bar-list` + `tag-chips` components)
+### Added (Phase 3 Day 19 — `personal/cv` recipe ship; CV 2-day sprint completes; personal domain complete)
+
+Thirteenth Phase-3 recipe migration. **CV 2-day sprint completes** —
+Day 18 built cv-layout + skill-bar-list + tag-chips infrastructure;
+Day 19 ships the recipe. **24-hour ship discipline: 4th consecutive
+application** (sections-grid Day 11→12, data-table Day 13→14,
+financial-summary Day 15→16, CV-infra Day 18→Day 19). The pattern is
+operationally stable.
+
+- **`recipes/personal-cv.yaml`** (new) — SINGLE-SECTION recipe; all
+  content lives inside cv-layout's `sidebar_html` + `main_html` raw
+  inputs. Fewest sections ever in Phase-3 (1 vs. mou's 25).
+  - **Sidebar (7 content blocks)**: photo slot (styled circular
+    placeholder) + name+headline block (centered) + Contact section
+    (5 labeled fields: Email/Phone/Location/Portfolio/LinkedIn) +
+    Personal section (3 labeled fields: Nationality/Visa/DOB) +
+    Languages section with inline `<ul class="katib-skill-bar-list">`
+    (2 items at level 5) + Core Skills section with same class (4
+    items at levels 5/4/4/3) + Tools section with inline `<ul
+    class="katib-tag-chips">` (4 chips).
+  - **Main column (4 sections)**: Summary (prose) + Experience (3
+    entries with role + dates + employer + location + ul achievements)
+    + Education (2 entries with degree + institution + meta) +
+    Selected Projects (1 entry).
+- **FIRST production consumer of 3 Day-18 components** simultaneously:
+  - `cv-layout` — 24-hour ship from infra day (4th consecutive
+    application of the discipline).
+  - `skill-bar-list` — 2 uses in one recipe (Languages + Core Skills).
+  - `tag-chips` — 1 use (Tools).
+- **Architecture discovery exercised: primitive styles auto-load.**
+  `core/compose.py:_load_primitive_styles()` loads ALL primitive CSS
+  globally into every rendered recipe. This enables writing inline
+  `katib-skill-bar-list` + `katib-tag-chips` class usage in
+  cv-layout's raw HTML — the primitive CSS applies without requiring
+  the primitives to be referenced as separate sections. The
+  abstraction is: primitives are library-level styles (available
+  everywhere); sections are recipe-scoped styles (loaded on
+  reference). Mirrors the tier semantics.
+- **Sidebar-scoped CSS overrides pay off.** cv-layout's styles.css
+  has `.katib-cv-layout__sidebar .katib-skill-bar-list__*` rules that
+  invert primitive colors against the dark accent sidebar bg.
+  Inline primitive usage in sidebar_html renders correctly without
+  per-recipe color overrides.
+- **Rendered output: 2 pages, 0 WeasyPrint warnings.** `target_pages:
+  [1, 2]`, `page_limit: 2`. Within target.
+- **1 fix pass: `word-break: break-word` → `overflow-wrap: break-word`**
+  (invalid CSS property fixed; property is `word-break: break-all` or
+  `overflow-wrap: break-word` in standard CSS).
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 personal-cv recipe-requests logged** (Senior AI Engineer CV +
+  Consulting partnership pitch CV + Academic/research CV) —
+  validates the recipe's reach across 3 CV types.
+- **Audit + capabilities:** recipe register entry +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 19)
+
+- **`tests/test_personal_cv.py`** (new, 24 tests): schema-loads,
+  en-only, page-targets [1, 2], single-section (regression guard:
+  1 cv-layout section — fewest ever), first-cv-layout-consumer,
+  sidebar-has-skill-bar-list-inline (regression guard: 2 uls + 6
+  items + level modifier classes l3/l4/l5), sidebar-has-tag-chips-
+  inline (regression guard: 1 ul + 4 chips), sidebar-has-all-identity-
+  sections (Contact + Personal + Languages + Core Skills + Tools),
+  main-has-four-main-sections (Summary + Experience + Education +
+  Selected Projects), main-has-three-experience-entries (regression
+  guard: 4 cv-entry divs = 3 experience + 1 project),
+  main-has-two-education-entries, validates-clean, validates-strict-
+  clean, renders-EN (4 marker classes), pdf-within-target-pages (1-2
+  accepted), renders-all-v1-content (25+ distinct phrases), regression
+  guards for skill-bar-list uls (2), tag-chips uls (1), skill items
+  (6), tag chips (4), grid-layout-in-html (regression guard:
+  `grid-template-columns: 70mm 1fr`), sidebar-has-photo-slot
+  (regression guard: circular photo placeholder), in-capabilities,
+  audit-entry-exists.
+- **Regression sweep:** 872/872 passing (was 848, +24). Zero
+  WeasyPrint warnings across all 23 render paths.
+
+### Architecture decisions (Phase 3 Day 19)
+
+1. **Primitive styles auto-load — architectural discovery exercised
+   for the first time.** `core/compose.py:_load_primitive_styles()`
+   loads all primitive CSS globally into every recipe. This enables
+   writing primitive-class inline HTML in raw_body inputs without
+   referencing the primitives as sections. The design is:
+   *primitives are library-level styles (available everywhere);
+   sections are recipe-scoped styles (loaded per-reference)*. Mirrors
+   the tier semantics. This was a Phase-2 feature newly exercised
+   on Day 19 — cv-layout's raw-HTML approach relies on it.
+2. **Single-section recipe pattern.** CV is the first single-section
+   recipe in Phase-3 (1 section vs. mou's 25). All content lives
+   inside cv-layout's sidebar_html + main_html raw inputs. This is
+   the terminal case of the "raw-HTML inputs" abstraction that scaled
+   from module (1 density block) → legal-mou (3 density blocks) →
+   cv-layout (hosts ENTIRE recipe content).
+3. **24-hour ship discipline: 4th consecutive application.** Prior
+   applications: sections-grid Day 11→12, data-table Day 13→14,
+   financial-summary Day 15→16. Now CV-infra Day 18→Day 19. The
+   pattern is no longer a discipline to maintain — it's the operating
+   mode for infra+recipe combo planning.
+4. **Personal domain complete.** cover-letter (Day 6) + cv (Day 19).
+   3rd complete Phase-3 domain after business-proposal (Day 14) and
+   financial (Day 16). Legal remains 25% complete (mou only; other
+   3 stay in v1-reference per Phase-3 triage).
+5. **Photo slot as inline placeholder.** cv-layout has no `photo`
+   input in v0.1.0 — the photo renders as a styled circular `<div>`.
+   Future Phase-4 evolution: add a `photo` input accepting a
+   registered brand image asset (brand_fields integration). For now,
+   users add their photo via manual HTML edit post-generation.
+6. **Invalid CSS property caught by WeasyPrint.** `word-break: break-word`
+   is not a valid CSS value (standard is `word-break: break-all` OR
+   `overflow-wrap: break-word`). WeasyPrint's warning caught it
+   pre-commit. Fixed to `overflow-wrap: break-word`. Documents the
+   value of WeasyPrint's strict CSS parsing as a lint-pass for
+   recipe authors.
+7. **13 of 14 recipes shipped (93%).** On pace for Day-21 Phase-3
+   close. 1 recipe remaining technically (Day 20 OR 21 — the
+   tutorial-onboarding + tutorial-katib-walkthrough pair). Both
+   zero-new-component per Day-17 ADR prediction.
+8. **AR variant deferred (thirteenth recipe in a row).** Same
+   discipline. First bilingual pending `inputs_by_lang` schema.
+
+
 
 Day 1 of the 2-day personal/cv infra+recipe sprint. **3 new components
 built in parallel** — all three auto-graduated through the request log
@@ -322,15 +444,16 @@ Open Item #4 (Phase 3 triage) resolved 2026-04-23. Items #1 (push + tag —
 HELD until Phase 3 close) and #3 (PNG goldens — pushed to Phase 4)
 parked by decision.
 
-Engine state: **31 components** (+3 Day 18: cv-layout, skill-bar-list,
-tag-chips; clause-list Day 17; financial-summary Day 15, data-table
+Engine state: **31 components** (cv-layout + skill-bar-list + tag-chips
+Day 18; clause-list Day 17; financial-summary Day 15, data-table
 Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
 kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
-at 0.2.0). **19 recipes** (13 production: tutorial + business-proposal-letter +
-personal-cover-letter + formal-noc + tutorial-how-to +
-tutorial-handoff + tutorial-cheatsheet + business-proposal-one-pager +
-editorial-white-paper + business-proposal-proposal + financial-invoice +
-financial-quote + legal-mou; 6 dev showcases). 6 core library
+at 0.2.0). **20 recipes** (+1 personal-cv Day 19; 14 production:
+tutorial + business-proposal-letter + personal-cover-letter +
+formal-noc + tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
+business-proposal-one-pager + editorial-white-paper +
+business-proposal-proposal + financial-invoice + financial-quote +
+legal-mou + **personal-cv**; 6 dev showcases). 6 core library
 modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
 skill dependencies.
 
@@ -339,7 +462,8 @@ shipped: letter (Day 4), one-pager (Day 12), proposal (Day 14).
 **Financial domain complete** (Day 16) — both recipes shipped:
 invoice (Day 15), quote (Day 16). **Legal domain 25% complete**
 (Day 17) — mou shipped; nda, service-agreement, engagement-letter
-stay in v1-reference per Phase-3 triage.
+stay in v1-reference per Phase-3 triage. **Personal domain complete**
+(Day 19) — cover-letter (Day 6) + cv (Day 19).
 
 **Day-0 component queue closed (Day 17)** — 8 originally-planned
 components accounted for: 7 built (kv-list, letterhead,

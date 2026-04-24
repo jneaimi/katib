@@ -1,0 +1,190 @@
+name: personal-cv
+version: 0.1.0
+namespace: katib
+description: Professional CV with 2-col sidebar+main layout. FIRST production consumer of cv-layout, skill-bar-list, and tag-chips (all Day-18 infra; 24-hour ship discipline — 4th consecutive application). Single-section recipe — fewest sections ever in Phase-3. Closes the personal domain (cover-letter Day 6 + cv Day 19). Sidebar holds photo + identity + contact + Languages/Skills bars + Tools chips; main holds Summary + Experience + Education + Projects.
+languages:
+- en
+target_pages:
+- 1
+- 2
+page_limit: 2
+when: Professional CV for GCC job market (UAE hiring convention). 2-col layout with 70mm accent-bg sidebar for identity and skills, main column for experience narrative. EN-only; AR deferred pending inputs_by_lang schema.
+keywords:
+- personal
+- cv
+- resume
+- curriculum-vitae
+- professional
+- career
+- gcc
+
+sections:
+  # Single cv-layout section — the entire CV lives in sidebar_html + main_html raw inputs.
+  # Primitive styles (skill-bar-list, tag-chips) auto-load via compose's _load_primitive_styles();
+  # sidebar-scoped overrides in cv-layout's styles.css invert primitive colors against the
+  # dark accent sidebar bg so they render correctly inline.
+  - component: cv-layout
+    inputs:
+      sidebar_html: |
+        <div class="cv-photo" style="width: 42mm; height: 42mm; border-radius: 50%; background: rgba(255, 255, 255, 0.15); margin: 0 auto 14pt auto; border: 3pt solid rgba(255, 255, 255, 0.25);"></div>
+
+        <div class="cv-name-block" style="text-align: center; margin-bottom: 16pt;">
+          <div style="font-size: 18pt; font-weight: 700; line-height: 1.15; margin-bottom: 3pt;">Jasem Al Neaimi</div>
+          <div style="font-size: 10pt; font-weight: 400; opacity: 0.85; line-height: 1.35;">[Professional Headline — e.g., Senior AI Engineer · GCC]</div>
+        </div>
+
+        <section>
+          <h3>Contact</h3>
+          <ul class="cv-contact-list" style="list-style: none; padding: 0; margin: 0;">
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35; overflow-wrap: break-word;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Email</span>jasem@jneaimi.com
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Phone</span>[+971 50 000 0000]
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Location</span>[City, UAE]
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Portfolio</span>[website.com]
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">LinkedIn</span>[linkedin.com/in/handle]
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Personal</h3>
+          <ul class="cv-contact-list" style="list-style: none; padding: 0; margin: 0;">
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Nationality</span>[Nationality]
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Visa Status</span>[Employment / Residence / Citizen]
+            </li>
+            <li style="font-size: 9pt; margin-bottom: 6pt; line-height: 1.35;">
+              <span style="font-size: 7.5pt; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 1pt;">Date of Birth</span>[YYYY-MM-DD]
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Languages</h3>
+          <ul class="katib-skill-bar-list" lang="en">
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">English</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l5"></span>
+            </li>
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">Arabic</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l5"></span>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Core Skills</h3>
+          <ul class="katib-skill-bar-list" lang="en">
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">[Skill 1]</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l5"></span>
+            </li>
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">[Skill 2]</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l4"></span>
+            </li>
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">[Skill 3]</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l4"></span>
+            </li>
+            <li class="katib-skill-bar-list__item">
+              <span class="katib-skill-bar-list__name">[Skill 4]</span>
+              <span class="katib-skill-bar-list__level katib-skill-bar-list__level--l3"></span>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Tools</h3>
+          <ul class="katib-tag-chips" lang="en">
+            <li class="katib-tag-chips__chip">[Tool 1]</li>
+            <li class="katib-tag-chips__chip">[Tool 2]</li>
+            <li class="katib-tag-chips__chip">[Tool 3]</li>
+            <li class="katib-tag-chips__chip">[Tool 4]</li>
+          </ul>
+        </section>
+      main_html: |
+        <section>
+          <h2>Summary</h2>
+          <p class="cv-summary" style="font-size: 10pt; line-height: 1.6; color: var(--text-secondary); margin: 0;">
+            [2–3 sentence summary. Lead with years of experience + domain, one signature strength with proof, one differentiator. Example: "AI engineer with 8 years building production LLM systems for GCC enterprises. Shipped bilingual customer-support agents handling 12K tickets/month at 94% first-response accuracy. Arabic + English native."]
+          </p>
+        </section>
+
+        <section>
+          <h2>Experience</h2>
+
+          <div class="cv-entry" style="margin-bottom: 12pt; page-break-inside: avoid;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2pt;">
+              <div style="font-size: 10.5pt; font-weight: 700; color: var(--text);">[Most recent title]</div>
+              <div style="font-size: 8.5pt; color: var(--text-tertiary); white-space: nowrap;">[YYYY-MM — Present]</div>
+            </div>
+            <div style="font-size: 9.5pt; color: var(--accent); font-weight: 600; margin-bottom: 5pt;">[Company Name]<span style="color: var(--text-tertiary); font-weight: 400; margin-left: 6pt;">· [City, UAE]</span></div>
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.5;">
+              <li style="margin-bottom: 3pt;">[Quantified achievement: verb + object + metric. "Built agent that reduced onboarding time from 6 weeks to 4."]</li>
+              <li style="margin-bottom: 3pt;">[Second achievement, different dimension — scale / cost / quality]</li>
+              <li style="margin-bottom: 3pt;">[Leadership or scope note — team size, budget owned, stakeholder level]</li>
+            </ul>
+          </div>
+
+          <div class="cv-entry" style="margin-bottom: 12pt; page-break-inside: avoid;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2pt;">
+              <div style="font-size: 10.5pt; font-weight: 700; color: var(--text);">[Previous title]</div>
+              <div style="font-size: 8.5pt; color: var(--text-tertiary); white-space: nowrap;">[YYYY-MM — YYYY-MM]</div>
+            </div>
+            <div style="font-size: 9.5pt; color: var(--accent); font-weight: 600; margin-bottom: 5pt;">[Company Name]<span style="color: var(--text-tertiary); font-weight: 400; margin-left: 6pt;">· [City]</span></div>
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.5;">
+              <li style="margin-bottom: 3pt;">[Achievement with outcome]</li>
+              <li style="margin-bottom: 3pt;">[Achievement with outcome]</li>
+            </ul>
+          </div>
+
+          <div class="cv-entry" style="margin-bottom: 12pt; page-break-inside: avoid;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2pt;">
+              <div style="font-size: 10.5pt; font-weight: 700; color: var(--text);">[Earlier title]</div>
+              <div style="font-size: 8.5pt; color: var(--text-tertiary); white-space: nowrap;">[YYYY-MM — YYYY-MM]</div>
+            </div>
+            <div style="font-size: 9.5pt; color: var(--accent); font-weight: 600; margin-bottom: 5pt;">[Company Name]<span style="color: var(--text-tertiary); font-weight: 400; margin-left: 6pt;">· [City]</span></div>
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.5;">
+              <li style="margin-bottom: 3pt;">[Achievement with outcome]</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>Education</h2>
+          <div class="cv-edu-entry" style="margin-bottom: 10pt;">
+            <div style="font-size: 10pt; font-weight: 700;">[Degree — e.g., M.Sc. in Computer Science]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">[University Name]</div>
+            <div style="font-size: 8.5pt; color: var(--text-tertiary); margin-top: 1pt;">[City, Country] · [YYYY – YYYY] · [Honours / GPA / Thesis topic]</div>
+          </div>
+          <div class="cv-edu-entry" style="margin-bottom: 10pt;">
+            <div style="font-size: 10pt; font-weight: 700;">[Bachelor's — e.g., B.Sc. in Information Technology]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">[University Name]</div>
+            <div style="font-size: 8.5pt; color: var(--text-tertiary); margin-top: 1pt;">[City, Country] · [YYYY – YYYY]</div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Selected Projects</h2>
+          <div class="cv-entry" style="margin-bottom: 10pt; page-break-inside: avoid;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2pt;">
+              <div style="font-size: 10.5pt; font-weight: 700; color: var(--text);">[Project name]</div>
+              <div style="font-size: 8.5pt; color: var(--text-tertiary); white-space: nowrap;">[YYYY]</div>
+            </div>
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.5;">
+              <li style="margin-bottom: 3pt;">[One-sentence outcome. Link or company if applicable.]</li>
+            </ul>
+          </div>
+        </section>

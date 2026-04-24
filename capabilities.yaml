@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T03:15:58+00:00'
+generated_at: '2026-04-24T03:28:24+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -329,6 +329,33 @@ recipes:
     - signature-block
     - rule
     - module
+  personal-cv:
+    namespace: katib
+    version: 0.1.0
+    description: Professional CV with 2-col sidebar+main layout. FIRST production consumer of cv-layout,
+      skill-bar-list, and tag-chips (all Day-18 infra; 24-hour ship discipline — 4th consecutive application).
+      Single-section recipe — fewest sections ever in Phase-3. Closes the personal domain (cover-letter
+      Day 6 + cv Day 19). Sidebar holds photo + identity + contact + Languages/Skills bars + Tools chips;
+      main holds Summary + Experience + Education + Projects.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: Professional CV for GCC job market (UAE hiring convention). 2-col layout with 70mm accent-bg
+      sidebar for identity and skills, main column for experience narrative. EN-only; AR deferred pending
+      inputs_by_lang schema.
+    keywords:
+    - personal
+    - cv
+    - resume
+    - curriculum-vitae
+    - professional
+    - career
+    - gcc
+    sections_shape:
+    - cv-layout
   phase-1-trivial:
     namespace: katib
     version: 0.1.0
@@ -818,7 +845,7 @@ components:
       are supplied as raw HTML via `sidebar_html` and `main_html` inputs — callers compose sidebar primitives
       (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural
       shape; future reuse expected for portfolio and profile pages.
-    used_in_recipes: 0
+    used_in_recipes: 1
   financial-summary:
     namespace: katib
     tier: section
