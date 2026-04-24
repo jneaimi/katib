@@ -102,7 +102,7 @@ sections:
         cd katib &amp;&amp; bash install.sh
 
         <span class="katib-code-block__comment"># Option B — npm</span>
-        npm i -g @jasemal/katib &amp;&amp; katib install
+        npm i -g @acmeal/katib &amp;&amp; katib install
 
   # 10. Step 2
   - component: tutorial-step
@@ -125,7 +125,7 @@ sections:
           location: ~/.local/share/katib/memory
 
         identity:
-          author_name: "Jasem Al Neaimi"
+          author_name: "Alex Acme"
           company: "TridenITS"
 
   # 12. Step 3
@@ -274,12 +274,12 @@ sections:
         - "Pass --brand <name> to any render."
         - "Understand what falls back to the domain default when the brand omits a field."
 
-  # 22. Jasem brand intro + palette + YAML + CLI + do/don't (density pattern: mixed inline)
+  # 22. acme brand intro + palette + YAML + CLI + do/don't (density pattern: mixed inline)
   - component: module
     inputs:
-      title: "The Jasem brand, as an example"
+      title: "The acme brand, as an example"
       raw_body: |
-        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">This document itself is rendered with the <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">jasem</code> brand — Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
+        <p style="font-size: 10pt; line-height: 1.55; margin: 6pt 0;">This document itself is rendered with the <code style="background: {{ colors.tag_bg }}; padding: 1pt 4pt; border-radius: 2pt; font-size: 9pt;">acme</code> brand — Warm Ember amber and orange, Newsreader serif, warm off-white paper. Compare the palette below to the tutorial domain default (teal on warm off-white) you'd see without a brand.</p>
 
         <div style="display: flex; gap: 8pt; margin: 8pt 0; flex-wrap: wrap;">
           <figure style="flex: 1 0 0; min-width: 30mm; border: 0.5pt solid {{ colors.border }}; border-radius: 3pt; padding: 0; overflow: hidden; text-align: center; margin: 0;">
@@ -310,13 +310,13 @@ sections:
         </div>
 
         <h3 style="font-size: 11pt; color: {{ colors.text }}; margin: 12pt 0 4pt 0; font-weight: 600;">The YAML</h3>
-        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.katib/brands/jasem.yaml</span>
-        name: Jasem Al Neaimi
-        name_ar: جاسم النعيمي
+        <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;"><span style="color: #A1A1AA;"># ~/.katib/brands/acme.yaml</span>
+        name: Alex Acme
+        name_ar: أليكس أكمي
 
         identity:
-          author_name: Jasem Al Neaimi
-          email: jasem@jneaimi.com
+          author_name: Alex Acme
+          email: alex@acme.test
 
         colors:
           accent:            "#F59E0B"   <span style="color: #A1A1AA;"># amber</span>
@@ -333,13 +333,13 @@ sections:
             fallback: "Amiri, 'Traditional Arabic', serif"
 
         logo:
-          primary: logos/jasem.svg
+          primary: logos/acme.svg
           max_height_mm: 14</pre>
 
         <h3 style="font-size: 11pt; color: {{ colors.text }}; margin: 12pt 0 4pt 0; font-weight: 600;">Using it</h3>
         <pre style="background: #27272A; color: #FAFAFA; font-family: var(--font-mono, monospace); font-size: 8.5pt; line-height: 1.5; padding: 10pt 12pt; border-radius: 4pt; white-space: pre-wrap; margin: 8pt 0; page-break-inside: avoid;">uv run scripts/build.py proposal \
           --domain business-proposal --lang en \
-          --brand jasem --with-cover \
+          --brand acme --with-cover \
           --title "Observability SOW"</pre>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10pt; margin: 10pt 0;">

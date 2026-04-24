@@ -41,10 +41,10 @@ blocks never split across pages.
 - component: code-block
   variant: terminal
   inputs:
-    label: "~/.katib/brands/jasem.yaml"
+    label: "~/.katib/brands/acme.yaml"
     code: |
       <span class="katib-code-block__comment"># brand identity</span>
-      name: Jasem Al Neaimi
+      name: Alex Acme
       accent: "#1F3A68"
 ```
 

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -9,11 +10,12 @@ import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ROUTE = ["uv", "run", "scripts/route.py"]
+TEST_BRANDS_DIR = Path(__file__).resolve().parent / "fixtures" / "brands"
 
 
 def _inject_no_persist(args: tuple[str, ...]) -> list[str]:
     """Append --no-persist to infer/resolve invocations so tests don't pollute
-    memory/*.jsonl. Day 13's persist-path tests live in test_request_log_cli.py
+    memory/*.jsonl. The persist-path tests live in test_request_log_cli.py
     and explicitly exercise persistence with their own tmp memory dirs.
     """
     if not args:
@@ -26,12 +28,15 @@ def _inject_no_persist(args: tuple[str, ...]) -> list[str]:
 def _run(*args: str, cwd: Path = REPO_ROOT) -> dict:
     """Run route.py with args, parse stdout as JSON, return dict.
 
-    Fails the test if stdout isn't valid JSON — catches the subprocess
-    JSON contract leak that was explicitly called out in the ADR.
+    KATIB_BRANDS_DIR is pointed at the anonymous test fixtures so tests
+    can reference 'acme' / 'contoso' without depending on the developer's
+    personal `~/.katib/brands/` (which is machine-specific and not in CI).
     """
+    env = {**os.environ, "KATIB_BRANDS_DIR": str(TEST_BRANDS_DIR)}
     result = subprocess.run(
         [*ROUTE, *_inject_no_persist(args)],
         cwd=cwd,
+        env=env,
         capture_output=True,
         text=True,
         timeout=30,
@@ -54,12 +59,12 @@ def test_infer_high_confidence_returns_render():
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production in English with jasem brand",
+        "render tutorial framework-guide bloom ai-collaboration production in English with acme brand",
     )
     assert out["action"] == "render"
     assert out["recipe"] == "tutorial"
     assert out["lang"] == "en"
-    assert out["brand"] == "jasem"
+    assert out["brand"] == "acme"
     assert out["confidence"] == "HIGH"
     # Observability: reasons should be populated
     assert isinstance(out["reasons"], list) and len(out["reasons"]) > 0
@@ -86,12 +91,12 @@ def test_infer_explicit_recipe_shortcircuits_gate():
         "--lang",
         "en",
         "--brand",
-        "jasem",
+        "acme",
     )
     assert out["action"] == "render"
     assert out["recipe"] == "tutorial"
     assert out["lang"] == "en"
-    assert out["brand"] == "jasem"
+    assert out["brand"] == "acme"
     # "confidence" is NOT set when short-circuiting (gate not run)
     assert "confidence" not in out
 
@@ -107,9 +112,9 @@ def test_infer_medium_returns_present_candidates():
     out = _run(
         "infer",
         "--transcript",
-        "please render the tutorial framework guide in English using jasem brand",
+        "please render the tutorial framework guide in English using acme brand",
         "--brand",
-        "jasem",
+        "acme",
     )
     # Could be proceed or choose depending on score — both are valid routing
     if out["action"] == "present_candidates":
@@ -161,11 +166,11 @@ def test_infer_explicit_lang_overrides_inferred():
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production with jasem brand",
+        "render tutorial framework-guide bloom ai-collaboration production with acme brand",
         "--lang",
         "ar",
         "--brand",
-        "jasem",
+        "acme",
     )
     # Lang should be AR even though intent is English
     assert out["action"] == "render"
@@ -178,7 +183,7 @@ def test_infer_transcript_file_read_from_disk(tmp_path):
     f = tmp_path / "t.txt"
     f.write_text(
         "render tutorial framework-guide bloom ai-collaboration production "
-        "in English with jasem brand"
+        "in English with acme brand"
     )
     out = _run("infer", "--transcript-file", str(f))
     assert out["action"] == "render"

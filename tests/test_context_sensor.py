@@ -81,48 +81,48 @@ def test_extract_intent_strips_role_prefix():
 
 
 def test_extract_brand_none_when_no_brands_registered():
-    brand, reason = extract_brand("use jasem brand please", [])
+    brand, reason = extract_brand("use acme brand please", [])
     assert brand is None
     assert "no brands registered" in reason.lower()
 
 
 def test_extract_brand_none_when_substring_not_at_boundary():
-    brand, _ = extract_brand("jasemal is not the brand we want", ["jasem"])
+    brand, _ = extract_brand("acmecorp is not the brand we want", ["acme"])
     assert brand is None
 
 
 def test_extract_brand_matches_with_indicator_verb():
     brand, reason = extract_brand(
-        "please use jasem for this document", ["jasem", "acme"]
+        "please use acme for this document", ["acme", "acme"]
     )
-    assert brand == "jasem"
+    assert brand == "acme"
     assert "near indicator" in reason.lower() or "indicator" in reason.lower()
 
 
 def test_extract_brand_matches_in_quotes():
-    brand, reason = extract_brand("render this with \"jasem\" styling", ["jasem"])
-    assert brand == "jasem"
+    brand, reason = extract_brand("render this with \"acme\" styling", ["acme"])
+    assert brand == "acme"
     assert "quoted" in reason.lower()
 
 
 def test_extract_brand_case_insensitive():
-    brand, _ = extract_brand("Use JASEM brand for this", ["jasem"])
-    assert brand == "jasem"
+    brand, _ = extract_brand("Use ACME brand for this", ["acme"])
+    assert brand == "acme"
 
 
 def test_extract_brand_most_recent_wins():
-    t = "first use acme brand... later, switch to use jasem brand instead"
-    brand, reason = extract_brand(t, ["jasem", "acme"])
-    assert brand == "jasem"
+    t = "first use acme brand... later, switch to use contoso brand instead"
+    brand, reason = extract_brand(t, ["acme", "contoso"])
+    assert brand == "contoso"
     assert "winner over" in reason.lower()
 
 
 def test_extract_brand_rejects_bare_mention_without_indicator():
     brand, _ = extract_brand(
-        "I was thinking about jasem yesterday while drinking coffee",
-        ["jasem", "acme"],
+        "I was thinking about acme yesterday while drinking coffee",
+        ["acme", "contoso"],
     )
-    # "jasem" appears but no indicator word nearby → reject
+    # "acme" appears but no indicator word nearby → reject
     assert brand is None
 
 
@@ -209,12 +209,12 @@ def test_infer_signals_empty_transcript():
 
 
 def test_infer_signals_full_explicit_case():
-    t = "please render the tutorial framework guide in English using jasem brand"
-    inf = infer_signals(t, known_brands=["jasem", "acme"])
-    assert inf.signals.brand == "jasem"
+    t = "please render the tutorial framework guide in English using acme brand"
+    inf = infer_signals(t, known_brands=["acme", "acme"])
+    assert inf.signals.brand == "acme"
     assert inf.signals.lang == "en"
     assert "tutorial" in inf.signals.intent
-    assert "brand jasem" in inf.summary
+    assert "brand acme" in inf.summary
     assert "lang en" in inf.summary
 
 
@@ -260,22 +260,22 @@ def test_infer_signals_feeds_gate_evaluate():
     # topic score ≥ STRONG threshold → HIGH → proceed.
     t = (
         "tutorial framework-guide bloom ai-collaboration production — "
-        "in English with jasem brand"
+        "in English with acme brand"
     )
-    inf = infer_signals(t, known_brands=["jasem"])
+    inf = infer_signals(t, known_brands=["acme"])
     decision = evaluate(inf.signals, caps)
     assert decision.outcome == "proceed"
     assert decision.plan is not None
     assert decision.plan.recipe == "tutorial"
-    assert decision.plan.brand == "jasem"
+    assert decision.plan.brand == "acme"
     assert decision.plan.lang == "en"
 
 
 def test_infer_signals_moderate_topic_routes_to_choose():
     """Integration: diluted intent (moderate topic match) routes to MEDIUM/choose."""
     caps = load_capabilities()
-    t = "please render the tutorial framework guide in English using jasem brand"
-    inf = infer_signals(t, known_brands=["jasem"])
+    t = "please render the tutorial framework guide in English using acme brand"
+    inf = infer_signals(t, known_brands=["acme"])
     decision = evaluate(inf.signals, caps)
     # This intent has diluting tokens ("please", "render", "using", "brand")
     # that drop topic score below STRONG=0.7 — gate routes to choose, not proceed.
@@ -288,7 +288,7 @@ def test_infer_signals_low_confidence_fires_gate():
     t = "something totally-novel quarterly-board-memo brainstorm"
     inf = infer_signals(
         t,
-        known_brands=["jasem", "acme", "globex"],  # ambiguous
+        known_brands=["acme", "acme", "globex"],  # ambiguous
     )
     decision = evaluate(inf.signals, caps)
     # Either LOW (fire) or needs-intent depending on match score
@@ -297,8 +297,8 @@ def test_infer_signals_low_confidence_fires_gate():
 
 def test_infer_signals_summary_is_under_two_sentences():
     """ADR observability: summary must be ≤ 2 sentences."""
-    t = "render the tutorial framework guide in English using jasem brand"
-    inf = infer_signals(t, known_brands=["jasem"])
+    t = "render the tutorial framework guide in English using acme brand"
+    inf = infer_signals(t, known_brands=["acme"])
     # Sentence-count: split by period, non-empty fragments
     sentences = [s.strip() for s in inf.summary.split(".") if s.strip()]
     assert len(sentences) <= 2
@@ -306,7 +306,7 @@ def test_infer_signals_summary_is_under_two_sentences():
 
 def test_infer_signals_log_entry_shape():
     t = "render tutorial please"
-    inf = infer_signals(t, known_brands=["jasem"])
+    inf = infer_signals(t, known_brands=["acme"])
     entry = inf.log_entry
     assert entry["schema_version"] == 1
     assert "ts" in entry
@@ -319,7 +319,7 @@ def test_infer_signals_log_entry_shape():
         "lang",
         "lang_source",
     }
-    assert entry["known_brands"] == ["jasem"]
+    assert entry["known_brands"] == ["acme"]
 
 
 def test_infer_signals_uses_disk_brands_by_default(tmp_path, monkeypatch):

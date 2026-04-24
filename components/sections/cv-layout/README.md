@@ -34,7 +34,7 @@ pattern used by every other Phase-3 recipe.
     sidebar_html: |
       <div class="photo"></div>
       <div class="name-block">
-        <div class="name">Jasem Al Neaimi</div>
+        <div class="name">Alex Acme</div>
         <div class="headline">Senior AI Engineer · GCC</div>
       </div>
       <section>

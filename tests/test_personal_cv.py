@@ -187,7 +187,7 @@ def test_cv_renders_all_v1_content(tmp_path):
     flat = re.sub(r"\s+", " ", raw).strip()
 
     # Name + identity
-    assert "Jasem Al Neaimi" in flat
+    assert "Alex Acme" in flat
     assert "Professional Headline" in flat
     # Contact labels (uppercased by sidebar CSS)
     for label in ("Email", "Phone", "Location", "Portfolio", "LinkedIn"):

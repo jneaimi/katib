@@ -163,8 +163,8 @@ def test_cover_letter_renders_all_v1_placeholder_content(tmp_path):
     flat = re.sub(r"\s+", " ", raw).strip()
 
     # Masthead
-    assert "Jasem Al Neaimi" in flat
-    assert "jasem@example.com" in flat
+    assert "Alex Acme" in flat
+    assert "alex@acme.test" in flat
     assert "Dubai, UAE" in flat
     # Date
     assert "23 April 2026" in flat

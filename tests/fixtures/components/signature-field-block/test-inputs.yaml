@@ -3,7 +3,7 @@
 inputs:
   parties:
     - label: "For Party A"
-      name: "jasem | katib"
+      name: "Acme | Katib"
       fields: ["Name", "Title", "Signature", "Date"]
     - label: "For Party B"
       name: "[Party B Legal Name]"

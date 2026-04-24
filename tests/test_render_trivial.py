@@ -35,7 +35,7 @@ def test_trivial_recipe_renders_to_pdf(lang, out_dir):
     text = "\n".join(page.extract_text() or "" for page in reader.pages).lower()
     # Eyebrow CSS uppercases EN text, so match case-insensitively
     assert "phase 1" in text
-    assert "jasem al neaimi" in text
+    assert "alex acme" in text
 
 
 def test_trivial_ar_contains_arabic_text(out_dir):
@@ -46,7 +46,7 @@ def test_trivial_ar_contains_arabic_text(out_dir):
     reader = PdfReader(str(pdf))
     text = "\n".join(page.extract_text() or "" for page in reader.pages)
     # Some Arabic text from the recipe's step-circle labels, callout body, etc.
-    # The author_name "Jasem Al Neaimi" renders in Latin script (name field not
+    # The author_name "Alex Acme" renders in Latin script (name field not
     # localised in the test recipe), but the recipe-level strings like the
     # callout title appear.
     assert text.strip(), "AR PDF produced empty text"

@@ -42,7 +42,7 @@ Each party object:
   inputs:
     parties:
       - label: "For Party A"
-        name: "jasem | katib"
+        name: "Acme | Katib"
         fields: ["Name", "Title", "Signature", "Date"]
       - label: "For Party B"
         name: "[Party B]"
@@ -55,8 +55,8 @@ Each party object:
 - component: signature-field-block
   inputs:
     parties:
-      - label: "For jasem | katib"
-        name: "Jasem Al Neaimi"
+      - label: "For Acme | Katib"
+        name: "Alex Acme"
         fields: ["Signature", "Date"]
       - label: "For [Client Name]"
         fields: ["Name", "Title", "Signature", "Date"]

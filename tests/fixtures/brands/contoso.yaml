@@ -1,0 +1,37 @@
+# Katib test brand — anonymous "Contoso Ltd" profile, second of two so
+# brand-inference tests can verify disambiguation across multiple known
+# brands. Not a real customer.
+
+name: Contoso Ltd
+name_ar: كونتوسو
+legal_name: Contoso Limited
+
+identity:
+  author_name: Chris Contoso
+  email: chris@contoso.test
+  phone: "+1 555 0200"
+
+colors:
+  accent: "#6B2D68"
+  accent_2: "#C17A00"
+  accent_on: "#FFFFFF"
+  text: "#111111"
+  text_secondary: "#333333"
+  text_tertiary: "#666666"
+  page_bg: "#F5F5F0"
+  border: "#E0E0E0"
+  border_strong: "#AAAAAA"
+  tag_bg: "#E8DFE7"
+  tag_fg: "#3A1538"
+  code_bg: "#222222"
+  code_fg: "#EEEEEE"
+
+fonts:
+  en:
+    primary: "Inter"
+    display: "Inter"
+    fallback: "Helvetica Neue, system-ui, sans-serif"
+  ar:
+    primary: "IBM Plex Arabic"
+    display: "IBM Plex Arabic"
+    fallback: "Cairo, Tahoma, sans-serif"

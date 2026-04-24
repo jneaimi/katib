@@ -4,10 +4,10 @@ Phase 1 CLI (Python-only). The `katib` npx/shell wrapper gets rewired to
 this in Phase 5. For now, invoke via uv:
 
     uv run scripts/build.py <recipe> --lang en
-    uv run scripts/build.py <recipe> --lang ar --brand jasem --slug 2026-04-23-demo
+    uv run scripts/build.py <recipe> --lang ar --brand acme --slug 2026-04-23-demo
     uv run scripts/build.py <recipe> --lang en --out /tmp/test.pdf
     uv run scripts/build.py <recipe> --lang en --skip-audit-check
-    uv run scripts/build.py <recipe> --lang en --brand jasem --json
+    uv run scripts/build.py <recipe> --lang en --brand acme --json
 """
 from __future__ import annotations
 

@@ -2,5 +2,5 @@
 # Used by `katib component test sections-grid`. Add realistic sample values.
 inputs:
   title: "Sample title"
-brand: null        # or a registered brand name, e.g. jasem
+brand: null        # or a registered brand name, e.g. acme
 variant: null      # or a declared variant name

@@ -59,7 +59,7 @@ def test_two_party_four_field_renders_en(tmp_path):
     inputs:
       parties:
         - label: "For Party A"
-          name: "jasem | katib"
+          name: "Acme | Katib"
           fields: ["Name", "Title", "Signature", "Date"]
         - label: "For Party B"
           name: "[Party B]"
@@ -76,7 +76,7 @@ def test_two_party_four_field_renders_en(tmp_path):
     assert "#katib-section-0 { break-inside: avoid" in html
     # party labels and names present
     assert "For Party A" in html
-    assert "jasem | katib" in html
+    assert "Acme | Katib" in html
 
 
 def test_single_party_renders(tmp_path):
@@ -125,7 +125,7 @@ def test_ar_render_reads_right_to_left(tmp_path):
     inputs:
       parties:
         - label: "الطرف الأول"
-          name: "jasem | katib"
+          name: "Acme | Katib"
           fields: ["الاسم", "الصفة", "التوقيع", "التاريخ"]
         - label: "الطرف الثاني"
           fields: ["الاسم", "الصفة", "التوقيع", "التاريخ"]

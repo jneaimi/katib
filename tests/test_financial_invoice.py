@@ -208,7 +208,7 @@ def test_invoice_renders_all_v1_content(tmp_path):
     # Letterhead (doc_title uppercased by letterhead commercial variant CSS)
     assert "Tax Invoice".upper() in flat.upper()
     assert "INV-2026-0042" in flat
-    assert "jasem | katib" in flat or "JASEM | KATIB" in flat.upper()
+    assert "Acme | Katib" in flat or "ACME | KATIB" in flat.upper()
     # Parties
     assert "Bill From".upper() in flat.upper()
     assert "Bill To".upper() in flat.upper()

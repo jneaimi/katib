@@ -34,8 +34,8 @@ Closing signature (letter, MoU):
 ```yaml
 - component: signature-block
   inputs:
-    name: "Jasem Al Neaimi"
-    title: "Managing Director · jasem | katib"
+    name: "Alex Acme"
+    title: "Managing Director · Acme | Katib"
     date: "23 April 2026"
 ```
 

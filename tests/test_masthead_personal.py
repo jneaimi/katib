@@ -79,9 +79,9 @@ def _inline_recipe(
     tmp_path: Path,
     *,
     lang: str = "en",
-    name: str = "Jasem Al Neaimi",
+    name: str = "Alex Acme",
     tagline: str | None = "Senior AI Engineer",
-    email: str | None = "jasem@example.com",
+    email: str | None = "alex@acme.test",
     phone: str | None = "+971 50 000 0000",
     location: str | None = "Dubai, UAE",
 ) -> Path:
@@ -117,27 +117,27 @@ def test_masthead_personal_renders_en(tmp_path):
     assert "katib-masthead-personal__identity" in html
     assert "katib-masthead-personal__contact" in html
     # Content
-    assert "Jasem Al Neaimi" in html
+    assert "Alex Acme" in html
     assert "Senior AI Engineer" in html
-    assert "jasem@example.com" in html
+    assert "alex@acme.test" in html
     assert "+971 50 000 0000" in html
     assert "Dubai, UAE" in html
 
 
 def test_masthead_personal_renders_ar(tmp_path):
-    rfile = _inline_recipe(tmp_path, lang="ar", name="جاسم النعيمي")
+    rfile = _inline_recipe(tmp_path, lang="ar", name="أليكس أكمي")
     html, _ = compose(str(rfile), "ar")
     assert 'dir="rtl"' in html
-    assert "جاسم النعيمي" in html
+    assert "أليكس أكمي" in html
 
 
 def test_masthead_personal_ar_contact_rows_forced_ltr(tmp_path):
     """Email + phone must render LTR inside RTL template (addresses + phone
     numbers are structurally LTR even in Arabic documents)."""
-    rfile = _inline_recipe(tmp_path, lang="ar", name="جاسم النعيمي")
+    rfile = _inline_recipe(tmp_path, lang="ar", name="أليكس أكمي")
     html, _ = compose(str(rfile), "ar")
     # Both email and phone divs should carry dir="ltr"
-    assert 'katib-masthead-personal__contact-row" dir="ltr">jasem@example.com' in html
+    assert 'katib-masthead-personal__contact-row" dir="ltr">alex@acme.test' in html
     assert 'katib-masthead-personal__contact-row" dir="ltr">+971 50 000 0000' in html
 
 
@@ -145,7 +145,7 @@ def test_masthead_personal_tagline_optional(tmp_path):
     """Missing tagline should not render an empty element."""
     rfile = _inline_recipe(tmp_path, tagline=None)
     html, _ = compose(str(rfile), "en")
-    assert "Jasem Al Neaimi" in html
+    assert "Alex Acme" in html
     assert '<div class="katib-masthead-personal__tagline">' not in html
 
 
@@ -162,18 +162,15 @@ def test_masthead_personal_contact_fields_skip_when_all_missing(tmp_path):
 # ---------------------------------------------------------------- brand fallback
 
 
-def test_masthead_personal_falls_back_to_brand_identity(tmp_path, monkeypatch):
+def test_masthead_personal_falls_back_to_brand_identity(tmp_path, test_brands_dir):
     """When email/phone not in recipe inputs but brand profile provides them,
     the contact rows should render with brand values. Exercises the
     `identity.email` / `identity.phone` context vars in the template."""
-    # Use jasem brand profile which has identity fields set
+    # Uses anonymous 'acme' test brand — identity.author_name is populated,
+    # so the masthead's brand-fallback path should emit that name.
     rfile = _inline_recipe(tmp_path, email=None, phone=None)
-    html, _ = compose(str(rfile), "en", brand="jasem")
-    # Whether the rendered HTML contains the brand email/phone depends on the
-    # jasem brand profile's identity fields being populated. If they are set,
-    # they appear; if not, the row just doesn't render. The invariant we test:
-    # the recipe render doesn't crash when the input is unset but brand has values.
-    assert "Jasem Al Neaimi" in html
+    html, _ = compose(str(rfile), "en", brand="acme")
+    assert "Alex Acme" in html
     assert "katib-masthead-personal" in html
 
 

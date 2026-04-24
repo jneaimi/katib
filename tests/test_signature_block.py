@@ -67,7 +67,7 @@ def _inline_recipe(
     *,
     variant: str | None = None,
     lang: str = "en",
-    name: str = "Jasem Al Neaimi",
+    name: str = "Alex Acme",
     title: str | None = "Managing Director",
     organization: str | None = None,
     location: str | None = None,
@@ -104,7 +104,7 @@ def test_signature_block_renders_default_signatory(tmp_path):
     # No "Signed" label element under line-over (the class appears in inlined <style>;
     # check the actual div element)
     assert '<div class="katib-signature__label">' not in html
-    assert "Jasem Al Neaimi" in html
+    assert "Alex Acme" in html
     assert "Managing Director" in html
 
 
@@ -163,7 +163,7 @@ def test_signature_block_without_optional_fields_still_renders(tmp_path):
     """Minimal recipe — only required `name` field."""
     rfile = _inline_recipe(tmp_path, title=None)
     html, _ = compose(str(rfile), "en")
-    assert "Jasem Al Neaimi" in html
+    assert "Alex Acme" in html
     # No title element when unset (the class name appears in inlined <style>; check for the div)
     assert '<div class="katib-signature__title">' not in html
     assert '<div class="katib-signature__organization">' not in html

@@ -30,13 +30,14 @@ sys.path.insert(0, str(REPO_ROOT))
 # ================================================================ EC1
 
 
-def test_ec1_bloom_framework_guide_renders(tmp_path):
+def test_ec1_bloom_framework_guide_renders(tmp_path, test_brands_dir):
     """EC1: The Bloom framework guide renders via v2 tutorial recipe."""
     out_pdf = tmp_path / "tutorial.en.pdf"
+    env = {**os.environ, "KATIB_BRANDS_DIR": str(test_brands_dir)}
     result = subprocess.run(
         ["uv", "run", "scripts/build.py", "tutorial",
-         "--lang", "en", "--brand", "jasem", "--out", str(out_pdf)],
-        cwd=REPO_ROOT, capture_output=True, text=True, timeout=120,
+         "--lang", "en", "--brand", "acme", "--out", str(out_pdf)],
+        cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=120,
     )
     assert result.returncode == 0, (
         f"tutorial render failed:\n  stdout: {result.stdout}\n  stderr: {result.stderr}"
@@ -147,22 +148,23 @@ def test_ec6_skill_md_describes_v2_flow():
 # ================================================================ EC7
 
 
-def test_ec7_context_aware_mode_infers_signals(tmp_path):
+def test_ec7_context_aware_mode_infers_signals(tmp_path, test_brands_dir):
     """EC7: /katib context-aware mode — transcript → correct recipe + brand + lang."""
     transcript = (
         "render tutorial framework-guide bloom ai-collaboration production "
-        "in English with jasem brand"
+        "in English with acme brand"
     )
+    env = {**os.environ, "KATIB_BRANDS_DIR": str(test_brands_dir)}
     result = subprocess.run(
         ["uv", "run", "scripts/route.py", "infer",
          "--transcript", transcript, "--no-persist"],
-        cwd=REPO_ROOT, capture_output=True, text=True, timeout=30,
+        cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=30,
     )
     assert result.returncode == 0
     inferred = json.loads(result.stdout)
     assert inferred["action"] == "render"
     assert inferred["recipe"] == "tutorial"
-    assert inferred["brand"] == "jasem"
+    assert inferred["brand"] == "acme"
     assert inferred["lang"] == "en"
     assert inferred["confidence"] == "HIGH"
 

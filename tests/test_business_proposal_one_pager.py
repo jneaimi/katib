@@ -153,7 +153,7 @@ def test_one_pager_renders_all_v1_content(tmp_path):
     flat = re.sub(r"\s+", " ", raw).strip()
 
     # Eyebrow row
-    assert "jasem | katib" in flat or "JASEM | KATIB" in flat.upper()
+    assert "Acme | Katib" in flat or "ACME | KATIB" in flat.upper()
     assert "PROP/2026/001" in flat
     assert "2026-04-24" in flat
     # Hero

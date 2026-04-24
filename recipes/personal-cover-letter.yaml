@@ -11,9 +11,9 @@ keywords: [cover-letter, personal, job-application, portfolio, introduction, cor
 sections:
   - component: masthead-personal
     inputs:
-      name: "Jasem Al Neaimi"
+      name: "Alex Acme"
       tagline: "[Professional headline — e.g., Senior AI Engineer]"
-      email: "jasem@example.com"
+      email: "alex@acme.test"
       phone: "+971 50 000 0000"
       location: "Dubai, UAE"
 
@@ -46,7 +46,7 @@ sections:
 
   - component: signature-block
     inputs:
-      name: "Jasem Al Neaimi"
+      name: "Alex Acme"
       title: "[Title / current role]"
 
   - component: rule

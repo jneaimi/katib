@@ -1,9 +1,9 @@
 # Test inputs for `masthead-personal` isolated render.
 # Used by `katib component test masthead-personal`.
 inputs:
-  name: "Jasem Al Neaimi"
+  name: "Alex Acme"
   tagline: "Senior AI Engineer"
-  email: "jasem@example.com"
+  email: "alex@acme.test"
   phone: "+971 50 000 0000"
   location: "Dubai, UAE"
 brand: null

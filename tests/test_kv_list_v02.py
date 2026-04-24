@@ -54,7 +54,7 @@ def _inline_recipe(tmp_path: Path, *, variant: str | None = None, lang: str = "e
         "    inputs:\n"
         "      heading: Employee details\n"
         "      items:\n"
-        '        - {term: Name, value: "Jasem Al Neaimi"}\n'
+        '        - {term: Name, value: "Alex Acme"}\n'
         '        - {term: Passport No., value: "A1234567"}\n'
         '        - {term: Emirates ID, value: "784-YYYY-NNNNNNN-N"}\n'
         '        - {term: Employment Status, value: "Active — Full Time"}\n'

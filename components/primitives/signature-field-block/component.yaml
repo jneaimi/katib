@@ -21,7 +21,7 @@ accepts:
             - label:
                 type: string
                 required: true
-                description: Uppercase eyebrow label above the party (e.g., "For Party A", "For jasem | katib").
+                description: Uppercase eyebrow label above the party (e.g., "For Party A", "For Acme | Katib").
             - name:
                 type: string
                 required: false
