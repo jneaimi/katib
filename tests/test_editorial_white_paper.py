@@ -173,7 +173,7 @@ def test_white_paper_renders_all_v1_content(tmp_path):
     # Title page (eyebrow is uppercased by inline CSS)
     assert "White Paper".upper() in flat.upper()
     assert "Primary Title" in flat
-    assert "Jasem Al Neaimi" in flat
+    assert "Alex Acme" in flat
     assert "2026-04-24" in flat
     # Abstract
     assert "Executive Summary" in flat
@@ -201,7 +201,7 @@ def test_white_paper_renders_all_v1_content(tmp_path):
     assert "Notes" in flat.upper() or "NOTES" in flat
     # About author
     assert "About the Author" in flat or "ABOUT THE AUTHOR" in flat
-    assert "jasem@jneaimi.com" in flat
+    assert "alex@acme.test" in flat
 
 
 def test_white_paper_data_table_has_five_columns_rendered():

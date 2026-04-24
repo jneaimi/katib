@@ -30,6 +30,12 @@ tmp/
 scratch/
 *.log
 
+# Per-user runtime logs regenerated on each /katib invocation.
+# Bundled memory files (audit + graduation requests) ARE tracked; these
+# session logs are not.
+memory/context-inferences.jsonl
+memory/gate-decisions.jsonl
+
 # Build artifacts
 dist/
 build/

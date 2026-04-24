@@ -96,18 +96,19 @@ def test_t1_graduation_workflow_end_to_end(memdir):
 # ================================================================ T2 — bare /katib happy path
 
 
-def test_t2_bare_katib_high_confidence_renders(tmp_path):
+def test_t2_bare_katib_high_confidence_renders(tmp_path, test_brands_dir):
     """Transcript → route.py infer (HIGH) → build.py → PDF written."""
     transcript = (
         "render tutorial framework-guide bloom ai-collaboration production "
-        "in English with jasem brand"
+        "in English with acme brand"
     )
+    env = {**os.environ, "KATIB_BRANDS_DIR": str(test_brands_dir)}
 
     # Step 1: route.py infer (JSON out)
     infer_result = subprocess.run(
         ["uv", "run", "scripts/route.py", "infer",
          "--transcript", transcript, "--no-persist"],
-        cwd=REPO_ROOT, capture_output=True, text=True, timeout=30,
+        cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=30,
     )
     assert infer_result.returncode == 0
     inferred = json.loads(infer_result.stdout)
@@ -119,9 +120,9 @@ def test_t2_bare_katib_high_confidence_renders(tmp_path):
     out_pdf = tmp_path / "t2.pdf"
     build_result = subprocess.run(
         ["uv", "run", "scripts/build.py", inferred["recipe"],
-         "--lang", inferred["lang"], "--brand", inferred["brand"] or "jasem",
+         "--lang", inferred["lang"], "--brand", inferred["brand"] or "acme",
          "--out", str(out_pdf)],
-        cwd=REPO_ROOT, capture_output=True, text=True, timeout=120,
+        cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=120,
     )
     assert build_result.returncode == 0
     assert out_pdf.exists()
@@ -146,7 +147,7 @@ def test_t3_gate_fire_full_loop(tmp_path):
          "--q1", "yes-fits", "--q2", "one-off",
          "--closest-recipe", "tutorial",
          "--intent", "quick tutorial for the team",
-         "--lang", "en", "--brand", "jasem",
+         "--lang", "en", "--brand", "acme",
          "--no-persist"],
         cwd=REPO_ROOT, capture_output=True, text=True, timeout=30,
     )

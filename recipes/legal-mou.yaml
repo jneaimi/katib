@@ -74,10 +74,10 @@ sections:
     inputs_by_lang:
       en:
         title: "Party A"
-        body: "jasem | katib · [Licence No.] · [Address, City, Emirate]"
+        body: "Acme | Katib · [Licence No.] · [Address, City, Emirate]"
       ar:
         title: "الطرف الأول"
-        body: "jasem | katib · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
+        body: "Acme | Katib · [رقم الرخصة] · [العنوان، المدينة، الإمارة]"
 
   # 5. Party B — callout info
   - component: callout
@@ -333,7 +333,7 @@ sections:
       en:
         parties:
           - label: "For Party A"
-            name: "jasem | katib"
+            name: "Acme | Katib"
             fields: ["Name", "Title", "Signature", "Date"]
           - label: "For Party B"
             name: "[Party B]"
@@ -341,7 +341,7 @@ sections:
       ar:
         parties:
           - label: "عن الطرف الأول"
-            name: "jasem | katib"
+            name: "Acme | Katib"
             fields: ["الاسم", "الصفة", "التوقيع", "التاريخ"]
           - label: "عن الطرف الثاني"
             name: "[الطرف الثاني]"

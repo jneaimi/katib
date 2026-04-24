@@ -58,6 +58,6 @@ sections:
   - component: signature-block
     variant: line-over
     inputs:
-      name: "Jasem Al Neaimi"
+      name: "Alex Acme"
       title: "Author"
       date: "2026-04-23"

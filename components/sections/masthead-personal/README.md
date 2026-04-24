@@ -32,7 +32,7 @@ With brand identity fallback:
 # Assumes active brand profile has identity.email + identity.phone set.
 - component: masthead-personal
   inputs:
-    name: "Jasem Al Neaimi"
+    name: "Alex Acme"
     tagline: "Senior AI Engineer"
     location: "Dubai, UAE"
 ```
@@ -42,9 +42,9 @@ Explicit contact (no brand fallback):
 ```yaml
 - component: masthead-personal
   inputs:
-    name: "Jasem Al Neaimi"
+    name: "Alex Acme"
     tagline: "Senior AI Engineer"
-    email: "jasem@example.com"
+    email: "alex@acme.test"
     phone: "+971 50 000 0000"
     location: "Dubai, UAE"
 ```

@@ -80,7 +80,7 @@ def _inline_recipe(tmp_path: Path, *, parties: list[dict], variant: str | None =
 
 
 NOC_PARTIES = [
-    {"name": "Jasem Al Neaimi", "title": "HR Manager", "email": "hr@example.com"},
+    {"name": "Alex Acme", "title": "HR Manager", "email": "hr@example.com"},
     {"name": "Authorised signatory", "title": "Signature & company stamp"},
 ]
 
@@ -91,7 +91,7 @@ def test_mps_block_renders_en_two_party(tmp_path):
     # Default variant is line-over
     assert "katib-multi-party-signature-block--line-over" in html
     # Both parties rendered
-    assert "Jasem Al Neaimi" in html
+    assert "Alex Acme" in html
     assert "HR Manager" in html
     assert "Authorised signatory" in html
     # Email only on first party
@@ -102,25 +102,25 @@ def test_mps_block_renders_ar(tmp_path):
     rfile = _inline_recipe(
         tmp_path,
         parties=[
-            {"name": "جاسم النعيمي", "title": "مدير الموارد البشرية"},
+            {"name": "أليكس أكمي", "title": "مدير الموارد البشرية"},
             {"name": "الموقع المفوض", "title": "التوقيع وختم الشركة"},
         ],
         lang="ar",
     )
     html, _ = compose(str(rfile), "ar")
     assert 'dir="rtl"' in html
-    assert "جاسم النعيمي" in html
+    assert "أليكس أكمي" in html
 
 
 def test_mps_block_email_forced_ltr_in_arabic(tmp_path):
     """Email addresses must render dir=ltr inside AR templates."""
     rfile = _inline_recipe(
         tmp_path,
-        parties=[{"name": "جاسم", "email": "jasem@example.com"}],
+        parties=[{"name": "أليكس", "email": "alex@acme.test"}],
         lang="ar",
     )
     html, _ = compose(str(rfile), "ar")
-    assert 'class="katib-multi-party-signature-block__email" dir="ltr">jasem@example.com' in html
+    assert 'class="katib-multi-party-signature-block__email" dir="ltr">alex@acme.test' in html
 
 
 def test_mps_block_renders_three_party_grid(tmp_path):

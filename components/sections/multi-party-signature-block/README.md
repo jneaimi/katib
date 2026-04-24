@@ -38,9 +38,9 @@ Two-party NOC signature:
 - component: multi-party-signature-block
   inputs:
     parties:
-      - name: "Jasem Al Neaimi"
+      - name: "Alex Acme"
         title: "HR Manager"
-        email: "hr@jasem-katib.example"
+        email: "hr@acme-katib.example"
       - name: "Authorised signatory"
         title: "Signature & company stamp"
 ```

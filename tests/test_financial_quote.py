@@ -227,7 +227,7 @@ def test_quote_renders_all_v1_content(tmp_path):
     # Letterhead
     assert "QUOTATION" in flat.upper()
     assert "QTE-2026-0042" in flat
-    assert "jasem | katib" in flat or "JASEM | KATIB" in flat.upper()
+    assert "Acme | Katib" in flat or "ACME | KATIB" in flat.upper()
     # Meta strip (labels uppercased by kv-list boxed CSS)
     for label in ("Issued", "Valid Until", "Currency", "Prepared By"):
         assert label.upper() in flat.upper(), f"meta label missing: {label}"
@@ -264,10 +264,10 @@ def test_quote_renders_all_v1_content(tmp_path):
     assert "Terms" in flat
     # Acceptance
     assert "Acceptance" in flat
-    assert "jasem@jneaimi.com" in flat
-    assert "Jasem Al Neaimi" in flat
+    assert "alex@acme.test" in flat
+    assert "Alex Acme" in flat
     # Signature labels uppercased by inline CSS
-    assert "FOR JASEM" in flat.upper()
+    assert "FOR ACME" in flat.upper()
     assert "ACCEPTED BY CLIENT" in flat.upper()
 
 

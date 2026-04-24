@@ -36,7 +36,7 @@ Author · Date · REF-CODE
     eyebrow: "Strategy brief"
     title: "GCC AI Ecosystem — H2 2026"
     subtitle: "Where the puck is going, and where it isn't"
-    author: "Jasem Al Neaimi"
+    author: "Alex Acme"
     date: "2026-04-23"
     reference_code: "JN-STRAT-0042"
 ```

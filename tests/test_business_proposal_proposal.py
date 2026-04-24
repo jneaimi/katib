@@ -218,7 +218,7 @@ def test_proposal_renders_all_v1_content(tmp_path):
     assert "COMMERCIAL PROPOSAL" in flat.upper()
     assert "Applied AI Training Program" in flat
     assert "PROP/2026/001" in flat
-    assert "Jasem Al Neaimi" in flat
+    assert "Alex Acme" in flat
     assert "2026-04-24" in flat
     # TOC
     assert "Contents".upper() in flat.upper()

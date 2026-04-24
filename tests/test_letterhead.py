@@ -97,7 +97,7 @@ def _inline_recipe(
         "  - component: letterhead\n"
         + variant_line +
         "    inputs:\n"
-        '      company: "jasem | katib"\n'
+        '      company: "Acme | Katib"\n'
         '      reference_code: "KATIB-2026-001"\n'
         '      date: "23 April 2026"\n'
         + doc_title_line
@@ -114,7 +114,7 @@ def test_letterhead_renders_en(tmp_path):
     assert "katib-letterhead__lead" in html
     assert "katib-letterhead__meta" in html
     # Content rendered
-    assert "jasem | katib" in html
+    assert "Acme | Katib" in html
     assert "KATIB-2026-001" in html
     assert "23 April 2026" in html
     # Default variant class emitted

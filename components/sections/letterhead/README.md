@@ -31,7 +31,7 @@ Letter header:
 ```yaml
 - component: letterhead
   inputs:
-    company: "jasem | katib"
+    company: "Acme | Katib"
     reference_code: "KATIB-2026-001"
     date: "23 April 2026"
 ```

@@ -222,7 +222,7 @@ def _scaffold_fixture(name: str) -> str:
         f"# Used by `katib component test {name}`. Add realistic sample values.\n"
         f"inputs:\n"
         f"  title: \"Sample title\"\n"
-        f"brand: null        # or a registered brand name, e.g. jasem\n"
+        f"brand: null        # or a registered brand name, e.g. acme\n"
         f"variant: null      # or a declared variant name\n"
     )
 

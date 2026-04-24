@@ -146,7 +146,7 @@ def test_letter_recipe_renders_all_v1_content(tmp_path):
     flat = re.sub(r"\s+", " ", raw).strip()
 
     # Letterhead
-    assert "jasem | katib" in flat
+    assert "Acme | Katib" in flat
     assert "KATIB-2026-001" in flat
     assert "23 April 2026" in flat
     # Recipient
@@ -162,7 +162,7 @@ def test_letter_recipe_renders_all_v1_content(tmp_path):
     assert "30-minute alignment call" in flat
     assert "Kind regards," in flat
     # Closing signature
-    assert "Jasem Al Neaimi" in flat
+    assert "Alex Acme" in flat
     assert "Managing Director" in flat
 
 

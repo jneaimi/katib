@@ -13,7 +13,7 @@ sections:
   - component: letterhead
     variant: formal
     inputs:
-      company: "jasem | katib"
+      company: "Acme | Katib"
       reference_code: "NOC/2026/042"
       date: "23 April 2026"
 
@@ -33,7 +33,7 @@ sections:
   - component: module
     inputs:
       raw_body: |
-        <p style="text-align: justify;">This letter is to confirm that the following individual is currently employed with jasem | katib in the capacity stated below, and that the company has no objection to the purpose specified below.</p>
+        <p style="text-align: justify;">This letter is to confirm that the following individual is currently employed with Acme | Katib in the capacity stated below, and that the company has no objection to the purpose specified below.</p>
 
   # 5. Employee details — kv-list boxed variant (field-summary style)
   - component: kv-list
@@ -81,4 +81,4 @@ sections:
   - component: module
     inputs:
       raw_body: |
-        <p style="margin-top: 16pt; padding-top: 8pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary); text-align: center;">This document is issued by jasem | katib. Unauthorised alteration or reproduction is prohibited.</p>
+        <p style="margin-top: 16pt; padding-top: 8pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary); text-align: center;">This document is issued by Acme | Katib. Unauthorised alteration or reproduction is prohibited.</p>

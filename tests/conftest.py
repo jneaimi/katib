@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+TEST_BRANDS_FIXTURE_DIR = Path(__file__).resolve().parent / "fixtures" / "brands"
 
 
 @pytest.fixture
@@ -19,6 +20,24 @@ def clean_env(monkeypatch):
     for var in ("KATIB_OUTPUT_ROOT", "KATIB_BRANDS_DIR", "GEMINI_API_KEY"):
         monkeypatch.delenv(var, raising=False)
     return monkeypatch
+
+
+@pytest.fixture
+def test_brands_dir(monkeypatch) -> Path:
+    """Point KATIB_BRANDS_DIR at the shipped test brand fixtures.
+
+    Returns the fixtures dir. Provides anonymous `acme` and `contoso`
+    profiles so tests that reference them work on any machine (not just
+    the developer's `~/.katib/brands/` setup). Subprocess tests should
+    read the env var from `os.environ` after this fixture runs;
+    in-process tests hit it through the standard `KATIB_BRANDS_DIR`
+    resolution path.
+    """
+    assert TEST_BRANDS_FIXTURE_DIR.exists(), (
+        f"test brands fixtures missing at {TEST_BRANDS_FIXTURE_DIR}"
+    )
+    monkeypatch.setenv("KATIB_BRANDS_DIR", str(TEST_BRANDS_FIXTURE_DIR))
+    return TEST_BRANDS_FIXTURE_DIR
 
 
 @pytest.fixture

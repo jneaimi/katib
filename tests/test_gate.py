@@ -29,8 +29,8 @@ def test_confidence_high_when_all_signals_explicit(caps):
     s = Signals(
         intent="tutorial framework guide",
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     c = score_confidence(s, caps)
     assert c.level == "HIGH"
@@ -42,8 +42,8 @@ def test_confidence_medium_when_weak_topic_but_strong_brand_lang(caps):
     s = Signals(
         intent="general document",  # won't strongly match any recipe
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     c = score_confidence(s, caps)
     assert c.level in ("MEDIUM", "LOW")
@@ -70,7 +70,7 @@ def test_confidence_medium_when_single_brand_registered_no_explicit(caps):
         intent="tutorial framework guide",
         lang="en",
         brand=None,
-        known_brands=["jasem"],  # only one registered → inferred
+        known_brands=["acme"],  # only one registered → inferred
     )
     c = score_confidence(s, caps)
     # Strong topic + inferred brand + explicit lang = HIGH
@@ -82,7 +82,7 @@ def test_confidence_ambiguous_brand_caps_at_medium(caps):
         intent="tutorial framework guide",
         lang="en",
         brand=None,
-        known_brands=["jasem", "acme", "globex"],  # multiple → ambiguous
+        known_brands=["acme", "acme", "globex"],  # multiple → ambiguous
     )
     c = score_confidence(s, caps)
     # Strong topic (50) + 0 brand + 25 lang = 75 → MEDIUM
@@ -95,8 +95,8 @@ def test_confidence_weights_are_tunable(caps):
     s = Signals(
         intent="tutorial framework guide bloom",
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     c_default = score_confidence(s, caps)
     c_topic_heavy = score_confidence(
@@ -107,7 +107,7 @@ def test_confidence_weights_are_tunable(caps):
     # Confirm override was actually used (else the scores would be identical)
     # Score differs because weight distribution differs; both top out at 100
     # when strong + explicit + explicit, so compare with weaker signals:
-    s_weak_topic = Signals(intent="tutorial", lang="en", brand="jasem", known_brands=["jasem"])
+    s_weak_topic = Signals(intent="tutorial", lang="en", brand="acme", known_brands=["acme"])
     c_weak_default = score_confidence(s_weak_topic, caps)
     c_weak_topic_heavy = score_confidence(
         s_weak_topic, caps, weights={"topic": 70, "brand": 15, "lang": 15}
@@ -121,8 +121,8 @@ def test_confidence_thresholds_are_tunable(caps):
     s = Signals(
         intent="tutorial framework guide bloom",
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     c_default = score_confidence(s, caps)
     c_strict = score_confidence(s, caps, thresholds={"high": 101})  # unreachable
@@ -152,8 +152,8 @@ def test_confidence_margin_guard_downgrades_tied_topic():
     s = Signals(
         intent="tutorial bloom guide",
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     c = score_confidence(s, fake_caps)
     # Perfect tie → margin guard should prevent HIGH
@@ -202,15 +202,15 @@ def test_evaluate_high_returns_plan(caps):
     s = Signals(
         intent="tutorial framework guide bloom",
         lang="en",
-        brand="jasem",
-        known_brands=["jasem"],
+        brand="acme",
+        known_brands=["acme"],
     )
     d = evaluate(s, caps)
     assert d.outcome == "proceed"
     assert d.plan is not None
     assert d.plan.recipe == "tutorial"
     assert d.plan.lang == "en"
-    assert d.plan.brand == "jasem"
+    assert d.plan.brand == "acme"
 
 
 def test_evaluate_medium_returns_candidates(caps):
@@ -218,7 +218,7 @@ def test_evaluate_medium_returns_candidates(caps):
         intent="tutorial framework guide",
         lang=None,  # no explicit lang
         brand=None,
-        known_brands=["jasem", "acme"],  # ambiguous brand
+        known_brands=["acme", "acme"],  # ambiguous brand
     )
     d = evaluate(s, caps)
     assert d.outcome in ("proceed", "choose")

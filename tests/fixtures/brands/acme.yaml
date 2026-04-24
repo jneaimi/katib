@@ -1,0 +1,39 @@
+# Katib test brand — anonymous "Acme Corp" profile.
+# Used by tests that exercise --brand resolution, identity fallback, or
+# brand inference. Not a real customer. Keep fields populated so
+# identity-backed assertions have something to check.
+
+name: Acme Corp
+name_ar: شركة أكمي
+legal_name: Acme Corporation FZE
+
+identity:
+  author_name: Alex Acme
+  author_name_ar: أليكس أكمي
+  email: alex@acme.test
+  phone: "+1 555 0100"
+
+colors:
+  accent: "#1F3A68"
+  accent_2: "#D4A437"
+  accent_on: "#FFFFFF"
+  text: "#111111"
+  text_secondary: "#333333"
+  text_tertiary: "#666666"
+  page_bg: "#FAFAF8"
+  border: "#DDDDDD"
+  border_strong: "#999999"
+  tag_bg: "#F0F0F0"
+  tag_fg: "#222222"
+  code_bg: "#111111"
+  code_fg: "#F5F5F5"
+
+fonts:
+  en:
+    primary: "Inter"
+    display: "Inter"
+    fallback: "Helvetica Neue, system-ui, sans-serif"
+  ar:
+    primary: "IBM Plex Arabic"
+    display: "IBM Plex Arabic"
+    fallback: "Cairo, Tahoma, sans-serif"

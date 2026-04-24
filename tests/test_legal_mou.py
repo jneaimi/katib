@@ -252,7 +252,7 @@ def test_mou_renders_all_v1_content(tmp_path):
     assert "The Parties" in flat
     assert "Party A" in flat
     assert "Party B" in flat
-    assert "jasem | katib" in flat
+    assert "Acme | Katib" in flat
     # §2 Background
     assert "Background" in flat
     # §3 Purpose + clauses

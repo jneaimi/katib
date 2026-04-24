@@ -23,7 +23,7 @@ sections:
   - component: letterhead
     variant: commercial
     inputs:
-      company: "jasem | katib"
+      company: "Acme | Katib"
       reference_code: "QTE-2026-0042"
       date: "2026-04-24"
       doc_title: "Quotation"
@@ -36,7 +36,7 @@ sections:
         - {term: "Issued", value: "2026-04-24"}
         - {term: "Valid Until", value: "2026-05-24"}
         - {term: "Currency", value: "AED"}
-        - {term: "Prepared By", value: "Jasem Al Neaimi"}
+        - {term: "Prepared By", value: "Alex Acme"}
 
   # 3. Prepared For — callout info (2nd production info consumer after handoff Day-10).
   #    v1 quote used --callout-border color for this block; info tone is the right semantic.
@@ -154,13 +154,13 @@ sections:
     inputs:
       number: 3
       title: "Acceptance"
-      intro: "To proceed, please sign below and return a scanned copy to jasem@jneaimi.com. On receipt, we will issue the initial invoice and confirm the project start date."
+      intro: "To proceed, please sign below and return a scanned copy to alex@acme.test. On receipt, we will issue the initial invoice and confirm the project start date."
       raw_body: |
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18pt; margin-top: 14pt;">
           <div>
-            <div style="font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 600; margin-bottom: 3pt;">For jasem | katib</div>
+            <div style="font-size: 8pt; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 600; margin-bottom: 3pt;">For Acme | Katib</div>
             <div style="border-bottom: 0.5pt solid var(--border-strong); height: 22pt; margin-bottom: 3pt;"></div>
-            <div style="font-size: 9.5pt;">Jasem Al Neaimi</div>
+            <div style="font-size: 9.5pt;">Alex Acme</div>
             <div style="font-size: 8pt; color: var(--text-tertiary);">Name · Title · Date</div>
           </div>
           <div>

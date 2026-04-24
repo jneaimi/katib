@@ -2,12 +2,12 @@
 inputs:
   sidebar_html: |
     <div class="name-block">
-      <div class="name" style="font-size: 18pt; font-weight: 700;">Jasem Al Neaimi</div>
+      <div class="name" style="font-size: 18pt; font-weight: 700;">Alex Acme</div>
       <div class="headline" style="font-size: 10pt;">Senior AI Engineer · GCC</div>
     </div>
     <section>
       <h3>Contact</h3>
-      <p style="font-size: 9pt;">jasem@example.com</p>
+      <p style="font-size: 9pt;">alex@acme.test</p>
     </section>
   main_html: |
     <section>
