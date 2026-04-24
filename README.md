@@ -1,14 +1,12 @@
 # Katib — Bilingual PDF Document Generation
 
-> **⚠️ v2 is under active development. This branch is not installable as a skill yet.**
->
-> For the stable v1 release, install via npm:
->
-> ```bash
-> npx @jasemal/katib@0 install
-> ```
->
-> Do not run `bash install.sh` from this repo until v1.0.0 ships.
+> **⚠️ v2 is in alpha.** User-content plumbing and the first round of
+> recipes are shipped and tested, but APIs and recipe shapes can still
+> change before `1.0.0`. If you need stability, stay on
+> `npx @jasemal/katib@0`. If you want the v2 architecture (custom
+> recipes and components under `~/.katib/`, bilingual EN+AR,
+> auto-regenerating capabilities), `npx @jasemal/katib install` installs
+> the current alpha.
 
 [![npm](https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square)](https://www.npmjs.com/package/@jasemal/katib)
 [![license](https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square)](LICENSE)
@@ -55,6 +53,67 @@ v2 key changes from v1:
 6. **Enforced graduation.** Adding new components and recipes goes through
    a CLI-driven workflow with build-time audit checks. Hand-editing the
    registry fails the skill load.
+7. **User content survives reinstall.** Your custom recipes, components,
+   and brand cover presets live under `~/.katib/`, not in the skill dir.
+   `npx install` never overwrites them.
+
+## Custom recipes & components
+
+Katib separates bundled content (shipped with the skill) from user
+content (yours, kept under `~/.katib/`). Both tiers are searched at
+resolve time, with user content silently shadowing bundled content of
+the same name.
+
+| Tier | Path | Written by |
+|---|---|---|
+| Bundled recipes | `~/.claude/skills/katib/recipes/` | Skill install |
+| Bundled components | `~/.claude/skills/katib/components/` | Skill install |
+| User recipes | `~/.katib/recipes/` | `katib recipe new` |
+| User components | `~/.katib/components/` | `katib component new --namespace user` |
+| Brand profiles + cover presets | `~/.katib/brands/` | `katib brand new`, `--save-cover-preset` |
+| Audit + gate logs | `~/.katib/memory/` | Runtime |
+
+### Create a custom recipe
+
+```bash
+uv run scripts/recipe.py new my-proposal --namespace user \
+    --description "Client proposal template"
+# edit ~/.katib/recipes/my-proposal.yaml (sections, inputs, languages)
+
+# render via /katib in Claude Code, or directly:
+uv run scripts/build.py my-proposal --lang en
+```
+
+### Create a custom component
+
+```bash
+uv run scripts/component.py new client-hero --tier section \
+    --namespace user --languages en,ar \
+    --description "Full-width hero with brand lockup"
+# edit ~/.katib/components/sections/client-hero/{en.html,ar.html,styles.css}
+```
+
+Reference it from a recipe exactly like a bundled component:
+
+```yaml
+sections:
+  - component: client-hero    # resolves user-tier first, bundled second
+    inputs:
+      headline: "Proposal for ACME"
+```
+
+### Shadow semantics
+
+A user component or recipe with the same name as a bundled one silently
+wins at resolve time — same pattern as local `.env` overriding shell
+env vars. But **scaffolding** a user item that collides with a bundled
+name is refused without `--force --justification '<why>'`, so you can't
+accidentally mask a shipped template.
+
+### Env var overrides
+
+For testing and CI isolation: `KATIB_RECIPES_DIR`, `KATIB_COMPONENTS_DIR`,
+`KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR` redirect each user-tier path.
 
 ## v1 users
 
