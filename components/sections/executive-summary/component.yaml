@@ -1,0 +1,38 @@
+name: executive-summary
+tier: section
+version: 0.1.0
+namespace: katib
+description: Key takeaways box for the top of reports, proposals, and white-papers. Header + 2-4 labeled bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent rail for visual separation from regular flow.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, border, page_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the title (e.g. "EXECUTIVE SUMMARY", "KEY FINDINGS").
+    - title:
+        type: string
+        required: true
+        description: Summary heading (e.g. "At a glance", "The bottom line").
+    - intro:
+        type: string
+        required: false
+        description: One-paragraph lede above the bullet rows.
+    - items:
+        type: array
+        required: true
+        description: List of items. Each item — {label, body}. Label renders bold+accent, body in primary text color. Expected 2-5 items.
+    - footer:
+        type: string
+        required: false
+        description: Optional call-to-action or closing line in muted text at the bottom.
+variants:
+  - default
+  - bordered
+page_behavior:
+  mode: atomic
+  break_before: auto
+  break_after: auto

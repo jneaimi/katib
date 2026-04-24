@@ -1,0 +1,21 @@
+inputs:
+  eyebrow: "ROADMAP"
+  title: "2026 delivery schedule"
+  events:
+    - date: "Jan"
+      title: "Phase 0 — archive + ADRs"
+      body: "v1 frozen under v1-reference/. Five ADRs signed off."
+      status: done
+    - date: "Feb-Mar"
+      title: "Phase 1 — core engine"
+      body: "Composer, renderer, token system, first 8 primitives."
+      status: done
+    - date: "Apr"
+      title: "Phase 3 — layout + builder"
+      body: "Page-layout primitives + AI-assisted component builder."
+      status: active
+    - date: "May-Jun"
+      title: "Phase 4 — sharing + import/export"
+      status: upcoming
+brand: null
+variant: default

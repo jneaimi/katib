@@ -1,0 +1,23 @@
+{%- set v = variant or 'default' %}
+<section class="katib-section katib-exec-summary katib-exec-summary--{{ v }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-exec-summary__eyebrow" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+    <h2 class="katib-exec-summary__title">{{ input.title }}</h2>
+{%- if input.intro %}
+    <p class="katib-exec-summary__intro">{{ input.intro }}</p>
+{%- endif %}
+{%- if input.items %}
+    <ul class="katib-exec-summary__items">
+{%- for it in input.items %}
+        <li class="katib-exec-summary__item">
+            <span class="katib-exec-summary__item-label">{{ it.label }}</span>
+            <span class="katib-exec-summary__item-body">{{ it.body }}</span>
+        </li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+{%- if input.footer %}
+    <p class="katib-exec-summary__footer">{{ input.footer }}</p>
+{%- endif %}
+</section>

@@ -55,3 +55,9 @@
 {"component": "appendix-page", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:27:40+00:00", "from_graduation": null, "note": "Registered by katib component register"}
 {"component": "metric-block", "tier": "primitive", "namespace": "katib", "action": "scaffold", "at": "2026-04-24T20:45:51+00:00", "from_graduation": null, "force_justification": null, "note": "Scaffolded by katib component new"}
 {"component": "metric-block", "tier": "primitive", "namespace": "katib", "action": "register", "at": "2026-04-24T20:47:25+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "executive-summary", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:55:08+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "timeline", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T20:57:01+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "citation", "tier": "primitive", "namespace": "katib", "action": "register", "at": "2026-04-24T20:58:15+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "references-list", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T21:00:24+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "toc", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T21:01:59+00:00", "from_graduation": null, "note": "Registered by katib component register"}
+{"component": "timeline", "tier": "section", "namespace": "katib", "action": "register", "at": "2026-04-24T21:04:54+00:00", "from_graduation": null, "note": "Registered by katib component register"}

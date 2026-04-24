@@ -1,0 +1,15 @@
+# Test inputs for `executive-summary` isolated render.
+inputs:
+  eyebrow: "EXECUTIVE SUMMARY"
+  title: "At a glance"
+  intro: "Three things a reader should take away before reading the full report."
+  items:
+    - label: "Growth"
+      body: "YoY revenue up 18%, driven by UAE and KSA expansion."
+    - label: "Risk"
+      body: "Infrastructure costs rose 22% — contract renegotiation scheduled."
+    - label: "Next"
+      body: "Board review on 2026-Q3 plan by end of month."
+  footer: "See Section II for the full breakdown."
+brand: null
+variant: default

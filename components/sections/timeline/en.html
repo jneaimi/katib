@@ -1,0 +1,29 @@
+{%- set v = variant or 'default' %}
+<section class="katib-section katib-timeline katib-timeline--{{ v }}" lang="en">
+{%- if input.eyebrow or input.title %}
+    <header class="katib-timeline__head">
+{%- if input.eyebrow %}
+        <div class="katib-timeline__eyebrow" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-timeline__title">{{ input.title }}</h2>
+{%- endif %}
+    </header>
+{%- endif %}
+{%- if input.events %}
+    <ol class="katib-timeline__events">
+{%- for ev in input.events %}
+        <li class="katib-timeline__event katib-timeline__event--{{ ev.status or 'upcoming' }}">
+            <div class="katib-timeline__node"></div>
+            <div class="katib-timeline__event-date">{{ ev.date }}</div>
+            <div class="katib-timeline__event-body">
+                <h3 class="katib-timeline__event-title">{{ ev.title }}</h3>
+{%- if ev.body %}
+                <p class="katib-timeline__event-text">{{ ev.body }}</p>
+{%- endif %}
+            </div>
+        </li>
+{%- endfor %}
+    </ol>
+{%- endif %}
+</section>

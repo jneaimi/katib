@@ -1,0 +1,29 @@
+inputs:
+  title: "Contents"
+  entries:
+    - label: "Executive Summary"
+      page: 1
+      level: 1
+    - label: "Part I — Context"
+      page: 3
+      level: 1
+    - label: "Market overview"
+      page: 4
+      level: 2
+    - label: "Competitive landscape"
+      page: 8
+      level: 2
+    - label: "Part II — Approach"
+      page: 12
+      level: 1
+    - label: "Methodology"
+      page: 13
+      level: 2
+    - label: "Data collection"
+      page: 15
+      level: 3
+    - label: "Appendix A — Raw data"
+      page: "A-1"
+      level: 1
+brand: null
+variant: default

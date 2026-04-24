@@ -1,0 +1,30 @@
+name: timeline
+tier: section
+version: 0.1.0
+namespace: katib
+description: Vertical event list with a connecting rail. Each event has a date, title, optional body, and status (done | active | upcoming — controls node tint). For progress reports, project plans, onboarding sequences, company histories. Rail flips to right side for RTL so the reading order is date-left → content-right in EN and date-right → content-left in AR.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the title (e.g. "ROADMAP", "PROJECT PHASES").
+    - title:
+        type: string
+        required: false
+        description: Optional heading above the timeline.
+    - events:
+        type: array
+        required: true
+        description: List of events. Each entry — {date, title, body, status?}. Status accepts "done" | "active" | "upcoming" and controls the node tint.
+variants:
+  - default
+  - compact
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-timeline__event

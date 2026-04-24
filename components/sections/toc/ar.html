@@ -1,0 +1,15 @@
+{%- set v = variant or 'default' %}
+<section class="katib-section katib-toc katib-toc--{{ v }}" lang="ar" dir="rtl">
+    <h2 class="katib-toc__title">{{ input.title or 'المحتويات' }}</h2>
+{%- if input.entries %}
+    <ul class="katib-toc__entries">
+{%- for e in input.entries %}
+        <li class="katib-toc__entry katib-toc__entry--level-{{ e.level or 1 }}">
+            <span class="katib-toc__label">{{ e.label }}</span>
+            <span class="katib-toc__leader"></span>
+            <span class="katib-toc__page">{{ e.page }}</span>
+        </li>
+{%- endfor %}
+    </ul>
+{%- endif %}
+</section>

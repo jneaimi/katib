@@ -1,0 +1,18 @@
+inputs:
+  title: "References"
+  entries:
+    - authors: "Al Neaimi, J."
+      year: 2026
+      title: "Bilingual print for the AI era"
+      source: "Katib internal notes"
+    - authors: "W3C"
+      year: 2024
+      title: "CSS Paged Media Module Level 3"
+      source: "w3.org/TR/css-page-3"
+      url: "https://www.w3.org/TR/css-page-3/"
+    - authors: "CourtBouillon"
+      year: 2025
+      title: "WeasyPrint documentation"
+      source: "doc.courtbouillon.org"
+brand: null
+variant: default

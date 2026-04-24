@@ -1,0 +1,23 @@
+{%- set v = variant or 'default' %}
+<section class="katib-section katib-references-list katib-references-list--{{ v }}" lang="ar" dir="rtl">
+    <h2 class="katib-references-list__title">{{ input.title or 'المراجع' }}</h2>
+{%- if input.entries %}
+    <ol class="katib-references-list__entries">
+{%- for e in input.entries %}
+        <li class="katib-references-list__entry">
+{%- if e.authors %}
+            <span class="katib-references-list__authors">{{ e.authors }}</span>
+{%- endif %}
+{%- if e.year %} <span class="katib-references-list__year">({{ e.year }}).</span>
+{%- endif %}
+{%- if e.title %} <span class="katib-references-list__title-text">{{ e.title }}.</span>
+{%- endif %}
+{%- if e.source %} <span class="katib-references-list__source">{{ e.source }}.</span>
+{%- endif %}
+{%- if e.url %} <span class="katib-references-list__url">{{ e.url }}</span>
+{%- endif %}
+        </li>
+{%- endfor %}
+    </ol>
+{%- endif %}
+</section>

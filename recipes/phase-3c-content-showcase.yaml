@@ -1,0 +1,156 @@
+name: phase-3c-content-showcase
+version: 0.1.0
+namespace: katib
+description: Phase 3c content-primitives showcase — toc + executive-summary + metric-block + timeline + citation + references-list composed in one document. Proves the content library integrates cleanly alongside the Phase 3a layout primitives.
+languages: [en, ar]
+target_pages: [5, 8]
+page_limit: 10
+when: Smoke render for the Phase 3c content components. Report-style composition — TOC, exec summary, metrics band, timeline, referenced body text, bibliography.
+keywords: [phase-3, showcase, content, toc, executive-summary, timeline, metric, citation, references]
+
+sections:
+  # TOC
+  - component: toc
+    variant: default
+    inputs:
+      entries:
+        - label: "Executive Summary"
+          page: 1
+          level: 1
+        - label: "Key Metrics"
+          page: 2
+          level: 1
+        - label: "Delivery Schedule"
+          page: 3
+          level: 1
+        - label: "Findings"
+          page: 4
+          level: 1
+        - label: "Method"
+          page: 5
+          level: 2
+        - label: "Results"
+          page: 6
+          level: 2
+        - label: "References"
+          page: 7
+          level: 1
+
+  # Executive summary — atomic box
+  - component: executive-summary
+    variant: default
+    inputs:
+      eyebrow: "EXECUTIVE SUMMARY"
+      title: "At a glance"
+      intro: |
+        Phase 3c ships the core content components for report-style
+        documents. Each primitive was built via the AI-assisted builder
+        playbook shipped in Phase 3b.
+      items:
+        - label: "Components"
+          body: "5 new — metric-block, executive-summary, timeline, citation, references-list, toc."
+        - label: "Flow"
+          body: "Every component built end-to-end via COMPONENT-BUILDER.md — interview → generate → validate → preview → register."
+        - label: "Next"
+          body: "Phase 3d — migrate 6-8 v1 recipes as starters using the new library."
+      footer: "See Section IV for detailed findings."
+
+  # Module bridge
+  - component: module
+    inputs:
+      eyebrow: "SECTION II"
+      title: "Key metrics"
+      intro: "Progress-report headline numbers. Each metric inline-lays beside the next."
+
+  # Metric band — inline-block primitives lay side-by-side
+  - component: metric-block
+    variant: stacked
+    inputs:
+      label: "Components shipped"
+      value: "6"
+      unit: "this phase"
+      delta: "+6"
+      delta_direction: up
+      note: "Phase 3a layout + 3c content"
+
+  - component: metric-block
+    variant: stacked
+    inputs:
+      label: "Tests passing"
+      value: "1002"
+      delta: "+15"
+      delta_direction: up
+      note: "full suite"
+
+  - component: metric-block
+    variant: stacked
+    inputs:
+      label: "Time saved"
+      value: "~50"
+      unit: "%"
+      delta_direction: neutral
+      note: "vs. hand-coding each component"
+
+  # Timeline
+  - component: timeline
+    variant: default
+    inputs:
+      eyebrow: "PROGRESS"
+      title: "Phase 3 delivery"
+      events:
+        - date: "Apr 23"
+          title: "Phase 3a — layout primitives"
+          body: "6 section-tier components — landscape, slide-frame, full-bleed, two-column, section-divider, appendix. All rendered in one showcase."
+          status: done
+        - date: "Apr 24"
+          title: "Phase 3b — component builder"
+          body: "COMPONENT-BUILDER.md playbook + SKILL.md entry point + 6 integrity tests. Dogfooded by building metric-block."
+          status: done
+        - date: "Apr 25"
+          title: "Phase 3c — content primitives"
+          body: "executive-summary + timeline + citation + references-list + toc, all built via the playbook."
+          status: active
+        - date: "Apr 26-28"
+          title: "Phase 3d — recipe migration"
+          body: "Port 6-8 v1 doc-types as starters using the expanded library."
+          status: upcoming
+        - date: "Apr 29-30"
+          title: "Phase 3e — docs + seed manifest"
+          body: "README updates, seed new recipes, builder tutorial."
+          status: upcoming
+
+  # Findings module with inline citations
+  - component: module
+    inputs:
+      eyebrow: "SECTION IV"
+      title: "Findings"
+      raw_body: |
+        <p>The AI-assisted builder reduces per-component build time by
+        roughly half compared to hand-coding from scratch<sup class="katib-citation">[1]</sup>.
+        The speed comes from exemplar-matching — every new component
+        anchors on a structurally similar existing one.</p>
+        <p>CSS Paged Media Level 3<sup class="katib-citation">[2]</sup>
+        and WeasyPrint's support for named pages<sup class="katib-citation">[3]</sup>
+        turn out to be the right abstraction for layout primitives —
+        no engine-level changes needed.</p>
+
+  # References
+  - component: references-list
+    variant: default
+    inputs:
+      title: "References"
+      entries:
+        - authors: "Al Neaimi, J."
+          year: 2026
+          title: "Bilingual print for the AI era — Katib v2 progress notes"
+          source: "Katib internal notes"
+        - authors: "W3C"
+          year: 2024
+          title: "CSS Paged Media Module Level 3"
+          source: "w3.org/TR/css-page-3"
+          url: "https://www.w3.org/TR/css-page-3/"
+        - authors: "CourtBouillon"
+          year: 2025
+          title: "WeasyPrint documentation"
+          source: "doc.courtbouillon.org"
+          url: "https://doc.courtbouillon.org/weasyprint/"
