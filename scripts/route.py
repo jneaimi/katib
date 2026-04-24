@@ -86,10 +86,15 @@ def _ensure_capabilities_fresh() -> tuple[dict, list[str]]:
     """
     notes: list[str] = []
     newest_source = 0.0
-    # Include the user-tier recipes dir so user-scaffolded recipes trigger
-    # a capabilities regen (Phase 3 — `generate_capabilities.py` reads both).
-    from core.tokens import user_recipes_dir  # local import, avoids cycles
-    watched = (RECIPES_DIR, COMPONENTS_DIR, user_recipes_dir())
+    # Include user-tier recipe + component dirs so user-scaffolded content
+    # triggers a capabilities regen (Phase 3: recipes; Phase 4: components).
+    from core.tokens import user_components_dir, user_recipes_dir  # local import, avoids cycles
+    watched = (
+        RECIPES_DIR,
+        COMPONENTS_DIR,
+        user_recipes_dir(),
+        user_components_dir(),
+    )
     for d in watched:
         if not d.exists():
             continue

@@ -30,7 +30,7 @@ from core.brand_presets import (  # noqa: E402
 from core.compose import compose  # noqa: E402
 from core.output import resolve_document_folder  # noqa: E402
 from core.render import render_to_pdf  # noqa: E402
-from core.tokens import user_memory_dir, user_recipes_dir  # noqa: E402
+from core.tokens import user_components_dir, user_memory_dir, user_recipes_dir  # noqa: E402
 
 COMPONENTS_DIR = REPO_ROOT / "components"
 RECIPES_DIR = REPO_ROOT / "recipes"
@@ -65,14 +65,18 @@ class AuditError(RuntimeError):
 
 
 def _on_disk_components() -> set[str]:
+    """Component names present in either the bundled or user tier. The audit
+    gate must see user-tier components so a user who drops one in by hand
+    (without scaffolding) gets flagged — mirrors the recipe behaviour."""
     out: set[str] = set()
-    for tier_dirname in TIER_DIRS:
-        tdir = COMPONENTS_DIR / tier_dirname
-        if not tdir.exists():
-            continue
-        for cdir in tdir.iterdir():
-            if (cdir / "component.yaml").exists():
-                out.add(cdir.name)
+    for base in (COMPONENTS_DIR, user_components_dir()):
+        for tier_dirname in TIER_DIRS:
+            tdir = base / tier_dirname
+            if not tdir.exists():
+                continue
+            for cdir in tdir.iterdir():
+                if (cdir / "component.yaml").exists():
+                    out.add(cdir.name)
     return out
 
 

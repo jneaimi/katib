@@ -25,7 +25,7 @@ SCHEMA_VERSION = 1
 TIER_DIRS = ("primitives", "sections", "covers")
 
 sys.path.insert(0, str(REPO_ROOT))
-from core.tokens import user_recipes_dir  # noqa: E402
+from core.tokens import user_components_dir, user_recipes_dir  # noqa: E402
 
 
 def _load_yaml(p: Path) -> dict:
@@ -33,26 +33,33 @@ def _load_yaml(p: Path) -> dict:
 
 
 def collect_components() -> dict[str, dict]:
+    """Collect components from bundled AND user tiers. User-tier components
+    shadow bundled ones of the same name (last-wins since user is processed
+    second) — matches the render-time precedent in compose."""
     out: dict[str, dict] = {}
-    for tier_dirname in TIER_DIRS:
-        tier_dir = COMPONENTS_DIR / tier_dirname
-        if not tier_dir.exists():
-            continue
-        for cdir in sorted(tier_dir.iterdir()):
-            meta = cdir / "component.yaml"
-            if not meta.exists():
+    component_dirs = [
+        d for d in (COMPONENTS_DIR, user_components_dir()) if d.exists()
+    ]
+    for base in component_dirs:
+        for tier_dirname in TIER_DIRS:
+            tier_dir = base / tier_dirname
+            if not tier_dir.exists():
                 continue
-            c = _load_yaml(meta)
-            name = c["name"]
-            out[name] = {
-                "namespace": c.get("namespace", "katib"),
-                "tier": c.get("tier"),
-                "version": c.get("version"),
-                "languages": c.get("languages", []),
-                "variants": c.get("variants", []),
-                "description": c.get("description", ""),
-                "used_in_recipes": 0,
-            }
+            for cdir in sorted(tier_dir.iterdir()):
+                meta = cdir / "component.yaml"
+                if not meta.exists():
+                    continue
+                c = _load_yaml(meta)
+                name = c["name"]
+                out[name] = {
+                    "namespace": c.get("namespace", "katib"),
+                    "tier": c.get("tier"),
+                    "version": c.get("version"),
+                    "languages": c.get("languages", []),
+                    "variants": c.get("variants", []),
+                    "description": c.get("description", ""),
+                    "used_in_recipes": 0,
+                }
     return out
 
 

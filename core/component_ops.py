@@ -28,17 +28,17 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from core.tokens import user_memory_dir
+from core.tokens import user_components_dir, user_memory_dir
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = REPO_ROOT / "components"
+USER_COMPONENTS_DIR = user_components_dir()
 SCHEMAS_DIR = REPO_ROOT / "schemas"
 FIXTURES_DIR = REPO_ROOT / "tests" / "fixtures" / "components"
 DIST_DIR = REPO_ROOT / "dist"
 
-# User-tier audit/requests paths (Phase 2). Component scaffold files
-# themselves still land under COMPONENTS_DIR (bundled) — scaffold-file
-# migration is scoped to a later phase.
+# User-tier audit/requests paths (Phase 2). Phase 4 extends the user tier
+# to component scaffold files themselves — see USER_COMPONENTS_DIR above.
 MEMORY_DIR = user_memory_dir()
 AUDIT_FILE = MEMORY_DIR / "component-audit.jsonl"
 REQUESTS_FILE = MEMORY_DIR / "component-requests.jsonl"
@@ -64,8 +64,33 @@ def _load_component_yaml(path: Path) -> dict:
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
+def _display_path(p: Path) -> str:
+    """Render path relative to REPO_ROOT when possible, else absolute. User-tier
+    paths (under `~/.katib/`) live outside REPO_ROOT and would raise on a
+    naked `.relative_to(REPO_ROOT)` call."""
+    try:
+        return str(p.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(p)
+
+
 def _find_component(name: str) -> Path | None:
-    """Return the component directory if it exists under any tier, else None."""
+    """Return the component directory if it exists, else None. Searches the
+    user tier first (so user components shadow bundled at lookup time), then
+    the bundled tier. Same precedent as recipe resolution."""
+    for base in (USER_COMPONENTS_DIR, COMPONENTS_DIR):
+        for tier_dirname in TIER_DIRS.values():
+            candidate = base / tier_dirname / name
+            if (candidate / "component.yaml").exists():
+                return candidate
+    return None
+
+
+def _find_bundled_component(name: str) -> Path | None:
+    """Return the bundled-tier component path, ignoring any user-tier shadow.
+    Used by the scaffold collision check — `_find_component` finds user-tier
+    shadows too, but for "refuse to shadow bundled" we need the bundled path
+    specifically."""
     for tier_dirname in TIER_DIRS.values():
         candidate = COMPONENTS_DIR / tier_dirname / name
         if (candidate / "component.yaml").exists():
@@ -229,11 +254,36 @@ def scaffold(
                 f"language {lang!r} not in {list(LANG_ENUM)}"
             )
 
+    # Existence / shadow check. Order matters:
+    #   - For namespace=user, reject a user-tier duplicate outright, and
+    #     reject a bundled-tier collision unless --force --justification is
+    #     supplied (matches recipe precedent).
+    #   - For namespace=katib, any existing component with the same name
+    #     (either tier) is a hard error — core scaffolding does not shadow.
     existing = _find_component(name)
-    if existing is not None:
-        raise ValueError(
-            f"component {name!r} already exists at {existing.relative_to(REPO_ROOT)}"
-        )
+    bundled_collision = _find_bundled_component(name)
+    if namespace == "user":
+        if existing is not None and existing != bundled_collision:
+            # User-tier duplicate — always a hard error.
+            raise ValueError(
+                f"component {name!r} already exists at {_display_path(existing)}"
+            )
+        if bundled_collision is not None and not force:
+            raise ValueError(
+                f"component {name!r} already exists in the bundled tier at "
+                f"{_display_path(bundled_collision)}. User components cannot "
+                f"shadow bundled components without "
+                f"--force --justification '<reason>'."
+            )
+        if force and bundled_collision is not None and not justification:
+            raise ValueError(
+                "--force requires --justification '<reason>' (audited)"
+            )
+    else:
+        if existing is not None:
+            raise ValueError(
+                f"component {name!r} already exists at {_display_path(existing)}"
+            )
 
     # Graduation check — soft-pass until Day 13's requests log exists.
     graduation_warning: str | None = None
@@ -241,13 +291,9 @@ def scaffold(
         count = _graduation_request_count(name)
         if count < GRADUATION_THRESHOLD and not force:
             if not REQUESTS_FILE.exists():
-                try:
-                    requests_display = str(REQUESTS_FILE.relative_to(REPO_ROOT))
-                except ValueError:
-                    requests_display = str(REQUESTS_FILE)
                 graduation_warning = (
                     "Graduation gate is not yet active — "
-                    f"{requests_display} does not exist "
+                    f"{_display_path(REQUESTS_FILE)} does not exist "
                     "(Day 13 will start writing it). Scaffolded without a "
                     f"request count. When the log exists, core namespace "
                     f"scaffolds will require >={GRADUATION_THRESHOLD} matching "
@@ -266,8 +312,12 @@ def scaffold(
 
     description = description or f"TODO: describe what {name} does."
 
+    # Write root depends on namespace:
+    #   user → USER_COMPONENTS_DIR (~/.katib/components/) — survives reinstall
+    #   katib → COMPONENTS_DIR (bundled) — ships with the skill
+    write_root = USER_COMPONENTS_DIR if namespace == "user" else COMPONENTS_DIR
     tier_dirname = TIER_DIRS[tier]
-    cdir = COMPONENTS_DIR / tier_dirname / name
+    cdir = write_root / tier_dirname / name
     cdir.mkdir(parents=True, exist_ok=False)
 
     created: list[str] = []
@@ -282,25 +332,30 @@ def scaffold(
         description=description,
     )
     (cdir / "component.yaml").write_text(yaml_text, encoding="utf-8")
-    created.append(str((cdir / "component.yaml").relative_to(REPO_ROOT)))
+    created.append(_display_path(cdir / "component.yaml"))
 
     # HTML variants
     for lang in languages:
         html_path = cdir / f"{lang}.html"
         html_path.write_text(_scaffold_html(name, lang), encoding="utf-8")
-        created.append(str(html_path.relative_to(REPO_ROOT)))
+        created.append(_display_path(html_path))
 
     # README
     readme_path = cdir / "README.md"
     readme_path.write_text(_scaffold_readme(name, tier, description), encoding="utf-8")
-    created.append(str(readme_path.relative_to(REPO_ROOT)))
+    created.append(_display_path(readme_path))
 
-    # Test fixture
-    fixture_dir = FIXTURES_DIR / name
+    # Test fixture — lives under REPO_ROOT/tests/fixtures/components/ for
+    # bundled components. For user components, the fixture goes next to the
+    # component itself so it survives reinstall.
+    if namespace == "user":
+        fixture_dir = cdir / "fixtures"
+    else:
+        fixture_dir = FIXTURES_DIR / name
     fixture_dir.mkdir(parents=True, exist_ok=True)
     fixture_path = fixture_dir / "test-inputs.yaml"
     fixture_path.write_text(_scaffold_fixture(name), encoding="utf-8")
-    created.append(str(fixture_path.relative_to(REPO_ROOT)))
+    created.append(_display_path(fixture_path))
 
     # Audit entry — action: scaffold
     audit_entry = {
@@ -319,7 +374,7 @@ def scaffold(
         component=name,
         tier=tier,
         namespace=namespace,
-        path=str(cdir.relative_to(REPO_ROOT)),
+        path=_display_path(cdir),
         files_created=created,
         graduation_warning=graduation_warning,
         audit_entry=audit_entry,
@@ -441,19 +496,31 @@ def _declared_input_names(comp: dict) -> set[str]:
 
 
 def _fixture_path(name: str) -> Path:
+    """Locate the test-inputs.yaml for a component. Bundled components store
+    fixtures under REPO_ROOT/tests/fixtures/components/<name>/. User
+    components store them next to the component so they survive reinstall.
+    Prefer user-tier when both exist (matches render shadow semantics)."""
+    cdir = _find_component(name)
+    if cdir is not None:
+        colocated = cdir / "fixtures" / "test-inputs.yaml"
+        if colocated.exists():
+            return colocated
     return FIXTURES_DIR / name / "test-inputs.yaml"
 
 
 def validate_full(name: str) -> ValidationResult:
     cdir = _find_component(name)
     if cdir is None:
-        raise ValueError(f"component {name!r} not found under {COMPONENTS_DIR}")
+        raise ValueError(
+            f"component {name!r} not found under {COMPONENTS_DIR} "
+            f"or {USER_COMPONENTS_DIR}"
+        )
     meta_path = cdir / "component.yaml"
 
     result = ValidationResult(
         component=name,
         tier=None,
-        path=str(cdir.relative_to(REPO_ROOT)),
+        path=_display_path(cdir),
     )
 
     # 1. Schema
@@ -697,7 +764,9 @@ def render_isolated(
     """
     cdir = _find_component(name)
     if cdir is None:
-        raise ValueError(f"component {name!r} not found under {COMPONENTS_DIR}")
+        raise ValueError(
+            f"component {name!r} not found under {COMPONENTS_DIR} or {USER_COMPONENTS_DIR}"
+        )
     comp = _load_component_yaml(cdir / "component.yaml")
     declared_langs = comp.get("languages", [])
     if lang is not None:
@@ -882,7 +951,9 @@ _SHARE_ALLOWLIST = (
 def bundle_share(name: str, out_dir: Path | None = None) -> ShareResult:
     cdir = _find_component(name)
     if cdir is None:
-        raise ValueError(f"component {name!r} not found under {COMPONENTS_DIR}")
+        raise ValueError(
+            f"component {name!r} not found under {COMPONENTS_DIR} or {USER_COMPONENTS_DIR}"
+        )
     comp = _load_component_yaml(cdir / "component.yaml")
     version = comp.get("version", "0.0.0")
 
@@ -933,15 +1004,23 @@ def bundle_share(name: str, out_dir: Path | None = None) -> ShareResult:
 
 
 def lint_all() -> list[ValidationResult]:
+    """Lint every component on disk across both bundled and user tiers.
+    User components shadow bundled (same semantics as render) — each name
+    is validated once, using whichever path `_find_component()` resolves."""
     results: list[ValidationResult] = []
-    for tier_dirname in TIER_DIRS.values():
-        tdir = COMPONENTS_DIR / tier_dirname
-        if not tdir.exists():
-            continue
-        for cdir in sorted(tdir.iterdir()):
-            if not (cdir / "component.yaml").exists():
+    seen: set[str] = set()
+    for base in (USER_COMPONENTS_DIR, COMPONENTS_DIR):
+        for tier_dirname in TIER_DIRS.values():
+            tdir = base / tier_dirname
+            if not tdir.exists():
                 continue
-            results.append(validate_full(cdir.name))
+            for cdir in sorted(tdir.iterdir()):
+                if not (cdir / "component.yaml").exists():
+                    continue
+                if cdir.name in seen:
+                    continue
+                seen.add(cdir.name)
+                results.append(validate_full(cdir.name))
     return results
 
 
