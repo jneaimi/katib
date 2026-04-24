@@ -1,0 +1,21 @@
+name: clause-list
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Numbered legal-clause list — ordered list (ol) with counter-based decimal numbering in accent color. Used for MoU clauses, NDA provisions, service-agreement sections, and any numbered legal-body structure where clause references must render prominently. Items are plain-text strings (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain body uses numbered-clause lists, not WHEREAS preambles.
+languages: [en, ar]
+requires:
+  tokens: [text, accent]
+  fonts: [primary]
+accepts:
+  inputs:
+    - items:
+        type: array
+        required: true
+        description: "Array of clause strings (or {text} mappings for consistency with other primitives). Each item becomes a numbered <li> with the counter rendered in the accent color to the leading side."
+    - start:
+        type: int
+        required: false
+        description: "Starting counter value (default 1). Use to continue numbering across split clause-lists (e.g. §5 Responsibilities Party A ends at 3; Party B starts at 4 only if numbering should continue — usually each section resets)."
+page_behavior:
+  break_inside: auto

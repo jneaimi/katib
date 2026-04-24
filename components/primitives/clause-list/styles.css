@@ -1,0 +1,44 @@
+.katib-clause-list {
+    counter-reset: clause;
+    list-style: none;
+    padding: 0;
+    margin: 6pt 0;
+    font-family: var(--font-primary);
+    color: var(--text);
+}
+
+.katib-clause-list__item {
+    counter-increment: clause;
+    position: relative;
+    margin-bottom: 8pt;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    page-break-inside: avoid;
+}
+
+.katib-clause-list__item::before {
+    content: counter(clause, decimal) ".";
+    position: absolute;
+    top: 0;
+    width: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* LTR: number on the leading (left) side, body indented with left padding */
+.katib-clause-list[lang="en"] .katib-clause-list__item {
+    padding-left: 32pt;
+}
+
+.katib-clause-list[lang="en"] .katib-clause-list__item::before {
+    left: 0;
+}
+
+/* RTL: number on the leading (right) side, body indented with right padding */
+.katib-clause-list[lang="ar"] .katib-clause-list__item {
+    padding-right: 32pt;
+}
+
+.katib-clause-list[lang="ar"] .katib-clause-list__item::before {
+    right: 0;
+}

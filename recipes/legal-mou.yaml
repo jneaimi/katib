@@ -1,0 +1,226 @@
+name: legal-mou
+version: 0.1.0
+namespace: katib
+description: UAE bilateral MoU — centered masthead + Template Notice + 2-party callouts + 10 numbered clauses with clause-list + 2-party signature grid. First production consumer of clause-list primitive. Closes the Day-0 component queue (legal-disclaimer-strip absorbed into callout neutral; recitals-block replaced by clause-list per v1 evidence).
+languages:
+- en
+target_pages:
+- 2
+- 4
+page_limit: 4
+when: UAE bilateral non-binding Memorandum of Understanding. Primarily non-binding with specific binding clauses (confidentiality, governing law, costs). First v2 legal-domain recipe. EN-only; AR deferred pending inputs_by_lang schema.
+keywords:
+- legal
+- mou
+- memorandum
+- understanding
+- agreement
+- uae
+- non-binding
+
+sections:
+  # 1. Masthead — centered inline module (density block #1: centered doc header)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+          <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Memorandum of Understanding</div>
+          <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">MOU · [Short Purpose Title]</h1>
+          <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[Non-binding statement of intent between two parties]</div>
+          <div style="font-size: 10pt; color: var(--text-tertiary);">Reference: MOU-2026-0042 · Dated 2026-04-24</div>
+        </div>
+
+  # 2. Template Notice — callout neutral (5th consumer; absorbs legal-disclaimer-strip)
+  - component: callout
+    inputs:
+      tone: neutral
+      title: "Template Notice"
+      body: "This is a Katib template for a Memorandum of Understanding (MOU) between two parties. It is drafted as a primarily non-binding instrument. Specific clauses (confidentiality, exclusivity, governing law) may be drafted as binding. Have the final instrument reviewed by counsel before execution."
+
+  # 3. §1 heading — module numbered (§1)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "The Parties"
+      intro: 'This Memorandum of Understanding (the "MOU") is entered into on 2026-04-24 between:'
+
+  # 4. Party A — callout info (3rd info consumer)
+  - component: callout
+    inputs:
+      tone: info
+      title: "Party A"
+      body: "jasem | katib · [Licence No.] · [Address, City, Emirate]"
+
+  # 5. Party B — callout info (4th info consumer)
+  - component: callout
+    inputs:
+      tone: info
+      title: "Party B"
+      body: "[Party B Legal Name] · [Licence No.] · [Address, City, Emirate]"
+
+  # 6. §2 Background
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Background"
+      body: "[Two or three sentences. Describe the context in which the parties are meeting: what each party does, what common interest or opportunity has emerged, and what question this MOU intends to answer.]"
+
+  # 7. §3 Purpose heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Purpose"
+      intro: "The Parties enter into this MOU for the following purpose:"
+
+  # 8. §3 clauses — clause-list (FIRST PRODUCTION CONSUMER of clause-list primitive)
+  - component: clause-list
+    inputs:
+      items:
+        - "To explore a potential [collaboration / partnership / joint venture / commercial arrangement] concerning [subject matter]."
+        - "To establish a framework for discussion, evaluation, and due diligence prior to any binding agreement."
+        - "To define the respective areas of responsibility and contribution each Party proposes to bring."
+
+  # 9. §4 Scope of Cooperation heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "Scope of Cooperation"
+
+  # 10. §4 clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "The Parties shall collaborate on [specific activities, workstreams, or deliverables] during the exploratory period."
+        - "Each Party shall appoint a primary point of contact responsible for coordination."
+        - "Meetings, information exchange, and site visits shall be arranged as the Parties deem appropriate."
+
+  # 11. §5 Responsibilities — Party A heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Responsibilities"
+      intro: "Party A shall:"
+
+  # 12. §5 Party A clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "[Specific contribution or commitment — Party A, item 1.]"
+        - "[Specific contribution — Party A, item 2.]"
+        - "[Specific contribution — Party A, item 3.]"
+
+  # 13. §5 Party B — module plain (continues §5, no number)
+  - component: module
+    inputs:
+      body: "Party B shall:"
+
+  # 14. §5 Party B clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "[Specific contribution — Party B, item 1.]"
+        - "[Specific contribution — Party B, item 2.]"
+        - "[Specific contribution — Party B, item 3.]"
+
+  # 15. §6 Non-Binding Nature heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 6
+      title: "Non-Binding Nature"
+
+  # 16. §6 emphasis — callout neutral (6th consumer; 2nd neutral use in this recipe)
+  - component: callout
+    inputs:
+      tone: neutral
+      body: "The Parties acknowledge and agree that, except for Clauses 7 (Confidentiality), 9 (Governing Law), and 10 (Costs), this MOU is <strong>non-binding</strong> and does not create any legal or equitable obligations on either Party. Any binding commitments require a separate written agreement executed by authorised representatives of both Parties."
+
+  # 17. §7 Confidentiality (binding) heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 7
+      title: "Confidentiality (binding)"
+
+  # 18. §7 clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "Any non-public information exchanged between the Parties in connection with this MOU shall be treated as confidential."
+        - "Neither Party shall disclose such information to any third party without the prior written consent of the disclosing Party."
+        - "The confidentiality obligations in this Clause survive the termination of this MOU for a period of two (2) years."
+
+  # 19. §8 Term and Termination heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 8
+      title: "Term and Termination"
+
+  # 20. §8 clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "This MOU is effective from 2026-04-24 and continues for [six (6) months] unless extended by mutual written agreement."
+        - "Either Party may terminate this MOU at any time by giving [14] days' written notice to the other."
+        - "Termination shall not affect the binding clauses (Confidentiality, Governing Law, Costs), which survive."
+
+  # 21. §9 Governing Law (binding) heading
+  - component: module
+    variant: numbered
+    inputs:
+      number: 9
+      title: "Governing Law (binding)"
+
+  # 22. §9 clauses — clause-list
+  - component: clause-list
+    inputs:
+      items:
+        - "This MOU and any dispute arising from its binding clauses shall be governed by the laws of the United Arab Emirates, as applied in the Emirate of [Emirate]."
+        - "Disputes shall be resolved through good-faith negotiation. Failing resolution, they shall be referred to the courts of [Emirate] / [DIFC Courts] / [DIAC arbitration]."
+
+  # 23. §10 Costs (binding) — prose-only module numbered
+  - component: module
+    variant: numbered
+    inputs:
+      number: 10
+      title: "Costs (binding)"
+      body: "Each Party shall bear its own costs incurred in connection with this MOU, including legal fees, due-diligence costs, and travel, unless otherwise agreed in writing."
+
+  # 24. Execution heading (centered, inline density block #2)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="margin-top: 18pt; padding-top: 14pt; border-top: 2pt solid var(--accent);">
+          <h2 style="text-align: center; font-size: 12pt; letter-spacing: 0.1em; text-transform: uppercase; border: 0; margin: 0 0 14pt 0; color: var(--accent); font-weight: 700;">Execution</h2>
+        </div>
+
+  # 25. Signatory grid — inline 2-col blank-field signature (density block #3;
+  #     3rd consumer of inline signature-field pattern — proposal Day 14 + quote Day 16 + mou Day 17.
+  #     Ripe for Phase-4 graduation to signature-field-block primitive.)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20pt;">
+          <div style="border-top: 1pt solid var(--border-strong); padding-top: 14pt;">
+            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt;">For Party A</div>
+            <div style="font-size: 11pt; font-weight: 700; margin-bottom: 14pt;">jasem | katib</div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Name</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Title</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Signature</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Date</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+          </div>
+          <div style="border-top: 1pt solid var(--border-strong); padding-top: 14pt;">
+            <div style="font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 700; margin-bottom: 6pt;">For Party B</div>
+            <div style="font-size: 11pt; font-weight: 700; margin-bottom: 14pt;">[Party B]</div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Name</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Title</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div style="margin-bottom: 10pt;"><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Signature</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+            <div><div style="font-size: 8.5pt; color: var(--text-tertiary); margin-bottom: 2pt;">Date</div><div style="border-bottom: 0.5pt solid var(--text); height: 18pt;"></div></div>
+          </div>
+        </div>
