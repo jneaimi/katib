@@ -77,6 +77,14 @@
           "pattern": "^(katib|user|@[A-Za-z0-9][A-Za-z0-9_-]*(/[A-Za-z0-9][A-Za-z0-9_-]*)?)$"
         },
         "inputs": { "type": "object" },
+        "inputs_by_lang": {
+          "type": "object",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^(en|ar)$": { "type": "object" }
+          },
+          "description": "Per-language input overrides merged on top of base `inputs`. Keys must be declared languages (en, ar). Use when section content differs by language (titles, bodies, labels). Shared fields (numbers, codes) can stay in base `inputs`."
+        },
         "repeats": {
           "type": "array",
           "minItems": 2,

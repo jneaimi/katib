@@ -342,7 +342,11 @@ def compose(
         template_rel = f"{TIER_DIRS[tier]}/{comp_name}/{lang}.html"
         template = env.get_template(template_rel)
 
-        inputs = section.get("inputs", {}) or {}
+        inputs = dict(section.get("inputs", {}) or {})
+        # inputs_by_lang overrides base inputs for the active lang.
+        inputs_by_lang = section.get("inputs_by_lang", {}) or {}
+        if lang in inputs_by_lang:
+            inputs.update(inputs_by_lang[lang])
         image_decls = _image_input_specs(comp)
         inputs = _resolve_image_slots(
             inputs, image_decls, cache_dir, providers, comp_name,

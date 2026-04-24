@@ -22,7 +22,9 @@ Placeholder prose preserved.
 
 Renders to 4 pages under v2 defaults; target_pages [2, 4], page_limit 4.
 
-AR variant deferred — pending inputs_by_lang schema resolution.
+v0.2.0 (Phase-4 Day 2) — bilingual EN+AR via inputs_by_lang. Legal-mou is
+the first v2 recipe to ship bilingual; proves the schema + engine path
+that will unblock 9 more EN-only recipes flagged as "AR deferred."
 """
 from __future__ import annotations
 
@@ -39,6 +41,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 RECIPE_NAME = "legal-mou"
 
 
+def _effective(section: dict, lang: str = "en") -> dict:
+    """Merge base inputs with inputs_by_lang[lang]. Mirrors compose engine behavior."""
+    merged = dict(section.get("inputs", {}) or {})
+    merged.update((section.get("inputs_by_lang", {}) or {}).get(lang, {}))
+    return merged
+
+
 # ---------------------------------------------------------------- schema
 
 
@@ -46,12 +55,13 @@ def test_mou_loads():
     r = load_recipe(RECIPE_NAME)
     assert r["name"] == RECIPE_NAME
     assert r["namespace"] == "katib"
-    assert r["version"] == "0.1.0"
+    assert r["version"] == "0.2.0"
 
 
-def test_mou_en_only():
+def test_mou_bilingual():
+    """v0.2.0 adds AR via inputs_by_lang — first bilingual legal-domain recipe."""
     r = load_recipe(RECIPE_NAME)
-    assert r["languages"] == ["en"]
+    assert set(r["languages"]) == {"en", "ar"}
 
 
 def test_mou_page_targets():
@@ -90,13 +100,16 @@ def test_mou_first_clause_list_consumer():
     r = load_recipe(RECIPE_NAME)
     clause_lists = [s for s in r["sections"] if s["component"] == "clause-list"]
     assert len(clause_lists) == 7
-    # Each clause-list has items
+    # Each clause-list has items (now under inputs_by_lang.en per v0.2.0 bilingual shape)
     for cl in clause_lists:
-        items = cl["inputs"]["items"]
+        items = _effective(cl, "en")["items"]
         assert len(items) >= 2  # every list has at least 2 clauses
     # Total item count: 3+3+3+3+3+3+2 = 20
-    total_items = sum(len(cl["inputs"]["items"]) for cl in clause_lists)
+    total_items = sum(len(_effective(cl, "en")["items"]) for cl in clause_lists)
     assert total_items == 20
+    # AR has parallel items
+    total_items_ar = sum(len(_effective(cl, "ar")["items"]) for cl in clause_lists)
+    assert total_items_ar == 20
 
 
 def test_mou_heaviest_module_numbered_deployment():
@@ -117,10 +130,12 @@ def test_mou_uses_two_callout_info_blocks_for_parties():
     r = load_recipe(RECIPE_NAME)
     info_callouts = [s for s in r["sections"]
                      if s["component"] == "callout"
-                     and s["inputs"].get("tone") == "info"]
+                     and s.get("inputs", {}).get("tone") == "info"]
     assert len(info_callouts) == 2
-    titles = [c["inputs"]["title"] for c in info_callouts]
-    assert titles == ["Party A", "Party B"]
+    titles_en = [_effective(c, "en")["title"] for c in info_callouts]
+    assert titles_en == ["Party A", "Party B"]
+    titles_ar = [_effective(c, "ar")["title"] for c in info_callouts]
+    assert titles_ar == ["الطرف الأول", "الطرف الثاني"]
 
 
 def test_mou_uses_two_callout_neutral_blocks():
@@ -129,12 +144,14 @@ def test_mou_uses_two_callout_neutral_blocks():
     r = load_recipe(RECIPE_NAME)
     neutral_callouts = [s for s in r["sections"]
                        if s["component"] == "callout"
-                       and s["inputs"].get("tone") == "neutral"]
+                       and s.get("inputs", {}).get("tone") == "neutral"]
     assert len(neutral_callouts) == 2
     # First is Template Notice (has title)
-    assert neutral_callouts[0]["inputs"]["title"] == "Template Notice"
+    assert _effective(neutral_callouts[0], "en")["title"] == "Template Notice"
+    assert _effective(neutral_callouts[0], "ar")["title"] == "ملاحظة قالب"
     # Second is Non-Binding emphasis (no title)
-    assert "title" not in neutral_callouts[1]["inputs"]
+    assert "title" not in _effective(neutral_callouts[1], "en")
+    assert "title" not in _effective(neutral_callouts[1], "ar")
 
 
 def test_mou_costs_section_has_no_clause_list():
@@ -145,8 +162,8 @@ def test_mou_costs_section_has_no_clause_list():
     costs = next(s for s in r["sections"]
                  if s["component"] == "module"
                  and s.get("inputs", {}).get("number") == 10)
-    assert costs["inputs"]["title"] == "Costs (binding)"
-    assert "body" in costs["inputs"]
+    assert _effective(costs, "en")["title"] == "Costs (binding)"
+    assert "body" in _effective(costs, "en")
     # No clause-list immediately after
     costs_idx = r["sections"].index(costs)
     # §10 is last numbered section — next should be Execution (plain module)
@@ -179,6 +196,32 @@ def test_mou_renders_en():
     assert "katib-callout--info" in html
     assert "katib-callout--neutral" in html
     assert "katib-module--numbered" in html
+
+
+def test_mou_renders_ar():
+    """v0.2.0 — AR render via inputs_by_lang. Core Arabic legal terms present."""
+    html, _ = compose(RECIPE_NAME, "ar")
+    assert 'lang="ar"' in html
+    assert 'dir="rtl"' in html
+    # Core legal Arabic terms
+    assert "مذكرة تفاهم" in html  # MoU title
+    assert "الطرف الأول" in html  # Party A
+    assert "الطرف الثاني" in html  # Party B
+    assert "السرية" in html  # Confidentiality
+    assert "القانون الحاكم" in html  # Governing Law
+    assert "غير ملزم" in html  # Non-binding
+    # Structure intact
+    assert "katib-clause-list" in html
+    assert "katib-signature-field-block" in html
+
+
+def test_mou_ar_pdf_within_target_pages(tmp_path):
+    """AR render hits page target; Arabic text typically expands ~5-10% vs EN."""
+    html, _ = compose(RECIPE_NAME, "ar")
+    pdf = render_to_pdf(html, tmp_path / "mou.ar.pdf", base_url=REPO_ROOT)
+    assert pdf.exists()
+    reader = PdfReader(str(pdf))
+    assert 2 <= len(reader.pages) <= 4
 
 
 def test_mou_pdf_within_target_pages(tmp_path):

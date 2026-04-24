@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-24T06:22:08+00:00'
+generated_at: '2026-04-24T06:59:08+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -251,20 +251,19 @@ recipes:
     - module
   legal-mou:
     namespace: katib
-    version: 0.1.0
+    version: 0.2.0
     description: UAE bilateral MoU — centered masthead + Template Notice + 2-party callouts + 10 numbered
       clauses with clause-list + 2-party signature grid. First production consumer of clause-list primitive.
-      Closes the Day-0 component queue (legal-disclaimer-strip absorbed into callout neutral; recitals-block
-      replaced by clause-list per v1 evidence).
+      v0.2.0 adds EN+AR bilingual rendering via inputs_by_lang — first legal-domain recipe to ship bilingual.
     languages:
     - en
+    - ar
     target_pages:
     - 2
     - 4
     page_limit: 4
     when: UAE bilateral non-binding Memorandum of Understanding. Primarily non-binding with specific binding
-      clauses (confidentiality, governing law, costs). First v2 legal-domain recipe. EN-only; AR deferred
-      pending inputs_by_lang schema.
+      clauses (confidentiality, governing law, costs). First v2 legal-domain recipe; bilingual EN+AR.
     keywords:
     - legal
     - mou
@@ -273,6 +272,7 @@ recipes:
     - agreement
     - uae
     - non-binding
+    - bilingual
     sections_shape:
     - module
     - callout

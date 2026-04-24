@@ -218,6 +218,63 @@ def test_pagination_cover_page_keeps_break_after(tmp_path):
     assert "#katib-section-0 { break-after: always; page-break-after: always;" in html
 
 
+# ---------------------------------------------------------------------------
+# inputs_by_lang — per-language input overrides merged on top of base inputs.
+# Unblocks bilingual recipes without duplicating files.
+# ---------------------------------------------------------------------------
+
+
+def test_inputs_by_lang_overrides_base_for_matching_lang(tmp_path):
+    r = tmp_path / "ibl.yaml"
+    r.write_text(
+        "name: ibl-test\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en, ar]\n"
+        "sections:\n"
+        '  - component: module\n'
+        "    inputs:\n"
+        '      title: "Fallback EN title"\n'
+        '      body: "Default body"\n'
+        "    inputs_by_lang:\n"
+        "      en:\n"
+        '        title: "Hello"\n'
+        "      ar:\n"
+        '        title: "مرحبا"\n'
+        '        body: "نص عربي"\n'
+    )
+    html_en, _ = compose(str(r), "en")
+    html_ar, _ = compose(str(r), "ar")
+    # EN override wins over fallback for title; body from base inputs is shared
+    assert "Hello" in html_en
+    assert "Default body" in html_en
+    # AR override provides both title and body
+    assert "مرحبا" in html_ar
+    assert "نص عربي" in html_ar
+
+
+def test_inputs_by_lang_falls_through_when_lang_absent(tmp_path):
+    """When the active lang has no inputs_by_lang entry, base inputs are used as-is."""
+    r = tmp_path / "ibl2.yaml"
+    r.write_text(
+        "name: ibl-test2\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en, ar]\n"
+        "sections:\n"
+        '  - component: module\n'
+        "    inputs:\n"
+        '      title: "Shared"\n'
+        '      body: "Shared body"\n'
+        "    inputs_by_lang:\n"
+        "      ar:\n"
+        '        title: "عربي"\n'
+    )
+    html_en, _ = compose(str(r), "en")
+    # EN has no override; falls through to base
+    assert "Shared" in html_en
+
+
 def test_compose_autoescapes_html_in_inputs(tmp_path):
     recipe_path = tmp_path / "xss.yaml"
     recipe_path.write_text(
