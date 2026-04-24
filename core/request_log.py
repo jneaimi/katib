@@ -36,11 +36,14 @@ Kind = Literal["component", "recipe"]
 
 
 def memory_dir() -> Path:
-    """Resolve the memory directory from $KATIB_MEMORY_DIR or the repo default."""
-    override = os.environ.get("KATIB_MEMORY_DIR")
-    if override:
-        return Path(override).expanduser()
-    return REPO_ROOT / "memory"
+    """Resolve the memory directory — delegates to `tokens.user_memory_dir()`.
+
+    Unified in Phase 2 so `request_log` (graduation-gate reader) and the ops
+    modules (audit writers) share a single source of truth. Any
+    $KATIB_MEMORY_DIR override is handled inside `tokens.user_memory_dir()`.
+    """
+    from core.tokens import user_memory_dir
+    return user_memory_dir()
 
 
 def _file_for_kind(kind: Kind) -> Path:

@@ -26,9 +26,10 @@ def memdir(tmp_path, monkeypatch):
 
 
 def test_memory_dir_default():
-    # With no env, resolves to <repo>/memory
+    # With no env, resolves to the user-tier memory dir (Phase 2 unified it
+    # with tokens.user_memory_dir() — was REPO_ROOT/memory pre-Phase-2).
     os.environ.pop("KATIB_MEMORY_DIR", None)
-    assert rl.memory_dir() == REPO_ROOT / "memory"
+    assert rl.memory_dir() == Path.home() / ".katib" / "memory"
 
 
 def test_memory_dir_env_override(memdir):

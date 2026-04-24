@@ -85,7 +85,7 @@ def test_new_scaffolds_recipe(throwaway_name):
         expect_rc=0,
     )
     assert "Scaffolded" in result.stdout
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     assert rpath.exists()
 
 
@@ -111,7 +111,7 @@ def test_new_target_pages_parsing(throwaway_name):
         expect_rc=0,
     )
     import yaml
-    data = yaml.safe_load((REPO_ROOT / "recipes" / f"{throwaway_name}.yaml").read_text())
+    data = yaml.safe_load((ops.RECIPES_DIR / f"{throwaway_name}.yaml").read_text())
     assert data["target_pages"] == [3, 8]
     assert data["page_limit"] == 10
 
@@ -133,7 +133,7 @@ def test_validate_detects_bad_recipe(throwaway_name):
     _run("new", throwaway_name, "--languages", "en", "--keywords", "smoke", expect_rc=0)
     # Inject a bad component reference
     import yaml
-    rpath = REPO_ROOT / "recipes" / f"{throwaway_name}.yaml"
+    rpath = ops.RECIPES_DIR / f"{throwaway_name}.yaml"
     data = yaml.safe_load(rpath.read_text())
     data["sections"].append({"component": "nonexistent-xyz"})
     rpath.write_text(yaml.safe_dump(data, sort_keys=False))

@@ -28,15 +28,20 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
+from core.tokens import user_memory_dir
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = REPO_ROOT / "components"
-RECIPES_DIR = REPO_ROOT / "recipes"
 SCHEMAS_DIR = REPO_ROOT / "schemas"
-MEMORY_DIR = REPO_ROOT / "memory"
-AUDIT_FILE = MEMORY_DIR / "component-audit.jsonl"
-REQUESTS_FILE = MEMORY_DIR / "component-requests.jsonl"   # Day 13 will start writing this
 FIXTURES_DIR = REPO_ROOT / "tests" / "fixtures" / "components"
 DIST_DIR = REPO_ROOT / "dist"
+
+# User-tier audit/requests paths (Phase 2). Component scaffold files
+# themselves still land under COMPONENTS_DIR (bundled) — scaffold-file
+# migration is scoped to a later phase.
+MEMORY_DIR = user_memory_dir()
+AUDIT_FILE = MEMORY_DIR / "component-audit.jsonl"
+REQUESTS_FILE = MEMORY_DIR / "component-requests.jsonl"
 
 TIER_DIRS = {"primitive": "primitives", "section": "sections", "cover": "covers"}
 LANG_ENUM = ("en", "ar", "bilingual")
@@ -236,9 +241,13 @@ def scaffold(
         count = _graduation_request_count(name)
         if count < GRADUATION_THRESHOLD and not force:
             if not REQUESTS_FILE.exists():
+                try:
+                    requests_display = str(REQUESTS_FILE.relative_to(REPO_ROOT))
+                except ValueError:
+                    requests_display = str(REQUESTS_FILE)
                 graduation_warning = (
                     "Graduation gate is not yet active — "
-                    f"memory/component-requests.jsonl does not exist "
+                    f"{requests_display} does not exist "
                     "(Day 13 will start writing it). Scaffolded without a "
                     f"request count. When the log exists, core namespace "
                     f"scaffolds will require >={GRADUATION_THRESHOLD} matching "

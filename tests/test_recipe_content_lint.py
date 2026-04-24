@@ -64,7 +64,7 @@ def test_validate_clean_recipe_strict_still_clean():
 
 def test_validate_dirty_recipe_surfaces_warnings(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     v = ops.validate_recipe_full(throwaway_name)
     content_issues = [i for i in v.issues if i.category == "content"]
@@ -79,7 +79,7 @@ def test_validate_dirty_recipe_surfaces_warnings(throwaway_name):
 
 def test_validate_dirty_recipe_strict_promotes_to_error(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     v = ops.validate_recipe_full(throwaway_name, strict=True)
     content_errs = [i for i in v.issues if i.category == "content" and i.severity == "error"]
@@ -90,7 +90,7 @@ def test_validate_dirty_recipe_strict_promotes_to_error(throwaway_name):
 
 def test_validate_dirty_recipe_no_content_lint_skips(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     v = ops.validate_recipe_full(throwaway_name, content_lint=False)
     content_issues = [i for i in v.issues if i.category == "content"]
@@ -99,7 +99,7 @@ def test_validate_dirty_recipe_no_content_lint_skips(throwaway_name):
 
 def test_register_refuses_on_strict_with_content_errors(throwaway_name):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     with pytest.raises(ValueError, match="validation error"):
         ops.register_recipe(throwaway_name, strict=True)
@@ -108,7 +108,7 @@ def test_register_refuses_on_strict_with_content_errors(throwaway_name):
 def test_register_passes_on_default_with_content_warnings(throwaway_name):
     """Default mode: content warnings are advisory; register still succeeds."""
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     # Should NOT raise — warnings don't block register
     result = ops.register_recipe(throwaway_name)
@@ -117,7 +117,7 @@ def test_register_passes_on_default_with_content_warnings(throwaway_name):
 
 def test_share_refuses_on_strict_with_content_errors(throwaway_name, tmp_path):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     with pytest.raises(ValueError, match="validation error"):
         ops.bundle_share_recipe(throwaway_name, out_dir=tmp_path, strict=True)
@@ -128,7 +128,7 @@ def test_share_refuses_on_strict_with_content_errors(throwaway_name, tmp_path):
 
 def test_env_var_strict_lint_promotes(throwaway_name, monkeypatch):
     ops.scaffold_recipe(throwaway_name, languages=["en"], keywords=["smoke"])
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     monkeypatch.setenv("KATIB_STRICT_LINT", "1")
     v = ops.validate_recipe_full(throwaway_name)
@@ -171,7 +171,7 @@ def test_cli_validate_strict_dirty_fails(throwaway_name):
         [*CMD, "new", throwaway_name, "--languages", "en", "--keywords", "smoke"],
         cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30,
     )
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     result = subprocess.run(
         [*CMD, "validate", throwaway_name, "--strict"],
@@ -186,7 +186,7 @@ def test_cli_validate_no_content_lint_dirty_passes(throwaway_name):
         [*CMD, "new", throwaway_name, "--languages", "en", "--keywords", "smoke"],
         cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30,
     )
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     result = subprocess.run(
         [*CMD, "validate", throwaway_name, "--no-content-lint"],
@@ -200,7 +200,7 @@ def test_cli_register_strict_dirty_refuses(throwaway_name):
         [*CMD, "new", throwaway_name, "--languages", "en", "--keywords", "smoke"],
         cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30,
     )
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     result = subprocess.run(
         [*CMD, "register", throwaway_name, "--strict"],
@@ -225,7 +225,7 @@ def test_cli_validate_json_shape_includes_content_category(throwaway_name):
         [*CMD, "new", throwaway_name, "--languages", "en", "--keywords", "smoke"],
         cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30,
     )
-    _inject_slop(REPO_ROOT / "recipes" / f"{throwaway_name}.yaml")
+    _inject_slop(ops.RECIPES_DIR / f"{throwaway_name}.yaml")
 
     result = subprocess.run(
         [*CMD, "--json", "validate", throwaway_name],
