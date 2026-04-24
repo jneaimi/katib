@@ -1,0 +1,302 @@
+name: tutorial-onboarding
+version: 0.1.0
+namespace: katib
+description: New-hire onboarding handbook — 5-part structure (Welcome + Your role + Tools and environment + First week + Closing) with cover page, TOC, 30/60/90-day milestone table, stakeholder cards, setup steps, and daily checklists. Fourteenth Phase-3 recipe; closes the triage list. Fulfills the Day-13 data-table triage prediction (onboarding = "3-col text-only windows" dependent — 7-day build-to-consumer gap).
+languages:
+- en
+target_pages:
+- 3
+- 6
+page_limit: 6
+when: Standard 5-part new-hire onboarding handbook with async-first guidance, 30/60/90-day milestones, stakeholder contacts, tool-setup steps, and first-week day-by-day checklists. EN-only; AR deferred pending inputs_by_lang schema.
+keywords:
+- tutorial
+- onboarding
+- new-hire
+- handbook
+- engineering
+- 30-60-90
+
+sections:
+  # 1. Cover — minimalist-typographic (4th production use of this variant)
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: Onboarding
+      title: Welcome to the team
+      subtitle: Your first 90 days, what matters, and how we work
+      reference_code: ONBOARDING-2026-0042
+
+  # 2. Table of Contents — inline density block #1
+  - component: module
+    inputs:
+      raw_body: |
+        <section style="margin-bottom: 18pt;">
+          <h2 style="font-size: 13pt; color: var(--accent); margin: 0 0 10pt 0; padding-bottom: 3pt; border-bottom: 0.5pt solid var(--border); font-weight: 600;">Contents</h2>
+          <div style="display: grid; grid-template-columns: 22mm 1fr auto 12mm; gap: 4pt 10pt; font-size: 10pt; line-height: 1.6;">
+            <span style="color: var(--text-tertiary); font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.06em;">Part I</span>
+            <span>Welcome and company context</span>
+            <span style="border-bottom: 0.5pt dotted var(--border); margin: 0 0 4pt 0;"></span>
+            <span style="color: var(--text-tertiary); font-variant-numeric: tabular-nums;">03</span>
+
+            <span style="color: var(--text-tertiary); font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.06em;">Part II</span>
+            <span>Your role and stakeholders</span>
+            <span style="border-bottom: 0.5pt dotted var(--border); margin: 0 0 4pt 0;"></span>
+            <span style="color: var(--text-tertiary); font-variant-numeric: tabular-nums;">06</span>
+
+            <span style="color: var(--text-tertiary); font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.06em;">Part III</span>
+            <span>Tools and environment setup</span>
+            <span style="border-bottom: 0.5pt dotted var(--border); margin: 0 0 4pt 0;"></span>
+            <span style="color: var(--text-tertiary); font-variant-numeric: tabular-nums;">09</span>
+
+            <span style="color: var(--text-tertiary); font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.06em;">Part IV</span>
+            <span>First week — day by day</span>
+            <span style="border-bottom: 0.5pt dotted var(--border); margin: 0 0 4pt 0;"></span>
+            <span style="color: var(--text-tertiary); font-variant-numeric: tabular-nums;">13</span>
+
+            <span style="color: var(--text-tertiary); font-weight: 600; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.06em;">Closing</span>
+            <span>Contacts and who to ask</span>
+            <span style="border-bottom: 0.5pt dotted var(--border); margin: 0 0 4pt 0;"></span>
+            <span style="color: var(--text-tertiary); font-variant-numeric: tabular-nums;">17</span>
+          </div>
+        </section>
+
+  # 3. Part I — section divider
+  - component: module
+    inputs:
+      eyebrow: "Part I"
+      title: "Welcome aboard"
+      intro: "A brief tour of the company, how we work, and why your role matters to the mission we're building toward."
+
+  # 4. Who we are
+  - component: module
+    inputs:
+      title: "Who we are"
+      body: "We build tools that help people think more clearly. Our team is small, distributed, and deliberate — we ship less but we ship what matters."
+
+  # 5. How we work
+  - component: module
+    inputs:
+      title: "How we work"
+      raw_body: |
+        <ul style="margin: 6pt 0; padding-left: 22pt; font-size: 10.5pt; line-height: 1.6;">
+          <li style="margin-bottom: 5pt;"><strong>Async-first:</strong> most coordination happens in writing; meetings are reserved for decisions that need a real-time conversation.</li>
+          <li style="margin-bottom: 5pt;"><strong>Documented decisions:</strong> every non-trivial choice gets an ADR, so the reasoning survives turnover.</li>
+          <li><strong>Ship-learn-adjust:</strong> we prefer small bets we can observe over grand plans we can't verify.</li>
+        </ul>
+
+  # 6. Callout tip — "Why this matters" (2nd tip consumer after tutorial-how-to Day 9)
+  - component: callout
+    inputs:
+      tone: tip
+      title: "Why this matters"
+      body: "The async-first rhythm means your first reflex should be a written update, not a meeting request. That single habit will unblock you and your teammates faster than anything else."
+
+  # 7. Our mission
+  - component: module
+    inputs:
+      title: "Our mission"
+      body: "Build the calmest, clearest thinking tools we can — ones that reward patient use and age gracefully alongside the people using them."
+
+  # 8. Part II — section divider
+  - component: module
+    inputs:
+      eyebrow: "Part II"
+      title: "Your role"
+      intro: "What we expect from you in the first 90 days, who you'll work with, and how success will be measured."
+
+  # 9. Responsibilities
+  - component: module
+    inputs:
+      title: "Responsibilities"
+      raw_body: |
+        <ul style="margin: 6pt 0; padding-left: 22pt; font-size: 10.5pt; line-height: 1.6;">
+          <li style="margin-bottom: 5pt;">Own your area end-to-end: planning, shipping, and following up after release.</li>
+          <li style="margin-bottom: 5pt;">Write down what you learn so the next person moves faster.</li>
+          <li>Flag risks early; late surprises cost much more than early concerns.</li>
+        </ul>
+
+  # 10. 30/60/90 header
+  - component: module
+    inputs:
+      title: "First 30 / 60 / 90 days"
+
+  # 11. 30/60/90 table — data-table (7TH PRODUCTION CONSUMER — Day-13 triage prediction fulfilled)
+  - component: data-table
+    inputs:
+      columns:
+        - label: "Window"
+          width: "40pt"
+        - label: "Focus"
+        - label: "Signal of success"
+      rows:
+        - - "Days 1–30"
+          - "Learn the codebase, meet the team, ship one small change"
+          - "Your first PR is merged"
+        - - "Days 31–60"
+          - "Lead a full feature from spec to release"
+          - "Users are using what you shipped"
+        - - "Days 61–90"
+          - "Propose and drive a meaningful improvement"
+          - "Team adopts your proposal"
+
+  # 12. Stakeholders header
+  - component: module
+    inputs:
+      title: "Stakeholders you'll work with"
+
+  # 13. Stakeholders — sections-grid bordered 2x2 (4th bordered consumer)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - eyebrow: "Direct manager"
+          title: "Your manager"
+          body: "Weekly 1:1 · async updates in between"
+        - eyebrow: "Peer engineer"
+          title: "Your onboarding buddy"
+          body: "First point of contact for quick questions"
+        - eyebrow: "Product partner"
+          title: "Product lead"
+          body: "Aligns roadmap, priorities, and user feedback"
+        - eyebrow: "Design partner"
+          title: "Design lead"
+          body: "Reviews design work before shipping"
+
+  # 14. Part III — section divider
+  - component: module
+    inputs:
+      eyebrow: "Part III"
+      title: "Tools and environment"
+      intro: "Everything you need installed, authenticated, and verified before you touch real code."
+
+  # 15. Accounts to set up — with inline checklist (density block #2)
+  - component: module
+    inputs:
+      title: "Accounts to set up"
+      raw_body: |
+        <ul style="margin: 6pt 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.6;">
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Company email and calendar</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Source control (with 2FA enabled on day one)</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Chat workspace and your team's channels</li>
+          <li style="margin-bottom: 4pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Password manager and any shared vaults you need</li>
+          <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Time-tracking and expense tools, if applicable</li>
+        </ul>
+
+  # 16. Software to install header
+  - component: module
+    inputs:
+      title: "Software to install"
+
+  # 17. Step 1 — tutorial-step (2nd production consumer after tutorial-how-to Day 9)
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "Install the core toolchain"
+      body: "Follow the repo's INSTALL.md. When in doubt, prefer the exact versions listed rather than the latest."
+
+  # 18. Step 2
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "Clone the main repo and run it locally"
+      body: "Success means you see the app running on your machine at the expected port, with no red errors in the console."
+
+  # 19. Step 3
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "Run the test suite once"
+      body: "A green run proves your environment matches CI. If tests fail locally but pass in CI, that's a sign to pair with a teammate before debugging solo."
+
+  # 20. Security callout — callout warn (2nd warn consumer after tutorial-how-to Day 9)
+  - component: callout
+    inputs:
+      tone: warn
+      title: "Security basics"
+      body: "Turn on 2FA everywhere on day one. Never paste credentials into chat, even in DMs. If you need to share a secret, use the team's secrets manager."
+
+  # 21. Part IV — section divider
+  - component: module
+    inputs:
+      eyebrow: "Part IV"
+      title: "Your first week"
+      intro: "A day-by-day walkthrough so nothing important slips, and so you can relax into a steady rhythm."
+
+  # 22. All 5 day checklists — combined raw_body (density block #3)
+  - component: module
+    inputs:
+      raw_body: |
+        <div>
+          <h3 style="font-size: 11pt; color: var(--text); margin: 14pt 0 6pt 0; font-weight: 700;">Day 1 — Meet and explore</h3>
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.55;">
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>1:1 with your manager and onboarding buddy</li>
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Intro to the team in the shared channel</li>
+            <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Read the architecture overview end-to-end (no code yet)</li>
+          </ul>
+
+          <h3 style="font-size: 11pt; color: var(--text); margin: 14pt 0 6pt 0; font-weight: 700;">Day 2 — Environment</h3>
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.55;">
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Install the toolchain; run the app locally</li>
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Green test run on your machine</li>
+            <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>First small commit to a scratch branch</li>
+          </ul>
+
+          <h3 style="font-size: 11pt; color: var(--text); margin: 14pt 0 6pt 0; font-weight: 700;">Day 3 — First change</h3>
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.55;">
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Pick a starter issue from the "good-first-issue" list</li>
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Open a draft PR early; invite review as you go</li>
+            <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Document anything surprising you ran into</li>
+          </ul>
+
+          <h3 style="font-size: 11pt; color: var(--text); margin: 14pt 0 6pt 0; font-weight: 700;">Day 4 — Ship</h3>
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.55;">
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Address review feedback and merge your first change</li>
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Watch it roll out in the live environment</li>
+            <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Write a short retro of what slowed you down</li>
+          </ul>
+
+          <h3 style="font-size: 11pt; color: var(--text); margin: 14pt 0 6pt 0; font-weight: 700;">Day 5 — Retro and plan</h3>
+          <ul style="margin: 0; padding-left: 0; list-style: none; font-size: 10pt; line-height: 1.55;">
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>1:1 with manager to reflect on the week</li>
+            <li style="margin-bottom: 3pt; padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Agree on the focus for weeks 2 and 3</li>
+            <li style="padding-left: 20pt; position: relative;"><span style="position: absolute; left: 0; color: var(--accent); font-weight: 700;">☐</span>Share one "I wish I'd known" note to improve this onboarding</li>
+          </ul>
+        </div>
+
+  # 23. Closing — section divider
+  - component: module
+    inputs:
+      eyebrow: "Closing"
+      title: "Who to ask"
+      intro: "When something's unclear, ask early. Nobody expects you to know everything — but we do expect you to surface blockers."
+
+  # 24. By topic header
+  - component: module
+    inputs:
+      title: "By topic"
+
+  # 25. Who-to-ask cards — sections-grid bordered 2x2 (5th bordered consumer)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - eyebrow: "Codebase and architecture"
+          title: "Engineering lead"
+          body: "For structural questions and deep-context decisions"
+        - eyebrow: "Product and roadmap"
+          title: "Product lead"
+          body: "For \"why are we building this\" questions"
+        - eyebrow: "People and time off"
+          title: "Operations"
+          body: "Leave, benefits, office logistics"
+        - eyebrow: "Anything else"
+          title: "Your manager"
+          body: "When you're not sure who to ask — ask here first"
+
+  # 26. Final welcome
+  - component: module
+    inputs:
+      body: "Welcome. We're glad you're here."

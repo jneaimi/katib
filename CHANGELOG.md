@@ -5,7 +5,132 @@ All notable changes to Katib are documented here. Format loosely follows
 
 ## [Unreleased] — v2 Phase 3 in progress (through 2026-04-24)
 
-### Added (Phase 3 Day 19 — `personal/cv` recipe ship; CV 2-day sprint completes; personal domain complete)
+### Added (Phase 3 Day 20 — `tutorial/onboarding` recipe ship; Day-13 data-table triage prediction fulfilled)
+
+Fourteenth Phase-3 recipe migration. **Zero-new-component day** — composes the existing library into the densest tutorial recipe shipped. **The Day-13 data-table triage prediction materializes**: data-table was built Day 13 with onboarding listed as a verified dependent ("3-col text-only windows" — 30/60/90-day milestone table). 7-day build-to-consumer gap. Validates the Phase-3 "triage-driven graduation" pattern operating over week-long horizons.
+
+- **`recipes/tutorial-onboarding.yaml`** (new) — 26-section new-hire
+  onboarding handbook:
+  1. `cover-page` **minimalist-typographic** — 4th production use of
+     this variant (tutorial-how-to Day 9, editorial-white-paper Day
+     13, inline variants, now onboarding). eyebrow "Onboarding" +
+     title "Welcome to the team" + subtitle + reference_code.
+  2. Inline TOC (density block #1) — 5-row custom grid layout with
+     part labels + titles + dotted leaders + page numbers.
+  3-7. **Part I — Welcome and company context**: section divider
+     (module plain with eyebrow "Part I" + title + intro) + 3
+     content modules (Who we are, How we work with 3-bullet ul, Our
+     mission) + 1 `callout tip` ("Why this matters" async-first
+     reinforcement — 2nd tip consumer after tutorial-how-to).
+  8-13. **Part II — Your role**: section divider + Responsibilities
+     ul + 30/60/90 header + **`data-table` 7TH PRODUCTION CONSUMER**
+     (3-col Window/Focus/Signal text-only table) + Stakeholders
+     header + `sections-grid` bordered cols=2 (4 stakeholder cards
+     — 4th bordered consumer).
+  14-20. **Part III — Tools and environment**: section divider +
+     Accounts inline checklist (density block #2) + Software header
+     + 3× `tutorial-step` (2nd production consumer — 11-day wait
+     since Day 9; validates primitive's reuse value) + `callout
+     warn` ("Security basics" 2FA — 2nd warn consumer).
+  21-22. **Part IV — Your first week**: section divider + combined
+     5-day checklists (density block #3 — single raw_body containing
+     5 h3 + checklist ul combinations for Days 1-5).
+  23-26. **Closing**: section divider + By topic header + `sections-
+     grid` bordered cols=2 (4 who-to-ask cards — 5th bordered
+     consumer) + final welcome prose.
+  Content adapted from `v1-reference/domains/tutorial/templates/
+  onboarding.en.html`. Placeholder prose preserved.
+- **Rendered output: 5 pages, 0 WeasyPrint warnings.** `target_pages:
+  [3, 6]`, `page_limit: 6`. Within target.
+- **Validation clean at default + strict** — 0 content-lint warnings.
+- **3 density-convention inline blocks** (TOC + accounts checklist +
+  combined 5-day checklists) — under NOC's empirical ceiling of 4.
+  Pattern: repeated identical-shape blocks (checklists) counted as 1
+  pattern per semantic group, not N distinct density blocks.
+- **3 tutorial-onboarding recipe-requests logged** (new-hire
+  engineering + consultant + partner-team).
+- **1 fix-pass during iteration**: dropped `meta_left` and
+  `meta_right` inputs from cover-page (not in its schema; v2
+  cover-page doesn't auto-render date like v1 did). Replaced with
+  `reference_code` input which IS supported.
+- **Audit + capabilities:** recipe register entry +
+  `capabilities.yaml` regenerated.
+
+### Tests (Phase 3 Day 20)
+
+- **`tests/test_tutorial_onboarding.py`** (new, 23 tests): schema-
+  loads, en-only, page-targets [3, 6], 26-section count,
+  component-mix (17 module + 2 sections-grid + 3 tutorial-step +
+  2 callout + 1 cover-page + 1 data-table), cover-uses-minimalist-
+  typographic, **seventh-data-table-consumer** (regression guard:
+  Day-13 triage prediction — 3 cols Window/Focus/Signal + 3 rows
+  Days-1-30/31-60/61-90), uses-three-tutorial-steps (regression:
+  numbers 1-2-3), uses-callout-tip (regression: "Why this matters"),
+  uses-callout-warn (regression: "Security basics"), uses-two-
+  sections-grid-bordered (regression: 2 instances, 4 items each,
+  cols=2), section-divider-pattern (regression: 5 module plain
+  dividers with eyebrows Part I/II/III/IV/Closing — validates
+  module eyebrow as section-separator pattern), validates-clean,
+  validates-strict-clean, renders-EN (5 marker classes), pdf-within-
+  target-pages (3-6 accepted), renders-all-v1-content (30+ distinct
+  phrases), regression guards for data-table (1 element), tutorial-
+  step elements (3), sections-grid bordered elements (2), data-
+  table 3-columns (regression), in-capabilities, audit-entry-exists.
+- **Regression sweep:** 895/895 passing (was 872, +23). Zero
+  WeasyPrint warnings across all 24 render paths.
+
+### Architecture decisions (Phase 3 Day 20)
+
+1. **Day-13 triage prediction fulfilled at 7-day horizon.** data-table
+   was built Day 13 with 4 verified dependents: white-paper (Day 13),
+   proposal (Day 14), invoice (Day 15), onboarding (Day 20). First
+   three shipped within 3 days of build; onboarding arrives 7 days
+   later. Validates the "triage-driven graduation" pattern operates
+   cleanly over week-long horizons, not just same-day ships. Future
+   Phase-4 components can be built against verified dependents
+   without requiring immediate same-day consumption.
+2. **tutorial-step's second consumer after 11 days.** Built Phase-2;
+   first production use Day 9 (tutorial-how-to); second use Day 20
+   (onboarding). 11-day gap. Proves Phase-2 primitives earn their
+   keep over weeks, not just days. Same pattern as pull-quote
+   (Phase-2 build → Day-13 white-paper consumer, 13-day gap).
+3. **Zero-new-component forecast held.** Day-17 ADR predicted this;
+   Day 20 delivers. Tutorial domain now at 80% complete (4 of 5:
+   how-to + handoff + cheatsheet + onboarding; katib-walkthrough
+   remaining for Day 21).
+4. **Section-divider pattern via module plain eyebrow** — codified.
+   5 Part dividers (Part I-IV + Closing) use `module plain` with
+   `eyebrow + title + intro`. No new component; validates module's
+   eyebrow input as a sub-document separator primitive. This
+   pattern is reusable for any multi-part long-form document
+   (white-paper already used 6 numbered modules; onboarding uses 5
+   plain modules with eyebrows — same component serves both
+   numbered and eyebrow-based section-separator shapes).
+5. **sections-grid bordered cements as THE contact-card pattern.**
+   Now at 5 production instances across 3 recipes (invoice 2 +
+   quote 1 + onboarding 2). Every instance is 2x2 (cols=2, 4 items).
+   The "bordered-grid for contact/stakeholder cards" pattern is
+   stable — future portfolio/directory recipes can assume this.
+6. **Repeated-shape density convention refined.** 6 checklist ul
+   instances in onboarding (1 accounts + 5 days). Combined 5 daily
+   checklists into 1 raw_body block + 1 accounts block = 2 density
+   blocks total (plus TOC = 3). Under NOC's ceiling of 4. The
+   refinement: identical-pattern repeated blocks count as 1
+   semantic density block per group, not N distinct density
+   decisions.
+7. **WeasyPrint CSS strict-parsing continues to serve as lint-pass.**
+   Day 19 caught `word-break: break-word`. Day 20 had no CSS issues
+   — clean renders across all 7 primitive CSS files + 3 section CSS
+   files + 26 recipe sections.
+8. **14 of 15 Phase-3 recipes shipped (93%).** Original triage
+   enumerated 15 (tutorial × 5 + business-proposal × 3 + formal/noc
+   + personal × 2 + financial × 2 + editorial/white-paper +
+   legal/mou = 15; CHANGELOG said "14" — arithmetic error).
+   Day 21 ships `tutorial-katib-walkthrough` to close at 15/15.
+9. **AR variant deferred (fourteenth recipe in a row).** Same
+   discipline. First bilingual pending `inputs_by_lang` schema.
+
+
 
 Thirteenth Phase-3 recipe migration. **CV 2-day sprint completes** —
 Day 18 built cv-layout + skill-bar-list + tag-chips infrastructure;
@@ -448,12 +573,12 @@ Engine state: **31 components** (cv-layout + skill-bar-list + tag-chips
 Day 18; clause-list Day 17; financial-summary Day 15, data-table
 Day 13, sections-grid Day 11, multi-party-signature-block Day 7,
 kv-list at 0.2.0, signature-block at 0.2.0, module at 0.3.0, callout
-at 0.2.0). **20 recipes** (+1 personal-cv Day 19; 14 production:
+at 0.2.0). **21 recipes** (+1 tutorial-onboarding Day 20; 15 production:
 tutorial + business-proposal-letter + personal-cover-letter +
 formal-noc + tutorial-how-to + tutorial-handoff + tutorial-cheatsheet +
 business-proposal-one-pager + editorial-white-paper +
 business-proposal-proposal + financial-invoice + financial-quote +
-legal-mou + **personal-cv**; 6 dev showcases). 6 core library
+legal-mou + personal-cv + **tutorial-onboarding**; 6 dev showcases). 6 core library
 modules, 5 CLIs, 4 memory streams, 4 image providers, 0 external
 skill dependencies.
 
