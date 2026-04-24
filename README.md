@@ -65,6 +65,34 @@ v2 key changes from v1:
    and brand cover presets live under `~/.katib/`, not in the skill dir.
    `npx install` never overwrites them.
 
+## Starter recipes on fresh install
+
+Fresh installs seed a curated set of starter recipes into
+`~/.katib/recipes/` — they're yours from that moment on. Edit them freely;
+future `npx install` runs will never overwrite your edits.
+
+- **Fresh install** (`~/.katib/recipes/` is empty) → 15 starter recipes are
+  copied in. You can edit, delete, or fork them at will.
+- **Returning install** (any recipe already in `~/.katib/recipes/`) → the
+  seed step is skipped entirely. Your changes survive.
+- **Bundled fallback** — if you delete a starter, the bundled version in the
+  skill folder takes over at resolve time. Nothing breaks.
+- **Opt-in refresh** — to pull a new starter after the manifest grows, or
+  to restore a file you deleted:
+
+  ```bash
+  uv run scripts/seed.py list                     # see what's available
+  uv run scripts/seed.py refresh personal-cv      # copy bundled → user if absent
+  uv run scripts/seed.py refresh --all            # every missing starter
+  uv run scripts/seed.py refresh tutorial \
+      --force --justification "reset to ship defaults"
+  ```
+
+The manifest (`seed-manifest.yaml` at the repo root) is the single source of
+truth for what gets seeded. This is the foundation for the Phase-4 share/import
+flow — recipes that live under `~/.katib/` are the ones you'll be able to
+package up and share with other Katib users.
+
 ## Custom recipes & components
 
 Katib separates bundled content (shipped with the skill) from user

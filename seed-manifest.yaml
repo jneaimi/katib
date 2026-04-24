@@ -1,0 +1,41 @@
+# Katib seed manifest
+#
+# Listed items are copied from the skill directory into ~/.katib/ on fresh
+# install only. "Fresh install" means the target user-tier directory is
+# empty. Install.sh and `scripts/seed.py` both read this file.
+#
+# Behavior:
+#   - Fresh install  → each listed item is copied to ~/.katib/... (never overwrites)
+#   - Returning user → user-tier left entirely alone
+#   - `scripts/seed.py refresh <name>` → opt-in re-seed of a single item
+#   - `scripts/seed.py refresh <name> --force --justification "..."` → overwrites
+#
+# Rule: every entry MUST exist in the bundled tier. scripts/seed.py validates
+# this on load. Typos fail the seed step loudly rather than silently.
+#
+# Excluded by design:
+#   - phase-*.yaml recipes (internal showcase only)
+#   - recipes/_wip/* (in-progress, not ready for users)
+#   - components (deferred — components are foundational; shadowing `module`
+#     affects every recipe. Step 2 of Phase 3 will add a curated set of
+#     domain-specific components once the recipe-seed flow is proven.)
+version: 1
+
+recipes:
+  - business-proposal-letter
+  - business-proposal-one-pager
+  - business-proposal-proposal
+  - editorial-white-paper
+  - financial-invoice
+  - financial-quote
+  - formal-noc
+  - legal-mou
+  - personal-cover-letter
+  - personal-cv
+  - tutorial
+  - tutorial-cheatsheet
+  - tutorial-handoff
+  - tutorial-how-to
+  - tutorial-onboarding
+
+components: []

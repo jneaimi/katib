@@ -139,6 +139,34 @@ else
   ok "~/.katib/brands/example.yaml already exists (left alone)"
 fi
 
+# Seed starter recipes on fresh install only.
+# "Fresh install" = ~/.katib/recipes/ is empty. Returning users are left
+# untouched so their edits, custom recipes, and intentional deletions all
+# survive upgrades. Use `uv run scripts/seed.py refresh <name>` to opt back
+# into a specific starter after the fact.
+if [ -f "$SKILL_DIR/seed-manifest.yaml" ]; then
+  if [ -z "$(ls -A "$HOME/.katib/recipes" 2>/dev/null || true)" ]; then
+    info "Seeding starter recipes to ~/.katib/recipes/"
+    # Run the seed CLI against $HOME/.katib/recipes via the env var.
+    # Emit JSON so parsing is robust even if output formatting changes.
+    SEED_OUTPUT="$(
+      KATIB_RECIPES_DIR="$HOME/.katib/recipes" \
+      KATIB_MEMORY_DIR="$HOME/.katib/memory" \
+      uv --project "$SKILL_DIR" run --quiet python "$SKILL_DIR/scripts/seed.py" \
+        --json refresh --all 2>/dev/null || true
+    )"
+    if [ -n "$SEED_OUTPUT" ]; then
+      SEEDED_COUNT="$(printf '%s' "$SEED_OUTPUT" | \
+        python3 -c 'import json,sys; d=json.load(sys.stdin); print(sum(1 for r in d.get("results", []) if r.get("action")=="seeded"))' 2>/dev/null || echo "0")"
+      ok "seeded $SEEDED_COUNT starter recipes into ~/.katib/recipes/"
+    else
+      warn "seed step skipped — scripts/seed.py didn't return output"
+    fi
+  else
+    ok "~/.katib/recipes/ already populated (left alone)"
+  fi
+fi
+
 # Seed ~/.config/katib/config.yaml with a vault-aware default
 CONFIG_FILE="$HOME/.config/katib/config.yaml"
 if [ ! -f "$CONFIG_FILE" ]; then
