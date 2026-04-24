@@ -28,7 +28,7 @@ HTML + CSS → WeasyPrint → PDF.
 | **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — install with `npx @jasemal/katib@0 install` |
 | **In development (v2):** | `1.0.0-alpha.0` — clean-canvas rebuild, component architecture |
 | **Archived:** | Full v1 code under `v1-reference/` (read-only) |
-| **Architecture doc:** | [ADR — Katib v2 Component Architecture](https://github.com/jneaimi/katib/blob/main/CHANGELOG.md) — see CHANGELOG for a summary, full ADR lives in Jasem's Soul Hub vault |
+| **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
 
 ## Why v2 exists
 
@@ -43,10 +43,9 @@ v2 key changes from v1:
 1. **Component-first composition.** Every visible element is a reusable
    component (primitives, sections, covers). Doc-types are YAML recipes
    that reference components by name.
-2. **No vault integration.** v1 wrote into the Obsidian-based Soul Hub vault.
-   v2 writes to the OS-standard user-documents directory
-   (`~/Documents/katib/`) on every install. File navigation belongs at a
-   different layer.
+2. **OS-standard output routing.** v2 writes to the OS user-documents
+   directory (`~/Documents/katib/` or `$KATIB_OUTPUT_ROOT`) on every
+   install. File navigation belongs at a different layer.
 3. **Trilingual contract.** EN / AR / **bilingual** — the third state
    supports side-by-side UAE contracts in a single PDF.
 4. **Self-contained.** No dependency on sibling Claude Code skills. The

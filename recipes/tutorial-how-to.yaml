@@ -40,7 +40,7 @@ sections:
     inputs:
       number: 1
       title: "Open the target screen"
-      body: "Navigate to the page where you'll perform the action. If you're using Soul Hub, this is usually the Vault tab."
+      body: "Navigate to the page where you'll perform the action — usually the main content view or the tab that matches the feature you're about to use."
 
   - component: tutorial-step
     inputs:

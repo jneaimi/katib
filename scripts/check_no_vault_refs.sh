@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
-# Exit criterion for Phase 1: no references to vault/obsidian/soul-hub
-# outside v1-reference/ and the CHANGELOG.
+# Exit criterion: the skill must be standalone — no references to
+# vault/obsidian/soul-hub in shipping code or content.
+#
+# Excluded from the scan:
+#   - v1-reference/           historical v1 code (read-only)
+#   - recipes/_wip/           scratch/deferred recipes (excluded from
+#                             capabilities generation; see recipes/_wip/README.md)
+#   - CHANGELOG.md            historical record of the project's evolution
+#   - README.md / SKILL.md    user-facing docs (scrubbed separately; legitimate
+#                             English prose like "password vault" may appear)
 #
 # Usage:  bash scripts/check_no_vault_refs.sh
 
@@ -18,6 +26,7 @@ matches="$(
         --include='*.py' --include='*.yaml' --include='*.yml' \
         --include='*.html' --include='*.css' --include='*.md' --include='*.json' \
         --exclude-dir=v1-reference \
+        --exclude-dir=_wip \
         --exclude-dir=.venv \
         --exclude-dir=__pycache__ \
         --exclude-dir=.git \
