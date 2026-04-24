@@ -19,6 +19,11 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
+from core.brand_presets import (  # noqa: E402
+    SavePresetError,
+    find_cover_image,
+    save_cover_preset,
+)
 from core.compose import compose  # noqa: E402
 from core.output import resolve_document_folder  # noqa: E402
 from core.render import render_to_pdf  # noqa: E402
@@ -137,7 +142,28 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Skip the startup audit-presence check (tests only).",
     )
+    ap.add_argument(
+        "--save-cover-preset",
+        metavar="NAME",
+        default=None,
+        help=(
+            "After rendering, save the resolved cover image as a reusable preset "
+            "on the --brand profile. Preset name must match [a-z0-9][a-z0-9_-]*."
+        ),
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="With --save-cover-preset, overwrite an existing preset of the same name.",
+    )
     args = ap.parse_args(argv)
+
+    if args.save_cover_preset and not args.brand:
+        print(
+            "ERROR: --save-cover-preset requires --brand to know where to save.",
+            file=sys.stderr,
+        )
+        return 1
 
     if not args.skip_audit_check:
         try:
@@ -162,6 +188,31 @@ def main(argv: list[str] | None = None) -> int:
 
     pdf = render_to_pdf(html, out_path, base_url=REPO_ROOT)
     print(f"wrote {pdf}  ({pdf.stat().st_size} bytes)")
+
+    if args.save_cover_preset:
+        cover = find_cover_image(meta.get("resolved_images", []))
+        if not cover:
+            print(
+                "ERROR: --save-cover-preset: no cover-tier image slot was "
+                "resolved in this render (is the recipe using a cover component "
+                "with an image input?).",
+                file=sys.stderr,
+            )
+            return 1
+        try:
+            dest = save_cover_preset(
+                brand=args.brand,
+                preset_name=args.save_cover_preset,
+                cover_image=cover,
+                force=args.force,
+            )
+        except SavePresetError as e:
+            print(f"ERROR: {e}", file=sys.stderr)
+            return 1
+        print(
+            f"saved cover preset {args.save_cover_preset!r} → {dest}"
+        )
+
     return 0
 
 

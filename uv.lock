@@ -729,6 +729,7 @@ dependencies = [
     { name = "platformdirs" },
     { name = "pypdf" },
     { name = "pyyaml" },
+    { name = "ruamel-yaml" },
     { name = "weasyprint" },
 ]
 
@@ -746,7 +747,6 @@ dev = [
     { name = "playwright" },
     { name = "pytest" },
     { name = "pytest-cov" },
-    { name = "ruamel-yaml" },
 ]
 
 [package.metadata]
@@ -759,6 +759,7 @@ requires-dist = [
     { name = "playwright", marker = "extra == 'screenshots'", specifier = ">=1.44" },
     { name = "pypdf", specifier = ">=4.0" },
     { name = "pyyaml", specifier = ">=6.0" },
+    { name = "ruamel-yaml", specifier = ">=0.19.1" },
     { name = "weasyprint", specifier = ">=60.0" },
 ]
 provides-extras = ["screenshots", "gemini"]
@@ -769,7 +770,6 @@ dev = [
     { name = "playwright", specifier = ">=1.44" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=5.0" },
-    { name = "ruamel-yaml", specifier = ">=0.19.1" },
 ]
 
 [[package]]
