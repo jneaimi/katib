@@ -21,9 +21,11 @@ custom v0.x content you want to preserve.
 | A v0.x user with shipped brand profiles you copied locally | Read [Brand profile changes](#brand-profile-changes). |
 | Brand-new user | Skip this guide; read [README.md](README.md) and [TUTORIAL.md](TUTORIAL.md). |
 
-**Pre-distribution status:** v1.0.0 is the first stable v2 release.
-v0.20.0 was on `@latest` for ~3 days before v1.0.0 ships. If you got
-lucky and tried v0.x in that window, this guide is for you.
+**Pre-distribution status:** v1.0.0 is the first stable release of
+the v2 architecture and the first announced version. v0.20.0 was on
+`@latest` for ~3 days during the v2 rebuild window. If you tried
+v0.x in that window, this guide is for you. Otherwise you're
+landing on v1 directly.
 
 ---
 
