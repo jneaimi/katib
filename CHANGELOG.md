@@ -3,6 +3,147 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.0.0-alpha.3] — Phase 4: local share format (`.katib-pack`) (2026-04-25)
+
+Phase 4 ships the share-format foundation: user-tier components,
+recipes, and brand profiles can now be packaged into a `.katib-pack`
+tarball, transferred peer-to-peer, and imported into another install
+with audit-gate equivalence. The same artifact format is what the
+Phase-6 marketplace will serve from `katib.jneaimi.com` — built once,
+used twice.
+
+**Frozen at `pack_format: 1` for v1.0.0.** The schema is the public
+contract; future breaking changes require `pack_format: 2`.
+
+### Added — `katib pack` CLI
+
+New top-level script `scripts/pack.py` with four subcommands:
+
+- **`pack export`** — produce a `.katib-pack` from one of:
+  - `--component <name>` — single component (primitive / section / cover)
+  - `--recipe <name>` — single recipe YAML
+  - `--brand <name>` — brand profile + sibling `<name>-assets/` dir
+  - `--bundle <recipe>` — recipe + its custom (user-tier) component
+    dependencies. Bundled deps are declared in `requires.bundled_components[]`
+    instead of being embedded.
+  - `--include-brand <name>` — combine with `--bundle` to ship a brand alongside
+  - `--author "Name <email>"` — defaults to `git config user.name/email`
+
+- **`pack inspect <pack>`** — read-only manifest dump + arcname tree.
+  Tolerates schema-invalid manifests so you can debug a bad pack.
+
+- **`pack verify <pack>`** — CI-grade safety check. Five gates,
+  each short-circuiting the next: tar/gzip parses → schema valid →
+  `pack_format` supported → `content_hash` matches recompute →
+  every component + recipe inside passes its existing validator.
+  Exit 0 = `ok`, exit 1 = something failed.
+
+- **`pack import <pack>`** — install into `~/.katib/`. Runs `verify`
+  first, then a bundled-dep gate (every name in
+  `requires.bundled_components[]` must exist on the host;
+  `requires.katib_min` must be ≤ host version), then a collision
+  check (refuses without `--force --justification "<reason>"`).
+  Writes audit entries with `action: imported`, `source_pack`,
+  `source_pack_version`, `source_hash`. Triggers capabilities regen.
+
+- **`pack import --dry-run`** — runs every check and reports the
+  plan, but writes nothing and adds no audit entries. Strict
+  invariant: directory unchanged before/after.
+
+All commands accept `--json` for machine-readable output.
+
+### Added — pack format
+
+- **`schemas/pack.yaml.schema.json`** — Draft 2020-12 JSON Schema for
+  `pack.yaml`. `pack_format: 1` is `const`. Reserves `signature` and
+  `signed_by` fields for Phase 7 pack signing (ignored on import in v1).
+- **`PACK-FORMAT.md`** — public spec doc at the repo root. Pack
+  layout, manifest field reference, audit-bootstrap entry shape,
+  determinism mechanics, refusal classes (in order), versioning
+  policy, what's NOT in the pack, distribution model.
+- **Namespacing locked at `<author>/<artifact>`** — self-asserted in
+  Phase 4, ready for Phase-7 verification.
+- **Determinism mechanics** — tar entries sorted alphabetically;
+  `mtime` / `uid` / `gid` zeroed; outer gzip with `mtime=0`.
+  Two consecutive exports produce **byte-identical** pack files.
+  Foundation for Phase-6 content-addressable distribution.
+
+### Added — `core/pack.py`
+
+New module exposing the pack-format public API:
+
+- `PackManifest` dataclass + `validate_manifest_dict()` / `load_manifest()`
+  / `dump_manifest()`
+- `compute_content_hash()` + `build_canonical_tar_body()` — deterministic
+  hashing primitives
+- `ExportResult`, `export_component()`, `export_recipe()`,
+  `export_brand()`, `export_bundle()` (with dep walk)
+- `PackInspectResult` + `inspect_pack()`
+- `PackVerifyResult` + `verify_pack()` — gates step-by-step
+- `ImportResult` + `import_pack()` — verify → dep check → collision
+  → write → audit → capabilities regen
+- Author helpers: `detect_git_author()`, `parse_author_string()`,
+  `slugify_author()`
+
+### Fixed — recipe validator now sees user-tier components
+
+`core/recipe_ops.py:_all_component_names()` only walked the bundled
+tier `components/` directory, not the user tier `~/.katib/components/`
+— inconsistent with `core/component_ops.py:_find_component()` which
+walks both. Fixed: `_all_component_names()` now walks both tiers
+with user-wins-on-collision (matches runtime resolver semantics).
+
+This is a strict improvement for any recipe-validation flow involving
+user-tier components, not just imports. Surfaced as a blocker during
+Phase-4 bundle verify.
+
+### Deprecated — `katib component share`
+
+The single-purpose `katib component share` command (introduced in
+Phase 2) is deprecated in favor of `katib pack export --component
+<name>`. The legacy command keeps working but emits a stderr
+deprecation note. Removal target: a future Phase 4.x or 5.x release.
+
+### Tests — Phase-4 suite
+
+74 new tests across:
+
+- `test_phase4_pack_schema.py` (48) — schema validation, regex edge
+  cases, reserved Phase-7 fields accepted, manifest round-trip
+- `test_phase4_content_hash.py` (10) — determinism, sensitivity,
+  tar normalization
+- `test_phase4_pack_export.py` (18) — single-artifact export,
+  byte-equivalence, CLI subprocess, determinism
+- `test_phase4_pack_bundle.py` (16) — dep walk, classification,
+  bundle-with-brand, error paths, CLI subprocess, determinism
+- `test_phase4_pack_inspect.py` (9) — read-only manifest dump,
+  schema-invalid tolerance, error paths, CLI human + JSON
+- `test_phase4_pack_verify.py` (12) — all five refusal classes,
+  CLI exit codes
+- `test_phase4_pack_import.py` (10) — clean import, collision
+  refusal, force/justification, audit shape compatibility with
+  `build.py:check_audit`
+- `test_phase4_pack_deps.py` (9) — bundled component / brand /
+  `katib_min` checks
+- `test_phase4_pack_dry_run.py` (7) — dry-run leaves disk untouched,
+  gates still fire, CLI human + JSON
+- `test_phase4_round_trip.py` (2) — sandbox A → pack → sandbox B
+  → render. Asserts the rendered PDF in B contains text emitted by
+  a custom user-tier component shipped in the pack.
+- `test_phase4_close_gate.py` (8) — Phase-4 acceptance criteria
+  (CLI wiring, schema, public API, docs, deprecation, version)
+
+**Test count: 1193 → 1220.** Zero regressions.
+
+### Roadmap
+
+Phase 5 next: v1.0.0 stable release. Migration guide, CHANGELOG
+consolidation, npm `@latest` move from `0.20.0` to `1.0.0`, pack
+format frozen at `v1`. Phase 6 (post-v1.0.0) launches the read-only
+marketplace at `katib.jneaimi.com`.
+
+---
+
 ## [1.0.0-alpha.2] — Phase 3: layout, builder, content, recipes, docs (2026-04-25)
 
 Phase 3 closes the gap from "engine + first recipes" to "complete

@@ -32,7 +32,7 @@ npx @jasemal/katib@alpha install
 | | |
 |---|---|
 | **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag) |
-| **In development (v2):** | `1.0.0-alpha.2` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
+| **In development (v2):** | `1.0.0-alpha.3` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
 | **Archived:** | Full v1 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
 | **Component library** | 45 components · 16 primitives, 28 sections, 1 cover |
