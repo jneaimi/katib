@@ -3,27 +3,29 @@
 [![CI](https://github.com/jneaimi/katib/actions/workflows/ci.yml/badge.svg)](https://github.com/jneaimi/katib/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square)](https://www.npmjs.com/package/@jasemal/katib)
 [![license](https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square)](LICENSE)
-![status](https://img.shields.io/badge/v2-alpha-orange?style=flat-square)
+![status](https://img.shields.io/badge/v1.0.0-beta-blue?style=flat-square)
 
 **كاتب** (*kātib*, "the writer") — the one who shapes words onto paper.
 
 One skill, bilingual (EN + AR) print-grade PDF generation for Claude Code.
-HTML + CSS → WeasyPrint → PDF.
+HTML + CSS → WeasyPrint → PDF. Component-composable, brand-aware,
+shareable as `.katib-pack` tarballs.
 
 ## Install
 
 ```bash
-# v1 stable — safe default, no v2 architecture changes
-npx @jasemal/katib install
+# v1.0.0 beta — current development line
+npx @jasemal/katib@beta install
 
-# v2 alpha — new component architecture, custom recipes under ~/.katib/
-npx @jasemal/katib@alpha install
+# v1.0.0 stable — coming soon (will become @latest at v1.0.0 final)
+npx @jasemal/katib install
 ```
 
-> **⚠️ v2 is in alpha.** Phase 3 (layout + content primitives, AI-assisted
-> component builder, recipe migration) is shipped and tested. APIs and
-> recipe shapes can still change before `1.0.0`. `@latest` on npm stays
-> pointed at v1 (`0.20.0`); v2 ships under the `alpha` dist-tag.
+> **v1.0.0 is in beta.** Pack format is **frozen at `pack_format: 1`** —
+> the share format is now a public contract. Final v1.0.0 ships after a
+> ~1-week soak window. Until then, `@latest` points at v0.20.0 (the v1-line
+> stable); v1.0.0 ships under the `beta` dist-tag. **Coming from v0.x?**
+> See [MIGRATING.md](MIGRATING.md).
 
 ---
 
@@ -31,12 +33,15 @@ npx @jasemal/katib@alpha install
 
 | | |
 |---|---|
-| **Stable (v1):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag) |
-| **In development (v2):** | `1.0.0-alpha.3` on npm under the `alpha` tag — `npx @jasemal/katib@alpha install` |
+| **Stable (v0 line):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag, until v1.0.0 final) |
+| **Beta (v1 line):** | `1.0.0-beta.1` on npm under the `beta` tag — `npx @jasemal/katib@beta install` |
+| **Migration guide:** | [MIGRATING.md](MIGRATING.md) — v0.x → v1.0.0 |
 | **Archived:** | Full v1 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
 | **Component library** | 45 components · 16 primitives, 28 sections, 1 cover |
 | **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
+| **Pack format** | `pack_format: 1` frozen — see [PACK-FORMAT.md](PACK-FORMAT.md) |
+| **Marketplace** | Coming post-v1.0.0 at `katib.jneaimi.com` |
 | **Extending** | Build new components with `/katib component new` — see [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) or the [tutorial](TUTORIAL.md) |
 
 ## Why v2 exists
@@ -198,14 +203,40 @@ accidentally mask a shipped template.
 For testing and CI isolation: `KATIB_RECIPES_DIR`, `KATIB_COMPONENTS_DIR`,
 `KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR` redirect each user-tier path.
 
-## v1 users
+## Sharing & marketplace
 
-Your install still works. No action needed. v2 is a breaking change and will
-ship as `1.0.0` with a migration guide. Until then:
+Custom recipes / components / brand profiles can be packaged into a
+`.katib-pack` tarball and imported into another install:
 
-- `@jasemal/katib@0.20.0` on npm remains the stable release
-- v0.x receives no further releases; all new work targets v2
-- When v1.0.0 stable ships, `@latest` moves off v0.x
+```bash
+# Pack a recipe + its custom dependencies
+uv run scripts/pack.py export --bundle my-recipe
+
+# Verify a pack you received
+uv run scripts/pack.py verify my-recipe-1.0.0.katib-pack
+
+# Install
+uv run scripts/pack.py import my-recipe-1.0.0.katib-pack
+```
+
+Pack format is **frozen at `pack_format: 1`** — the schema is a public
+contract. See [PACK-FORMAT.md](PACK-FORMAT.md).
+
+A curated marketplace at **`katib.jneaimi.com`** ships post-v1.0.0
+(Phase 6). The same `.katib-pack` artifact will install via:
+
+```bash
+katib pack install jneaimi/financial-invoice
+```
+
+`KATIB_REGISTRY_URL` lets enterprises self-host their own registry.
+
+## v1 users (v0.x → v1.0.0)
+
+Your v0.x install still works. `@jasemal/katib@0.20.0` remains on the
+`@0` dist-tag indefinitely. To upgrade to v1.0.0 see
+[MIGRATING.md](MIGRATING.md). The v1 line will move to `@latest` when
+v1.0.0 final ships (after the beta soak window).
 
 ## Development phases
 
@@ -219,14 +250,17 @@ ship as `1.0.0` with a migration guide. Until then:
 | **3c — Content primitives** | ✅ shipped | `executive-summary`, `timeline`, `citation`, `references-list`, `toc`, `metric-block` |
 | **3d — Recipe migration** | ✅ shipped | 6 new bilingual starters (legal-nda, legal-service-agreement, personal-bio, formal-authority-letter, report-progress, editorial-article) |
 | **3e — Docs + tutorial** | ✅ shipped | README polish, TUTORIAL.md, CHANGELOG, seed manifest expansion |
-| **4 — Self-improvement + sharing** | next | Reflect, feedback, import/export — `~/.katib/` content becomes shareable |
-| **5 — v1.0.0 release** | planned | Migration guide, final CHANGELOG, `@latest` moves off v0.x |
+| **4 — Local share format** | ✅ shipped | `.katib-pack` artifact + `katib pack export/import/inspect/verify` CLI; pack_format: 1 frozen |
+| **5 — v1.0.0 release** | beta | Migration guide, beta dogfood, final CHANGELOG, `@latest` moves to v1.0.0 |
+| **6 — Marketplace MVP** | post-v1 | Static landing at `katib.jneaimi.com`, curated registry, `katib pack install <author>/<name>` |
+| **7 — Community uploads** | future | Auth, signing, moderation, ratings — own ADR |
 
 ## Contributing
 
-Not accepting external contributions during Phases 0–4. After v1.0.0 stable
+Not accepting external contributions during Phases 0–5. After v1.0.0 stable
 ships, Tier 2 (sections) and Tier 3 (recipes) will accept community PRs.
-Tier 1 primitives stay curated until v2.0.
+Tier 1 primitives stay curated until v2.0. Phase 7 will open community
+uploads via the marketplace.
 
 ## License
 

@@ -4,15 +4,15 @@ A `.katib-pack` is a portable bundle of user-tier Katib content —
 recipes, components, brand profiles — that can be exported from one
 install and imported into another. This document is the public spec.
 
-**Frozen at `pack_format: 1` for `@jasemal/katib@1.0.0`.** Future
-breaking changes will require `pack_format: 2` and an explicit
-migration story; v1 packs will keep installing on v1.x and v2.x
-hosts indefinitely.
+**Frozen at `pack_format: 1` for `@jasemal/katib@1.0.0`.** The schema
+is a public contract. Future breaking changes will require
+`pack_format: 2` with explicit migration; v1 packs will keep
+installing on v1.x and v2.x hosts indefinitely.
 
-> **Pre-distribution note.** This spec ships in alpha (`1.0.0-alpha.3`+).
-> The byte-level format is stable, but until v1.0.0 final, edge-case
-> behavior may be tightened in response to dogfooding. Once v1.0.0
-> ships, the format becomes a public contract.
+> **Status: BETA.** Format frozen at `1.0.0-beta.1` (2026-04-25);
+> stabilizes as the contract on v1.0.0 final after a ~1-week soak.
+> No format-level changes are planned during the beta window —
+> only bug fixes and documentation polish.
 
 ---
 
