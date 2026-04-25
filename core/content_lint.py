@@ -132,6 +132,21 @@ EN_META_COMMENTARY = [
 ]
 
 
+# ===================== HTML / markup rules =====================
+
+# Arabic Unicode ranges: base block, presentation forms A and B.
+_RE_ARABIC_CHARS = re.compile(r"[؀-ۿﭐ-﷿ﹰ-﻿]")
+_RE_SVG_BLOCK = re.compile(r"<svg\b[^>]*>(.*?)</svg>", re.DOTALL | re.IGNORECASE)
+_RE_TEXT_TAG = re.compile(r"<text\b[^>]*>(.*?)</text>", re.DOTALL | re.IGNORECASE)
+
+_ARABIC_IN_SVG_TEXT_MESSAGE = (
+    "Arabic text inside SVG <text> element. WeasyPrint cannot shape Arabic in "
+    "SVG. Use the HTML-overlay pattern: SVG geometry + position:absolute HTML "
+    "labels. See COMPONENT-BUILDER.md §Arabic in SVG diagrams or "
+    "recipes/bilingual-svg-diagram.yaml for a working example."
+)
+
+
 # ===================== Core linter =====================
 
 
@@ -251,6 +266,40 @@ def lint_arabic(text: str) -> list[Violation]:
     return v
 
 
+def lint_html_arabic_in_svg_text(raw: str) -> list[Violation]:
+    """Scan raw markup for Arabic characters inside SVG <text> elements.
+
+    WeasyPrint's SVG renderer cannot shape Arabic — letters appear in
+    isolated forms with no bidi reorder. The fix is the HTML-overlay
+    pattern (geometry-only SVG + position:absolute HTML labels).
+
+    Runs unconditionally — Arabic strings can leak into charts even when
+    the document language is English (e.g., user-supplied data, mixed
+    labels). Emits one HARD ERROR per offending <text> element.
+    """
+    violations: list[Violation] = []
+    for svg_match in _RE_SVG_BLOCK.finditer(raw):
+        svg_body = svg_match.group(1)
+        svg_start_offset = svg_match.start()
+        for text_match in _RE_TEXT_TAG.finditer(svg_body):
+            content = text_match.group(1)
+            if not content.strip():
+                continue
+            if _RE_ARABIC_CHARS.search(content):
+                # Find the line number in the original raw string.
+                abs_offset = svg_start_offset + text_match.start()
+                line_no = raw.count("\n", 0, abs_offset) + 1
+                excerpt = re.sub(r"\s+", " ", content).strip()[:80]
+                violations.append(Violation(
+                    rule="ARABIC_IN_SVG_TEXT",
+                    severity="error",
+                    pattern=_ARABIC_IN_SVG_TEXT_MESSAGE,
+                    line=line_no,
+                    snippet=excerpt,
+                ))
+    return violations
+
+
 def lint_english(text: str) -> list[Violation]:
     v: list[Violation] = []
 
@@ -300,4 +349,8 @@ def lint_file(path: Path, lang: str | None = None) -> tuple[list[Violation], str
     raw = path.read_text(encoding="utf-8")
     text = extract_text(raw)
     resolved = lang or guess_language(path, text)
-    return lint(text, resolved), resolved
+    violations = lint(text, resolved)
+    # HTML-level rules run on raw markup (always, regardless of language) —
+    # Arabic can leak into SVG <text> in any document.
+    violations.extend(lint_html_arabic_in_svg_text(raw))
+    return violations, resolved

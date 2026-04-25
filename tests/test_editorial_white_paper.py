@@ -38,12 +38,14 @@ def test_white_paper_loads():
     r = load_recipe(RECIPE_NAME)
     assert r["name"] == RECIPE_NAME
     assert r["namespace"] == "katib"
-    assert r["version"] == "0.1.0"
+    assert r["version"] == "0.2.0"
 
 
-def test_white_paper_en_only():
+def test_white_paper_bilingual():
+    """v0.2.0 — bilingual EN+AR via inputs_by_lang (per ADR
+    adr-katib-bilingual-pattern-discoverability)."""
     r = load_recipe(RECIPE_NAME)
-    assert r["languages"] == ["en"]
+    assert r["languages"] == ["en", "ar"]
 
 
 def test_white_paper_page_targets():
@@ -76,18 +78,29 @@ def test_white_paper_section_ordering():
 # ---------------------------------------------------------------- production proofs
 
 
+def _en_inputs(section: dict) -> dict:
+    """Merge a section's shared `inputs` block with `inputs_by_lang.en` so
+    tests can assert the rendered EN payload regardless of which block a
+    field lives in. Bilingual recipes (v0.2.0+) split text fields under
+    inputs_by_lang.en."""
+    merged = dict(section.get("inputs") or {})
+    merged.update(section.get("inputs_by_lang", {}).get("en", {}))
+    return merged
+
+
 def test_white_paper_first_data_table_consumer():
     """data-table Day-13 debut — first production consumer.
     5 columns (Indicator + 4 years), 3 rows, 4 numeric-aligned columns."""
     r = load_recipe(RECIPE_NAME)
     table = r["sections"][4]
     assert table["component"] == "data-table"
-    assert len(table["inputs"]["columns"]) == 5
+    en = _en_inputs(table)
+    assert len(en["columns"]) == 5
     # 4 numeric columns (2020, 2022, 2024, 2026)
-    numeric_cols = [c for c in table["inputs"]["columns"] if c.get("align") == "num"]
+    numeric_cols = [c for c in en["columns"] if c.get("align") == "num"]
     assert len(numeric_cols) == 4
-    assert len(table["inputs"]["rows"]) == 3
-    assert table["inputs"]["caption"] == "Indicator trends, 2020–2026"
+    assert len(en["rows"]) == 3
+    assert en["caption"] == "Indicator trends, 2020–2026"
 
 
 def test_white_paper_third_callout_neutral_consumer():
@@ -96,8 +109,9 @@ def test_white_paper_third_callout_neutral_consumer():
     r = load_recipe(RECIPE_NAME)
     abstract = r["sections"][1]
     assert abstract["component"] == "callout"
-    assert abstract["inputs"]["tone"] == "neutral"
-    assert abstract["inputs"]["title"] == "Executive Summary"
+    en = _en_inputs(abstract)
+    assert en["tone"] == "neutral"
+    assert en["title"] == "Executive Summary"
 
 
 def test_white_paper_uses_pull_quote_rule_leading():
@@ -106,7 +120,7 @@ def test_white_paper_uses_pull_quote_rule_leading():
     pq = r["sections"][6]
     assert pq["component"] == "pull-quote"
     assert pq["variant"] == "rule-leading"
-    assert pq["inputs"]["attribution"] == "The central claim of this paper"
+    assert _en_inputs(pq)["attribution"] == "The central claim of this paper"
 
 
 def test_white_paper_six_numbered_module_sections():
@@ -114,9 +128,9 @@ def test_white_paper_six_numbered_module_sections():
     r = load_recipe(RECIPE_NAME)
     numbered = [s for s in r["sections"] if s["component"] == "module" and s.get("variant") == "numbered"]
     assert len(numbered) == 6
-    numbers = [s["inputs"]["number"] for s in numbered]
+    numbers = [_en_inputs(s)["number"] for s in numbered]
     assert numbers == [1, 2, 3, 4, 5, 6]
-    titles = [s["inputs"]["title"] for s in numbered]
+    titles = [_en_inputs(s)["title"] for s in numbered]
     assert titles == [
         "Introduction",
         "The State of the Problem",

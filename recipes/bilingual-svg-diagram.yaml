@@ -1,0 +1,61 @@
+name: bilingual-svg-diagram
+version: 0.1.0
+namespace: katib
+description: Bundled example — canonical HTML-overlay pattern for bilingual SVG diagrams. WeasyPrint cannot shape Arabic in SVG <text>, so Arabic labels render as absolutely-positioned HTML <div> elements over a geometry-only SVG. EN may keep <text> inside SVG.
+languages: [en, ar]
+target_pages: [1, 1]
+page_limit: 1
+when: New recipe authors composing a hand-drawn SVG diagram with Arabic labels. Read this before authoring any bilingual figure. Pairs with COMPONENT-BUILDER.md §Arabic in SVG diagrams and ADR adr-katib-arabic-svg-text-regression.
+keywords: [example, svg, diagram, bilingual, arabic, html-overlay, pattern, reference]
+
+sections:
+  # 1. Intro — explains what this example demonstrates.
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Bilingual SVG Diagram — HTML-overlay pattern"
+        intro: "This bundled example demonstrates the canonical pattern for embedding a hand-drawn SVG diagram with Arabic labels. WeasyPrint's SVG engine has no bidi or HarfBuzz path, so Arabic inside <text> renders as isolated, mis-ordered glyphs. The fix: keep geometry in SVG, render labels as absolutely-positioned HTML <div> elements layered over the SVG inside a position:relative <figure>."
+      ar:
+        title: "مخطط SVG ثنائي اللغة — نمط طبقة HTML"
+        intro: "يوضح هذا المثال المرفق النمط القياسي لتضمين مخطط SVG مرسوم يدويًا يحتوي على نصوص عربية. محرك SVG في WeasyPrint لا يمر عبر Pango أو HarfBuzz، فيظهر النص العربي داخل <text> بحروف منعزلة وبترتيب خاطئ. الحل: إبقاء الأشكال داخل SVG، وعرض النصوص كعناصر HTML <div> بموضع مطلق فوق SVG داخل <figure> ذي position:relative."
+
+  # 2. The figure — three stacked rows. Same geometry both languages;
+  #    EN keeps <text> in SVG, AR uses HTML-overlay <div>s.
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Figure: three stacked rows"
+        raw_body: |
+          <figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
+            <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="Three stacked rows">
+              <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+              <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+              <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+              <text x="280" y="50"  text-anchor="middle" font-size="14" fill="#141414">First</text>
+              <text x="280" y="120" text-anchor="middle" font-size="14" fill="#141414">Second</text>
+              <text x="280" y="190" text-anchor="middle" font-size="14" fill="#141414">Third</text>
+            </svg>
+          </figure>
+      ar:
+        title: "الشكل: ثلاثة صفوف مكدسة"
+        raw_body: |
+          <figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
+            <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="ثلاثة صفوف مكدسة">
+              <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+              <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+              <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+            </svg>
+            <div style="position: absolute; top: 18.75%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الأول</div>
+            <div style="position: absolute; top: 47.92%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثاني</div>
+            <div style="position: absolute; top: 77.08%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثالث</div>
+          </figure>
+
+  # 3. Closing — pointers to the canonical references.
+  - component: module
+    inputs_by_lang:
+      en:
+        title: "Where to learn more"
+        body: "Read COMPONENT-BUILDER.md §Arabic in SVG diagrams for the full pattern, the positioning math (cy/VH * 100%), and the lint rule ARABIC_IN_SVG_TEXT that enforces it. The decision rationale lives in ADR adr-katib-arabic-svg-text-regression."
+      ar:
+        title: "للمزيد"
+        body: "يرجى مراجعة COMPONENT-BUILDER.md §Arabic in SVG diagrams للاطلاع على النمط الكامل، ومعادلة تحديد المواضع (cy/VH * 100%)، وقاعدة الفحص ARABIC_IN_SVG_TEXT التي تطبقه. أما مبررات القرار فمدونة في ADR adr-katib-arabic-svg-text-regression."

@@ -213,6 +213,72 @@ _DEFAULT_SCAFFOLD_SECTIONS = [
 ]
 
 
+# Bilingual scaffold mirrors _DEFAULT_SCAFFOLD_SECTIONS but moves text-bearing
+# inputs under `inputs_by_lang.{en,ar}` per the legal-mou.yaml pattern. All
+# default scaffold inputs are text (no images / numeric layout knobs), so the
+# top-level `inputs:` block is empty for these sections and omitted. Variant
+# stays at section level (not language-scoped). Non-text inputs (e.g. a
+# section's `variant`, image specs, layout numbers) would remain at the
+# `inputs:` level when authors extend the recipe.
+_DEFAULT_SCAFFOLD_SECTIONS_BILINGUAL = [
+    {
+        "component": "cover-page",
+        "variant": "minimalist-typographic",
+        "inputs_by_lang": {
+            "en": {
+                "eyebrow": "Document",
+                "title": "<title in English>",
+                "subtitle": "<subtitle in English>",
+            },
+            "ar": {
+                "eyebrow": "وثيقة",
+                "title": "<العنوان بالعربية>",
+                "subtitle": "<العنوان الفرعي بالعربية>",
+            },
+        },
+    },
+    {
+        "component": "module",
+        "inputs_by_lang": {
+            "en": {
+                "title": "<first module title in English>",
+                "body": "<module body in English — plain text or markdown>",
+            },
+            "ar": {
+                "title": "<عنوان الوحدة الأولى بالعربية>",
+                "body": "<نص الوحدة بالعربية — نص عادي أو ماركداون>",
+            },
+        },
+    },
+    {
+        "component": "summary",
+        "inputs_by_lang": {
+            "en": {
+                "heading": "Summary",
+                "items": ["<takeaway one in English>", "<takeaway two in English>"],
+            },
+            "ar": {
+                "heading": "الملخص",
+                "items": ["<النقطة الأولى بالعربية>", "<النقطة الثانية بالعربية>"],
+            },
+        },
+    },
+    {
+        "component": "whats-next",
+        "inputs_by_lang": {
+            "en": {
+                "heading": "What's next",
+                "items": ["<next step one in English>", "<next step two in English>"],
+            },
+            "ar": {
+                "heading": "الخطوات التالية",
+                "items": ["<الخطوة الأولى بالعربية>", "<الخطوة الثانية بالعربية>"],
+            },
+        },
+    },
+]
+
+
 def _scaffold_recipe_yaml(
     name: str,
     namespace: str,
@@ -223,6 +289,7 @@ def _scaffold_recipe_yaml(
     page_limit: int | None,
     keywords: list[str],
     when: str | None,
+    bilingual: bool = False,
 ) -> str:
     data: dict[str, Any] = {
         "name": name,
@@ -241,7 +308,9 @@ def _scaffold_recipe_yaml(
         data["when"] = when
     if keywords:
         data["keywords"] = keywords
-    data["sections"] = _DEFAULT_SCAFFOLD_SECTIONS
+    data["sections"] = (
+        _DEFAULT_SCAFFOLD_SECTIONS_BILINGUAL if bilingual else _DEFAULT_SCAFFOLD_SECTIONS
+    )
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
 
 
@@ -259,12 +328,23 @@ def scaffold_recipe(
     force: bool = False,
     justification: str | None = None,
     from_graduation: str | None = None,
+    bilingual: bool = False,
 ) -> RecipeScaffoldResult:
-    """Scaffold a new recipe file. Raises ValueError on misuse."""
+    """Scaffold a new recipe file. Raises ValueError on misuse.
+
+    When ``bilingual=True``, defaults ``languages`` to ``["en", "ar"]`` and
+    emits sections that use the ``inputs_by_lang.{en,ar}`` shape (see
+    ``recipes/legal-mou.yaml`` for the production reference). The flag is
+    a discoverability convenience for ADR
+    `adr-katib-bilingual-pattern-discoverability` recommendation #4 — the
+    output is otherwise identical to the single-language scaffold.
+    """
     if not NAME_RE.match(name):
         raise ValueError(
             f"recipe name {name!r} must be kebab-case (e.g. my-recipe)"
         )
+    if bilingual and languages is None:
+        languages = ["en", "ar"]
     languages = languages or ["en"]
     for lang in languages:
         if lang not in LANG_ENUM:
@@ -323,6 +403,7 @@ def scaffold_recipe(
         page_limit=page_limit,
         keywords=keywords,
         when=when,
+        bilingual=bilingual,
     )
     rpath.write_text(yaml_text, encoding="utf-8")
 
@@ -527,6 +608,10 @@ def validate_recipe_full(
             violations = cl.lint(text, lint_lang)
         except ValueError:
             violations = []
+
+        # HTML/markup rules run on raw recipe text (catches Arabic in inline
+        # SVG <text> elements regardless of the recipe's languages: setting).
+        violations.extend(cl.lint_html_arabic_in_svg_text(raw))
 
         for v in violations:
             # All content-lint findings surface as warnings by default so the

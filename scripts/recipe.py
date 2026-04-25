@@ -143,6 +143,7 @@ def _cmd_new(args) -> int:
             force=args.force,
             justification=args.justification,
             from_graduation=args.from_graduation,
+            bilingual=args.bilingual,
         )
     except ValueError as e:
         return _emit_error(e, json_out=args.json)
@@ -301,6 +302,15 @@ def main(argv: list[str] | None = None) -> int:
     p_new.add_argument("--force", action="store_true")
     p_new.add_argument("--justification", default=None)
     p_new.add_argument("--from-graduation", default=None)
+    p_new.add_argument(
+        "--bilingual",
+        action="store_true",
+        help=(
+            "Scaffold a bilingual EN+AR recipe. Sets languages to [en, ar] and "
+            "structures each section's text inputs under inputs_by_lang.{en,ar} "
+            "with placeholder strings (matches the legal-mou.yaml pattern)."
+        ),
+    )
     p_new.set_defaults(func=_cmd_new)
 
     # validate

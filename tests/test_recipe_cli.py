@@ -116,6 +116,23 @@ def test_new_target_pages_parsing(throwaway_name):
     assert data["page_limit"] == 10
 
 
+def test_new_bilingual_flag(throwaway_name):
+    """--bilingual produces languages: [en, ar] and inputs_by_lang blocks."""
+    _run(
+        "new", throwaway_name,
+        "--bilingual", "--keywords", "smoke",
+        expect_rc=0,
+    )
+    import yaml
+    rpath = ops.USER_RECIPES_DIR / f"{throwaway_name}.yaml"
+    raw = rpath.read_text()
+    data = yaml.safe_load(raw)
+    assert data["languages"] == ["en", "ar"]
+    assert "inputs_by_lang:" in raw
+    for section in data["sections"]:
+        assert "inputs_by_lang" in section
+
+
 # ================================================================ validate
 
 

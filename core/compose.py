@@ -593,6 +593,14 @@ code {{
 
 a {{ color: var(--accent); text-decoration: none; }}
 
+/* ============================================================
+   Utilities — opt-in classes recipe authors can apply directly
+   ============================================================ */
+.katib-atomic {{
+  break-inside: avoid;
+  page-break-inside: avoid;
+}}
+
 """.strip()
 
     return f"""<!DOCTYPE html>
