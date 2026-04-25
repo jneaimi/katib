@@ -105,6 +105,112 @@ def test_bar_ar_axis_on_right():
     assert 'x="140.00"' not in svg
 
 
+# -------- Arabic HTML-overlay routing (per ADR adr-katib-arabic-svg-text-regression) --------
+
+
+def test_bar_english_labels_stay_in_svg_text():
+    """English labels keep the SVG <text> path — no overlay, no <figure>."""
+    out = render_bar({
+        "data": [
+            {"label": "Apple", "value": 1},
+            {"label": "Banana", "value": 2},
+        ],
+        "colors": ["#111", "#222"],
+        "width": 600,
+    })
+    assert ">Apple</text>" in out
+    assert ">Banana</text>" in out
+    assert "direction: rtl" not in out
+    assert out.startswith("<svg")
+    assert "<figure" not in out
+
+
+def test_bar_arabic_labels_route_to_html_overlay():
+    """Arabic labels move out of SVG <text> into HTML overlay divs."""
+    out = render_bar({
+        "data": [
+            {"label": "تفاح", "value": 1},
+            {"label": "موز", "value": 2},
+            {"label": "كرز", "value": 3},
+        ],
+        "colors": ["#111", "#222", "#333"],
+        "lang": "ar",
+        "width": 600,
+    })
+    # Arabic must NOT appear inside SVG <text>
+    assert "تفاح</text>" not in out
+    assert "موز</text>" not in out
+    assert "كرز</text>" not in out
+    # Three overlay divs each with direction: rtl
+    assert out.count("direction: rtl") == 3
+    assert out.count("unicode-bidi: isolate") == 3
+    # Arabic strings still appear (inside divs)
+    assert "تفاح" in out
+    assert "موز" in out
+    assert "كرز" in out
+
+
+def test_bar_arabic_chart_wrapped_in_figure():
+    """When any label is Arabic, the whole chart is wrapped in <figure position:relative>."""
+    out = render_bar({
+        "data": [{"label": "تفاح", "value": 1}],
+        "colors": ["#111"],
+        "lang": "ar",
+        "width": 600,
+    })
+    assert out.startswith("<figure")
+    assert "position: relative" in out
+    assert out.endswith("</figure>")
+
+
+def test_bar_mixed_chart_routes_per_label():
+    """Per-label routing: Latin -> SVG <text>; Arabic -> overlay div."""
+    out = render_bar({
+        "data": [
+            {"label": "Apple", "value": 1},
+            {"label": "موز", "value": 2},
+            {"label": "Cherry", "value": 3},
+        ],
+        "colors": ["#111", "#222", "#333"],
+        "width": 600,
+    })
+    assert ">Apple</text>" in out
+    assert ">Cherry</text>" in out
+    assert "موز</text>" not in out
+    assert out.count("direction: rtl") == 1
+    # figure wrapper present (at least one Arabic label triggered overlay path)
+    assert "<figure" in out
+
+
+def test_bar_arabic_values_stay_as_svg_text():
+    """Numeric values are always SVG <text> (numerals are Latin, render fine)."""
+    out = render_bar({
+        "data": [{"label": "تفاح", "value": 42}],
+        "colors": ["#111"],
+        "lang": "ar",
+        "width": 600,
+    })
+    # Value must appear as SVG <text>, not as overlay div
+    assert ">42</text>" in out
+
+
+def test_bar_arabic_chart_lint_clean():
+    """The Arabic chart-bar output must NOT trigger the ARABIC_IN_SVG_TEXT lint."""
+    from core.content_lint import lint_html_arabic_in_svg_text
+
+    out = render_bar({
+        "data": [
+            {"label": "تفاح", "value": 1},
+            {"label": "موز", "value": 2},
+        ],
+        "colors": ["#111", "#222"],
+        "lang": "ar",
+        "width": 600,
+    })
+    violations = lint_html_arabic_in_svg_text(out)
+    assert violations == []
+
+
 # -------- sparkline renderer --------
 
 def test_sparkline_rejects_empty():

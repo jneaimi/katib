@@ -19,11 +19,21 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 from core.image.base import ProviderError, ResolvedImage
 
 _AXIS_FALLBACK = "#7A7268"
+
+# Arabic Unicode ranges: base block, presentation forms A, presentation forms B.
+# WeasyPrint's SVG renderer cannot shape Arabic — labels containing any of
+# these characters route through HTML overlay divs instead of SVG <text>.
+_ARABIC_RE = re.compile(r"[؀-ۿﭐ-﷿ﹰ-﻿]")
+
+
+def _has_arabic(s: str) -> bool:
+    return bool(_ARABIC_RE.search(s))
 
 
 class InlineSvgProvider:
@@ -158,6 +168,9 @@ def render_bar(spec: dict) -> str:
         f'<line x1="{axis_x}" y1="{pad_top}" x2="{axis_x}" '
         f'y2="{height - pad_bottom}" stroke="{axis_color}" stroke-width="1" />'
     ]
+    # Arabic labels are emitted as HTML overlays (WeasyPrint can't shape
+    # Arabic in SVG). Non-empty -> wrap output in <figure position:relative>.
+    overlays: list[str] = []
 
     for i, d in enumerate(data):
         value = d.get("value", 0)
@@ -185,24 +198,63 @@ def render_bar(spec: dict) -> str:
             f'<rect x="{rect_x:.2f}" y="{y}" width="{bar_w:.2f}" '
             f'height="{bar_height}" fill="{color}" rx="2" />'
         )
-        parts.append(
-            f'<text x="{label_x}" y="{text_y:.1f}" '
-            f'text-anchor="{label_anchor}" font-size="10" '
-            f'fill="#141414">{_esc(label)}</text>'
-        )
+        # Label: SVG <text> for Latin/other; HTML overlay div for Arabic.
+        if _has_arabic(label):
+            label_cy = y + bar_height / 2
+            top_pct = label_cy / height * 100
+            left_pct = label_x / width * 100
+            # Map SVG text-anchor -> CSS transform for the overlay.
+            if label_anchor == "start":
+                anchor_transform = "translateY(-50%)"
+                anchor_text_align = "right"  # RTL: visual right edge
+            elif label_anchor == "end":
+                anchor_transform = "translate(-100%, -50%)"
+                anchor_text_align = "right"
+            else:  # middle
+                anchor_transform = "translate(-50%, -50%)"
+                anchor_text_align = "center"
+            overlays.append(
+                f'<div style="position: absolute; '
+                f"top: {top_pct:.4f}%; left: {left_pct:.4f}%; "
+                f"transform: {anchor_transform}; "
+                f"direction: rtl; unicode-bidi: isolate; "
+                f"font-family: Cairo, sans-serif; font-size: 10px; "
+                f"color: #141414; white-space: nowrap; "
+                f'text-align: {anchor_text_align};">'
+                f"{_esc(label)}</div>"
+            )
+        else:
+            parts.append(
+                f'<text x="{label_x}" y="{text_y:.1f}" '
+                f'text-anchor="{label_anchor}" font-size="10" '
+                f'fill="#141414">{_esc(label)}</text>'
+            )
+        # Value is always a numeral string — keep as SVG <text>.
         parts.append(
             f'<text x="{value_x:.2f}" y="{text_y:.1f}" '
             f'text-anchor="{value_anchor}" font-size="10" '
             f'fill="#4A4A4A">{_fmt_num(value)}</text>'
         )
 
-    return (
-        f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" '
-        f'role="img" aria-label="{_esc(title)}">'
+    svg = (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
+        f'viewBox="0 0 {width} {height}" '
+        f'role="img" aria-label="{_esc(title)}" '
+        f'style="display: block; width: 100%;">'
         f"<title>{_esc(title)}</title>"
         + "".join(parts)
         + "</svg>"
     )
+    if overlays:
+        return (
+            f'<figure style="position: relative; display: block; '
+            f'width: 100%; margin: 0; '
+            f'break-inside: avoid; page-break-inside: avoid;">'
+            + svg
+            + "".join(overlays)
+            + "</figure>"
+        )
+    return svg
 
 
 def render_sparkline(spec: dict) -> str:

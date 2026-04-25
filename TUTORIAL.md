@@ -299,6 +299,65 @@ at its job with every new component you add.
 
 ---
 
+## Bilingual recipes
+
+Katib renders both languages from the **same recipe file**, not parallel
+EN/AR siblings. Per-section language overrides go in `inputs_by_lang`;
+language-neutral inputs (variants, tones, image paths, numerics) stay
+on the section's plain `inputs:` block. The renderer picks the slot
+matching `--lang`. Avoid the parallel-recipe anti-pattern — drift is
+guaranteed.
+
+| Pattern | Where it lives | What goes in it |
+|---|---|---|
+| `inputs:` | Section root | Language-neutral fields — `tone`, `variant`, `number`, image specs, dates |
+| `inputs_by_lang:` | Section root | Per-language overrides — `title`, `body`, `intro`, `raw_body`, anything text-bearing |
+
+### Minimum example
+
+```yaml
+name: my-bilingual-doc
+languages: [en, ar]
+sections:
+  - component: callout
+    inputs:
+      tone: info                       # neutral — same both langs
+    inputs_by_lang:
+      en:
+        title: "Heads up"
+        body: "Review this section before signing."
+      ar:
+        title: "تنبيه"
+        body: "يرجى مراجعة هذا القسم قبل التوقيع."
+```
+
+### Render commands
+
+```bash
+uv run scripts/build.py my-bilingual-doc --lang en
+uv run scripts/build.py my-bilingual-doc --lang ar
+```
+
+### Scaffold a bilingual recipe
+
+```bash
+uv run scripts/recipe.py new my-bilingual-doc \
+    --namespace user \
+    --bilingual
+```
+
+The `--bilingual` flag pre-fills `languages: [en, ar]` and structures every default section's text inputs under `inputs_by_lang.en` / `inputs_by_lang.ar` slots. Equivalent to `--languages en,ar` plus the per-section refactor.
+
+### Reference recipes
+
+- `recipes/legal-mou.yaml` — production reference; bilateral MoU with `inputs_by_lang` on every text-bearing section.
+- `recipes/editorial-white-paper.yaml` — content-heavy bilingual template; long-form prose.
+- `recipes/bilingual-svg-diagram.yaml` — canonical pattern for bilingual figures (see COMPONENT-BUILDER.md §Arabic in SVG diagrams).
+
+See ADR `adr-katib-bilingual-pattern-discoverability` for the rationale.
+
+---
+
 ## Reference
 
 - [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) — full playbook with

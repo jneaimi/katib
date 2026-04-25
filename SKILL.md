@@ -99,6 +99,10 @@ receipt and decide whether to offer a post-render save:
 uv run scripts/build.py <recipe> --lang <lang> [--brand <brand>] [--slug <slug>] --json
 ```
 
+When `--lang ar` is passed, the recipe must declare `languages` to
+include `ar`. Per-language content uses `inputs_by_lang` — see
+`TUTORIAL.md` §Bilingual recipes.
+
 The JSON receipt has shape:
 
 ```json

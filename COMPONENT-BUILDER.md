@@ -323,6 +323,147 @@ sections:
 
 ---
 
+## Bilingual authoring
+
+Designing a component that survives both languages cleanly:
+
+- **Every text-bearing input is wrappable in `inputs_by_lang`.** The recipe
+  decides per language; the component just declares the input once. No
+  per-lang inputs in `component.yaml`.
+- **SVG with text → see the next section.** WeasyPrint cannot shape
+  Arabic in SVG `<text>`. Use the HTML-overlay pattern.
+- **RTL** — the renderer sets `direction: rtl` on `<html>` when
+  `--lang ar`, plus `dir="rtl"` on the component root. Logical CSS
+  properties (`text-align: end`, `border-inline-start`, `margin-inline-start`)
+  flip automatically. Hardcoded `text-align: left` does not — gate it
+  behind `[lang="ar"]` if you need a per-language override.
+- **Numerals** — Western (`123`) vs. Arabic-Indic (`١٢٣`) is a
+  recipe-author choice, not a component decision. Default behavior keeps
+  source numerals as authored. Don't transform them in CSS.
+
+---
+
+## Arabic in SVG diagrams
+
+WeasyPrint's SVG renderer has no bidi or HarfBuzz path. Putting Arabic
+inside `<svg><text>...</text></svg>` produces disjoined, mis-ordered
+glyphs. The fix: **SVG holds geometry only; labels render as
+absolutely-positioned HTML `<div>` elements layered over the SVG.**
+
+### The pattern
+
+Wrap the figure in `<figure style="position: relative;">`. Inside, put a
+geometry-only SVG (`<rect>`, `<line>`, `<circle>`, `<path>`). Then layer
+HTML `<div>` labels on top, anchored on shape centers.
+
+```html
+<figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
+  <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="Three stacked rows">
+    <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+    <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+    <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+    <!-- EN can keep <text> in SVG -->
+    <text x="280" y="50"  text-anchor="middle" font-size="14" fill="#141414">First</text>
+    <text x="280" y="120" text-anchor="middle" font-size="14" fill="#141414">Second</text>
+    <text x="280" y="190" text-anchor="middle" font-size="14" fill="#141414">Third</text>
+  </svg>
+</figure>
+```
+
+Same geometry for Arabic, but labels are HTML overlays:
+
+```html
+<figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
+  <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="ثلاثة صفوف مكدسة">
+    <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+    <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+    <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+  </svg>
+  <div style="position: absolute; top: 18.75%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الأول</div>
+  <div style="position: absolute; top: 47.92%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثاني</div>
+  <div style="position: absolute; top: 77.08%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثالث</div>
+</figure>
+```
+
+### Positioning math
+
+Anchor each label on the center of its shape, expressed as percentages
+of the SVG viewBox:
+
+```
+top:  cy / VH * 100%
+left: cx / VW * 100%
+transform: translate(-50%, -50%);
+```
+
+For `viewBox="0 0 560 240"` (VW=560, VH=240), a `<rect>` centered at
+`(280, 45)` becomes `top: 18.75%; left: 50%`.
+
+### Required CSS on each label
+
+```
+direction: rtl;
+unicode-bidi: isolate;
+font-family: Cairo, sans-serif;
+white-space: nowrap;
+```
+
+`unicode-bidi: isolate` prevents adjacent labels from cross-contaminating
+bidi runs. `white-space: nowrap` keeps the label on one line so the
+center-translate stays accurate.
+
+### Pitfalls
+
+| Pitfall | Why it bites | Fix |
+|---|---|---|
+| Using `bottom:` for vertical anchor | WeasyPrint anchoring quirk inside `position: relative` | Always use `top:` (compute from `cy/VH`) |
+| Missing `width="100%"` on `<svg>` | SVG renders at intrinsic size; HTML overlay drifts off the geometry | Always set explicit `width="100%"` |
+| `<figure>` splits across pages | `module` is `mode: flowing`; raw HTML inherits | Add `break-inside: avoid; page-break-inside: avoid;` (or use `class="katib-atomic"`) |
+| Arabic inside `<svg><text>` | WeasyPrint produces broken glyphs | Refactor to HTML overlay |
+
+### Lint enforcement
+
+The `ARABIC_IN_SVG_TEXT` lint rule blocks Arabic codepoints inside SVG
+`<text>` elements at recipe-validation time. If you see this error,
+refactor the offending diagram using the HTML-overlay pattern above.
+
+See `recipes/bilingual-svg-diagram.yaml` for a working example.
+
+---
+
+## Atomic blocks inside flowing modules
+
+`module` is `mode: flowing` — its body can split across pages. Raw HTML
+in `module.raw_body` inherits this behavior, so a callout box, install
+snippet, repository card, framed quote, or styled code block can split
+mid-element and look broken.
+
+Apply the **`katib-atomic` utility class** to any wrapper element you
+don't want to split:
+
+```html
+<div class="katib-atomic" style="border: 1pt solid var(--border); padding: 12pt; border-radius: 4pt;">
+  ...content that must stay together...
+</div>
+```
+
+The class is opt-in and ships in katib's base CSS. Internally it sets
+`break-inside: avoid; page-break-inside: avoid;` — equivalent to
+hand-writing both, but with a stable name.
+
+**Common targets:**
+- Callout boxes built inline in `raw_body`
+- Install snippets / `<pre>` blocks with custom framing
+- Repository cards, contact cards, framed quotes
+- Any inline figure with a caption that must travel with it
+
+**Bundled named components (`callout`, `pull-quote`, `data-table`,
+`executive-summary`) already declare `mode: atomic` in their
+`page_behavior` — only raw HTML in `module.raw_body` needs the utility
+class.**
+
+---
+
 ## Scope of this mode
 
 **In scope:** Creating a single new component from interview → register.

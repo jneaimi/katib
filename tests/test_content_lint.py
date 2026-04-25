@@ -210,3 +210,86 @@ def test_lint_file_respects_forced_lang(tmp_path):
     violations, lang = cl.lint_file(p, lang="en")
     assert lang == "en"
     assert any(x.rule == "vague-declarative" for x in violations)
+
+
+# ================================================================ ARABIC_IN_SVG_TEXT
+
+
+def test_arabic_in_svg_text_fires():
+    """Arabic inside <svg><text> is a hard error."""
+    html = '<svg viewBox="0 0 100 100"><text x="10" y="20">المستوى السادس</text></svg>'
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert len(v) == 1
+    assert v[0].rule == "ARABIC_IN_SVG_TEXT"
+    assert v[0].severity == "error"
+    assert "المستوى" in v[0].snippet
+
+
+def test_arabic_in_svg_text_html_overlay_does_not_fire():
+    """HTML-overlay pattern: Arabic label is outside SVG, not inside <text>."""
+    html = (
+        '<figure style="position:relative;">'
+        '<svg viewBox="0 0 560 400"><rect x="40" y="36" width="480" height="44"/></svg>'
+        '<div style="position:absolute;top:50pt;left:60pt;">المستوى</div>'
+        "</figure>"
+    )
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert v == []
+
+
+def test_english_in_svg_text_does_not_fire():
+    """English inside SVG <text> is fine — only Arabic triggers the rule."""
+    html = '<svg viewBox="0 0 100 100"><text x="10" y="20">Level Six</text></svg>'
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert v == []
+
+
+def test_arabic_in_svg_text_multiline_svg_fires():
+    """Arabic in <text> inside a multi-line, deeply nested SVG block still fires."""
+    html = (
+        '<svg\n  viewBox="0 0 200 200"\n  xmlns="http://www.w3.org/2000/svg">\n'
+        "  <g>\n    <g>\n"
+        '      <text\n        x="10"\n        y="50"\n      >الإبداع</text>\n'
+        "    </g>\n  </g>\n</svg>"
+    )
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert len(v) == 1
+    assert v[0].rule == "ARABIC_IN_SVG_TEXT"
+
+
+def test_arabic_outside_svg_does_not_fire():
+    """Arabic in body prose (outside SVG) must not trigger ARABIC_IN_SVG_TEXT."""
+    html = "<p>هذا نص عربي في الجسم الرئيسي للمستند</p>"
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert v == []
+
+
+def test_arabic_in_svg_text_multiple_offenders():
+    """Multiple <text> elements with Arabic produce multiple violations."""
+    html = (
+        '<svg viewBox="0 0 200 200">'
+        '<text x="10" y="20">العمل</text>'
+        '<text x="10" y="40">المالك</text>'
+        '<text x="10" y="60">المستوى</text>'
+        "</svg>"
+    )
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert len(v) == 3
+    assert all(x.rule == "ARABIC_IN_SVG_TEXT" for x in v)
+
+
+def test_arabic_in_svg_text_empty_text_does_not_fire():
+    """Empty <text> elements are skipped (no real content to flag)."""
+    html = '<svg viewBox="0 0 100 100"><text x="10" y="20"></text></svg>'
+    v = cl.lint_html_arabic_in_svg_text(html)
+    assert v == []
+
+
+def test_lint_file_runs_html_rules(tmp_path):
+    """lint_file must surface HTML-level rules alongside text-level rules."""
+    p = tmp_path / "broken.ar.html"
+    p.write_text(
+        '<svg viewBox="0 0 100 100"><text x="10" y="20">المستوى</text></svg>'
+    )
+    violations, _ = cl.lint_file(p)
+    assert any(x.rule == "ARABIC_IN_SVG_TEXT" for x in violations)

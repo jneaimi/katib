@@ -92,6 +92,67 @@ def test_scaffolded_recipe_passes_schema(throwaway_name):
     assert schema_errors == []
 
 
+def test_scaffold_default_is_single_language(throwaway_name):
+    """Without --bilingual, scaffold produces languages: [en] and uses
+    plain `inputs:` blocks (no `inputs_by_lang`)."""
+    ops.scaffold_recipe(throwaway_name, keywords=["smoke"])
+    rpath = ops.USER_RECIPES_DIR / f"{throwaway_name}.yaml"
+    raw = rpath.read_text(encoding="utf-8")
+    data = yaml.safe_load(raw)
+    assert data["languages"] == ["en"]
+    assert "inputs_by_lang:" not in raw
+    for section in data["sections"]:
+        assert "inputs_by_lang" not in section
+        assert "inputs" in section
+
+
+def test_scaffold_bilingual_uses_inputs_by_lang(throwaway_name):
+    """With bilingual=True, scaffold sets languages to [en, ar] and moves
+    text inputs under inputs_by_lang.{en,ar} per the legal-mou.yaml shape."""
+    result = ops.scaffold_recipe(throwaway_name, bilingual=True, keywords=["smoke"])
+    rpath = ops.USER_RECIPES_DIR / f"{throwaway_name}.yaml"
+    raw = rpath.read_text(encoding="utf-8")
+    data = yaml.safe_load(raw)
+    assert data["languages"] == ["en", "ar"]
+    assert "inputs_by_lang:" in raw
+    # Every default scaffold section is text-bearing — all should use the
+    # per-language shape and omit a top-level `inputs:` block.
+    for section in data["sections"]:
+        assert "inputs_by_lang" in section, section
+        assert "en" in section["inputs_by_lang"]
+        assert "ar" in section["inputs_by_lang"]
+        assert "inputs" not in section, section
+    # Arabic placeholders should actually contain Arabic characters
+    # (U+0600..U+06FF). Pull a representative one from the cover-page.
+    cover = data["sections"][0]
+    ar_title = cover["inputs_by_lang"]["ar"]["title"]
+    assert any("؀" <= ch <= "ۿ" for ch in ar_title), ar_title
+    # Result still reports the recipe + path
+    assert result.recipe == throwaway_name
+
+
+def test_scaffold_bilingual_explicit_languages_respected(throwaway_name):
+    """If the caller passes explicit languages alongside bilingual=True, the
+    explicit value wins — the flag only fills in defaults."""
+    ops.scaffold_recipe(
+        throwaway_name,
+        bilingual=True,
+        languages=["ar", "en"],
+        keywords=["smoke"],
+    )
+    rpath = ops.USER_RECIPES_DIR / f"{throwaway_name}.yaml"
+    data = yaml.safe_load(rpath.read_text(encoding="utf-8"))
+    assert data["languages"] == ["ar", "en"]
+
+
+def test_scaffolded_bilingual_recipe_passes_schema(throwaway_name):
+    """The bilingual scaffold output must also be schema-valid."""
+    ops.scaffold_recipe(throwaway_name, bilingual=True, keywords=["smoke"])
+    v = ops.validate_recipe_full(throwaway_name)
+    schema_errors = [i for i in v.issues if i.category == "schema"]
+    assert schema_errors == []
+
+
 # ================================================================== validate_recipe_full
 
 

@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-25T11:18:40+00:00'
+generated_at: '2026-04-25T21:04:24+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -25,6 +25,34 @@ governance:
     - katib recipe validate <name>
     - katib recipe register <name>
 recipes:
+  bilingual-svg-diagram:
+    namespace: katib
+    version: 0.1.0
+    description: Bundled example — canonical HTML-overlay pattern for bilingual SVG diagrams. WeasyPrint
+      cannot shape Arabic in SVG <text>, so Arabic labels render as absolutely-positioned HTML <div> elements
+      over a geometry-only SVG. EN may keep <text> inside SVG.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 1
+    - 1
+    page_limit: 1
+    when: New recipe authors composing a hand-drawn SVG diagram with Arabic labels. Read this before authoring
+      any bilingual figure. Pairs with COMPONENT-BUILDER.md §Arabic in SVG diagrams and ADR adr-katib-arabic-svg-text-regression.
+    keywords:
+    - example
+    - svg
+    - diagram
+    - bilingual
+    - arabic
+    - html-overlay
+    - pattern
+    - reference
+    sections_shape:
+    - module
+    - module
+    - module
   business-proposal-letter:
     namespace: katib
     version: 0.1.0
@@ -145,19 +173,21 @@ recipes:
     - references-list
   editorial-white-paper:
     namespace: katib
-    version: 0.1.0
+    version: 0.2.0
     description: White paper — long-form editorial argument with title page, executive summary, 6 numbered
       body sections, pull-quote, data-table, footnotes, and about-author box. First production consumer
       of data-table (Day 13). Third production consumer of callout neutral; first Phase-3 consumer of
-      pull-quote primitive.
+      pull-quote primitive. v0.2.0 adds EN+AR bilingual rendering via inputs_by_lang — second long-form
+      recipe to ship bilingual alongside legal-mou.
     languages:
     - en
+    - ar
     target_pages:
     - 4
     - 8
     page_limit: 10
     when: Long-form editorial piece — thesis-driven paper with evidence, argument, counterarguments, implications.
-      Typically 4-8 pages. EN-only; AR deferred pending inputs_by_lang schema.
+      Typically 4-8 pages. Bilingual EN+AR.
     keywords:
     - editorial
     - white-paper
@@ -165,6 +195,7 @@ recipes:
     - thesis
     - argument
     - research
+    - bilingual
     sections_shape:
     - module
     - callout
@@ -981,6 +1012,123 @@ recipes:
     - summary
     - whats-next
     - reference-strip
+  bloom-framework-review:
+    namespace: user
+    version: 0.1.0
+    description: Critical review of Bloom's AI Collaboration Framework with auditability reframe — cover,
+      TOC, executive summary, strengths, critiques, recommendations, three diagrams.
+    languages:
+    - en
+    target_pages:
+    - 10
+    - 16
+    page_limit: 20
+    when: Critical review of an existing knowledge artifact. Long-form analysis with structured critique,
+      central reframe, and concrete recommendations.
+    keywords:
+    - review
+    - critique
+    - framework
+    - bloom
+    - ai-collaboration
+    - auditability
+    - analysis
+    sections_shape:
+    - cover-page
+    - toc
+    - executive-summary
+    - module
+    - module
+    - module
+    - module
+    - pull-quote
+    - module
+    - summary
+    - reference-strip
+  bloom-framework-v2-shareable:
+    namespace: user
+    version: 0.2.0
+    description: Bloom's AI Collaboration Framework v2.0 — shareable public PDF. Neural-cartography Gemini
+      cover, GitHub repo link, 14 sections, three diagrams. For distribution to readers outside the immediate
+      workspace. Bilingual EN+AR via inputs_by_lang.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 14
+    - 22
+    page_limit: 28
+    when: Public-facing shareable version of the v2 framework. Use when distributing the framework to
+      colleagues, prospects, or readers who don't have access to the vault.
+    keywords:
+    - framework
+    - bloom
+    - ai-collaboration
+    - auditability
+    - pillars
+    - v2
+    - shareable
+    - public
+    - bilingual
+    - arabic
+    sections_shape:
+    - cover-page
+    - toc
+    - executive-summary
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - summary
+    - module
+    - reference-strip
+  bloom-framework-v2:
+    namespace: user
+    version: 0.1.0
+    description: Bloom's AI Collaboration Framework v2.0 — print-grade canonical document. Cover, TOC,
+      exec summary, auditability principle, level-by-level, 6+3 questions, pillars, operational tiers,
+      failure modes, real usage data, worked examples, three diagrams.
+    languages:
+    - en
+    target_pages:
+    - 14
+    - 22
+    page_limit: 28
+    when: Canonical published version of the v2 framework. The framework as a document — not a review,
+      not a critique.
+    keywords:
+    - framework
+    - bloom
+    - ai-collaboration
+    - auditability
+    - pillars
+    - v2
+    sections_shape:
+    - cover-page
+    - toc
+    - executive-summary
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - module
+    - summary
+    - reference-strip
 components:
   callout:
     namespace: katib
@@ -1098,7 +1246,7 @@ components:
     - rule-leading
     - large-quote
     description: Emphasized blockquote — larger text with accent rule and optional attribution.
-    used_in_recipes: 2
+    used_in_recipes: 3
   rule:
     namespace: katib
     tier: primitive
@@ -1270,7 +1418,7 @@ components:
     description: Key takeaways box for the top of reports, proposals, and white-papers. Header + 2-4 labeled
       bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent
       rail for visual separation from regular flow.
-    used_in_recipes: 2
+    used_in_recipes: 5
   financial-summary:
     namespace: katib
     tier: section
@@ -1377,7 +1525,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 23
+    used_in_recipes: 27
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1415,7 +1563,7 @@ components:
     - flat
     - tagged
     description: Compact list of further-reading references or source citations.
-    used_in_recipes: 2
+    used_in_recipes: 5
   references-list:
     namespace: katib
     tier: section
@@ -1487,7 +1635,7 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 5
+    used_in_recipes: 8
   timeline:
     namespace: katib
     tier: section
@@ -1516,7 +1664,7 @@ components:
     description: Table of contents with entry text + dotted leader + page number. Recipes provide explicit
       entries (label + level + page) — recipes know their own structure better than any auto-generation
       pass. Supports up to 3 nesting levels.
-    used_in_recipes: 1
+    used_in_recipes: 4
   tutorial-step:
     namespace: katib
     tier: section
@@ -1580,4 +1728,4 @@ components:
     - neural-cartography
     description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background
       (user-file/url full-bleed), neural-cartography (Gemini-generated).
-    used_in_recipes: 5
+    used_in_recipes: 8
