@@ -293,7 +293,51 @@ Quick summary of that flow (full detail in the guide):
 
 **The builder is the lowest-risk way for users to extend Katib**.
 Components land in `~/.katib/components/` (user tier), survive reinstall,
-and can be shared with other users under Phase 4's share/import flow.
+and can be shared with other users via the `katib pack` CLI (see below).
+
+## Sharing mode (`katib pack export/import`)
+
+Custom recipes / components / brand profiles can be packaged into a
+`.katib-pack` tarball and imported into another install. The pack format
+is **frozen at `pack_format: 1`** for the v1.x line — the schema is the
+public contract.
+
+When the user asks to "export this recipe", "share my component", or
+"package this for someone else", run the appropriate `katib pack` command:
+
+| Intent | Command |
+|---|---|
+| Pack a single component | `uv run scripts/pack.py export --component <name>` |
+| Pack a single recipe | `uv run scripts/pack.py export --recipe <name>` |
+| Pack a brand profile | `uv run scripts/pack.py export --brand <name>` |
+| Pack a recipe + its custom-component deps | `uv run scripts/pack.py export --bundle <recipe>` |
+| Bundle + include a brand | `uv run scripts/pack.py export --bundle <recipe> --include-brand <name>` |
+| Inspect a `.katib-pack` (read-only) | `uv run scripts/pack.py inspect <pack>` |
+| CI-grade verification | `uv run scripts/pack.py verify <pack>` |
+| Install a pack into `~/.katib/` | `uv run scripts/pack.py import <pack>` |
+| Dry-run an import (plan, no writes) | `uv run scripts/pack.py import <pack> --dry-run` |
+| Force-overwrite a collision | `uv run scripts/pack.py import <pack> --force --justification "<why>"` |
+
+**Defaults:**
+- Author defaults to `git config user.name/email`. Override via `--author "Name <email>"`.
+- Output dir defaults to `./dist/`. Override via `--out <path>`.
+- All commands accept `--json` for machine-readable output.
+
+**Refusal classes** (in order — each gates the next):
+1. Pack opens cleanly (gzip + tar parseable, `pack.yaml` present)
+2. Manifest schema-valid
+3. `pack_format` supported by host
+4. `content_hash` matches recompute
+5. Per-artifact validators pass
+6. Bundled-dep gate: `requires.bundled_components` exist on host, `requires.katib_min` ≤ host version
+7. No collision (or `--force --justification`)
+
+See `PACK-FORMAT.md` at the repo root for the full spec.
+
+**Phase 6+ marketplace** (future): `katib pack install <author>/<name>`
+will resolve against `katib.jneaimi.com` (or the URL in `KATIB_REGISTRY_URL`).
+Same `.katib-pack` artifact format — the CLI gains a resolver, not a new
+artifact format.
 
 ## Fresh-install sanity
 
