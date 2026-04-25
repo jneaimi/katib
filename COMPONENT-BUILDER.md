@@ -350,38 +350,80 @@ inside `<svg><text>...</text></svg>` produces disjoined, mis-ordered
 glyphs. The fix: **SVG holds geometry only; labels render as
 absolutely-positioned HTML `<div>` elements layered over the SVG.**
 
-### The pattern
+### Container scope: keep `<figcaption>` OUT of the relative parent
 
-Wrap the figure in `<figure style="position: relative;">`. Inside, put a
-geometry-only SVG (`<rect>`, `<line>`, `<circle>`, `<path>`). Then layer
-HTML `<div>` labels on top, anchored on shape centers.
+The percentages on overlay `<div>`s resolve against the **total height of
+their `position: relative` ancestor**. If you put `position: relative` on
+the `<figure>` and the figure also contains a `<figcaption>`, the
+ancestor height becomes `svg_height + figcaption_height` — every overlay
+drifts upward, and the drift gets worse the further up the SVG you go.
+
+The relative-positioning context must be **the SVG aspect ratio alone —
+caption goes outside.**
+
+❌ **Wrong** — `position: relative` on `<figure>`, caption inside it:
 
 ```html
-<figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
-  <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="Three stacked rows">
-    <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
-    <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
-    <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
-    <!-- EN can keep <text> in SVG -->
-    <text x="280" y="50"  text-anchor="middle" font-size="14" fill="#141414">First</text>
-    <text x="280" y="120" text-anchor="middle" font-size="14" fill="#141414">Second</text>
-    <text x="280" y="190" text-anchor="middle" font-size="14" fill="#141414">Third</text>
-  </svg>
+<figure style="position: relative; ...">
+  <svg ...>...</svg>
+  <div style="position: absolute; top: 18.75%; ...">الأول</div>
+  <figcaption>...</figcaption>   <!-- inflates the relative parent -->
 </figure>
 ```
 
-Same geometry for Arabic, but labels are HTML overlays:
+✓ **Right** — wrap SVG + overlays in their own `<div style="position: relative;">`, leave the `<figcaption>` outside that div as a sibling:
 
 ```html
-<figure style="position: relative; margin: 0; break-inside: avoid; page-break-inside: avoid;">
-  <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="ثلاثة صفوف مكدسة">
-    <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
-    <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
-    <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
-  </svg>
-  <div style="position: absolute; top: 18.75%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الأول</div>
-  <div style="position: absolute; top: 47.92%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثاني</div>
-  <div style="position: absolute; top: 77.08%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثالث</div>
+<figure style="margin: 0; break-inside: avoid; page-break-inside: avoid;">
+  <div style="position: relative;">
+    <svg ...>...</svg>
+    <div style="position: absolute; top: 18.75%; ...">الأول</div>
+  </div>
+  <figcaption>...</figcaption>
+</figure>
+```
+
+### The pattern
+
+Inside a `<figure>`, wrap the SVG + overlay labels in a
+`<div style="position: relative;">`. Put a geometry-only SVG (`<rect>`,
+`<line>`, `<circle>`, `<path>`) inside, then layer HTML `<div>` labels
+on top, anchored on shape centers. Place any `<figcaption>` **outside**
+the relative `<div>` but inside the `<figure>`.
+
+```html
+<figure style="margin: 0; break-inside: avoid; page-break-inside: avoid;">
+  <div style="position: relative;">
+    <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="Three stacked rows">
+      <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+      <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+      <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+      <!-- EN can keep <text> in SVG -->
+      <text x="280" y="50"  text-anchor="middle" font-size="14" fill="#141414">First</text>
+      <text x="280" y="120" text-anchor="middle" font-size="14" fill="#141414">Second</text>
+      <text x="280" y="190" text-anchor="middle" font-size="14" fill="#141414">Third</text>
+    </svg>
+  </div>
+  <figcaption>Figure: three stacked rows.</figcaption>
+</figure>
+```
+
+Same geometry for Arabic, but labels are HTML overlays inside the same
+`position: relative` `<div>`:
+
+```html
+<figure style="margin: 0; break-inside: avoid; page-break-inside: avoid;">
+  <div style="position: relative;">
+    <svg viewBox="0 0 560 240" width="100%" style="display: block;" role="img" aria-label="ثلاثة صفوف مكدسة">
+      <rect x="40" y="20"  width="480" height="50" fill="#E8F4FD" rx="4"/>
+      <rect x="40" y="90"  width="480" height="50" fill="#FFF3E0" rx="4"/>
+      <rect x="40" y="160" width="480" height="50" fill="#F3E5F5" rx="4"/>
+    </svg>
+    <div style="position: absolute; top: 18.75%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الأول</div>
+    <div style="position: absolute; top: 47.92%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثاني</div>
+    <div style="position: absolute; top: 77.08%; left: 50%; transform: translate(-50%, -50%); direction: rtl; unicode-bidi: isolate; font-family: Cairo, sans-serif; font-size: 14px; color: #141414; white-space: nowrap; text-align: center;">الثالث</div>
+  </div>
+  <figcaption>الشكل: ثلاثة صفوف مكدسة.</figcaption>
 </figure>
 ```
 
@@ -420,6 +462,7 @@ center-translate stays accurate.
 | Missing `width="100%"` on `<svg>` | SVG renders at intrinsic size; HTML overlay drifts off the geometry | Always set explicit `width="100%"` |
 | `<figure>` splits across pages | `module` is `mode: flowing`; raw HTML inherits | Add `break-inside: avoid; page-break-inside: avoid;` (or use `class="katib-atomic"`) |
 | Arabic inside `<svg><text>` | WeasyPrint produces broken glyphs | Refactor to HTML overlay |
+| `<figcaption>` inside the `position: relative` parent | Caption height inflates the parent; overlay `top: %` drifts upward (worst on upper rows) | Wrap only `<svg>` + overlays in `<div style="position: relative;">`; put `<figcaption>` outside that div, inside `<figure>` |
 
 ### Lint enforcement
 
