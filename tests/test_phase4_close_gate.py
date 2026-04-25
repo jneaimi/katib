@@ -11,7 +11,9 @@ Mapping:
     EC5  At least one round-trip integration test exists
     EC6  `katib component share` emits a deprecation note (no breaking change)
     EC7  CHANGELOG.md has an entry mentioning [1.0.0-alpha.3]
-    EC8  package.json version matches the alpha.3 bump
+    EC8  package.json version is in the 1.0.0 line (alpha.3 was the
+         Phase-4 ship target; later phases roll the version forward,
+         this test only guards against regression off the v1 line)
 """
 from __future__ import annotations
 
@@ -150,9 +152,12 @@ def test_changelog_has_alpha_3_entry():
 # ================================================================ EC8
 
 
-def test_package_json_at_alpha_3():
+def test_package_json_in_v1_line():
+    """Phase 4 shipped under alpha.3; subsequent phases roll the
+    version forward (beta.1, 1.0.0, ...). This test guards against
+    regression OFF the v1 line — alpha.3's history is preserved by
+    the CHANGELOG entry + git tag, not by freezing package.json."""
     pkg = json.loads((REPO_ROOT / "package.json").read_text(encoding="utf-8"))
-    assert pkg["version"] == "1.0.0-alpha.3", (
-        f"package.json version should be '1.0.0-alpha.3' for Phase-4 close, "
-        f"got {pkg['version']!r}"
+    assert pkg["version"].startswith("1.0.0"), (
+        f"package.json version regressed off the v1.0.0 line: {pkg['version']!r}"
     )
