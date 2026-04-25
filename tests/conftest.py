@@ -68,6 +68,7 @@ def isolated_user_dirs(tmp_path, monkeypatch):
     # RECIPES_DIR / COMPONENTS_DIR stay bundled (the real repo paths);
     # USER_RECIPES_DIR / USER_COMPONENTS_DIR are the tiers that redirect.
     monkeypatch.setattr(recipe_ops, "USER_RECIPES_DIR", recipes)
+    monkeypatch.setattr(recipe_ops, "USER_COMPONENTS_DIR", components)
     monkeypatch.setattr(recipe_ops, "MEMORY_DIR", memory)
     monkeypatch.setattr(recipe_ops, "AUDIT_FILE", memory / "recipe-audit.jsonl")
     monkeypatch.setattr(recipe_ops, "REQUESTS_FILE", memory / "recipe-requests.jsonl")
@@ -82,5 +83,12 @@ def isolated_user_dirs(tmp_path, monkeypatch):
     import scripts.build as build_mod
     monkeypatch.setattr(build_mod, "AUDIT_FILE", memory / "component-audit.jsonl")
     monkeypatch.setattr(build_mod, "RECIPE_AUDIT_FILE", memory / "recipe-audit.jsonl")
+
+    # core.pack also captures USER_* constants at import time. Same redirect
+    # pattern so Phase-4 in-process tests see the isolated tier.
+    from core import pack as pack_mod
+    monkeypatch.setattr(pack_mod, "USER_COMPONENTS_DIR", components)
+    monkeypatch.setattr(pack_mod, "USER_RECIPES_DIR", recipes)
+    monkeypatch.setattr(pack_mod, "USER_BRANDS_DIR", brands)
 
     return tmp_path

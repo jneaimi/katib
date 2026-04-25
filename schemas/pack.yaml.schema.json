@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jneaimi/katib/schemas/pack.yaml.schema.json",
+  "title": "Katib pack.yaml",
+  "description": "Schema for the manifest of a .katib-pack share artifact. Frozen at pack_format=1 for v1.0.0; future breaking changes require pack_format=2 with explicit migration.",
+  "type": "object",
+  "required": ["pack_format", "name", "version", "content_hash", "contents", "requires"],
+  "additionalProperties": false,
+  "properties": {
+    "pack_format": {
+      "type": "integer",
+      "const": 1,
+      "description": "Pack format version. Hosts refuse pack_format > supported_max."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*/[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Namespaced pack identity, '<author>/<name>'. Lowercase kebab-case both halves. Author is self-asserted in Phase 4; verified in Phase 7."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9.-]+)?$",
+      "description": "Semantic version of the pack itself."
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "SHA-256 of the deterministic tar body (excluding pack.yaml itself). Used for integrity + divergence detection."
+    },
+    "contents": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "tier"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+              },
+              "tier": {
+                "type": "string",
+                "enum": ["primitive", "section", "cover"]
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9.-]+)?$"
+              }
+            }
+          }
+        },
+        "recipes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9.-]+)?$"
+              }
+            }
+          }
+        },
+        "brands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "katib_min": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9.-]+)?$",
+          "description": "Minimum host Katib version. Import refuses if host < katib_min."
+        },
+        "bundled_components": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+          },
+          "description": "Components that must already exist in the host install. Import refuses if any are missing."
+        },
+        "bundled_brands": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+          }
+        },
+        "external_packs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": ["name", "version"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*/[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[A-Za-z0-9.-]+)?$"
+              }
+            }
+          },
+          "description": "Forward-compat: declared dependency on another pack. Phase 4 logs the dep but does not auto-fetch (no registry yet)."
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "email": { "type": "string", "format": "email" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50,
+      "description": "SPDX license identifier (e.g., MIT, Apache-2.0)."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+      }
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Primary domain hint for marketplace categorization (business, legal, financial, etc.)."
+    },
+    "marketplace": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preview_image": { "type": "string" },
+        "documentation_url": { "type": "string", "format": "uri" }
+      },
+      "description": "Optional metadata only meaningful in Phase 6+."
+    },
+    "signature": {
+      "type": "string",
+      "description": "Reserved for Phase 7 pack signing. Ignored in Phase 4."
+    },
+    "signed_by": {
+      "type": "string",
+      "description": "Reserved for Phase 7 pack signing. Ignored in Phase 4."
+    }
+  }
+}

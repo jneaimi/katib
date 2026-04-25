@@ -217,6 +217,13 @@ def _cmd_register(args) -> int:
 
 
 def _cmd_share(args) -> int:
+    print(
+        "DEPRECATED: `katib component share` will be removed in a future release.\n"
+        "Use `uv run scripts/pack.py export --component <name>` instead — it "
+        "produces a `.katib-pack` artifact compatible with the marketplace "
+        "(Phase 6) and supports recipes, brands, and bundles too. See PACK-FORMAT.md.",
+        file=sys.stderr,
+    )
     try:
         result = ops.bundle_share(args.name)
     except ValueError as e:

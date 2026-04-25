@@ -28,10 +28,11 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from core.tokens import user_memory_dir, user_recipes_dir
+from core.tokens import user_components_dir, user_memory_dir, user_recipes_dir
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMPONENTS_DIR = REPO_ROOT / "components"
+USER_COMPONENTS_DIR = user_components_dir()
 # Two-tier recipe layout (Phase 3):
 #   RECIPES_DIR      = bundled (shipped with the skill)
 #   USER_RECIPES_DIR = user-authored content in ~/.katib/recipes/
@@ -114,15 +115,21 @@ def _user_scaffold_path(name: str) -> Path:
 
 
 def _all_component_names() -> dict[str, Path]:
-    """Return {name: path-to-component-dir} across every tier."""
+    """Return {name: path-to-component-dir} across every tier.
+
+    User tier wins on collision (matches `core.component_ops._find_component()`
+    semantics). Iteration order: bundled first, user second — the dict
+    update on collision flips the value to the user-tier path.
+    """
     out: dict[str, Path] = {}
-    for tier_dirname in TIER_DIRS:
-        tier_dir = COMPONENTS_DIR / tier_dirname
-        if not tier_dir.exists():
-            continue
-        for cdir in tier_dir.iterdir():
-            if (cdir / "component.yaml").exists():
-                out[cdir.name] = cdir
+    for base in (COMPONENTS_DIR, USER_COMPONENTS_DIR):
+        for tier_dirname in TIER_DIRS:
+            tier_dir = base / tier_dirname
+            if not tier_dir.exists():
+                continue
+            for cdir in tier_dir.iterdir():
+                if (cdir / "component.yaml").exists():
+                    out[cdir.name] = cdir
     return out
 
 
