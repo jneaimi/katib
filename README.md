@@ -3,7 +3,7 @@
 [![CI](https://github.com/jneaimi/katib/actions/workflows/ci.yml/badge.svg)](https://github.com/jneaimi/katib/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/%40jasemal%2Fkatib?color=1B2A4A&label=npm&style=flat-square)](https://www.npmjs.com/package/@jasemal/katib)
 [![license](https://img.shields.io/badge/license-MIT-1B2A4A?style=flat-square)](LICENSE)
-![status](https://img.shields.io/badge/v1.0.0-beta-blue?style=flat-square)
+![status](https://img.shields.io/badge/v1.0.0-stable-1B2A4A?style=flat-square)
 
 **كاتب** (*kātib*, "the writer") — the one who shapes words onto paper.
 
@@ -14,18 +14,16 @@ shareable as `.katib-pack` tarballs.
 ## Install
 
 ```bash
-# v1.0.0 beta — current development line
-npx @jasemal/katib@beta install
-
-# v1.0.0 stable — coming soon (will become @latest at v1.0.0 final)
+# v1.0.0 stable
 npx @jasemal/katib install
+
+# Pin to the legacy v0 line
+npx @jasemal/katib@0 install
 ```
 
-> **v1.0.0 is in beta.** Pack format is **frozen at `pack_format: 1`** —
-> the share format is now a public contract. Final v1.0.0 ships after a
-> ~1-week soak window. Until then, `@latest` points at v0.20.0 (the v1-line
-> stable); v1.0.0 ships under the `beta` dist-tag. **Coming from v0.x?**
-> See [MIGRATING.md](MIGRATING.md).
+> **v1.0.0 is the current stable release.** Pack format is **frozen at
+> `pack_format: 1`** — the share format is the public contract.
+> **Coming from v0.x?** See [MIGRATING.md](MIGRATING.md).
 
 ---
 
@@ -33,15 +31,15 @@ npx @jasemal/katib install
 
 | | |
 |---|---|
-| **Stable (v0 line):** | `@jasemal/katib@0.20.0` on npm — `npx @jasemal/katib install` (the `@latest` tag, until v1.0.0 final) |
-| **Beta (v1 line):** | `1.0.0-beta.1` on npm under the `beta` tag — `npx @jasemal/katib@beta install` |
+| **Current stable:** | `@jasemal/katib@1.0.0` on npm `@latest` — `npx @jasemal/katib install` |
+| **Legacy v0:** | `@jasemal/katib@0.20.0` on npm `@0` — `npx @jasemal/katib@0 install` (pinned for any user who needs v0.x) |
 | **Migration guide:** | [MIGRATING.md](MIGRATING.md) — v0.x → v1.0.0 |
-| **Archived:** | Full v1 code under `v1-reference/` (read-only) |
+| **Archived source:** | v0 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
 | **Component library** | 45 components · 16 primitives, 28 sections, 1 cover |
 | **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
 | **Pack format** | `pack_format: 1` frozen — see [PACK-FORMAT.md](PACK-FORMAT.md) |
-| **Marketplace** | Coming post-v1.0.0 at `katib.jneaimi.com` |
+| **Marketplace** | Coming next at `katib.jneaimi.com` (Phase 6) |
 | **Extending** | Build new components with `/katib component new` — see [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) or the [tutorial](TUTORIAL.md) |
 
 ## Why v2 exists
@@ -231,12 +229,12 @@ katib pack install jneaimi/financial-invoice
 
 `KATIB_REGISTRY_URL` lets enterprises self-host their own registry.
 
-## v1 users (v0.x → v1.0.0)
+## Coming from v0.x
 
-Your v0.x install still works. `@jasemal/katib@0.20.0` remains on the
-`@0` dist-tag indefinitely. To upgrade to v1.0.0 see
-[MIGRATING.md](MIGRATING.md). The v1 line will move to `@latest` when
-v1.0.0 final ships (after the beta soak window).
+`@jasemal/katib@0.20.0` remains on the `@0` dist-tag indefinitely; if
+you've pinned to it, nothing breaks. To upgrade to v1.0.0 see
+[MIGRATING.md](MIGRATING.md). New installs default to v1.0.0
+(`@latest`).
 
 ## Development phases
 
@@ -251,8 +249,8 @@ v1.0.0 final ships (after the beta soak window).
 | **3d — Recipe migration** | ✅ shipped | 6 new bilingual starters (legal-nda, legal-service-agreement, personal-bio, formal-authority-letter, report-progress, editorial-article) |
 | **3e — Docs + tutorial** | ✅ shipped | README polish, TUTORIAL.md, CHANGELOG, seed manifest expansion |
 | **4 — Local share format** | ✅ shipped | `.katib-pack` artifact + `katib pack export/import/inspect/verify` CLI; pack_format: 1 frozen |
-| **5 — v1.0.0 release** | beta | Migration guide, beta dogfood, final CHANGELOG, `@latest` moves to v1.0.0 |
-| **6 — Marketplace MVP** | post-v1 | Static landing at `katib.jneaimi.com`, curated registry, `katib pack install <author>/<name>` |
+| **5 — v1.0.0 release** | ✅ shipped | Migration guide, format frozen, `@latest` moved from v0.20.0 → v1.0.0 |
+| **6 — Marketplace MVP** | next | Static landing at `katib.jneaimi.com`, curated registry, `katib pack install <author>/<name>` |
 | **7 — Community uploads** | future | Auth, signing, moderation, ratings — own ADR |
 
 ## Contributing

@@ -9,10 +9,9 @@ is a public contract. Future breaking changes will require
 `pack_format: 2` with explicit migration; v1 packs will keep
 installing on v1.x and v2.x hosts indefinitely.
 
-> **Status: BETA.** Format frozen at `1.0.0-beta.1` (2026-04-25);
-> stabilizes as the contract on v1.0.0 final after a ~1-week soak.
-> No format-level changes are planned during the beta window —
-> only bug fixes and documentation polish.
+> **Status: STABLE.** Format frozen at `1.0.0` (2026-04-25). The
+> schema and byte format are now the public contract for the v1.x
+> line. v1 packs are guaranteed to install on every v1.x host.
 
 ---
 

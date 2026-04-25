@@ -3,16 +3,17 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [1.0.0-beta.1] — Phase 5: pack format frozen, migration guide, beta release (2026-04-25)
+## [1.0.0] — v1 stable release: component architecture + pack format (2026-04-25)
 
-Phase 5a: alpha → beta promotion. Pack format declared **frozen at
-`pack_format: 1`** for the v1.0.0 line. The schema and `.katib-pack`
-artifact are now a public contract — only bug fixes and doc polish
-during the beta soak; no format-level changes.
+**The v0 → v1 cutover.** Pack format declared **frozen at
+`pack_format: 1`** as the public contract. `@latest` on npm moves
+from `0.20.0` (v0 line) to `1.0.0` (v1 line). The component-first
+architecture, user-tier under `~/.katib/`, OS-standard output, and
+`.katib-pack` share format are all stable.
 
-This is the last release before `1.0.0` final. After ~1 week of beta
-dogfooding without critical issues, `1.0.0` ships and `@latest`
-moves from `0.20.0` (v0 line) to `1.0.0` (v1 line).
+Pre-distribution status: `1.0.0` is the first announced release of
+the v1 line. The v0 line stays available on the `@0` dist-tag for
+any user who pinned it, but new installs default to v1.
 
 ### Added
 
@@ -57,23 +58,27 @@ releases as long as the above public surfaces stay byte-stable.
 
 ### Tests
 
-New `test_phase5_beta_integrity.py` (5 assertions): MIGRATING.md
-exists + references real CLI commands + lists known-broken paths;
-README has the beta badge + migration link; PACK-FORMAT.md status
-banner declares the format frozen; package.json at 1.0.0-beta.1.
+New `test_phase5_v1_release_integrity.py` (9 assertions): MIGRATING.md
+exists + references real CLI commands + links to PACK-FORMAT.md;
+README has the migration link + stable status + no alpha-only warning;
+PACK-FORMAT.md explicitly declares the format STABLE; CHANGELOG
+references frozen + migration; `package.json` at `1.0.0`.
 
-**Test count: 1203 → 1208.** Zero regressions.
+**Test count: 1203 → 1212.** Zero regressions.
+
+### npm dist-tag changes
+
+- `@latest`: `0.20.0` → `1.0.0` (the v0 → v1 cutover)
+- `@0`: pinned at `0.20.0` for any user who wants to stay on v0
+- `@alpha`: `1.0.0-alpha.3` (Phase 4 historical, kept for traceability)
+- `@beta`: never published (alpha.3 → 1.0.0 direct, no soak window
+  needed pre-distribution)
 
 ### Roadmap
 
-- **v1.0.0 final** (~1 week soak): consolidate alpha.* + beta.* into
-  a single `[1.0.0]` CHANGELOG entry, drop "beta" warnings, bump to
-  `1.0.0`, **move npm `@latest` from `0.20.0` → `1.0.0`** (the v1→v2
-  cutover).
-- **Phase 6 (post-v1.0.0)**: read-only marketplace MVP at
-  `katib.jneaimi.com` with curated registry + `katib pack install
-  <author>/<name>` resolver.
-- **Phase 7 (future, own ADR)**: community uploads, pack signing,
+- **Phase 6**: read-only marketplace MVP at `katib.jneaimi.com` with
+  curated registry + `katib pack install <author>/<name>` resolver.
+- **Phase 7** (future, own ADR): community uploads, pack signing,
   verified publishers, moderation, ratings.
 
 ---
