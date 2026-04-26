@@ -102,6 +102,11 @@ It also writes an audit entry. Never touch the audit file by hand.
 Read the exemplar first (`components/<tier>/<exemplar>/*`). Mirror its
 patterns. Fill in the four files with content tailored to the interview.
 
+When the component carries default prose (placeholders, README example
+copy, `fixtures/test-inputs.yaml` strings), apply the content quality gate
+in `references/writing.{lang}.md` to that prose — defaults set the tone
+every recipe author inherits.
+
 ### `component.yaml` — the contract
 
 Must contain at minimum:
