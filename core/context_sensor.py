@@ -45,11 +45,25 @@ _DEFAULT_USER_BRANDS_DIR = Path.home() / ".katib" / "brands"
 _REPO_BRANDS_DIR = Path(__file__).resolve().parent.parent / "brands"
 
 # Indicator words that, when appearing within ±3 words of a brand candidate,
-# lift a substring match to a confident brand signal.
+# lift a substring match to a confident brand signal. Kept narrow on purpose:
+# generic English connectors (the, for, in, with, as) match in too many
+# contexts and produce false positives — e.g., "for example" lifting the
+# 'example' brand. The router's MEDIUM-confidence path catches false
+# positives at the confirmation step, but reducing them up-front is cheaper.
 _BRAND_INDICATORS = frozenset(
     {
-        "brand", "with", "using", "use", "apply", "for", "in",
-        "as", "the",
+        "brand", "using", "apply", "style",
+        "theme", "profile", "preset",
+    }
+)
+
+# Brand names that are also common English words. For these, the proximity-
+# indicator path is too permissive (e.g., "for example", "the default")
+# triggers false positives. Require quoted/backticked context only.
+_COMMON_NOUN_BRAND_NAMES = frozenset(
+    {
+        "example", "default", "tutorial", "personal",
+        "test", "demo", "sample",
     }
 )
 
@@ -200,11 +214,18 @@ def extract_brand(
                         near_indicator = True
                         break
 
-            if quoted or near_indicator:
-                reason = (
-                    f"brand {brand!r} at pos {pos} "
-                    f"({'quoted' if quoted else 'near indicator word'})"
-                )
+            # Common-noun brand names need stronger evidence — quoted context
+            # only. Other brand names accept either quoted or proximity-
+            # indicator context.
+            if brand_lower in _COMMON_NOUN_BRAND_NAMES:
+                accepted = quoted
+                accept_reason = "quoted (common-noun brand)"
+            else:
+                accepted = quoted or near_indicator
+                accept_reason = "quoted" if quoted else "near indicator word"
+
+            if accepted:
+                reason = f"brand {brand!r} at pos {pos} ({accept_reason})"
                 candidates.append((pos, brand, reason))
 
     if not candidates:
