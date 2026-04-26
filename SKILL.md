@@ -272,6 +272,21 @@ Show `message` to the user. Don't retry automatically. Common codes:
 - **`/katib` with a fresh session and no prose** → go straight to step 3d
   (`ask_intent`).
 
+## Quality gate (content authoring)
+
+Before authoring recipe or component content — especially Arabic — apply
+the gate in `references/writing.{lang}.md`. The gate covers brand voice,
+MSA grammar (for Arabic), semantic precision, anti-slop, and a 5-dimension
+quality score (Directness / Rhythm / Trust / Authenticity / Density, must
+total ≥ 35/50). `core/content_lint.py` runs the mechanical layer at
+recipe-validation time, but the human-judgement layer lives in those
+references — they are the reason katib v2 doesn't depend on any external
+content-quality skill.
+
+- `references/writing.en.md` — English gate
+- `references/writing.ar.md` — Arabic gate (read this before writing any Arabic)
+- `references/README.md` — index + the lint-vs-references split
+
 ## Component creation mode (`/katib component new`)
 
 When the user invokes `/katib component new [name]` — or asks in plain

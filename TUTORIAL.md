@@ -354,6 +354,10 @@ The `--bilingual` flag pre-fills `languages: [en, ar]` and structures every defa
 - `recipes/editorial-white-paper.yaml` — content-heavy bilingual template; long-form prose.
 - `recipes/bilingual-svg-diagram.yaml` — canonical pattern for bilingual figures (see COMPONENT-BUILDER.md §Arabic in SVG diagrams).
 
+### Content quality gate
+
+Before filling `inputs_by_lang.en` / `inputs_by_lang.ar` (or any prose-bearing recipe input), apply the gate in `references/writing.{lang}.md` — brand voice, MSA grammar, anti-slop, and the 5-dimension ≥ 35/50 score that katib relies on instead of any external content-quality skill.
+
 See ADR `adr-katib-bilingual-pattern-discoverability` for the rationale.
 
 ---
