@@ -19,14 +19,77 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_BG = REPO_ROOT / "tests" / "fixtures" / "cover-bg.jpg"
 
 
-def test_cover_declares_three_variants():
+def test_cover_declares_four_variants():
     c = load_component("cover-page")
     assert set(c["variants"]) == {
         "minimalist-typographic",
         "image-background",
         "neural-cartography",
+        "framed-canvas",
     }
     assert c["version"] == "0.2.0"
+
+
+def test_framed_canvas_variant_in_list():
+    c = load_component("cover-page")
+    assert "framed-canvas" in c["variants"]
+
+
+def test_framed_canvas_variant_emits_image_no_scrim_visible(tmp_path):
+    """framed-canvas: full-bleed image renders, scrim div is emitted but
+    hidden via CSS, dark-text classes apply."""
+    rfile = tmp_path / "r.yaml"
+    rfile.write_text(
+        "name: framed-canvas-test\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en]\n"
+        "sections:\n"
+        "  - component: cover-page\n"
+        "    variant: framed-canvas\n"
+        "    inputs:\n"
+        "      title: Framed canvas test\n"
+        "      subtitle: Light editorial cover\n"
+        f"      image: {{source: user-file, path: {FIXTURE_BG}}}\n"
+    )
+    html, _ = compose(str(rfile), "en")
+    # Variant class lands on the section
+    assert "katib-cover--framed-canvas" in html
+    # has-image modifier applied (image was supplied)
+    assert "katib-cover--has-image" in html
+    # Image emitted into the cover
+    assert '<img class="katib-cover__bg"' in html
+    # Stylesheet defines display:none for the framed-canvas scrim — verify the
+    # rule exists in the bundled CSS so the scrim is not visible.
+    section_classes = _section_class_attr(html)
+    assert "framed-canvas" in section_classes
+    assert "image-background" not in section_classes
+    assert "neural-cartography" not in section_classes
+    # CSS rule that hides the scrim for this variant is in the stylesheet
+    css_path = REPO_ROOT / "components" / "covers" / "cover-page" / "styles.css"
+    css = css_path.read_text()
+    assert ".katib-cover--framed-canvas .katib-cover__scrim" in css
+    assert "display: none" in css
+
+
+def test_framed_canvas_renders_to_pdf(tmp_path):
+    rfile = tmp_path / "r.yaml"
+    rfile.write_text(
+        "name: framed-canvas-render\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "languages: [en]\n"
+        "sections:\n"
+        "  - component: cover-page\n"
+        "    variant: framed-canvas\n"
+        "    inputs:\n"
+        "      title: Framed render\n"
+        "      subtitle: Dark text on warm canvas\n"
+        f"      image: {{source: user-file, path: {FIXTURE_BG}}}\n"
+    )
+    html, _ = compose(str(rfile), "en")
+    pdf = render_to_pdf(html, tmp_path / "out.pdf", base_url=REPO_ROOT)
+    assert pdf.stat().st_size > 20000
 
 
 def test_cover_image_input_declared():

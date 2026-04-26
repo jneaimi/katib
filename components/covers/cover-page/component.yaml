@@ -2,7 +2,7 @@ name: cover-page
 tier: cover
 version: 0.2.0
 namespace: katib
-description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background (user-file/url full-bleed), neural-cartography (Gemini-generated).
+description: Full-page document opener. Four variants — minimalist-typographic (CSS-only), image-background (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial canvas, dark text on warm off-white image, no scrim).
 languages: [en, ar]
 requires:
   tokens: [text, text_secondary, text_tertiary, accent, accent_2, border_strong, page_bg]
@@ -30,11 +30,12 @@ accepts:
         sources_accepted: [user-file, url, gemini]
         fallback: gemini
         fallback_prompt: "editorial abstract, soft organic gradient, neutral palette"
-        description: Full-bleed cover image. Required when variant is image-background or neural-cartography; ignored for minimalist-typographic.
+        description: Full-bleed cover image. Required when variant is image-background, neural-cartography, or framed-canvas; ignored for minimalist-typographic.
 variants:
   - minimalist-typographic
   - image-background
   - neural-cartography
+  - framed-canvas
 page_behavior:
   mode: atomic
   break_after: always

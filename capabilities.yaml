@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-25T22:10:08+00:00'
+generated_at: '2026-04-26T00:22:08+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -1726,6 +1726,8 @@ components:
     - minimalist-typographic
     - image-background
     - neural-cartography
-    description: Full-page document opener. Three variants — minimalist-typographic (CSS-only), image-background
-      (user-file/url full-bleed), neural-cartography (Gemini-generated).
+    - framed-canvas
+    description: Full-page document opener. Four variants — minimalist-typographic (CSS-only), image-background
+      (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial
+      canvas, dark text on warm off-white image, no scrim).
     used_in_recipes: 8
