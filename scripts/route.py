@@ -49,6 +49,7 @@ from core.capabilities import load_capabilities  # noqa: E402
 from core.context_sensor import enumerate_brands, infer_signals  # noqa: E402
 from core.gate import (  # noqa: E402
     Signals,
+    build_evaluation_log_entry,
     evaluate,
     resolve,
 )
@@ -325,6 +326,19 @@ def _cmd_infer(args) -> dict:
         }
         if cap_notes:
             out["capability_notes"] = cap_notes
+        if not args.no_persist:
+            try:
+                log_gate_decision(build_evaluation_log_entry(
+                    intent=signals.intent,
+                    action="explicit-recipe",
+                    decision=None,
+                    recipe=args.recipe,
+                    lang=lang,
+                    brand=signals.brand,
+                    reasons=out["reasons"],
+                ))
+            except OSError:
+                pass   # never fail routing on a log write
         return out
 
     # 7. Gate
@@ -333,6 +347,10 @@ def _cmd_infer(args) -> dict:
     # Observability: include summary + reasons on every outcome
     base_reasons = inference.reasons + override_notes + decision.confidence.reasons
 
+    out_recipe: str | None = None
+    out_lang: str | None = signals.lang
+    out_brand: str | None = signals.brand
+
     if decision.outcome == "proceed":
         plan = decision.plan
         if args.slug:
@@ -340,6 +358,9 @@ def _cmd_infer(args) -> dict:
         out = _build_plan_action(plan, inference)
         out["confidence"] = decision.confidence.level
         out["reasons"] = base_reasons
+        out_recipe = plan.recipe
+        out_lang = plan.lang
+        out_brand = plan.brand
     elif decision.outcome == "choose":
         out = _build_candidates_action(
             decision.candidates, inference.summary, decision.confidence.level
@@ -355,6 +376,26 @@ def _cmd_infer(args) -> dict:
         )
         out = _build_ask_intent_action(message, inference)
         out["reasons"] = base_reasons
+
+    if not args.no_persist:
+        action_for_log = {
+            "proceed": "render",
+            "choose": "present_candidates",
+            "fire": "ask_questions",
+            "needs-intent": "ask_intent",
+        }[decision.outcome]
+        try:
+            log_gate_decision(build_evaluation_log_entry(
+                intent=signals.intent,
+                action=action_for_log,
+                decision=decision,
+                recipe=out_recipe,
+                lang=out_lang,
+                brand=out_brand,
+                reasons=base_reasons,
+            ))
+        except OSError:
+            pass   # never fail routing on a log write
 
     if cap_notes:
         out["capability_notes"] = cap_notes

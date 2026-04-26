@@ -292,6 +292,124 @@ def test_project_config_malformed_yields_error_action(tmp_path):
     assert ".katib.yaml" in out["message"]
 
 
+# ================================================================ infer-stage gate-decisions log
+
+
+def _run_with_persistence(*args: str, memory_dir: Path) -> tuple[dict, list[dict]]:
+    """Run route.py without --no-persist; return (json_action, gate_decisions_entries).
+
+    Pipes a custom KATIB_MEMORY_DIR so writes hit `memory_dir` instead of
+    the developer's real `~/.katib/memory/`. Reads the resulting
+    gate-decisions.jsonl back and returns the parsed entries.
+    """
+    env = {
+        **os.environ,
+        "KATIB_BRANDS_DIR": str(TEST_BRANDS_DIR),
+        "KATIB_MEMORY_DIR": str(memory_dir),
+    }
+    result = subprocess.run(
+        [*ROUTE, *args],   # NOTE: no --no-persist injection
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    out = json.loads(result.stdout)
+    log_path = memory_dir / "gate-decisions.jsonl"
+    entries = []
+    if log_path.exists():
+        for line in log_path.read_text().splitlines():
+            line = line.strip()
+            if line:
+                entries.append(json.loads(line))
+    return out, entries
+
+
+def test_infer_high_confidence_writes_evaluate_log(tmp_path):
+    """A HIGH-confidence render must write a gate-decisions entry tagged stage=evaluate."""
+    out, entries = _run_with_persistence(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production "
+        "in English with acme brand",
+        memory_dir=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert len(entries) == 1
+    e = entries[0]
+    assert e["stage"] == "evaluate"
+    assert e["action"] == "render"
+    assert e["recipe"] == out["recipe"]
+    assert e["lang"] == out["lang"]
+    assert e["confidence_level"] == out["confidence"]
+
+
+def test_infer_explicit_recipe_writes_evaluate_log(tmp_path):
+    """The explicit-recipe short-circuit must still write a log entry."""
+    out, entries = _run_with_persistence(
+        "infer",
+        "--transcript",
+        "",
+        "--recipe",
+        "tutorial",
+        "--lang",
+        "en",
+        memory_dir=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert len(entries) == 1
+    e = entries[0]
+    assert e["stage"] == "evaluate"
+    assert e["action"] == "explicit-recipe"
+    assert e["recipe"] == "tutorial"
+    assert e["lang"] == "en"
+
+
+def test_infer_no_persist_skips_log(tmp_path):
+    """--no-persist must suppress the evaluate-stage write."""
+    env = {
+        **os.environ,
+        "KATIB_BRANDS_DIR": str(TEST_BRANDS_DIR),
+        "KATIB_MEMORY_DIR": str(tmp_path),
+    }
+    subprocess.run(
+        [*ROUTE, "infer", "--transcript",
+         "render tutorial framework-guide bloom ai-collaboration production "
+         "in English with acme brand", "--no-persist"],
+        cwd=REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    log_path = tmp_path / "gate-decisions.jsonl"
+    assert not log_path.exists()
+
+
+def test_resolve_writes_resolve_stage_log(tmp_path):
+    """The existing resolve path must keep writing — now tagged stage=resolve."""
+    env = {
+        **os.environ,
+        "KATIB_BRANDS_DIR": str(TEST_BRANDS_DIR),
+        "KATIB_MEMORY_DIR": str(tmp_path),
+    }
+    subprocess.run(
+        [*ROUTE, "resolve", "--q1", "yes-fits", "--q2", "one-off",
+         "--closest-recipe", "tutorial", "--intent", "build a guide"],
+        cwd=REPO_ROOT, env=env, capture_output=True, text=True, timeout=30,
+    )
+    entries = [
+        json.loads(line)
+        for line in (tmp_path / "gate-decisions.jsonl").read_text().splitlines()
+        if line.strip()
+    ]
+    assert len(entries) == 1
+    assert entries[0]["stage"] == "resolve"
+    assert entries[0]["fit"] == "yes-fits"
+    assert entries[0]["frequency"] == "one-off"
+
+
 # ================================================================ resolve
 
 
