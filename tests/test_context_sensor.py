@@ -92,8 +92,11 @@ def test_extract_brand_none_when_substring_not_at_boundary():
 
 
 def test_extract_brand_matches_with_indicator_verb():
+    # Updated for tighter indicator list: 'use' and 'for' were dropped
+    # (too generic — false-positive on "for example"). 'using' is kept
+    # as an active verb that implies intentional brand selection.
     brand, reason = extract_brand(
-        "please use acme for this document", ["acme", "acme"]
+        "please render this using acme styling", ["acme", "acme"]
     )
     assert brand == "acme"
     assert "near indicator" in reason.lower() or "indicator" in reason.lower()
@@ -124,6 +127,67 @@ def test_extract_brand_rejects_bare_mention_without_indicator():
     )
     # "acme" appears but no indicator word nearby → reject
     assert brand is None
+
+
+def test_extract_brand_example_in_for_example_phrase_no_match():
+    """'for example' must not lift the 'example' brand — common-noun stop-list."""
+    transcript = (
+        "I want a recipe modeled exactly on a provided example PDF, "
+        "for example the editorial template."
+    )
+    brand, reason = extract_brand(transcript, ["example", "jasem"])
+    assert brand is None, f"expected no match, got {brand!r} ({reason})"
+
+
+def test_extract_brand_example_in_quotes_does_match():
+    """Quoted brand mention is accepted even for common-noun names."""
+    transcript = 'Apply the "example" brand to this document.'
+    brand, reason = extract_brand(transcript, ["example", "jasem"])
+    assert brand == "example", f"expected 'example', got {brand!r} ({reason})"
+
+
+def test_extract_brand_jasem_with_proximity_indicator():
+    """Real brand names accept proximity-indicator path (no change in behavior)."""
+    transcript = "Apply jasem brand to this proposal."
+    brand, _ = extract_brand(transcript, ["jasem", "example"])
+    assert brand == "jasem"
+
+
+def test_extract_brand_jasem_without_indicator_no_match():
+    """Real brand names without indicator + without quotes — still no match."""
+    transcript = "I love the jasem coffee in the morning."
+    brand, _ = extract_brand(transcript, ["jasem"])
+    # 'the' was previously an indicator; it's no longer in the list.
+    # No other indicators near 'jasem' in this sentence.
+    assert brand is None
+
+
+def test_extract_brand_default_in_general_phrase_no_match():
+    """'the default' must not lift the 'default' brand."""
+    transcript = "Use the default settings for this render."
+    brand, _ = extract_brand(transcript, ["default", "jasem"])
+    assert brand is None
+
+
+def test_extract_brand_tutorial_as_topic_no_match():
+    """A document ABOUT tutorials shouldn't infer a 'tutorial' brand."""
+    transcript = "Write a tutorial about installing the SDK."
+    brand, _ = extract_brand(transcript, ["tutorial", "jasem"])
+    assert brand is None
+
+
+def test_extract_brand_existing_for_jasem_still_fires():
+    """Regression guard: 'using jasem' should still match (using is in indicators)."""
+    transcript = "Render this using jasem styling."
+    brand, _ = extract_brand(transcript, ["jasem"])
+    assert brand == "jasem"
+
+
+def test_extract_brand_style_indicator_works():
+    """'in jasem style' — 'style' is a new indicator."""
+    transcript = "I'd like the cover in jasem style."
+    brand, _ = extract_brand(transcript, ["jasem"])
+    assert brand == "jasem"
 
 
 # ============================================================ extract_lang_marker
