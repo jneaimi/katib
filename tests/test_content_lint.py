@@ -293,3 +293,82 @@ def test_lint_file_runs_html_rules(tmp_path):
     )
     violations, _ = cl.lint_file(p)
     assert any(x.rule == "ARABIC_IN_SVG_TEXT" for x in violations)
+
+
+# ================================================================ FIGCAPTION_INSIDE_RELATIVE
+
+
+def test_figcaption_inside_relative_fires():
+    """figure[position:relative] containing both <svg> and <figcaption> is a hard error."""
+    html = (
+        '<figure style="position: relative; margin: 0;">'
+        '<svg viewBox="0 0 100 100"><rect/></svg>'
+        '<figcaption>caption</figcaption>'
+        '</figure>'
+    )
+    v = cl.lint_html_figcaption_inside_relative(html)
+    assert len(v) == 1
+    assert v[0].rule == "FIGCAPTION_INSIDE_RELATIVE"
+    assert v[0].severity == "error"
+
+
+def test_figcaption_outside_relative_div_does_not_fire():
+    """The safe pattern: relative div wraps svg only, figcaption sibling outside."""
+    html = (
+        '<figure style="margin: 0;">'
+        '<div style="position: relative;">'
+        '<svg viewBox="0 0 100 100"><rect/></svg>'
+        '</div>'
+        '<figcaption>caption</figcaption>'
+        '</figure>'
+    )
+    v = cl.lint_html_figcaption_inside_relative(html)
+    assert v == []
+
+
+def test_figure_relative_without_figcaption_does_not_fire():
+    """figure[position:relative] with only <svg> (no figcaption) is fine."""
+    html = (
+        '<figure style="position: relative;">'
+        '<svg><rect/></svg>'
+        '</figure>'
+    )
+    v = cl.lint_html_figcaption_inside_relative(html)
+    assert v == []
+
+
+def test_figure_relative_with_figcaption_no_svg_does_not_fire():
+    """figure[position:relative] with only <figcaption> (no svg) is fine."""
+    html = (
+        '<figure style="position: relative;">'
+        '<img src="x.png">'
+        '<figcaption>cap</figcaption>'
+        '</figure>'
+    )
+    v = cl.lint_html_figcaption_inside_relative(html)
+    assert v == []
+
+
+def test_figure_no_relative_does_not_fire():
+    """figure without position:relative — no anchor-context bug to detect."""
+    html = (
+        '<figure>'
+        '<svg><rect/></svg>'
+        '<figcaption>cap</figcaption>'
+        '</figure>'
+    )
+    v = cl.lint_html_figcaption_inside_relative(html)
+    assert v == []
+
+
+def test_lint_file_runs_figcaption_rule(tmp_path):
+    """lint_file must surface FIGCAPTION_INSIDE_RELATIVE alongside other HTML rules."""
+    p = tmp_path / "broken.en.html"
+    p.write_text(
+        '<figure style="position: relative;">'
+        '<svg viewBox="0 0 100 100"><rect/></svg>'
+        '<figcaption>caption</figcaption>'
+        '</figure>'
+    )
+    violations, _ = cl.lint_file(p)
+    assert any(x.rule == "FIGCAPTION_INSIDE_RELATIVE" for x in violations)

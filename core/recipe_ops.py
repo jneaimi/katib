@@ -612,6 +612,7 @@ def validate_recipe_full(
         # HTML/markup rules run on raw recipe text (catches Arabic in inline
         # SVG <text> elements regardless of the recipe's languages: setting).
         violations.extend(cl.lint_html_arabic_in_svg_text(raw))
+        violations.extend(cl.lint_html_figcaption_inside_relative(raw))
 
         for v in violations:
             # All content-lint findings surface as warnings by default so the
