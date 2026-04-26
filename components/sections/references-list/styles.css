@@ -74,6 +74,7 @@
     font-family: var(--font-mono, "JetBrains Mono", monospace);
     font-size: 8.5pt;
     color: var(--accent);
+    text-decoration: none;
     word-break: break-all;
 }
 

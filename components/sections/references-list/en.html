@@ -14,7 +14,7 @@
 {%- endif %}
 {%- if e.source %} <span class="katib-references-list__source">{{ e.source }}.</span>
 {%- endif %}
-{%- if e.url %} <span class="katib-references-list__url">{{ e.url }}</span>
+{%- if e.url %} <a class="katib-references-list__url" href="{{ e.url }}">{{ e.url }}</a>
 {%- endif %}
         </li>
 {%- endfor %}
