@@ -52,6 +52,10 @@ from core.gate import (  # noqa: E402
     evaluate,
     resolve,
 )
+from core.project_config import (  # noqa: E402
+    ProjectConfigError,
+    load_project_config,
+)
 from core.request_log import (  # noqa: E402
     log_context_inference,
     log_gate_decision,
@@ -241,9 +245,40 @@ def _cmd_infer(args) -> dict:
         except OSError:
             pass   # never fail routing on a log write
 
-    # 4. Apply explicit overrides
+    # 4. Fill gaps from .katib.yaml project defaults (sensor inference still wins)
     override_notes: list[str] = []
     signals = inference.signals
+    try:
+        project_cfg = load_project_config(Path.cwd())
+    except ProjectConfigError as exc:
+        return {
+            "action": "error",
+            "code": "bad_project_config",
+            "message": str(exc),
+        }
+    if project_cfg is not None and not project_cfg.is_empty:
+        if project_cfg.default_brand and not signals.brand:
+            override_notes.append(
+                f"brand default {project_cfg.default_brand!r} from {project_cfg.path}"
+            )
+            signals = Signals(
+                intent=signals.intent,
+                lang=signals.lang,
+                brand=project_cfg.default_brand,
+                known_brands=signals.known_brands,
+            )
+        if project_cfg.default_lang and not signals.lang:
+            override_notes.append(
+                f"lang default {project_cfg.default_lang!r} from {project_cfg.path}"
+            )
+            signals = Signals(
+                intent=signals.intent,
+                lang=project_cfg.default_lang,
+                brand=signals.brand,
+                known_brands=signals.known_brands,
+            )
+
+    # 5. Apply explicit overrides (still trump project defaults + sensor)
     if args.lang:
         if signals.lang and signals.lang != args.lang:
             override_notes.append(
@@ -267,7 +302,7 @@ def _cmd_infer(args) -> dict:
             known_brands=signals.known_brands,
         )
 
-    # 5. Explicit recipe short-circuits the gate entirely
+    # 6. Explicit recipe short-circuits the gate entirely
     if args.recipe:
         if args.recipe not in caps.get("recipes", {}):
             return {
@@ -292,7 +327,7 @@ def _cmd_infer(args) -> dict:
             out["capability_notes"] = cap_notes
         return out
 
-    # 6. Gate
+    # 7. Gate
     decision = evaluate(signals, caps)
 
     # Observability: include summary + reasons on every outcome

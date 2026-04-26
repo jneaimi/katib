@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-ROUTE = ["uv", "run", "scripts/route.py"]
+ROUTE = ["uv", "run", "--project", str(REPO_ROOT), str(REPO_ROOT / "scripts" / "route.py")]
 TEST_BRANDS_DIR = Path(__file__).resolve().parent / "fixtures" / "brands"
 
 
@@ -188,6 +188,108 @@ def test_infer_transcript_file_read_from_disk(tmp_path):
     out = _run("infer", "--transcript-file", str(f))
     assert out["action"] == "render"
     assert out["recipe"] == "tutorial"
+
+
+# ================================================================ .katib.yaml project defaults
+
+
+def _write_project_config(dir_: Path, body: str) -> Path:
+    """Drop a .katib.yaml at dir_ with body. Returns its path."""
+    cfg = dir_ / ".katib.yaml"
+    cfg.write_text(body)
+    return cfg
+
+
+def test_project_config_fills_brand_when_no_explicit_flag(tmp_path):
+    """A .katib.yaml in cwd supplies default brand when neither flag nor sensor set one."""
+    _write_project_config(tmp_path, "version: 1\ndefaults:\n  brand: acme\n")
+    out = _run(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production in English",
+        cwd=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert out["brand"] == "acme"
+    assert any(".katib.yaml" in r and "acme" in r for r in out["reasons"])
+
+
+def test_project_config_fills_lang_when_sensor_has_no_lang(tmp_path):
+    """A .katib.yaml supplies default lang when the sensor can't infer one.
+
+    Uses --recipe to bypass the gate so the rendered action surfaces lang
+    directly. With an ambiguous transcript, sensor.lang is None — the
+    project default 'ar' fills the gap.
+    """
+    _write_project_config(tmp_path, "version: 1\ndefaults:\n  lang: ar\n")
+    out = _run(
+        "infer",
+        "--transcript",
+        "",
+        "--recipe",
+        "tutorial",
+        cwd=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert out["lang"] == "ar"
+    assert any(".katib.yaml" in r and "ar" in r for r in out["reasons"])
+
+
+def test_project_config_brand_yields_to_explicit_flag(tmp_path):
+    """Explicit --brand on the CLI must override .katib.yaml default brand."""
+    _write_project_config(tmp_path, "version: 1\ndefaults:\n  brand: acme\n")
+    out = _run(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production in English",
+        "--brand",
+        "contoso",
+        cwd=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert out["brand"] == "contoso"
+
+
+def test_project_config_brand_yields_to_sensor_inference(tmp_path):
+    """Sensor-inferred brand from transcript wins over .katib.yaml default."""
+    _write_project_config(tmp_path, "version: 1\ndefaults:\n  brand: contoso\n")
+    out = _run(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production "
+        "in English using acme brand",
+        cwd=tmp_path,
+    )
+    assert out["action"] == "render"
+    assert out["brand"] == "acme"
+
+
+def test_project_config_walks_up_from_subdir(tmp_path):
+    """Config in ancestor directory is discovered from a nested cwd."""
+    _write_project_config(tmp_path, "version: 1\ndefaults:\n  brand: acme\n")
+    nested = tmp_path / "deep" / "subdir"
+    nested.mkdir(parents=True)
+    out = _run(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production in English",
+        cwd=nested,
+    )
+    assert out["brand"] == "acme"
+
+
+def test_project_config_malformed_yields_error_action(tmp_path):
+    """A broken .katib.yaml surfaces as action=error rather than a traceback."""
+    _write_project_config(tmp_path, "defaults: {brand: [unterminated")
+    out = _run(
+        "infer",
+        "--transcript",
+        "render tutorial framework-guide bloom ai-collaboration production",
+        cwd=tmp_path,
+    )
+    assert out["action"] == "error"
+    assert out["code"] == "bad_project_config"
+    assert ".katib.yaml" in out["message"]
 
 
 # ================================================================ resolve
