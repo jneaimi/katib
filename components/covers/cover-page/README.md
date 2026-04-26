@@ -9,6 +9,7 @@ Full-page document opener. First-class `cover` tier component.
 | `minimalist-typographic` (default) | CSS-only — big display-font title, small eyebrow, brand logo top, footer strip with author + ref | none |
 | `image-background` | Full-bleed photo/illustration with dark-scrim overlay; title in white | `user-file` · `url` |
 | `neural-cartography` | Gemini-generated abstract background + softer scrim | `gemini` (requires `GEMINI_API_KEY`) |
+| `framed-canvas` | Light editorial canvas — full-bleed warm off-white image, dark text on top, no scrim; for image compositions that frame a clean center for typography | `user-file` · `url` · `gemini` |
 
 ## Inputs
 

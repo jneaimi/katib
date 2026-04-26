@@ -157,3 +157,32 @@
 .katib-cover--neural-cartography .katib-cover__scrim {
     background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%);
 }
+
+/* ---- framed-canvas: full-bleed image, NO scrim, DARK text ---- */
+
+.katib-cover--framed-canvas .katib-cover__scrim {
+    display: none;
+}
+
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__title,
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__subtitle,
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__eyebrow {
+    color: var(--text);
+}
+
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__subtitle {
+    color: var(--text-secondary, var(--text));
+}
+
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__eyebrow {
+    opacity: 1;
+}
+
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__footer {
+    color: var(--text-secondary, var(--text));
+    border-top-color: var(--border-strong);
+}
+
+.katib-cover--framed-canvas.katib-cover--has-image .katib-cover__author {
+    color: var(--text);
+}

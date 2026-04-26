@@ -1,5 +1,5 @@
 {%- set v = variant or 'minimalist-typographic' %}
-{%- set is_image = v in ('image-background', 'neural-cartography') %}
+{%- set is_image = v in ('image-background', 'neural-cartography', 'framed-canvas') %}
 <section class="katib-cover katib-cover--{{ v }}{% if is_image %} katib-cover--has-image{% endif %}" lang="en">
 {%- if is_image and input.image and (input.image.resolved_path or input.image.resolved_svg) %}
 {%- if input.image.resolved_svg %}
