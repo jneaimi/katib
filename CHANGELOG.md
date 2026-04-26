@@ -80,26 +80,22 @@ cmux orchestration, then a per-project defaults feature.
   noise. 8 new tests + 1 existing test retargeted from a dropped
   indicator to a kept one.
 
-### Investigated (report-only, no code change)
-
-- **`gate-decisions.jsonl` empty despite heavy `/katib` usage** —
-  Diagnosed as a scope gap, not a writer bug. `log_gate_decision` is
-  defined at `core/request_log.py:172` and works correctly, but is
-  only called from `_cmd_resolve` in `scripts/route.py:408` (the
-  post-AUQ low-confidence resolution path). Every other routing
-  outcome — proceed/render (HIGH), present_candidates (MEDIUM),
-  ask_intent (no signal), explicit `--recipe` short-circuit, error
-  — bypasses the writer entirely. SKILL.md's "No path bypasses the
-  log" claim overstates the implementation. Fix recommendation:
-  ~30-60 LOC across `core/gate.py` (evaluate-stage log_entry
-  builder), `core/request_log.py` (new writer or schema variant),
-  and `scripts/route.py` (~5 call sites in `_cmd_infer`). Deferred
-  as a non-trivial follow-up — captured here so the gap is visible
-  in the public changelog, not just internal notes.
+- **`gate-decisions.jsonl` now writes on every routing outcome.** The
+  diagnosis from the post-deploy review found the writer was wired
+  only into `route.py resolve` (the post-AUQ low-confidence path); all
+  other paths (HIGH proceed, MEDIUM choose, ask_intent, explicit
+  `--recipe`) bypassed it. Closed by extending the schema with a
+  `stage` field — existing post-AUQ entries are now stamped
+  `stage: "resolve"`, and `_cmd_infer` writes one entry per outcome
+  tagged `stage: "evaluate"` via a new `gate.build_evaluation_log_entry`
+  helper. Both stages share the same JSONL file. SKILL.md's "No path
+  bypasses the log" claim is now accurate. 4 new tests covering the
+  HIGH path, the explicit-recipe short-circuit, the `--no-persist`
+  suppression, and the resolve-stage tagging.
 
 ### Tests
 
-- 1273 passed, 2 pre-existing failures unrelated to this hardening
+- 1275 passed, 2 pre-existing failures unrelated to this hardening
   pass (online-news-story content lint under `--strict` — separate
   remediation).
 
@@ -109,7 +105,8 @@ Wave 1 (parallel via cmux orchestration): references-list fix +
 FIGCAPTION lint + brand inference + gate-decisions diagnosis ran
 concurrently in 4 isolated panes, each driven by a self-contained
 prompt blueprint. Wave 2 (sequential, in main pane): the
-`.katib.yaml` feature, after Wave 1 landed.
+`.katib.yaml` feature, then the gate-decisions writer extension to
+close out item 4 — both addressed in the same evening.
 
 ---
 

@@ -259,11 +259,16 @@ Show `message` to the user. Don't retry automatically. Common codes:
 
 - **Always show inferred signals** before rendering. User can say "no, use
   different brand/language" and we re-route.
-- **No path bypasses the log.** `route.py resolve` emits `log_entry` dicts
-  for every gate decision and writes them to `~/.katib/memory/gate-decisions.jsonl`
-  via `core.request_log.log_gate_decision`. Context inferences go to
-  `context-inferences.jsonl`; graduated recipe requests go to `recipe-requests.jsonl`.
-  The agent does not need to echo anything — persistence is automatic.
+- **No path bypasses the log.** Both routing stages persist to
+  `~/.katib/memory/gate-decisions.jsonl` via
+  `core.request_log.log_gate_decision`. The infer stage writes one entry
+  per outcome (`render` / `present_candidates` / `ask_questions` /
+  `ask_intent` / `explicit-recipe`) tagged `stage: "evaluate"`; the
+  follow-up resolve call (after AskUserQuestion) writes a second entry
+  tagged `stage: "resolve"`. Context inferences go to
+  `context-inferences.jsonl`; graduated recipe requests go to
+  `recipe-requests.jsonl`. The agent does not need to echo anything —
+  persistence is automatic. Use `--no-persist` only in tests.
 - **No hand-edits to `capabilities.yaml`**, `component-audit.jsonl`, or any
   file under `components/` or `recipes/` during `/katib` execution.
   Governance is enforced by the CLI + build-time audit gate.

@@ -488,6 +488,7 @@ def resolve(
     log_entry: dict = {
         "schema_version": LOG_SCHEMA_VERSION,
         "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "stage": "resolve",
         "request": intent,
         "routed_to": fill_recipe,
         "reason": reasons[0] + (f" + {reasons[1]}" if len(reasons) > 1 else ""),
@@ -509,3 +510,55 @@ def resolve(
         log_entry=log_entry,
         reasons=reasons,
     )
+
+
+# ---------------------------------------------------------------- evaluation log
+
+def build_evaluation_log_entry(
+    *,
+    intent: str,
+    action: str,
+    decision: GateDecision | None = None,
+    recipe: str | None = None,
+    lang: str | None = None,
+    brand: str | None = None,
+    reasons: list[str] | None = None,
+) -> dict:
+    """Build a gate-decisions log entry for the infer stage.
+
+    Mirrors the resolve-stage entry shape so both stages live in the same
+    `gate-decisions.jsonl` distinguished by the `stage` field. `action`
+    matches the JSON action emitted by route.py infer:
+    'render' | 'present_candidates' | 'ask_questions' | 'ask_intent' |
+    'explicit-recipe' | 'error'.
+
+    `decision` is optional — the explicit-recipe path short-circuits the
+    gate so no GateDecision exists; we still log the routing outcome.
+    """
+    confidence_level: str | None = None
+    confidence_score: int | None = None
+    closest: str | None = None
+    candidates: list[str] = []
+    if decision is not None:
+        confidence_level = decision.confidence.level
+        confidence_score = decision.confidence.score
+        if decision.closest is not None:
+            closest = decision.closest.name
+        if decision.candidates:
+            candidates = [c.name for c in decision.candidates]
+
+    return {
+        "schema_version": LOG_SCHEMA_VERSION,
+        "ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "stage": "evaluate",
+        "request": intent,
+        "action": action,
+        "recipe": recipe,
+        "lang": lang,
+        "brand": brand,
+        "confidence_level": confidence_level,
+        "confidence_score": confidence_score,
+        "closest": closest,
+        "candidates": candidates,
+        "reasons": list(reasons or []),
+    }
