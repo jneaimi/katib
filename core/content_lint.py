@@ -146,6 +146,25 @@ _ARABIC_IN_SVG_TEXT_MESSAGE = (
     "recipes/bilingual-svg-diagram.yaml for a working example."
 )
 
+# <figure style="position: relative"> containing both <svg> and <figcaption>
+# breaks the anchor context for absolute-positioned overlay labels: percent
+# top/left values resolve against svg+caption height, not svg alone, so
+# labels drift upward. Detect non-nested figure blocks (figures don't nest
+# in real katib markup) and check the body for both children.
+_RE_FIGURE_BLOCK_RELATIVE = re.compile(
+    r"<figure\b[^>]*\bstyle\s*=\s*[\"'][^\"']*position\s*:\s*relative[^\"']*[\"'][^>]*>(.*?)</figure>",
+    re.IGNORECASE | re.DOTALL,
+)
+
+_FIGCAPTION_INSIDE_RELATIVE_MESSAGE = (
+    "<figure style='position: relative'> contains both <svg> and <figcaption>. "
+    "Absolute-positioned label percentages will be calculated against the figure's "
+    "total height (svg + caption), not the svg alone — labels will drift upward. "
+    "Wrap the svg + overlays in their own <div style='position: relative'> with the "
+    "<figcaption> as a sibling outside that div. See COMPONENT-BUILDER.md "
+    "§Arabic in SVG diagrams §Container scope, or recipes/bilingual-svg-diagram.yaml."
+)
+
 
 # ===================== Core linter =====================
 
@@ -300,6 +319,32 @@ def lint_html_arabic_in_svg_text(raw: str) -> list[Violation]:
     return violations
 
 
+def lint_html_figcaption_inside_relative(raw: str) -> list[Violation]:
+    """Detect figure[position:relative] containing both <svg> and <figcaption>.
+
+    The relative-positioning context determines the basis for absolute-child
+    percentages. If the figure is the relative context AND contains a
+    figcaption, the figcaption's height inflates the basis and labels drift.
+    Caught yesterday after 5 render-fix cycles on the bloom Arabic figures.
+    """
+    violations: list[Violation] = []
+    for m in _RE_FIGURE_BLOCK_RELATIVE.finditer(raw):
+        body = m.group(1)
+        body_lower = body.lower()
+        if "<svg" in body_lower and "<figcaption" in body_lower:
+            line_no = raw.count("\n", 0, m.start()) + 1
+            opener_end = raw.find(">", m.start()) + 1
+            excerpt = raw[m.start():opener_end].strip()[:80]
+            violations.append(Violation(
+                rule="FIGCAPTION_INSIDE_RELATIVE",
+                severity="error",
+                pattern=_FIGCAPTION_INSIDE_RELATIVE_MESSAGE,
+                line=line_no,
+                snippet=excerpt,
+            ))
+    return violations
+
+
 def lint_english(text: str) -> list[Violation]:
     v: list[Violation] = []
 
@@ -353,4 +398,5 @@ def lint_file(path: Path, lang: str | None = None) -> tuple[list[Violation], str
     # HTML-level rules run on raw markup (always, regardless of language) —
     # Arabic can leak into SVG <text> in any document.
     violations.extend(lint_html_arabic_in_svg_text(raw))
+    violations.extend(lint_html_figcaption_inside_relative(raw))
     return violations, resolved
