@@ -394,6 +394,30 @@ clobbers your work:
 Env var overrides (for testing / isolation): `KATIB_RECIPES_DIR`,
 `KATIB_COMPONENTS_DIR`, `KATIB_BRANDS_DIR`, `KATIB_MEMORY_DIR`.
 
+### Per-project defaults — `.katib.yaml`
+
+Drop a `.katib.yaml` at the root of any project to set defaults for
+`/katib` invocations made from that tree. The router walks up from the
+current working directory until it finds one (or hits the filesystem
+root).
+
+```yaml
+# .katib.yaml
+version: 1
+defaults:
+  brand: jasem    # optional — fills --brand when not given
+  lang: en        # optional — fills --lang when not given (en | ar)
+```
+
+**Precedence:** explicit `--brand`/`--lang` flag > sensor inference from
+the transcript > `.katib.yaml` defaults. The file is a soft fallback —
+it never overrides what the user said in prose or on the CLI. When a
+default fills a gap, an entry like `brand default 'jasem' from
+/path/to/.katib.yaml` is added to `reasons[]` for observability.
+
+A malformed file surfaces as `action: error, code: bad_project_config`
+rather than a stack trace.
+
 When resolving a recipe or component name, the engine checks the user tier
 first, then bundled — so a user override with the same name silently wins.
 Scaffolding always writes to the user tier (for `--namespace user`) and
