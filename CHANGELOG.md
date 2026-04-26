@@ -3,6 +3,116 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased] — 2026-04-27 post-deploy hardening
+
+A focused hardening pass against findings from the 2026-04-26 review
+(`~/SecondBrain/knowledge/2026-04-27-katib-post-deploy-review.md`).
+Five recommendations addressed in two waves: four parallel fixes via
+cmux orchestration, then a per-project defaults feature.
+
+### Added
+
+- **`FIGCAPTION_INSIDE_RELATIVE` lint rule** (`core/content_lint.py`).
+  Hard-error rule mirroring `ARABIC_IN_SVG_TEXT`. Detects
+  `<figure style="position: relative">` containing both `<svg>` and
+  `<figcaption>` — the anchor-context bug that took 5 render-fix cycles
+  to isolate during the bloom Arabic SVG work. Wired into both
+  `lint_file` and `validate_recipe_full`. The bundled bilingual
+  recipes (`bilingual-svg-diagram`, `editorial-white-paper`) verified
+  clean — they already use the safe pattern (relative div wraps SVG,
+  figcaption sibling outside). 6 new tests in
+  `tests/test_content_lint.py`.
+
+- **Per-project `.katib.yaml` defaults** (`core/project_config.py`,
+  new). Drop a `.katib.yaml` at any project root to set fallback
+  `brand` / `lang` for `/katib` invocations within that tree. The
+  router walks up from cwd to find it. Schema (v1, forward-compatible
+  — unknown keys ignored):
+
+  ```yaml
+  version: 1
+  defaults:
+    brand: jasem    # optional
+    lang: en        # optional (en | ar)
+  ```
+
+  Precedence: explicit `--flag` > sensor inference from transcript >
+  `.katib.yaml` defaults. The file is purely a gap-filler, never
+  overrides what the user said in prose or on the CLI. When a default
+  fills a gap, the path + value land in `reasons[]` for observability.
+  Malformed YAML, non-mapping top level, unsupported version, or
+  invalid types surface as `action: error, code: bad_project_config`
+  rather than a stack trace. 14 unit tests + 6 integration tests
+  covering walk-up discovery, all error classes, precedence, and
+  forward-compat unknown keys.
+
+- **SKILL.md "Per-project defaults" section** under "Where user
+  content lives" — documents the `.katib.yaml` schema, precedence,
+  and error handling.
+
+### Fixed
+
+- **`references-list` URLs render as `<a href>`, not dead `<span>`**
+  (`components/sections/references-list/{en,ar}.html`). The bundled
+  component had been rendering URLs as styled `<span>` elements —
+  visually link-like but not clickable. Caught in the wild during a
+  journalism document render. The wrapper changes from `<span>` to
+  `<a>` while preserving class names + CSS (no underline, accent
+  color, break-all wrapping); `text-decoration: none` added to
+  styles.css to keep the original visual. New
+  `tests/test_references_list.py` (2 tests) asserts both EN + AR
+  templates emit `<a class="...__url" href="...">` for every entry
+  with a url field. Render proof confirmed against
+  `phase-3c-content-showcase`.
+
+- **Brand inference no longer lifts common-noun false positives**
+  (`core/context_sensor.py`). The phrase "modeled exactly on a
+  provided example PDF" was lifting `example` as a brand. Two
+  changes: (1) indicator-word list narrowed from 9 generic words
+  to 7 domain-specific ones (dropped `the`/`for`/`in`/`with`/`as`/
+  `use`; kept `brand`/`using`/`apply`; added `style`/`theme`/
+  `profile`/`preset`); (2) common-noun stop-list added (`example`,
+  `default`, `tutorial`, `personal`, `test`, `demo`, `sample`) —
+  these names require quoted/backticked context only, the
+  proximity-indicator path is bypassed for them. The router's
+  MEDIUM-confidence confirmation step still catches any remaining
+  false positives at the user level; this just reduces upfront
+  noise. 8 new tests + 1 existing test retargeted from a dropped
+  indicator to a kept one.
+
+### Investigated (report-only, no code change)
+
+- **`gate-decisions.jsonl` empty despite heavy `/katib` usage** —
+  Diagnosed as a scope gap, not a writer bug. `log_gate_decision` is
+  defined at `core/request_log.py:172` and works correctly, but is
+  only called from `_cmd_resolve` in `scripts/route.py:408` (the
+  post-AUQ low-confidence resolution path). Every other routing
+  outcome — proceed/render (HIGH), present_candidates (MEDIUM),
+  ask_intent (no signal), explicit `--recipe` short-circuit, error
+  — bypasses the writer entirely. SKILL.md's "No path bypasses the
+  log" claim overstates the implementation. Fix recommendation:
+  ~30-60 LOC across `core/gate.py` (evaluate-stage log_entry
+  builder), `core/request_log.py` (new writer or schema variant),
+  and `scripts/route.py` (~5 call sites in `_cmd_infer`). Deferred
+  as a non-trivial follow-up — captured here so the gap is visible
+  in the public changelog, not just internal notes.
+
+### Tests
+
+- 1273 passed, 2 pre-existing failures unrelated to this hardening
+  pass (online-news-story content lint under `--strict` — separate
+  remediation).
+
+### Coordination
+
+Wave 1 (parallel via cmux orchestration): references-list fix +
+FIGCAPTION lint + brand inference + gate-decisions diagnosis ran
+concurrently in 4 isolated panes, each driven by a self-contained
+prompt blueprint. Wave 2 (sequential, in main pane): the
+`.katib.yaml` feature, after Wave 1 landed.
+
+---
+
 ## [1.0.0] — v1 stable release: component architecture + pack format (2026-04-25)
 
 **The v0 → v1 cutover.** Pack format declared **frozen at

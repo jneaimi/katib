@@ -39,6 +39,7 @@ npx @jasemal/katib@0 install
 | **Component library** | 45 components · 16 primitives, 28 sections, 1 cover |
 | **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
 | **Pack format** | `pack_format: 1` frozen — see [PACK-FORMAT.md](PACK-FORMAT.md) |
+| **Per-project defaults** | Drop a `.katib.yaml` at any project root to pin `brand` / `lang` defaults — see [SKILL.md §Per-project defaults](SKILL.md#per-project-defaults--katibyaml) |
 | **Marketplace** | Coming next at `katib.jneaimi.com` (Phase 6) |
 | **Extending** | Build new components with `/katib component new` — see [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) or the [tutorial](TUTORIAL.md) |
 
