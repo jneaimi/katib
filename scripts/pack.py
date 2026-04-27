@@ -211,7 +211,12 @@ def _cmd_export(args) -> int:
         if kind == "component":
             result = pack_mod.export_component(name, author=author, out_dir=out_dir)
         elif kind == "recipe":
-            result = pack_mod.export_recipe(name, author=author, out_dir=out_dir)
+            result = pack_mod.export_recipe(
+                name,
+                author=author,
+                out_dir=out_dir,
+                with_previews=bool(getattr(args, "with_previews", False)),
+            )
         elif kind == "brand":
             result = pack_mod.export_brand(name, author=author, out_dir=out_dir)
         else:  # bundle
@@ -368,6 +373,16 @@ def main(argv: list[str] | None = None) -> int:
         "--out",
         default=None,
         help="Output directory for the .katib-pack file. Default: ./dist/",
+    )
+    p_export.add_argument(
+        "--with-previews",
+        action="store_true",
+        help=(
+            "Slice B — render captured HTML previews per declared lang and "
+            "embed them in the pack under previews/. The marketplace "
+            "publisher will upload these to R2 and the registry UI will "
+            "show them in a sandboxed iframe."
+        ),
     )
     p_export.set_defaults(func=_cmd_export)
 

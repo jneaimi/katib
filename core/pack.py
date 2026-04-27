@@ -103,7 +103,7 @@ class PackManifest:
     description: str | None = None
     tags: list[str] = field(default_factory=list)
     domain: str | None = None
-    marketplace: dict[str, str] | None = None
+    marketplace: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Render to a dict suitable for YAML dump.
@@ -587,12 +587,18 @@ def export_recipe(
     *,
     author: dict[str, str] | None = None,
     out_dir: Path | None = None,
+    with_previews: bool = False,
 ) -> ExportResult:
     """Pack a single recipe YAML into a `.katib-pack` file.
 
     The recipe's component dependencies are NOT walked here — that's
-    Day 3's `--bundle` flag. A standalone recipe pack is only useful
+    the `--bundle` flag. A standalone recipe pack is only useful
     if every section references a bundled component.
+
+    When `with_previews=True`, the captured HTML for each declared
+    language is rendered via core.compose, inlined to be self-contained,
+    and stamped into the pack under `previews/<name>.<lang>.html` plus
+    a `marketplace.previews` block in the manifest. Slice B feature.
     """
     rpath = _find_recipe(name)
     if rpath is None:
@@ -605,6 +611,21 @@ def export_recipe(
     languages = list(meta.get("languages") or [])
 
     file_pairs = _collect_recipe_files(rpath, name)
+
+    marketplace: dict[str, Any] | None = None
+    if with_previews:
+        # Lazy import — pulls in WeasyPrint/Jinja transitively. The
+        # default --no-previews export path stays cheap.
+        from core.previews import render_recipe_previews
+
+        preview_entries = render_recipe_previews(meta)
+        if preview_entries:
+            for entry in preview_entries:
+                file_pairs.append((entry.arcname, entry.body))
+            marketplace = {
+                "previews": [e.manifest_entry for e in preview_entries]
+            }
+
     body = build_canonical_tar_body(file_pairs)
     content_hash = compute_content_hash(body)
 
@@ -623,6 +644,7 @@ def export_recipe(
         author=author_dict or None,
         description=description,
         tags=tags,
+        marketplace=marketplace,
     )
 
     out_dir = out_dir or DEFAULT_OUT_DIR
