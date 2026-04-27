@@ -129,6 +129,30 @@ pre-release tags.
 | `domain` | string (kebab-case) | Primary domain hint for marketplace categorization (`business`, `legal`, etc.). |
 | `marketplace.preview_image` | string | Path inside the pack to a marketplace preview image (Phase 6+ only). |
 | `marketplace.documentation_url` | string (URL) | External docs link (Phase 6+ only). |
+| `marketplace.previews` | array | Slice B HTML previews — see below. Populated by `pack export --with-previews`. |
+
+#### `marketplace.previews` (Slice B)
+
+Each entry points at a self-contained HTML file inside the pack tarball
+that mirrors what the recipe / component renders to PDF. The marketplace
+uploads these alongside the `.katib-pack` to a public URL and embeds them
+in a sandboxed iframe so visitors can preview before installing.
+
+```yaml
+marketplace:
+  previews:
+    - path: previews/tutorial.en.html
+      recipe: tutorial          # exactly one of recipe / component
+      lang: en
+    - path: previews/tutorial.ar.html
+      recipe: tutorial
+      lang: ar
+```
+
+Constraints: `path` matches `^previews/[a-z0-9_-]+\.(en|ar)\.html$`; exactly
+one of `recipe` or `component` must be set; `lang` is `en` or `ar`. The
+`marketplace` block accepts unknown keys (`additionalProperties: true`) so
+future additive metadata does not require a `pack_format` bump.
 
 ### Reserved fields (Phase 7)
 
