@@ -1,5 +1,5 @@
 name: tutorial
-version: 1.1.0
+version: 1.2.0
 namespace: katib
 description: Bloom's AI Collaboration Framework — production tutorial recipe. First real-content v2 recipe; ports the v1 framework-guide output that triggered the ADR.
 languages: [en]
