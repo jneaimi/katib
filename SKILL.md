@@ -339,9 +339,11 @@ When the user asks to "export this recipe", "share my component", or
 | Bundle + include a brand | `uv run scripts/pack.py export --bundle <recipe> --include-brand <name>` |
 | Inspect a `.katib-pack` (read-only) | `uv run scripts/pack.py inspect <pack>` |
 | CI-grade verification | `uv run scripts/pack.py verify <pack>` |
-| Install a pack into `~/.katib/` | `uv run scripts/pack.py import <pack>` |
-| Dry-run an import (plan, no writes) | `uv run scripts/pack.py import <pack> --dry-run` |
-| Force-overwrite a collision | `uv run scripts/pack.py import <pack> --force --justification "<why>"` |
+| Install a pack from a local file | `uv run scripts/pack.py import <pack>` |
+| Search the marketplace registry | `uv run scripts/pack.py search [query] [--domain X --language Y]` |
+| Install from the marketplace | `uv run scripts/pack.py install <author>/<name>[@<version>]` |
+| Dry-run a registry install | `uv run scripts/pack.py install <author>/<name> --dry-run` |
+| Force-overwrite a collision | `uv run scripts/pack.py install <author>/<name> --force --justification "<why>"` |
 
 **Defaults:**
 - Author defaults to `git config user.name/email`. Override via `--author "Name <email>"`.
@@ -371,10 +373,13 @@ placeholder prose so the RTL preview reads naturally.
 
 See `PACK-FORMAT.md` at the repo root for the full spec.
 
-**Phase 6+ marketplace** (future): `katib pack install <author>/<name>`
-will resolve against `katib.jneaimi.com` (or the URL in `KATIB_REGISTRY_URL`).
-Same `.katib-pack` artifact format — the CLI gains a resolver, not a new
-artifact format.
+**Phase 6 marketplace** (live): `katib pack search` and `katib pack install`
+resolve against `https://jneaimi.com/api/katib` (override via
+`KATIB_REGISTRY_URL`). Same `.katib-pack` artifact format — the CLI gained
+a resolver, not a new artifact format. Install pipeline: registry HTTP →
+download from R2 → `verify_pack` → bundled-dep + collision gates → audit
+write → user-tier install. Same gates as `katib pack import` — the
+resolver only changes how the file gets to disk.
 
 ## Fresh-install sanity
 

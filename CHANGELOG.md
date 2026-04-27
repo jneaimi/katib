@@ -62,7 +62,31 @@ pack detail page.
   keyword set. No production code change — the tests had pinned the
   example-payload words in their literal fixtures.
 
-## [Earlier Unreleased] — 2026-04-27 post-deploy hardening
+## [Unreleased] — 2026-04-27 marketplace resolver
+
+### Added
+
+- **`katib pack search`** — query the marketplace registry by free-text,
+  domain, or language. Stdlib-only HTTP via `urllib.request`, no new
+  deps. Default registry URL `https://jneaimi.com/api/katib`; override
+  via `$KATIB_REGISTRY_URL`.
+- **`katib pack install <author>/<name>[@<version>]`** — registry-aware
+  install. Fetches the `.katib-pack` from R2, then delegates to the
+  existing `import_pack` function — same gates (`verify_pack`,
+  bundled-dep + `katib_min` checks, collision refusal, audit log).
+  `--dry-run` plans without writes; `--force --justification` overrides
+  collisions per the existing audit-gate discipline.
+- **`core/registry.py`** — HTTP client wrapping `GET /registry`,
+  `GET /packs/<author>/<name>`, and the redirect download endpoint.
+  Captures `X-Content-Hash` for cross-check before `verify_pack`.
+
+### Validated
+
+- End-to-end pipeline test: `jneaimi/tutorial@1.0.0` exported, submitted
+  via PR to the marketplace, verified in CI, merged, published to R2 +
+  registered, then resolved + installed via `katib pack install`.
+
+## [Unreleased] — 2026-04-27 post-deploy hardening
 
 A focused hardening pass against findings from the 2026-04-26 review
 (`~/SecondBrain/knowledge/2026-04-27-katib-post-deploy-review.md`).
@@ -167,6 +191,29 @@ prompt blueprint. Wave 2 (sequential, in main pane): the
 `.katib.yaml` feature, then the gate-decisions writer extension to
 close out item 4 — both addressed in the same evening.
 
+### Architecture (Phase 6 planning)
+
+- **Marketplace ADR pivoted R3 → R4** (`adr-katib-marketplace-and-sharing`).
+  R3 had Phase 6 packs as static files in the website repo
+  (`public/katib/packs/...`) with a static `index.json` registry. R4
+  pulls the storage decision forward from Phase 7: pack blobs move to
+  **Cloudflare R2** (custom domain `packs.jneaimi.com`, free egress)
+  and the registry index moves to **Postgres on Coolify** behind
+  Next.js Route Handlers at `/api/katib/*`. Driver: avoid a costly
+  later migration of the shipped CLI's registry URL + pack URLs once
+  v1 is in the wild. Cost stays at $0 marginal vs R3 for Phase 6 scale,
+  and Phase 7 features (downloads, ratings, install events) become
+  additive instead of a schema break. Default `KATIB_REGISTRY_URL`
+  changes from `https://jneaimi.com/katib/registry/index.json` (R3) to
+  `https://jneaimi.com/api/katib/registry` (R4) — same JSON shape, now
+  dynamic. No engine code changes required for the pivot; all impact
+  is in `jasem-profile-app` (new) + the `katib-marketplace` curation
+  repo (new). Engine-side changes deferred to the Phase 6 ship: CLI
+  resolver retarget against the dynamic endpoint, optional
+  `~/.katib/cache/registry-index.json` cache for offline `katib pack
+  search`. See [[adr-katib-marketplace-and-sharing|R4 ADR]] +
+  [[projects/katib/phase-6-plan|Phase 6 implementation plan]].
+
 ---
 
 ## [1.0.0] — v1 stable release: component architecture + pack format (2026-04-25)
@@ -193,7 +240,9 @@ any user who pinned it, but new installs default to v1.
 - **PACK-FORMAT.md status banner** — explicitly declares the format
   frozen and the schema a public contract.
 - **README sharing section** — surfaces `katib pack export/import` and
-  the marketplace endgame at `katib.jneaimi.com`.
+  the marketplace endgame (originally documented as `katib.jneaimi.com`;
+  later revised to `jneaimi.com/katib` subpath in R3, then to R2 + Postgres
+  storage in R4 — see ADR for current binding).
 
 ### Changed
 
@@ -242,10 +291,18 @@ references frozen + migration; `package.json` at `1.0.0`.
 
 ### Roadmap
 
-- **Phase 6**: read-only marketplace MVP at `katib.jneaimi.com` with
-  curated registry + `katib pack install <author>/<name>` resolver.
+- **Phase 6**: read-only marketplace MVP at `jneaimi.com/katib`
+  (subpath inside the personal site, Coolify-hosted) — pack blobs in
+  Cloudflare R2 (`packs.jneaimi.com`), registry index in Postgres on
+  Coolify, served via Next.js Route Handlers at `/api/katib/*`, and
+  the `katib pack install <author>/<name>` resolver pointed at the
+  dynamic endpoint. Originally scoped to `katib.jneaimi.com` static
+  site (R2 ADR); revised to subpath in R3; storage layer locked to
+  R2 + Postgres in R4 (2026-04-27). See
+  [[adr-katib-marketplace-and-sharing|R4 ADR]].
 - **Phase 7** (future, own ADR): community uploads, pack signing,
-  verified publishers, moderation, ratings.
+  verified publishers, moderation, ratings — additive to the Phase 6
+  schema, no migration.
 
 ---
 
@@ -255,7 +312,9 @@ Phase 4 ships the share-format foundation: user-tier components,
 recipes, and brand profiles can now be packaged into a `.katib-pack`
 tarball, transferred peer-to-peer, and imported into another install
 with audit-gate equivalence. The same artifact format is what the
-Phase-6 marketplace will serve from `katib.jneaimi.com` — built once,
+Phase-6 marketplace will serve (originally planned for
+`katib.jneaimi.com` static; revised to `jneaimi.com/katib` subpath
+in R3 and to Cloudflare R2 + Postgres storage in R4) — built once,
 used twice.
 
 **Frozen at `pack_format: 1` for v1.0.0.** The schema is the public
@@ -386,7 +445,8 @@ deprecation note. Removal target: a future Phase 4.x or 5.x release.
 Phase 5 next: v1.0.0 stable release. Migration guide, CHANGELOG
 consolidation, npm `@latest` move from `0.20.0` to `1.0.0`, pack
 format frozen at `v1`. Phase 6 (post-v1.0.0) launches the read-only
-marketplace at `katib.jneaimi.com`.
+marketplace (originally planned at `katib.jneaimi.com`; later revised
+to `jneaimi.com/katib` subpath with R2/Postgres storage — see R4 ADR).
 
 ---
 
