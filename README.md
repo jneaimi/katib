@@ -40,7 +40,7 @@ npx @jasemal/katib@0 install
 | **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
 | **Pack format** | `pack_format: 1` frozen — see [PACK-FORMAT.md](PACK-FORMAT.md) |
 | **Per-project defaults** | Drop a `.katib.yaml` at any project root to pin `brand` / `lang` defaults — see [SKILL.md §Per-project defaults](SKILL.md#per-project-defaults--katibyaml) |
-| **Marketplace** | Coming next at `katib.jneaimi.com` (Phase 6) |
+| **Marketplace** | Live at `jneaimi.com/api/katib` (Phase 6) — Cloudflare R2 for pack blobs + Postgres for registry index. `katib pack search` + `install` resolve against it. |
 | **Extending** | Build new components with `/katib component new` — see [COMPONENT-BUILDER.md](COMPONENT-BUILDER.md) or the [tutorial](TUTORIAL.md) |
 
 ## Why v2 exists
@@ -221,14 +221,23 @@ uv run scripts/pack.py import my-recipe-1.0.0.katib-pack
 Pack format is **frozen at `pack_format: 1`** — the schema is a public
 contract. See [PACK-FORMAT.md](PACK-FORMAT.md).
 
-A curated marketplace at **`katib.jneaimi.com`** ships post-v1.0.0
-(Phase 6). The same `.katib-pack` artifact will install via:
+A curated marketplace at **`https://jneaimi.com/api/katib`** is live as
+of Phase 6 — Cloudflare R2 for `.katib-pack` blobs and Postgres on
+Coolify for the registry index. The CLI gained two subcommands that
+talk to it:
 
 ```bash
-katib pack install jneaimi/financial-invoice
+katib pack search bloom              # find packs
+katib pack install jneaimi/tutorial  # install latest
+katib pack install jneaimi/tutorial@1.0.0 --dry-run  # plan only
 ```
 
-`KATIB_REGISTRY_URL` lets enterprises self-host their own registry.
+The install pipeline reuses every gate `katib pack import` already had —
+`verify_pack`, bundled-dep + `katib_min` checks, collision refusal,
+audit log. The resolver only changes how the file gets to disk.
+
+`KATIB_REGISTRY_URL` lets enterprises point at their own registry —
+any HTTP endpoint that returns the same JSON shape works.
 
 ## Coming from v0.x
 
@@ -251,7 +260,7 @@ you've pinned to it, nothing breaks. To upgrade to v1.0.0 see
 | **3e — Docs + tutorial** | ✅ shipped | README polish, TUTORIAL.md, CHANGELOG, seed manifest expansion |
 | **4 — Local share format** | ✅ shipped | `.katib-pack` artifact + `katib pack export/import/inspect/verify` CLI; pack_format: 1 frozen |
 | **5 — v1.0.0 release** | ✅ shipped | Migration guide, format frozen, `@latest` moved from v0.20.0 → v1.0.0 |
-| **6 — Marketplace MVP** | next | Static landing at `katib.jneaimi.com`, curated registry, `katib pack install <author>/<name>` |
+| **6 — Marketplace MVP** | ✅ shipped | API at `jneaimi.com/api/katib` (Next.js Route Handlers + Postgres on Coolify), Cloudflare R2 for pack blobs, `katib pack search` + `install` subcommands, end-to-end pipeline validated with `jneaimi/tutorial@1.0.0` |
 | **7 — Community uploads** | future | Auth, signing, moderation, ratings — own ADR |
 
 ## Contributing

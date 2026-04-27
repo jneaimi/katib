@@ -1,22 +1,30 @@
-"""katib pack — share-format CLI (Phase 4).
+"""katib pack — share-format CLI (Phase 4 + 6 marketplace resolver).
 
 Subcommands:
     export    Pack a component, recipe, brand, or bundle into a .katib-pack
-    import    Install a .katib-pack into the user tier (Day 5)
-    inspect   Show manifest + contents tree without writing to disk (Day 4)
-    verify    Schema + hash + structural checks; CI-grade (Day 4)
+    import    Install a .katib-pack from a local file path
+    inspect   Show manifest + contents tree without writing to disk
+    verify    Schema + hash + structural checks; CI-grade
+    search    Query the marketplace registry (Phase 6)
+    install   Resolve <author>/<name>[@version] from the registry, then import
 
 Global flag:
     --json    Emit JSON to stdout instead of human-readable text.
 
+Environment:
+    KATIB_REGISTRY_URL   Override the marketplace base URL.
+                         Default: https://jneaimi.com/api/katib
+
 Examples:
     uv run scripts/pack.py export --component eyebrow
     uv run scripts/pack.py export --recipe tutorial --author "Jane Doe <jane@example.com>"
-    uv run scripts/pack.py export --brand example --out /tmp/
+    uv run scripts/pack.py search bloom
+    uv run scripts/pack.py install jneaimi/tutorial
+    uv run scripts/pack.py install jneaimi/tutorial@1.0.0 --dry-run
 
 Exit codes:
     0   success
-    1   operational error (artifact missing, schema violation, etc.)
+    1   operational error (artifact missing, schema violation, registry 404, etc.)
     2   bad CLI usage / not yet implemented
 """
 from __future__ import annotations
@@ -24,6 +32,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import tempfile
 from dataclasses import asdict
 from pathlib import Path
 
@@ -31,6 +40,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT))
 
 from core import pack as pack_mod  # noqa: E402
+from core import registry as registry_mod  # noqa: E402
 
 
 # ---------------------------------------------------------------------------
@@ -324,6 +334,106 @@ def _cmd_verify(args) -> int:
     return 0 if result.ok else 1
 
 
+def _cmd_search(args) -> int:
+    try:
+        result = registry_mod.search_packs(
+            q=args.query,
+            domain=args.domain,
+            language=args.language,
+            page=args.page,
+            per_page=args.limit,
+        )
+    except registry_mod.RegistryError as e:
+        return _emit_error(e, json_out=args.json)
+
+    if args.json:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+
+    print(_human_search(result, registry_mod.registry_url()))
+    return 0
+
+
+def _human_search(result: dict, registry_url: str) -> str:
+    packs = result.get("packs", [])
+    total = result.get("total", 0)
+    page = result.get("page", 1)
+    per_page = result.get("per_page", len(packs))
+
+    if not packs:
+        return f"No packs matched.  (registry: {registry_url})"
+
+    lines = [
+        f"Found {total} pack(s) — page {page}, showing {len(packs)}:",
+        "",
+    ]
+    for p in packs:
+        size_kb = p.get("size_bytes", 0) / 1024
+        lines.append(
+            f"  {p['author']}/{p['name']}@{p['latest_version']}"
+            f"  ({size_kb:.1f} KB, {p.get('license') or 'no license'})"
+        )
+        if p.get("description"):
+            desc = p["description"]
+            if len(desc) > 100:
+                desc = desc[:97] + "..."
+            lines.append(f"      {desc}")
+    if total > page * per_page:
+        lines.append("")
+        lines.append(f"  ... use --page {page + 1} for more")
+    return "\n".join(lines)
+
+
+def _cmd_install(args) -> int:
+    try:
+        author, name, version = registry_mod.parse_pack_ref(args.ref)
+    except ValueError as e:
+        return _emit_error(e, json_out=args.json)
+
+    # Resolve "latest" via the detail endpoint.
+    if version is None:
+        try:
+            detail = registry_mod.get_pack_detail(author, name)
+        except registry_mod.RegistryError as e:
+            return _emit_error(e, json_out=args.json)
+        if detail is None:
+            return _emit_error(
+                ValueError(f"{author}/{name} not found in registry"),
+                json_out=args.json,
+            )
+        version = detail["pack"]["latest_version"]
+
+    # Download to a temp file under tempfile root; auto-cleanup.
+    with tempfile.TemporaryDirectory(prefix="katib-install-") as tmp:
+        dest = Path(tmp) / f"{name}-{version}.katib-pack"
+        try:
+            dl = registry_mod.download_pack(author, name, version, dest)
+        except registry_mod.RegistryError as e:
+            return _emit_error(e, json_out=args.json)
+
+        try:
+            result = pack_mod.import_pack(
+                dl.path,
+                force=args.force,
+                justification=args.justification,
+                dry_run=args.dry_run,
+            )
+        except ValueError as e:
+            return _emit_error(e, json_out=args.json)
+
+    if args.json:
+        payload = asdict(result)
+        payload["resolved_version"] = version
+        payload["download_url"] = dl.redirect_url
+        payload["download_size_bytes"] = dl.size_bytes
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        print(f"  resolved:  {author}/{name}@{version}")
+        print(f"  fetched:   {dl.size_bytes} bytes from {dl.redirect_url}")
+        print(_human_import(result))
+    return 0
+
+
 def _emit_error(exc: BaseException, *, json_out: bool) -> int:
     if json_out:
         print(
@@ -403,6 +513,54 @@ def main(argv: list[str] | None = None) -> int:
     p_verify = sub.add_parser("verify", help="Schema + hash + structural checks (Day 4)")
     p_verify.add_argument("pack", nargs="?", help="Path to a .katib-pack file")
     p_verify.set_defaults(func=_cmd_verify)
+
+    # search — query the marketplace registry
+    p_search = sub.add_parser(
+        "search",
+        help="Query the marketplace registry (Phase 6).",
+    )
+    p_search.add_argument(
+        "query",
+        nargs="?",
+        default=None,
+        help="Free-text search across name + description + tags.",
+    )
+    p_search.add_argument("--domain", default=None, help="Filter by domain.")
+    p_search.add_argument(
+        "--language",
+        default=None,
+        help="Filter by language: en, ar, or bilingual.",
+    )
+    p_search.add_argument("--page", type=int, default=1, help="Page number (1-based).")
+    p_search.add_argument(
+        "--limit",
+        type=int,
+        default=50,
+        help="Results per page (max 200).",
+    )
+    p_search.set_defaults(func=_cmd_search)
+
+    # install — resolve from registry then delegate to import_pack
+    p_install = sub.add_parser(
+        "install",
+        help="Install <author>/<name>[@version] from the marketplace registry.",
+    )
+    p_install.add_argument(
+        "ref",
+        help='Pack ref: "<author>/<name>" or "<author>/<name>@<version>".',
+    )
+    p_install.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite collisions on disk (requires --justification).",
+    )
+    p_install.add_argument("--justification", default=None)
+    p_install.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Plan only; don't write files or audit entries.",
+    )
+    p_install.set_defaults(func=_cmd_install)
 
     args = ap.parse_args(argv)
     try:
