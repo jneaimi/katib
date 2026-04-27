@@ -25,10 +25,14 @@ from __future__ import annotations
 
 import base64
 import re
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+import yaml
+
 from core.compose import compose
+from core.preview_scrub import scrub_recipe_for_preview
 
 
 GOOGLE_FONTS_LINK = (
@@ -126,26 +130,43 @@ def render_recipe_previews(
 ) -> list[PreviewEntry]:
     """Render every supported lang of a recipe into preview HTML entries.
 
+    The recipe is scrubbed to template form before compose() runs —
+    real content (titles, authors, prose) is replaced with [Field]
+    placeholders so a marketplace browser sees layout, not commitment.
+    Section structure, variants, and image slot declarations survive
+    intact.
+
     Returns an empty list if the recipe declares no `en`/`ar` language.
     Raises ValueError when compose() fails — caller decides whether
     that's fatal for the export or just a warning.
     """
     name = recipe["name"]
+    scrubbed = scrub_recipe_for_preview(recipe)
+
     entries: list[PreviewEntry] = []
-    for lang in _supported_langs(recipe):
-        html, _meta = compose(name, lang=lang, brand=brand)
-        html = inline_image_assets(html)
-        html = _inject_fonts_link(html)
-        body = html.encode("utf-8")
-        entries.append(
-            PreviewEntry(
-                arcname=f"previews/{name}.{lang}.html",
-                body=body,
-                manifest_entry={
-                    "path": f"previews/{name}.{lang}.html",
-                    "recipe": name,
-                    "lang": lang,
-                },
-            )
+    # compose() resolves recipes by name OR path. Writing the scrubbed
+    # recipe to a temp file keeps compose unchanged.
+    with tempfile.TemporaryDirectory(prefix="katib-preview-") as tmp:
+        tmp_path = Path(tmp) / f"{name}.yaml"
+        tmp_path.write_text(
+            yaml.safe_dump(scrubbed, sort_keys=False, allow_unicode=True),
+            encoding="utf-8",
         )
+
+        for lang in _supported_langs(recipe):
+            html, _meta = compose(str(tmp_path), lang=lang, brand=brand)
+            html = inline_image_assets(html)
+            html = _inject_fonts_link(html)
+            body = html.encode("utf-8")
+            entries.append(
+                PreviewEntry(
+                    arcname=f"previews/{name}.{lang}.html",
+                    body=body,
+                    manifest_entry={
+                        "path": f"previews/{name}.{lang}.html",
+                        "recipe": name,
+                        "lang": lang,
+                    },
+                )
+            )
     return entries
