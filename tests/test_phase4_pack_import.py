@@ -124,6 +124,31 @@ def test_import_recipe_into_clean_tier(isolated_user_dirs, tmp_path):
     assert rows[0]["action"] == "imported"
 
 
+def test_import_skips_marketplace_previews(isolated_user_dirs, tmp_path):
+    """A `.katib-pack` produced with --with-previews carries
+    `previews/<name>.<lang>.html` arcnames intended for the marketplace
+    publisher. Local import must silently skip them — they don't belong
+    in the user tier and an unrecognized-prefix raise would block any
+    `katib pack install` of a Slice-B-era pack."""
+    res = pack_mod.export_recipe(
+        "tutorial", author=_author(), out_dir=tmp_path, with_previews=True
+    )
+    # Sanity: the pack actually contains previews
+    import tarfile
+    with tarfile.open(res.pack_path, "r:gz") as tf:
+        names = tf.getnames()
+    assert any(n.startswith("previews/") for n in names), (
+        "fixture precondition: pack must contain previews"
+    )
+
+    imp = pack_mod.import_pack(Path(res.pack_path), regenerate_capabilities=False)
+
+    # Recipe lands; no previews/ directory is created in the user tier
+    assert (isolated_user_dirs / "recipes" / "tutorial.yaml").exists()
+    assert not (isolated_user_dirs / "previews").exists()
+    assert imp.audit_entries_added == 1
+
+
 def test_import_bundle_writes_recipe_and_components(isolated_user_dirs, tmp_path):
     """A bundle pack drops a recipe + its custom components into the
     user tier in one go."""
