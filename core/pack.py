@@ -1264,6 +1264,11 @@ def _user_target_for_arcname(arc: str) -> Path | None:
         return USER_RECIPES_DIR / Path(*Path(arc).parts[1:])
     if arc.startswith("brands/"):
         return USER_BRANDS_DIR / Path(*Path(arc).parts[1:])
+    if arc.startswith("previews/"):
+        # Slice B HTML previews — published to R2 by the marketplace
+        # CI, not extracted into the user tier. Importing the pack
+        # locally should silently skip them.
+        return None
     raise ValueError(f"Unrecognized arcname prefix: {arc!r}")
 
 
