@@ -333,6 +333,7 @@ When the user asks to "export this recipe", "share my component", or
 |---|---|
 | Pack a single component | `uv run scripts/pack.py export --component <name>` |
 | Pack a single recipe | `uv run scripts/pack.py export --recipe <name>` |
+| Pack a single recipe with marketplace HTML previews | `uv run scripts/pack.py export --recipe <name> --with-previews` |
 | Pack a brand profile | `uv run scripts/pack.py export --brand <name>` |
 | Pack a recipe + its custom-component deps | `uv run scripts/pack.py export --bundle <recipe>` |
 | Bundle + include a brand | `uv run scripts/pack.py export --bundle <recipe> --include-brand <name>` |
@@ -346,6 +347,18 @@ When the user asks to "export this recipe", "share my component", or
 - Author defaults to `git config user.name/email`. Override via `--author "Name <email>"`.
 - Output dir defaults to `./dist/`. Override via `--out <path>`.
 - All commands accept `--json` for machine-readable output.
+
+**Marketplace previews** (`--with-previews`, recipe export only): For
+each language declared on the recipe, captures the same `compose()`
+HTML the PDF renderer uses, scrubs every input to template form (real
+content → proportional-length lorem ipsum, images and SVG pass
+through verbatim), inlines absolute-path images as `data:` URLs, and
+stamps the result into the pack at `previews/<name>.<lang>.html`. The
+manifest's `marketplace.previews[]` lists each entry. The marketplace
+publisher uploads these to R2; the registry UI embeds them in a
+sandboxed iframe so visitors can preview before installing. Bilingual
+recipes get both EN and AR previews; the AR scrubber emits Arabic
+placeholder prose so the RTL preview reads naturally.
 
 **Refusal classes** (in order — each gates the next):
 1. Pack opens cleanly (gzip + tar parseable, `pack.yaml` present)
