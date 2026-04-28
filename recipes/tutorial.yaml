@@ -1,12 +1,12 @@
 name: tutorial
-version: 1.2.0
+version: 1.3.0
 namespace: katib
-description: Bloom's AI Collaboration Framework — production tutorial recipe. First real-content v2 recipe; ports the v1 framework-guide output that triggered the ADR.
-languages: [en]
+description: Long-form bilingual tutorial template — cover, objectives box, content modules with rich body (tables, inline SVG diagrams, pull-quotes, callouts), summary, next-steps, and reference strip. For framework guides, technical onboarding, and educational long-form documents.
+languages: [en, ar]
 target_pages: [8, 14]
 page_limit: 16
-when: Use as the canonical tutorial/framework-guide reference. Demonstrates cover + objectives + 8 modules with rich body (tables, inline SVG, pull-quotes, callouts) + summary + whats-next + reference-strip end-to-end through v2.
-keywords: [tutorial, framework-guide, bloom, ai-collaboration, production]
+when: Use as the canonical long-form tutorial/framework-guide template. Demonstrates cover + objectives + 8 modules with rich body (tables, inline SVG, pull-quotes, callouts) + summary + whats-next + reference-strip end-to-end.
+keywords: [tutorial, framework-guide, long-form, education, bilingual]
 
 sections:
   - component: cover-page

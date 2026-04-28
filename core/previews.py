@@ -141,19 +141,20 @@ def render_recipe_previews(
     that's fatal for the export or just a warning.
     """
     name = recipe["name"]
-    scrubbed = scrub_recipe_for_preview(recipe)
 
     entries: list[PreviewEntry] = []
     # compose() resolves recipes by name OR path. Writing the scrubbed
-    # recipe to a temp file keeps compose unchanged.
+    # recipe to a temp file keeps compose unchanged. We re-scrub per
+    # lang so placeholder labels and lorem text match the script of
+    # the rendered template (Arabic placeholders inside RTL layout).
     with tempfile.TemporaryDirectory(prefix="katib-preview-") as tmp:
-        tmp_path = Path(tmp) / f"{name}.yaml"
-        tmp_path.write_text(
-            yaml.safe_dump(scrubbed, sort_keys=False, allow_unicode=True),
-            encoding="utf-8",
-        )
-
         for lang in _supported_langs(recipe):
+            scrubbed = scrub_recipe_for_preview(recipe, lang=lang)
+            tmp_path = Path(tmp) / f"{name}.{lang}.yaml"
+            tmp_path.write_text(
+                yaml.safe_dump(scrubbed, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
             html, _meta = compose(str(tmp_path), lang=lang, brand=brand)
             html = inline_image_assets(html)
             html = _inject_fonts_link(html)
