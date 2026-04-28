@@ -3,7 +3,66 @@
 All notable changes to Katib are documented here. Format loosely follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — 2026-04-27 post-deploy hardening
+## [Unreleased] — 2026-04-28 Phase 6 Slice B (HTML previews)
+
+Marketplace HTML previews — visitors see what a pack renders before
+they install. Previews are captured from the same `compose()` output
+the PDF renderer uses, scrubbed to template form (real content
+replaced with proportional-length lorem ipsum), uploaded to R2 via
+the marketplace publisher, and embedded in a sandboxed iframe on the
+pack detail page.
+
+### Added
+
+- **`pack export --with-previews`** (`core/previews.py`,
+  `core/preview_scrub.py` — both new). For every supported language
+  declared on the recipe, `compose()` runs against a deep-copied,
+  scrubbed recipe and the captured HTML lands in the pack tarball at
+  `previews/<name>.<lang>.html`. The manifest gains a
+  `marketplace.previews[]` array (`pack_format: 1` additive change —
+  no bump). Image references with absolute filesystem paths are
+  inlined as `data:` URLs so the captured HTML is self-contained;
+  Google Fonts are spliced into `<head>` so iframe rendering stays
+  close to PDF type.
+
+- **Recipe-input scrubber** (`core/preview_scrub.py`). Replaces real
+  content with template-form placeholders before the preview render:
+  - HTML-bearing inputs (`raw_body`, `*_html`) keep tag structure but
+    every prose text node is swapped for proportional-length lorem
+    ipsum, so paragraph density and rhythm match the original.
+  - Plain string inputs become localized labels (`[Title]` /
+    `[العنوان]`).
+  - `<svg>`, `<style>`, and `<script>` subtrees pass through verbatim
+    — they carry layout signal, not narrative.
+  - Recipe-level `description` is also rewritten so the original
+    pack's pitch doesn't leak through the preview's HTML `<title>`.
+  - Bilingual: per-lang re-scrub means AR previews render Arabic
+    placeholder prose inside RTL layout instead of Latin lorem in an
+    RTL container (which read as broken at first glance).
+
+- **Marketplace preview gallery** (jasem-profile-app: PreviewGallery
+  React component, `previews JSONB` column on `katib_pack_versions`,
+  R2 upload in `publish-pack.py`). Sandboxed iframe with one tab per
+  `(artifact × lang)`; tab defaults to the locale-matching preview
+  via `useLocale()` so an AR visitor lands on the AR preview without
+  an extra click. CSP `frame-src` widened to allow the R2 origin.
+
+### Changed
+
+- **Tutorial recipe → 1.3.0**. `languages: [en, ar]` (was `[en]`),
+  description rewritten to describe the long-form template instead
+  of the example payload, keywords updated
+  (`bloom`/`ai-collaboration`/`production` removed; `long-form`/
+  `bilingual`/`education` added). Earlier preview-less versions
+  (`1.0.0`, `1.1.0`, `1.2.0`) deprecated in the registry.
+
+- **Phase-2 gate/route/sensor tests**: integration transcripts
+  updated to use the new tutorial keyword vocabulary so HIGH-
+  confidence routing assertions still hold under the recipe's new
+  keyword set. No production code change — the tests had pinned the
+  example-payload words in their literal fixtures.
+
+## [Earlier Unreleased] — 2026-04-27 post-deploy hardening
 
 A focused hardening pass against findings from the 2026-04-26 review
 (`~/SecondBrain/knowledge/2026-04-27-katib-post-deploy-review.md`).
