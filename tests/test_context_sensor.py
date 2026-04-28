@@ -323,7 +323,7 @@ def test_infer_signals_feeds_gate_evaluate():
     # Concentrated intent hitting 5 of the 5 tutorial-recipe keywords →
     # topic score ≥ STRONG threshold → HIGH → proceed.
     t = (
-        "tutorial framework-guide bloom ai-collaboration production — "
+        "tutorial framework-guide long-form bilingual education — "
         "in English with acme brand"
     )
     inf = infer_signals(t, known_brands=["acme"])

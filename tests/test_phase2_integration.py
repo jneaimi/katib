@@ -99,7 +99,7 @@ def test_t1_graduation_workflow_end_to_end(memdir):
 def test_t2_bare_katib_high_confidence_renders(tmp_path, test_brands_dir):
     """Transcript → route.py infer (HIGH) → build.py → PDF written."""
     transcript = (
-        "render tutorial framework-guide bloom ai-collaboration production "
+        "render tutorial framework-guide long-form bilingual education "
         "in English with acme brand"
     )
     env = {**os.environ, "KATIB_BRANDS_DIR": str(test_brands_dir)}
