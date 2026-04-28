@@ -151,7 +151,7 @@ def test_ec6_skill_md_describes_v2_flow():
 def test_ec7_context_aware_mode_infers_signals(tmp_path, test_brands_dir):
     """EC7: /katib context-aware mode — transcript → correct recipe + brand + lang."""
     transcript = (
-        "render tutorial framework-guide bloom ai-collaboration production "
+        "render tutorial framework-guide long-form bilingual education "
         "in English with acme brand"
     )
     env = {**os.environ, "KATIB_BRANDS_DIR": str(test_brands_dir)}
