@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-26T00:50:02+00:00'
+generated_at: '2026-04-27T19:09:19+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -1129,6 +1129,118 @@ recipes:
     - module
     - summary
     - reference-strip
+  bmp-erp-modules-layout:
+    namespace: user
+    version: 1.2.0
+    description: BMP ERP module layout document — Material Supply + Sub-contracting modules for external
+      audit/review reference. Includes surface area, end-to-end flows, GL postings, and approval workflows
+      for both modules.
+    languages:
+    - en
+    target_pages:
+    - 6
+    - 8
+    page_limit: 12
+    when: One-off documentation deliverable describing existing BMP ERP modules to external reviewers
+      (audit firms, system selection committees).
+    keywords:
+    - erp
+    - module
+    - documentation
+    - layout
+    - material-supply
+    - sub-contracting
+    - audit-reference
+    sections_shape:
+    - module
+    - callout
+    - module
+    - module
+    - module
+    - data-table
+    - module
+    - landscape-diagram
+    - timeline
+    - module
+    - data-table
+    - module
+    - module
+    - kv-list
+    - module
+    - clause-list
+    - module
+    - module
+    - module
+    - data-table
+    - module
+    - landscape-diagram
+    - timeline
+    - module
+    - data-table
+    - module
+    - kv-list
+    - module
+    - kv-list
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - module
+    - kv-list
+    - module
+  online-news-story:
+    namespace: user
+    version: 0.1.0
+    description: 'Online news story for digital publication — Arabic news layout with catchy
+
+      headline, journalistic body containing embedded hyperlinks, official
+
+      pull-quote, video/infographic/gallery placeholders, keywords tag list,
+
+      related-news block, and comments-section placeholder. Modeled after
+
+      Al Ittihad / Al Bayan / WAM digital news layout.
+
+      '
+    languages:
+    - ar
+    target_pages:
+    - 2
+    - 4
+    page_limit: 5
+    when: 'Digital news story for a journalism course or interactive news website.
+
+      Arabic-only. Single-column body with embedded hyperlinks. Pairs visual
+
+      placeholders (video / infographic / image gallery) with structured
+
+      metadata (keywords, related news, comments).
+
+      '
+    keywords:
+    - news
+    - journalism
+    - arabic
+    - digital
+    - online
+    - reporting
+    - bilingual
+    sections_shape:
+    - news-cover
+    - module
+    - pull-quote
+    - video-card
+    - module
+    - module
+    - module
+    - polaroid-wall
+    - module
+    - module
+    - tag-chips
+    - module
+    - module
 components:
   callout:
     namespace: katib
@@ -1141,7 +1253,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 13
+    used_in_recipes: 14
   citation:
     namespace: katib
     tier: primitive
@@ -1166,7 +1278,7 @@ components:
       legal-body structure where clause references must render prominently. Items are plain-text strings
       (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain
       body uses numbered-clause lists, not WHEREAS preambles.
-    used_in_recipes: 6
+    used_in_recipes: 7
   code-block:
     namespace: katib
     tier: primitive
@@ -1197,7 +1309,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 5
+    used_in_recipes: 6
   eyebrow:
     namespace: katib
     tier: primitive
@@ -1246,7 +1358,7 @@ components:
     - rule-leading
     - large-quote
     description: Emphasized blockquote — larger text with accent rule and optional attribution.
-    used_in_recipes: 3
+    used_in_recipes: 4
   rule:
     namespace: katib
     tier: primitive
@@ -1338,7 +1450,7 @@ components:
       or topics. Items render as inline-block pills with accent-muted background and small-font, semi-bold
       text. Reusable across CV Tools section, future bio/portfolio skill lists, blog post keywords, editorial
       metadata tags.
-    used_in_recipes: 0
+    used_in_recipes: 1
   appendix-page:
     namespace: katib
     tier: section
@@ -1472,7 +1584,7 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 6
+    used_in_recipes: 7
   landscape-section:
     namespace: katib
     tier: section
@@ -1525,7 +1637,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 27
+    used_in_recipes: 29
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1650,7 +1762,7 @@ components:
       and status (done | active | upcoming — controls node tint). For progress reports, project plans,
       onboarding sequences, company histories. Rail flips to right side for RTL so the reading order is
       date-left → content-right in EN and date-right → content-left in AR.
-    used_in_recipes: 2
+    used_in_recipes: 3
   toc:
     namespace: katib
     tier: section
@@ -1731,3 +1843,102 @@ components:
       (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial
       canvas, dark text on warm off-white image, no scrim).
     used_in_recipes: 8
+  landscape-diagram:
+    namespace: user
+    tier: section
+    version: 0.1.2
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Single-page landscape diagram block — guarantees a complex diagram (SVG, HTML) fits on
+      exactly one landscape A4 page without overflow or splitting. Optional eyebrow, title, and caption
+      surround the diagram canvas; the diagram itself is constrained to the available canvas height so
+      SVGs with viewBox auto-scale to fit.
+    used_in_recipes: 1
+  photo-collage:
+    namespace: user
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Magazine-style asymmetric photo collage. Six images in a mosaic — one
+
+      hero on the left at full collage height, three stacked supporting images
+
+      in the right column, and two more in a wide bottom row. Optional
+
+      eyebrow, title, subtitle and source attribution. Bilingual EN+AR.
+
+      Designed for news galleries, event coverage, photo essays.
+
+      '
+    used_in_recipes: 0
+  polaroid-wall:
+    namespace: user
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Scrapbook-style scattered Polaroid wall. Seven images rendered as
+
+      Polaroids with white frames, slight rotations, drop shadows, and
+
+      natural overlap — anchored by an optional handwritten-style note in
+
+      the center. Bilingual EN+AR. Designed for editorial photo essays,
+
+      year-in-review posts, casual feature spreads.
+
+      '
+    used_in_recipes: 1
+  video-card:
+    namespace: user
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Video preview card for print PDFs. Horizontal layout — portrait
+
+      thumbnail on the left with play button overlay and platform badge,
+
+      metadata block on the right (title, author, duration, clickable URL,
+
+      QR code). Bilingual EN+AR. Designed for embedding TikToks, YouTube
+
+      Shorts, and Instagram Reels into print-grade documents.
+
+      '
+    used_in_recipes: 1
+  news-cover:
+    namespace: user
+    tier: cover
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Newspaper-style cover page — stacked layout: eyebrow + thick top rule +
+
+      large headline at the top, rectangular image in the middle, optional
+
+      caption + byline strip + subtitle/deck under the image, and a footer
+
+      with author and reference code. Bilingual EN+AR. Designed for digital
+
+      news stories and print article openers; mirrors front-page feature
+
+      layouts in Al Ittihad / Al Bayan / The National.
+
+      '
+    used_in_recipes: 1
