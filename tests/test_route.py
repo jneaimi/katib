@@ -59,7 +59,7 @@ def test_infer_high_confidence_returns_render():
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production in English with acme brand",
+        "render tutorial framework-guide long-form bilingual education in English with acme brand",
     )
     assert out["action"] == "render"
     assert out["recipe"] == "tutorial"
@@ -166,7 +166,7 @@ def test_infer_explicit_lang_overrides_inferred():
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production with acme brand",
+        "render tutorial framework-guide long-form bilingual education with acme brand",
         "--lang",
         "ar",
         "--brand",
@@ -182,7 +182,7 @@ def test_infer_explicit_lang_overrides_inferred():
 def test_infer_transcript_file_read_from_disk(tmp_path):
     f = tmp_path / "t.txt"
     f.write_text(
-        "render tutorial framework-guide bloom ai-collaboration production "
+        "render tutorial framework-guide long-form bilingual education "
         "in English with acme brand"
     )
     out = _run("infer", "--transcript-file", str(f))
@@ -206,7 +206,7 @@ def test_project_config_fills_brand_when_no_explicit_flag(tmp_path):
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production in English",
+        "render tutorial framework-guide long-form bilingual education in English",
         cwd=tmp_path,
     )
     assert out["action"] == "render"
@@ -241,7 +241,7 @@ def test_project_config_brand_yields_to_explicit_flag(tmp_path):
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production in English",
+        "render tutorial framework-guide long-form bilingual education in English",
         "--brand",
         "contoso",
         cwd=tmp_path,
@@ -256,7 +256,7 @@ def test_project_config_brand_yields_to_sensor_inference(tmp_path):
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production "
+        "render tutorial framework-guide long-form bilingual education "
         "in English using acme brand",
         cwd=tmp_path,
     )
@@ -272,7 +272,7 @@ def test_project_config_walks_up_from_subdir(tmp_path):
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production in English",
+        "render tutorial framework-guide long-form bilingual education in English",
         cwd=nested,
     )
     assert out["brand"] == "acme"
@@ -284,7 +284,7 @@ def test_project_config_malformed_yields_error_action(tmp_path):
     out = _run(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production",
+        "render tutorial framework-guide long-form bilingual education",
         cwd=tmp_path,
     )
     assert out["action"] == "error"
@@ -331,7 +331,7 @@ def test_infer_high_confidence_writes_evaluate_log(tmp_path):
     out, entries = _run_with_persistence(
         "infer",
         "--transcript",
-        "render tutorial framework-guide bloom ai-collaboration production "
+        "render tutorial framework-guide long-form bilingual education "
         "in English with acme brand",
         memory_dir=tmp_path,
     )
@@ -375,7 +375,7 @@ def test_infer_no_persist_skips_log(tmp_path):
     }
     subprocess.run(
         [*ROUTE, "infer", "--transcript",
-         "render tutorial framework-guide bloom ai-collaboration production "
+         "render tutorial framework-guide long-form bilingual education "
          "in English with acme brand", "--no-persist"],
         cwd=REPO_ROOT,
         env=env,

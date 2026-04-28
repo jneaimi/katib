@@ -93,7 +93,7 @@ def test_confidence_weights_are_tunable(caps):
     """Custom weights kwarg must take effect. With strong topic, HIGH
     should still be reachable under topic-heavy weighting."""
     s = Signals(
-        intent="tutorial framework guide bloom",
+        intent="tutorial framework guide long-form bilingual",
         lang="en",
         brand="acme",
         known_brands=["acme"],
@@ -119,7 +119,7 @@ def test_confidence_weights_are_tunable(caps):
 def test_confidence_thresholds_are_tunable(caps):
     """Raise the HIGH threshold above 100 — even perfect score must downgrade."""
     s = Signals(
-        intent="tutorial framework guide bloom",
+        intent="tutorial framework guide long-form bilingual",
         lang="en",
         brand="acme",
         known_brands=["acme"],
@@ -200,7 +200,7 @@ def test_infer_lang_threshold_tunable():
 
 def test_evaluate_high_returns_plan(caps):
     s = Signals(
-        intent="tutorial framework guide bloom",
+        intent="tutorial framework guide long-form bilingual",
         lang="en",
         brand="acme",
         known_brands=["acme"],

@@ -170,12 +170,46 @@
     },
     "marketplace": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "properties": {
         "preview_image": { "type": "string" },
-        "documentation_url": { "type": "string", "format": "uri" }
+        "documentation_url": { "type": "string", "format": "uri" },
+        "previews": {
+          "type": "array",
+          "description": "Slice B — captured HTML previews of what this pack renders. Populated by `pack export --with-previews`. Each entry points at a file inside the pack tarball under `previews/<recipe-or-component>.<lang>.html`.",
+          "items": {
+            "type": "object",
+            "required": ["path", "lang"],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string",
+                "pattern": "^previews/[a-z0-9][a-z0-9_-]*\\.(en|ar)\\.html$",
+                "description": "Pack-relative path. Must live under previews/ and end in <lang>.html."
+              },
+              "recipe": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+                "description": "Recipe name this preview was rendered from. Omit for component-only previews."
+              },
+              "component": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+                "description": "Component name when the preview is from `pack export --component --with-previews`. Mutually exclusive with `recipe`."
+              },
+              "lang": {
+                "type": "string",
+                "enum": ["en", "ar"]
+              }
+            },
+            "oneOf": [
+              { "required": ["recipe"] },
+              { "required": ["component"] }
+            ]
+          }
+        }
       },
-      "description": "Optional metadata only meaningful in Phase 6+."
+      "description": "Optional metadata only meaningful in Phase 6+. additionalProperties is open so future additive keys (e.g., social cards, tutorials) don't require a pack_format bump."
     },
     "signature": {
       "type": "string",
