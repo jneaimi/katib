@@ -1,0 +1,31 @@
+name: comparison-table
+tier: section
+version: 0.1.0
+namespace: katib
+description: Feature × option comparison grid — rows are features, columns are options (vendors / tiers / variants), cells are check / cross / value / text. Used for pricing tables, vendor evaluations, RFP responses, and any "this vs that" decision document. Distinct from `data-table` which is a generic spreadsheet — comparison-table has semantic check / cross cells, recommended-column highlighting, and built-in row eyebrows for grouping.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border, callout_tip_bg, callout_tip_accent, callout_danger_bg, callout_danger_accent]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the table (e.g. "PRICING", "FEATURE COMPARISON").
+    - title:
+        type: string
+        required: false
+        description: Optional heading above the table.
+    - options:
+        type: array
+        required: true
+        description: "Column headers — array of either strings or {label, sublabel?, recommended?} mappings. `recommended: true` highlights the column with the accent colour."
+    - rows:
+        type: array
+        required: true
+        description: "Feature rows. Each row is {feature, sub?, group?, cells: [...]}. `cells` length must equal `options` length. Each cell is either a string (rendered as text), a number, true (✓), false (✗), or {kind: 'check'|'cross'|'value'|'note', value?}."
+variants:
+  - default
+page_behavior:
+  mode: atomic

@@ -1,0 +1,63 @@
+.katib-status-banner {
+    margin: 0 0 14pt 0;
+    font-family: var(--font-primary);
+}
+
+.katib-status-banner__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7pt 12pt;
+    border-radius: 3pt;
+    border: 0.5pt solid var(--border);
+    background: var(--callout-info-bg);
+    color: var(--callout-info-accent);
+}
+
+.katib-status-banner__label {
+    font-size: 9.5pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.katib-status-banner__sublabel {
+    font-size: 8.5pt;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+}
+
+/* Tones — backgrounds and accent colour come from the callout tokens so
+   a brand profile that recolours callouts also recolours banners.
+   Note: katib's existing token model uses `tip` for the green/success
+   tone, so we map "success" through the tip tokens. */
+.katib-status-banner--info .katib-status-banner__inner {
+    background: var(--callout-info-bg);
+    color: var(--callout-info-accent);
+    border-color: var(--callout-info-accent);
+}
+
+.katib-status-banner--warn .katib-status-banner__inner {
+    background: var(--callout-warn-bg);
+    color: var(--callout-warn-accent);
+    border-color: var(--callout-warn-accent);
+}
+
+.katib-status-banner--success .katib-status-banner__inner {
+    background: var(--callout-tip-bg);
+    color: var(--callout-tip-accent);
+    border-color: var(--callout-tip-accent);
+}
+
+.katib-status-banner--danger .katib-status-banner__inner {
+    background: var(--callout-danger-bg);
+    color: var(--callout-danger-accent);
+    border-color: var(--callout-danger-accent);
+}
+
+.katib-status-banner--neutral .katib-status-banner__inner {
+    background: var(--page-bg, #f6f5f2);
+    color: var(--text-secondary);
+    border-color: var(--border);
+}

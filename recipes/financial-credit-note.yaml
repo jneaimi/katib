@@ -1,0 +1,140 @@
+name: financial-credit-note
+version: 0.1.0
+namespace: katib
+description: UAE Federal-Decree-Law-compliant tax credit note — references the original invoice and the reason for credit (return, post-issuance discount, or correction). Letterhead + Issued By/To + meta strip + reason callout + line-items + totals (TOTAL CREDIT) + refund-method block + VAT-regulation footer. Pairs with financial/invoice.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 2
+when: UAE Federal-Decree-Law-compliant tax credit note for refunds, returned goods, post-issuance discounts, or invoice corrections. Must reference the original invoice number and reason for issuance. Pairs with financial/invoice. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [financial, credit, note, refund, vat, uae, fta, tax]
+
+sections:
+  # 1. Letterhead — commercial variant
+  - component: letterhead
+    variant: commercial
+    inputs:
+      company: "Acme | Katib"
+      reference_code: "CN-2026-0007"
+      date: "2026-04-30"
+      doc_title: "Tax Credit Note"
+
+  # 2. Issued By / Issued To — same shape as invoice but flips which party
+  #    gets the credit; "Issued To" is the customer who originally received
+  #    the now-corrected invoice.
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - eyebrow: "Issued By"
+          title: "Acme | Katib"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Street address]<br>[PO Box, City — UAE]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">TRN: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[100000000000003]</span></div>
+        - eyebrow: "Issued To"
+          title: "[Customer Legal Name LLC]"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Customer street address]<br>[PO Box, City — UAE]<br>[Attn: Accounts Payable]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">TRN: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[100000000000004]</span></div>
+
+  # 3. Meta strip — links credit note to its parent invoice
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Credit Note Date", value: "2026-04-30"}
+        - {term: "Original Invoice", value: "INV-2026-0042"}
+        - {term: "Original Invoice Date", value: "2026-03-15"}
+        - {term: "Currency", value: "AED"}
+
+  # 4. Reason — callout warn (4th production callout consumer; warn tone
+  #    chosen because a credit note is, by nature, a correction/refund)
+  - component: callout
+    inputs:
+      tone: warn
+      title: "Reason for Credit"
+      body: "Partial return of two units (line item #2) following customer-reported damage on receipt. Goods returned 2026-04-28, refund processed against original payment method."
+
+  # 5. Line items being credited — data-table dense.
+  #    Amounts shown as positive; the Totals box shows them as a credit
+  #    (reduction). This matches FTA convention for credit-note formats.
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "#"
+          align: num
+          width: "24pt"
+        - label: "Description"
+        - label: "Qty"
+          align: num
+          width: "40pt"
+        - label: "Unit Price"
+          align: num
+          width: "70pt"
+        - label: "VAT %"
+          align: num
+          width: "40pt"
+        - label: "VAT"
+          align: num
+          width: "60pt"
+        - label: "Credit (AED)"
+          align: num
+          width: "70pt"
+      rows:
+        - - "1"
+          - {text: "[Returned line item — partial qty]", sub: "[References INV-2026-0042 line #2; 2 of 10 units returned damaged]"}
+          - "2"
+          - "200.00"
+          - "5%"
+          - "20.00"
+          - "420.00"
+
+  # 6. Totals — financial-summary; "TOTAL CREDIT" makes the semantic
+  #    difference from invoice's "TOTAL DUE" obvious.
+  - component: financial-summary
+    inputs:
+      currency: "AED"
+      rows:
+        - {label: "Subtotal credited (excl. VAT)", value: "400.00"}
+        - {label: "VAT credited (5%)", value: "20.00"}
+        - {label: "TOTAL CREDIT", value: "420.00", variant: total}
+
+  # 7. Amount in Words — callout neutral
+  - component: callout
+    inputs:
+      tone: neutral
+      title: "Amount in Words"
+      body: "UAE Dirhams [Four Hundred Twenty] only — credited to the customer."
+
+  # 8. Refund Method + Bank/Reference — sections-grid bordered (2-col)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - title: "Refund Method"
+          raw_body: |
+            <p style="margin: 0 0 6pt 0; font-size: 9.5pt; line-height: 1.55;"><strong>Refunded to original payment method</strong> within 7 business days of credit-note issuance.</p>
+            <p style="margin: 0; font-size: 9pt; color: var(--text-secondary);">Customer will receive a confirmation reference upon settlement.</p>
+        - title: "Reference"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 90pt 1fr; gap: 2pt 8pt; margin: 0; font-size: 9pt;">
+              <dt style="color: var(--text-secondary);">Original Invoice</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">INV-2026-0042</dd>
+              <dt style="color: var(--text-secondary);">Credit Note No.</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">CN-2026-0007</dd>
+              <dt style="color: var(--text-secondary);">RMA No.</dt><dd style="margin: 0; font-weight: 600; font-variant-numeric: tabular-nums;">[RMA-00128]</dd>
+              <dt style="color: var(--text-secondary);">Settled By</dt><dd style="margin: 0; font-weight: 600;">Alex Acme</dd>
+            </dl>
+
+  # 9. Footer — VAT Law citation tied to credit-note specifics
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.5;">
+          <p style="margin: 3pt 0;">This is a tax credit note issued under the UAE Federal Decree-Law No. 8 of 2017 (VAT Law) and its Executive Regulations. It supersedes the corresponding line items on the original tax invoice referenced above.</p>
+          <p style="margin: 3pt 0;">Questions on this credit note should be directed to <a href="mailto:alex@acme.test" style="color: var(--accent); text-decoration: none;">alex@acme.test</a>. All figures in AED unless noted otherwise.</p>
+          <div style="margin-top: 16pt; font-size: 9pt; color: var(--text-secondary);">
+            <div style="border-bottom: 0.5pt solid var(--border-strong); width: 60mm; margin-bottom: 3pt; height: 18pt;"></div>
+            Authorised signatory · Alex Acme
+          </div>
+        </div>

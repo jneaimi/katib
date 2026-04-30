@@ -1,0 +1,176 @@
+name: business-meeting-minutes
+version: 0.1.0
+namespace: katib
+description: Board / project meeting minutes — masthead + meeting metadata + attendees grid + agenda summary + numbered discussion blocks + decisions list + action register table + signature block. Suitable for board minutes, steering committees, project status meetings, and any governance-grade meeting record.
+languages: [en]
+target_pages: [2, 3]
+page_limit: 4
+when: Formal record of a meeting — used for governance (board / steering committee), project status meetings, regulatory committees, or any context where a written, signed minute is the source of truth for decisions and actions. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [business, meeting, minutes, board, governance, decisions, actions]
+
+sections:
+  # 1. Masthead
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+          <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Meeting Minutes</div>
+          <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">[Meeting Name]</h1>
+          <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[One-line meeting purpose]</div>
+          <div style="font-size: 10pt; color: var(--text-tertiary);">MIN-2026-0014 · Recorded 2026-04-30</div>
+        </div>
+
+  # 2. Meeting metadata — kv-list boxed
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Date & Time", value: "2026-04-30 · 10:00–11:30 GST"}
+        - {term: "Location", value: "Acme HQ Boardroom · Dubai (hybrid via Teams)"}
+        - {term: "Chair", value: "[Chair name and role]"}
+        - {term: "Recorder", value: "[Recorder name and role]"}
+        - {term: "Quorum", value: "Met (5 of 7 voting members present)"}
+
+  # 3. Attendees / Apologies — sections-grid bordered (3 columns)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 3
+      items:
+        - eyebrow: "Present"
+          title: "Voting Members"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.6;">
+              <li>[Name] — Chair</li>
+              <li>[Name] — Director</li>
+              <li>[Name] — Director</li>
+              <li>[Name] — Director</li>
+              <li>[Name] — Director</li>
+            </ul>
+        - eyebrow: "Present"
+          title: "Invited"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.6;">
+              <li>[Name] — CFO</li>
+              <li>[Name] — Head of Risk</li>
+              <li>[Name] — Counsel</li>
+            </ul>
+        - eyebrow: "Apologies"
+          title: "Absent"
+          raw_body: |
+            <ul style="margin: 0; padding-left: 14pt; font-size: 9.5pt; line-height: 1.6;">
+              <li>[Name] — Director</li>
+              <li>[Name] — Director</li>
+            </ul>
+
+  # 4. Agenda summary — clause-list (correct items shape: array of strings)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Agenda"
+
+  - component: clause-list
+    inputs:
+      items:
+        - "Approval of previous minutes (MIN-2026-0013, dated 2026-03-26)."
+        - "Q1 financial review — performance vs plan, working-capital position."
+        - "Risk register update — top three risks and mitigations."
+        - "[Strategic decision item — name the topic the board needs to decide on]."
+        - "AOB and date of next meeting."
+
+  # 5. Discussion summary — module numbered (one entry per agenda item)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Q1 Financial Review"
+      raw_body: |
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;">CFO presented Q1 results. Revenue tracking 4% above plan; gross margin in line; opex 2% under plan due to delayed hire. Working capital healthy.</p>
+        <p style="margin: 0; font-size: 10pt; line-height: 1.6;">Board noted the variance vs plan was driven by [project/customer] and asked Finance to confirm whether it is structural or a one-off. To return at the May meeting.</p>
+
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Risk Register Update"
+      raw_body: |
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;">Head of Risk walked through the top three risks: [Risk 1], [Risk 2], [Risk 3]. Mitigations on track for Risk 1 and 2; Risk 3 (regulatory) requires a board decision — see §4.</p>
+
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "[Strategic Decision Topic]"
+      raw_body: |
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;">Counsel summarised the decision context, options, and recommended course. Discussion focused on [the two or three substantive points raised]. After debate, the Chair called the question.</p>
+
+  # 6. Decisions — callout success (semantically: a positive resolution
+  #    record). Each decision lists who proposed, who seconded, vote split.
+  - component: callout
+    inputs:
+      tone: success
+      title: "Decisions Recorded"
+      body: "RESOLVED: That the previous minutes (MIN-2026-0013) be approved without amendment. Carried unanimously. // RESOLVED: That [option B] be approved as the board's response to Risk 3, subject to legal review of the implementation plan by the May meeting. Proposed: [Name]. Seconded: [Name]. Carried 4 in favour, 1 against."
+
+  # 7. Action register — data-table dense (the operational output of any
+  #    meeting; this is what gets tracked between meetings)
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Action Register"
+
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "ID"
+          width: "44pt"
+        - label: "Action"
+        - label: "Owner"
+          width: "75pt"
+        - label: "Due"
+          width: "70pt"
+        - label: "Status"
+          width: "62pt"
+      rows:
+        - - "A1"
+          - {text: "Confirm whether Q1 revenue variance is structural or one-off; bring back at May board.", sub: "Linked: §2 above; reports to CFO."}
+          - "CFO"
+          - "2026-05-28"
+          - "Open"
+        - - "A2"
+          - {text: "Draft implementation plan for Risk 3 mitigation, including legal review schedule.", sub: "Linked: §4 above; counsel to advise."}
+          - "Head of Risk"
+          - "2026-05-21"
+          - "Open"
+        - - "A3"
+          - {text: "Schedule deep-dive on [strategic topic] for next quarter's offsite agenda.", sub: "Coordinate with Chair's office."}
+          - "Chair"
+          - "2026-06-15"
+          - "Open"
+
+  # 8. Next meeting + chair signature
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Next Meeting", value: "2026-05-28 · 10:00 GST · Acme HQ Boardroom"}
+        - {term: "Minutes Status", value: "Draft — to be approved at next meeting"}
+
+  - component: signature-block
+    inputs:
+      role: "Chair"
+      name: "[Chair Name]"
+      title: "Chair of the Board"
+      date_label: "Approved on"
+      date: "[Date of approval at next meeting]"
+
+  # 9. Footer
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.55;">
+          <p style="margin: 3pt 0;">These minutes are a true record of the meeting referenced above and are issued for review. They become the formal record of the meeting once approved at the next meeting and signed by the Chair.</p>
+        </div>
