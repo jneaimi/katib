@@ -1,6 +1,6 @@
 name: chart-sparkline
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological convention). Inline-svg only.
 languages: [en, ar]
