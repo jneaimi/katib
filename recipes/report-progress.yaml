@@ -1,5 +1,5 @@
 name: report-progress
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: Project progress report — exec summary, headline metrics, timeline of milestones, findings narrative, next-period focus, and optional appendix. Composes the full Phase-3c content library into a production-ready report. Bilingual EN+AR.
 languages:
