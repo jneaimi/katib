@@ -1,5 +1,5 @@
 name: personal-cv
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: Professional CV with 2-col sidebar+main layout. FIRST production consumer of cv-layout, skill-bar-list, and tag-chips (all Day-18 infra; 24-hour ship discipline — 4th consecutive application). Single-section recipe — fewest sections ever in Phase-3. Closes the personal domain (cover-letter Day 6 + cv Day 19). Sidebar holds photo + identity + contact + Languages/Skills bars + Tools chips; main holds Summary + Experience + Education + Projects.
 languages:

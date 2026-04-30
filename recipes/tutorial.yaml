@@ -1,5 +1,5 @@
 name: tutorial
-version: 1.3.0
+version: 1.3.1
 namespace: katib
 description: Long-form bilingual tutorial template — cover, objectives box, content modules with rich body (tables, inline SVG diagrams, pull-quotes, callouts), summary, next-steps, and reference strip. For framework guides, technical onboarding, and educational long-form documents.
 languages: [en, ar]
