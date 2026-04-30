@@ -1,0 +1,37 @@
+name: slide-quote
+tier: section
+version: 0.1.0
+namespace: katib
+description: Single 16:9 landscape slide carrying a dramatic centered pull quote with attribution. For testimonial slides, founder-vision slides, customer-quote slides — any moment in a deck where the message is "let one person's words do the work". Use multiple slide-quote sections in a row to build a "what people are saying" sequence. Page-size matches slide-frame.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the quote (e.g. "WHAT CUSTOMERS SAY", "TESTIMONIAL"). Optional.
+    - quote:
+        type: string
+        required: true
+        description: The quote body text. Wrap with surrounding curly quotes is automatic — pass the words only, do not include the leading or trailing quote marks.
+    - author:
+        type: string
+        required: true
+        description: Person being quoted (e.g. "Layla Al-Mansoori").
+    - role:
+        type: string
+        required: false
+        description: Author role + organisation (e.g. "Head of Procurement, Acme Corp").
+    - source:
+        type: string
+        required: false
+        description: Optional source citation (e.g. "Forbes interview, Mar 2026"). Rendered smaller below the role.
+variants:
+  - default
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

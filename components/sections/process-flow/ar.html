@@ -1,0 +1,23 @@
+<section class="katib-section katib-process-flow katib-process-flow--{{ input.orientation or 'horizontal' }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-process-flow__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-process-flow__title">{{ input.title }}</h2>
+{%- endif %}
+    <ol class="katib-process-flow__steps">
+{%- for step in input.steps %}
+        <li class="katib-process-flow__step">
+            <div class="katib-process-flow__node">
+                <span class="katib-process-flow__num">{{ loop.index }}</span>
+            </div>
+            <div class="katib-process-flow__copy">
+                <h3 class="katib-process-flow__label">{{ step.label }}</h3>
+{%- if step.body %}
+                <p class="katib-process-flow__body">{{ step.body }}</p>
+{%- endif %}
+            </div>
+        </li>
+{%- endfor %}
+    </ol>
+</section>

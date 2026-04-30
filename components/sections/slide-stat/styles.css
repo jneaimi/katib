@@ -1,0 +1,103 @@
+/* slide-stat — A4 landscape slide. Stat dominates; everything else
+   reads as supporting context. */
+
+@page slide {
+    size: A4 landscape;
+    margin: 18mm;
+}
+
+.katib-slide-stat {
+    page: slide;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: calc(210mm - 36mm);
+    font-family: var(--font-primary);
+    color: var(--text);
+    page-break-before: always;
+    page-break-after: always;
+    padding: 0 12mm;
+}
+
+.katib-slide-stat__eyebrow {
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18pt;
+}
+
+.katib-slide-stat__value-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 12pt;
+    line-height: 1;
+}
+
+.katib-slide-stat__value {
+    font-family: var(--font-display);
+    font-size: 130pt;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 0.9;
+}
+
+.katib-slide-stat__unit {
+    font-family: var(--font-display);
+    font-size: 26pt;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.01em;
+}
+
+.katib-slide-stat__delta {
+    margin-top: 10pt;
+    padding: 4pt 12pt;
+    border-radius: 14pt;
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: var(--callout-tip-bg);
+    color: var(--callout-tip-accent);
+}
+
+.katib-slide-stat__delta--success {
+    background: var(--callout-tip-bg);
+    color: var(--callout-tip-accent);
+}
+
+.katib-slide-stat__delta--warn {
+    background: var(--callout-warn-bg);
+    color: var(--callout-warn-accent);
+}
+
+.katib-slide-stat__delta--danger {
+    background: var(--callout-danger-bg);
+    color: var(--callout-danger-accent);
+}
+
+.katib-slide-stat__delta--neutral {
+    background: var(--page-bg, #f6f5f2);
+    color: var(--text-secondary);
+}
+
+.katib-slide-stat__label {
+    margin-top: 22pt;
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--text);
+    max-width: 200mm;
+}
+
+.katib-slide-stat__body {
+    margin: 18pt auto 0 auto;
+    max-width: 180mm;
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}

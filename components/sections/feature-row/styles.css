@@ -1,0 +1,97 @@
+.katib-feature-row {
+    margin: 1em 0 1.4em 0;
+    font-family: var(--font-primary);
+}
+
+.katib-feature-row__eyebrow {
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6pt;
+}
+
+.katib-feature-row__title {
+    font-family: var(--font-display);
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 14pt 0;
+}
+
+.katib-feature-row__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14pt;
+}
+
+.katib-feature-row--two-up .katib-feature-row__rows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16pt 18pt;
+}
+
+.katib-feature-row__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14pt;
+}
+
+.katib-feature-row__visual {
+    flex-shrink: 0;
+    width: 36pt;
+    height: 36pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.katib-feature-row__icon {
+    width: 36pt;
+    height: 36pt;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16pt;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.katib-feature-row__icon--blank {
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+}
+
+.katib-feature-row__image {
+    width: 36pt;
+    height: 36pt;
+    object-fit: cover;
+    border-radius: 4pt;
+    border: 0.5pt solid var(--border);
+}
+
+.katib-feature-row__copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.katib-feature-row__heading {
+    margin: 0 0 4pt 0;
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+.katib-feature-row__body {
+    margin: 0;
+    font-size: 9.5pt;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}

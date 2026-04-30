@@ -1,0 +1,33 @@
+name: feature-row
+tier: section
+version: 0.1.0
+namespace: katib
+description: Repeating row pattern with an icon (or thumbnail image) on the leading side, a heading, and a body paragraph. Use for "what we do", "key features", "what's included", or "how it works" sections — anywhere the same visual pattern repeats 3–6 times for parallel ideas. Distinct from `kv-list` (terms + values) and `objectives-box` (bullets) — feature-row carries enough body text to stand on its own.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the section heading.
+    - title:
+        type: string
+        required: false
+        description: Optional heading above the rows.
+    - rows:
+        type: array
+        required: true
+        description: 'Array of {icon?, image?, heading, body}. Provide either `icon` (a 1–2 character emoji or text glyph rendered in a circle) OR `image` (a small thumbnail image path) — not both. Heading is bold display; body is one paragraph of supporting text.'
+    - layout:
+        type: string
+        required: false
+        description: '"stacked" (default — rows full-width, one beneath the next) or "two-up" (rows render as a 2-column grid).'
+variants:
+  - default
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-feature-row__row

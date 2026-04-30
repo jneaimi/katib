@@ -1,0 +1,27 @@
+<section class="katib-section katib-feature-row katib-feature-row--{{ input.layout or 'stacked' }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-feature-row__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-feature-row__title">{{ input.title }}</h2>
+{%- endif %}
+    <div class="katib-feature-row__rows">
+{%- for row in input.rows %}
+        <div class="katib-feature-row__row">
+            <div class="katib-feature-row__visual">
+{%- if row.image %}
+                <img class="katib-feature-row__image" src="{{ row.image }}" alt="" />
+{%- elif row.icon %}
+                <div class="katib-feature-row__icon">{{ row.icon }}</div>
+{%- else %}
+                <div class="katib-feature-row__icon katib-feature-row__icon--blank">&middot;</div>
+{%- endif %}
+            </div>
+            <div class="katib-feature-row__copy">
+                <h3 class="katib-feature-row__heading">{{ row.heading }}</h3>
+                <p class="katib-feature-row__body">{{ row.body }}</p>
+            </div>
+        </div>
+{%- endfor %}
+    </div>
+</section>

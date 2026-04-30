@@ -1,0 +1,45 @@
+name: slide-stat
+tier: section
+version: 0.1.0
+namespace: katib
+description: Single 16:9 landscape slide carrying one massive stat with a label and an optional supporting paragraph. For traction slides, market-size slides, "single moment of impact" slides in any deck. The stat dominates the slide visually so the audience reads the number first and the prose second.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the stat (e.g. "TRACTION", "MARKET SIZE", "WHAT WE LEARNED").
+    - value:
+        type: string
+        required: true
+        description: The big number itself (e.g. "10M+", "AED 2.4B", "47%"). Pass as-is — the component renders it at huge display size with tabular numerals.
+    - unit:
+        type: string
+        required: false
+        description: Small unit suffix shown immediately after the value, smaller weight (e.g. "users", "ARR", "of GCC procurement"). Optional.
+    - label:
+        type: string
+        required: true
+        description: One-line descriptor under the stat (e.g. "monthly active accounts", "annual recurring revenue").
+    - body:
+        type: string
+        required: false
+        description: Optional 1–2 sentence supporting note rendered smaller below the label.
+    - delta:
+        type: string
+        required: false
+        description: 'Optional change indicator (e.g. "+34% YoY", "↑ 12pp"). Rendered as a pill in success or accent colour.'
+    - delta_tone:
+        type: string
+        required: false
+        description: '"success" (green, default), "warn" (amber), "danger" (red), or "neutral". Controls the pill colour.'
+variants:
+  - default
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

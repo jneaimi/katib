@@ -1,0 +1,18 @@
+<section class="katib-section katib-slide-stat" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-slide-stat__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+    <div class="katib-slide-stat__value-wrap">
+        <span class="katib-slide-stat__value">{{ input.value }}</span>
+{%- if input.unit %}
+        <span class="katib-slide-stat__unit">{{ input.unit }}</span>
+{%- endif %}
+    </div>
+{%- if input.delta %}
+    <div class="katib-slide-stat__delta katib-slide-stat__delta--{{ input.delta_tone or 'success' }}">{{ input.delta }}</div>
+{%- endif %}
+    <div class="katib-slide-stat__label">{{ input.label }}</div>
+{%- if input.body %}
+    <p class="katib-slide-stat__body">{{ input.body }}</p>
+{%- endif %}
+</section>

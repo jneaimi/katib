@@ -1,0 +1,38 @@
+<section class="katib-section katib-org-chart" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-org-chart__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-org-chart__title">{{ input.title }}</h2>
+{%- endif %}
+    <div class="katib-org-chart__tree">
+        <div class="katib-org-chart__root-row">
+            <div class="katib-org-chart__node katib-org-chart__node--root">
+{%- if input.root.image %}
+                <img class="katib-org-chart__avatar" src="{{ input.root.image }}" alt="" />
+{%- endif %}
+                <div class="katib-org-chart__node-label">{{ input.root.label }}</div>
+{%- if input.root.role %}
+                <div class="katib-org-chart__node-role">{{ input.root.role }}</div>
+{%- endif %}
+            </div>
+        </div>
+        <div class="katib-org-chart__connector"></div>
+        <div class="katib-org-chart__children">
+{%- for child in input.children %}
+            <div class="katib-org-chart__child">
+                <div class="katib-org-chart__stub"></div>
+                <div class="katib-org-chart__node">
+{%- if child.image %}
+                    <img class="katib-org-chart__avatar" src="{{ child.image }}" alt="" />
+{%- endif %}
+                    <div class="katib-org-chart__node-label">{{ child.label }}</div>
+{%- if child.role %}
+                    <div class="katib-org-chart__node-role">{{ child.role }}</div>
+{%- endif %}
+                </div>
+            </div>
+{%- endfor %}
+        </div>
+    </div>
+</section>
