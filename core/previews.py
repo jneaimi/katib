@@ -174,29 +174,97 @@ def render_recipe_previews(
     return entries
 
 
+# Rich HTML default for slot-style string inputs (fields named *_html or
+# whose description signals "trusted HTML"). The scrubber's HTML path
+# preserves tag structure and replaces narrative text with lorem-style
+# fill, so passing a structured block in produces a structured block out
+# rather than a flat `[Field]` label sitting on an empty page.
+_HTML_SLOT_DEFAULT_EN = (
+    "<h3>Lorem ipsum dolor sit amet</h3>"
+    "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>"
+    "<p>Duis aute irure dolor in reprehenderit in voluptate velit esse "
+    "cillum dolore eu fugiat nulla pariatur.</p>"
+    "<ul>"
+    "<li>Lorem ipsum dolor sit amet</li>"
+    "<li>Consectetur adipiscing elit</li>"
+    "<li>Sed do eiusmod tempor incididunt</li>"
+    "</ul>"
+)
+_HTML_SLOT_DEFAULT_AR = (
+    "<h3>لوريم إيبسوم دولور سيت أميت</h3>"
+    "<p>لوريم إيبسوم دولور سيت أميت، كونسيكتيتور أديبيسسينج إليت. "
+    "سيد دو إيوسمود تيمبور إنكيديدونت أوت لابوري إت دولوري ماجنا "
+    "أليكوا. أوت إنيم أد مينيم فينيام، كويس نوسترود إكسيرسيتيشن.</p>"
+    "<p>دويس أوتي إيروري دولور إن ريبريهيندريت إن فولوبتاتي فيليت "
+    "إسسي كيلوم دولوري إيو فوجيات نولا باريتور.</p>"
+    "<ul>"
+    "<li>لوريم إيبسوم دولور سيت أميت</li>"
+    "<li>كونسيكتيتور أديبيسسينج إليت</li>"
+    "<li>سيد دو إيوسمود تيمبور إنكيديدونت</li>"
+    "</ul>"
+)
+
+
+def _is_html_slot(field: str, spec: dict) -> bool:
+    if field.endswith("_html") or field == "html":
+        return True
+    desc = (spec.get("description") or "").lower()
+    return "trusted html" in desc or "html content" in desc
+
+
+def _image_stub_for(spec: dict, *, image_path: Path, component_name: str) -> dict:
+    """Pick an image-input stub that satisfies the spec's `sources_accepted`.
+
+    Most components accept `user-file` (the synthesized neutral SVG path
+    is then resolved through the standard image pipeline). Chart
+    components only accept `inline-svg` — those need a minimal chart
+    spec instead. Component name picks the chart shape (chart-bar →
+    bar, chart-donut → donut, chart-sparkline → sparkline) so the spec
+    matches what the inline-svg provider expects.
+    """
+    sources = spec.get("sources_accepted") or ["user-file"]
+    if "user-file" in sources:
+        return {"source": "user-file", "path": str(image_path)}
+    if "inline-svg" in sources:
+        if "sparkline" in component_name:
+            return {
+                "source": "inline-svg",
+                "type": "sparkline",
+                "data": [10, 12, 8, 14, 11, 16, 13],
+            }
+        chart_type = "bar" if "bar" in component_name else "donut"
+        return {
+            "source": "inline-svg",
+            "type": chart_type,
+            "data": [
+                {"label": "A", "value": 3},
+                {"label": "B", "value": 2},
+                {"label": "C", "value": 1},
+            ],
+        }
+    # url / gemini / screenshot — fall back to user-file. compose() may
+    # still fail validation, but that's strictly better than silently
+    # dropping a required image input.
+    return {"source": "user-file", "path": str(image_path)}
+
+
 def _synthesize_wrapper_recipe(component_meta: dict, *, image_path: Path) -> dict:
     """Build a one-section recipe that wraps a component for previewing.
 
     Inputs are minimal placeholders that the scrubber will replace with
-    `[Field]` labels. Image inputs receive a synthesized neutral SVG
-    placeholder via `resolved_svg` AND `resolved_path` so component
-    templates that prefer either shape both render. The dict carries
-    `resolved_path` so the scrubber preserves it intact (image slots
-    are never scrubbed — they're declared shapes, not narrative).
+    `[Field]` labels. Image inputs receive a stub picked from the
+    component's `sources_accepted` (file path for user-file, minimal
+    chart spec for inline-svg-only components like chart-bar). Slot-
+    style string inputs (fields ending `_html` or whose description
+    signals trusted HTML) get a structured lorem block so the
+    scrubber's HTML path produces a populated page rather than a flat
+    `[Field]` label on whitespace.
     """
     name = component_meta["name"]
     declared_langs = component_meta.get("languages") or ["en"]
     accepts = component_meta.get("accepts", {}).get("inputs") or []
-
-    # Stub image spec — points at the neutral placeholder SVG written
-    # to the temp dir. compose() walks `source: user-file` through the
-    # standard image-resolution path so the component template gets a
-    # real `resolved_path` regardless of which access pattern (svg or
-    # raster) it expects.
-    image_stub = {
-        "source": "user-file",
-        "path": str(image_path),
-    }
 
     inputs_en: dict = {}
     inputs_ar: dict = {}
@@ -209,8 +277,11 @@ def _synthesize_wrapper_recipe(component_meta: dict, *, image_path: Path) -> dic
             spec = spec or {}
             t = (spec.get("type") or "string").lower()
             if t == "image":
-                inputs_en[field] = dict(image_stub)
-                inputs_ar[field] = dict(image_stub)
+                stub = _image_stub_for(
+                    spec, image_path=image_path, component_name=name
+                )
+                inputs_en[field] = dict(stub)
+                inputs_ar[field] = dict(stub)
             elif t in ("number", "integer", "int", "float"):
                 inputs_en[field] = 1
                 inputs_ar[field] = 1
@@ -224,6 +295,9 @@ def _synthesize_wrapper_recipe(component_meta: dict, *, image_path: Path) -> dic
                 # Booleans aren't scrubbed — pass through as-is.
                 inputs_en[field] = spec.get("default", True)
                 inputs_ar[field] = spec.get("default", True)
+            elif _is_html_slot(field, spec):
+                inputs_en[field] = _HTML_SLOT_DEFAULT_EN
+                inputs_ar[field] = _HTML_SLOT_DEFAULT_AR
             else:  # "string" and any unknown type
                 inputs_en[field] = "Sample text content goes here"
                 inputs_ar[field] = "نص نموذجي يظهر هنا"
