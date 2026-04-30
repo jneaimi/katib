@@ -1,0 +1,159 @@
+name: personal-employment-offer-letter
+version: 0.1.0
+namespace: katib
+description: UAE-style employment offer letter — letterhead + recipient block + offer summary table (role, start date, probation, salary, gratuity-eligible) + numbered terms (compensation, leave, benefits, probation, termination, confidentiality, governing law) + acceptance signature row. Drafted to align with the UAE Federal Decree-Law No. 33 of 2021 on labour relations and its 2026 amendments. Replace bracketed fields and have legal counsel review before issuing.
+languages: [en]
+target_pages: [2, 3]
+page_limit: 4
+when: Formal written offer of employment in the UAE — confirms role, salary breakdown (basic + housing + transport per the standard UAE structure), probation, joining date, leave entitlement, and acceptance requirements. Issued ahead of MOHRE work-permit application. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [personal, employment, offer, hr, uae, labour, mohre]
+
+sections:
+  # 1. Letterhead — commercial variant (employer is the issuer)
+  - component: letterhead
+    variant: commercial
+    inputs:
+      company: "Acme | Katib"
+      reference_code: "OFR-2026-0042"
+      date: "2026-04-30"
+      doc_title: "Offer of Employment"
+
+  # 2. Recipient block — module raw_body (warmer than a generic kv-list)
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="font-size: 10pt; line-height: 1.6; color: var(--text); margin-bottom: 14pt;">
+          <p style="margin: 0 0 4pt 0; color: var(--text-secondary); font-size: 9pt; text-transform: uppercase; letter-spacing: 0.1em;">Private &amp; Confidential</p>
+          <p style="margin: 0; font-weight: 600;">[Candidate Full Name]</p>
+          <p style="margin: 0; color: var(--text-secondary);">[Candidate residential address]</p>
+          <p style="margin: 0; color: var(--text-secondary);">[City — UAE]</p>
+        </div>
+        <p style="margin: 0 0 12pt 0; font-size: 11pt; line-height: 1.6;">Dear [Candidate First Name],</p>
+        <p style="margin: 0; font-size: 11pt; line-height: 1.65;">We are pleased to offer you the position of <strong>[Job Title]</strong> at <strong>Acme | Katib</strong>, reporting to <strong>[Reporting Manager — Title]</strong>. Below are the principal terms of this offer; the full terms will be set out in your employment contract, which is to be signed before your joining date.</p>
+
+  # 3. Offer summary — kv-list boxed (the headline figures the candidate
+  #    will scan for first)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Position", value: "[Job Title]"}
+        - {term: "Start Date", value: "2026-06-01 (subject to MOHRE work-permit issuance)"}
+        - {term: "Probation Period", value: "Six (6) months from start date"}
+        - {term: "Working Pattern", value: "Full-time · Sunday–Thursday · Hybrid"}
+        - {term: "Total Monthly Salary", value: "AED [XX,XXX]"}
+        - {term: "End-of-Service Gratuity", value: "Accrues per UAE Labour Law"}
+
+  # 4. §1 Compensation breakdown — module numbered + data-table
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Compensation"
+      raw_body: |
+        <p style="margin: 0 0 8pt 0; font-size: 10pt; line-height: 1.6;">Your monthly compensation is structured per the UAE standard breakdown below. Total figures are gross of any statutory deductions; net pay is calculated at payroll.</p>
+
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "Component"
+        - label: "Monthly (AED)"
+          align: num
+          width: "100pt"
+        - label: "Annual (AED)"
+          align: num
+          width: "100pt"
+      rows:
+        - - {text: "Basic salary", sub: "Used for end-of-service gratuity calculation under UAE Labour Law"}
+          - "[B,000]"
+          - "[B × 12]"
+        - - "Housing allowance"
+          - "[H,000]"
+          - "[H × 12]"
+        - - "Transport allowance"
+          - "[T,000]"
+          - "[T × 12]"
+        - - {text: "TOTAL", sub: "Excludes performance bonus and other variable compensation"}
+          - "[XX,XXX]"
+          - "[XXX,XXX]"
+
+  # 5. §2 Variable comp + benefits — module numbered, raw_body block
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Variable Compensation & Benefits"
+      raw_body: |
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;"><strong>Performance bonus.</strong> Up to [XX]% of annual basic salary, paid annually in arrears against KPIs agreed with your line manager. Pro-rated for partial years.</p>
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;"><strong>Health insurance.</strong> Comprehensive cover for you and up to [N] dependants per the company group scheme. Coverage starts on the first day of employment.</p>
+        <p style="margin: 0; font-size: 10pt; line-height: 1.6;"><strong>Annual ticket.</strong> Economy-class round-trip airfare from your country of origin, reimbursed once per calendar year on production of receipts.</p>
+
+  # 6. §3 Leave entitlement — module numbered, raw_body block
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Leave Entitlement"
+      raw_body: |
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;"><strong>Annual leave.</strong> Twenty-five (25) working days per calendar year, accrued monthly. Pro-rated for partial years and during probation.</p>
+        <p style="margin: 0 0 6pt 0; font-size: 10pt; line-height: 1.6;"><strong>Sick leave.</strong> Per UAE Labour Law (full pay for the first 15 days, half pay for the next 30, on a certified medical leave basis).</p>
+        <p style="margin: 0; font-size: 10pt; line-height: 1.6;"><strong>Public holidays.</strong> All UAE Federal-Decree public holidays as published.</p>
+
+  # 7. §4 Probation, termination & notice — module numbered + clause-list
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "Probation, Termination & Notice"
+
+  - component: clause-list
+    inputs:
+      items:
+        - "During the six-month probation period, either party may terminate this employment with fourteen (14) calendar days' written notice. After confirmation, the notice period rises to thirty (30) calendar days."
+        - "End-of-Service Gratuity accrues from the start date and is calculated on the basic salary component, paid on settled departure per the UAE Labour Law."
+        - "Both parties confirm compliance with the UAE Federal Decree-Law No. 33 of 2021 on the regulation of employment relations and its implementing regulations as amended."
+
+  # 8. §5 Confidentiality, IP, governing law — module numbered + clause-list
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Confidentiality, IP & Governing Law"
+
+  - component: clause-list
+    inputs:
+      items:
+        - "All work product, code, designs, documentation, and inventions created by you during the course of your employment are the property of Acme | Katib, free of any further compensation."
+        - "You will not, during or after employment, disclose company confidential information except as required by law."
+        - "This offer and the resulting employment contract are governed by the laws of the United Arab Emirates. Disputes are subject to the exclusive jurisdiction of the [Dubai / Abu Dhabi] courts."
+
+  # 9. Conditional & validity callout — info tone (warm, not warn)
+  - component: callout
+    inputs:
+      tone: info
+      title: "How to Accept"
+      body: "This offer is open for acceptance until 2026-05-14 and is conditional on (i) successful background and reference checks, (ii) issuance of a UAE work permit and residence visa under our sponsorship, and (iii) signature of the full employment contract and any annexes referenced therein. To accept, please sign and return the acceptance row below."
+
+  # 10. Acceptance — multi-party-signature-block (employer + candidate)
+  - component: multi-party-signature-block
+    inputs:
+      parties:
+        - role: "For Acme | Katib"
+          name: "[Hiring Manager Name]"
+          title: "[Title]"
+          date_label: "Date of Offer"
+          date: "2026-04-30"
+        - role: "Accepted by"
+          name: "[Candidate Full Name]"
+          title: "Candidate"
+          date_label: "Date of Acceptance"
+
+  # 11. Footer
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.55;">
+          <p style="margin: 3pt 0;">This offer is issued in good faith and does not, in itself, constitute a contract of employment. The binding contract is the employment agreement signed by both parties before the start date.</p>
+          <p style="margin: 3pt 0;">Questions: <a href="mailto:hr@acme.test" style="color: var(--accent); text-decoration: none;">hr@acme.test</a>.</p>
+        </div>

@@ -1,0 +1,51 @@
+{%- set size = input.size or '3x3' -%}
+{%- set n = 4 if size == '4x4' else 3 -%}
+{%- set default_likelihood_3 = ['Low', 'Medium', 'High'] -%}
+{%- set default_impact_3 = ['Low', 'Medium', 'High'] -%}
+{%- set default_likelihood_4 = ['Rare', 'Unlikely', 'Likely', 'Almost Certain'] -%}
+{%- set default_impact_4 = ['Minor', 'Moderate', 'Major', 'Severe'] -%}
+{%- set likelihood_labels = input.likelihood_labels or (default_likelihood_4 if n == 4 else default_likelihood_3) -%}
+{%- set impact_labels = input.impact_labels or (default_impact_4 if n == 4 else default_impact_3) -%}
+<section class="katib-section katib-risk-matrix katib-risk-matrix--{{ size }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-risk-matrix__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-risk-matrix__title">{{ input.title }}</h2>
+{%- endif %}
+    <div class="katib-risk-matrix__wrap">
+        <div class="katib-risk-matrix__axis-y">
+            <span class="katib-risk-matrix__axis-label">Likelihood</span>
+        </div>
+        <div class="katib-risk-matrix__grid-wrap">
+            <div class="katib-risk-matrix__grid">
+{# Render rows top-down so the highest likelihood is at the top of the visual #}
+{%- for li in range(n, 0, -1) %}
+                <div class="katib-risk-matrix__rail-y">{{ likelihood_labels[li - 1] }}</div>
+{%- for im in range(1, n + 1) %}
+{%- set severity = li + im %}
+{%- set tone = 'low' if severity <= (n + 1) else ('medium' if severity <= (n + n - 1) else 'high') %}
+                <div class="katib-risk-matrix__cell katib-risk-matrix__cell--{{ tone }}">
+{%- for item in input.items %}
+{%- if item.likelihood == li and item.impact == im %}
+                    <div class="katib-risk-matrix__pin">
+                        <span class="katib-risk-matrix__pin-id">{{ item.id }}</span>
+                        <span class="katib-risk-matrix__pin-label">{{ item.label }}</span>
+                    </div>
+{%- endif %}
+{%- endfor %}
+                </div>
+{%- endfor %}
+{%- endfor %}
+            </div>
+            <div class="katib-risk-matrix__rail-x">
+{%- for im in range(1, n + 1) %}
+                <div class="katib-risk-matrix__rail-x-cell">{{ impact_labels[im - 1] }}</div>
+{%- endfor %}
+            </div>
+            <div class="katib-risk-matrix__axis-x">
+                <span class="katib-risk-matrix__axis-label">Impact →</span>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,8 @@
+<section class="katib-section katib-status-banner katib-status-banner--{{ input.tone or 'info' }}" lang="ar" dir="rtl">
+    <div class="katib-status-banner__inner">
+        <span class="katib-status-banner__label">{{ input.label }}</span>
+{%- if input.sublabel %}
+        <span class="katib-status-banner__sublabel">{{ input.sublabel }}</span>
+{%- endif %}
+    </div>
+</section>
