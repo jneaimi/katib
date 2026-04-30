@@ -1,0 +1,65 @@
+<section class="katib-section katib-comparison-table" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-comparison-table__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+    <h2 class="katib-comparison-table__title">{{ input.title }}</h2>
+{%- endif %}
+    <div class="katib-comparison-table__wrap">
+        <table class="katib-comparison-table__table">
+            <thead>
+                <tr>
+                    <th class="katib-comparison-table__th katib-comparison-table__th--feature"></th>
+{%- for opt in input.options %}
+{%- if opt is mapping %}
+                    <th class="katib-comparison-table__th{% if opt.recommended %} katib-comparison-table__th--recommended{% endif %}">
+                        <div class="katib-comparison-table__opt-label">{{ opt.label }}</div>
+{%- if opt.sublabel %}
+                        <div class="katib-comparison-table__opt-sublabel">{{ opt.sublabel }}</div>
+{%- endif %}
+{%- if opt.recommended %}
+                        <div class="katib-comparison-table__opt-pill">موصى به</div>
+{%- endif %}
+                    </th>
+{%- else %}
+                    <th class="katib-comparison-table__th"><div class="katib-comparison-table__opt-label">{{ opt }}</div></th>
+{%- endif %}
+{%- endfor %}
+                </tr>
+            </thead>
+            <tbody>
+{%- for row in input.rows %}
+{%- if row.group %}
+                <tr class="katib-comparison-table__group-row">
+                    <td colspan="{{ (input.options | length) + 1 }}" class="katib-comparison-table__group-label">{{ row.group }}</td>
+                </tr>
+{%- endif %}
+                <tr class="katib-comparison-table__row">
+                    <td class="katib-comparison-table__feature">
+                        <div class="katib-comparison-table__feature-label">{{ row.feature }}</div>
+{%- if row.sub %}
+                        <div class="katib-comparison-table__feature-sub">{{ row.sub }}</div>
+{%- endif %}
+                    </td>
+{%- for cell in row.cells %}
+{%- set is_check = (cell is sameas true) or (cell is mapping and cell.kind == 'check') %}
+{%- set is_cross = (cell is sameas false) or (cell is mapping and cell.kind == 'cross') %}
+{%- set cell_value = cell.value if cell is mapping else cell %}
+                    <td class="katib-comparison-table__cell{% if is_check %} katib-comparison-table__cell--check{% elif is_cross %} katib-comparison-table__cell--cross{% endif %}{% if input.options[loop.index0] is mapping and input.options[loop.index0].recommended %} katib-comparison-table__cell--recommended{% endif %}">
+{%- if is_check %}
+                        <span class="katib-comparison-table__icon" aria-label="مُتضمَّن">✓</span>
+{%- elif is_cross %}
+                        <span class="katib-comparison-table__icon katib-comparison-table__icon--cross" aria-label="غير مُتضمَّن">✗</span>
+{%- elif cell is mapping and cell.kind == 'note' %}
+                        <span class="katib-comparison-table__note">{{ cell_value }}</span>
+{%- else %}
+                        <span class="katib-comparison-table__value">{{ cell_value }}</span>
+{%- endif %}
+                    </td>
+{%- endfor %}
+                </tr>
+{%- endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>

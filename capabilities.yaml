@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-30T10:42:02+00:00'
+generated_at: '2026-04-30T15:54:14+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -52,6 +52,45 @@ recipes:
     sections_shape:
     - module
     - module
+    - module
+  business-meeting-minutes:
+    namespace: katib
+    version: 0.1.0
+    description: Board / project meeting minutes — masthead + meeting metadata + attendees grid + agenda
+      summary + numbered discussion blocks + decisions list + action register table + signature block.
+      Suitable for board minutes, steering committees, project status meetings, and any governance-grade
+      meeting record.
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 3
+    page_limit: 4
+    when: Formal record of a meeting — used for governance (board / steering committee), project status
+      meetings, regulatory committees, or any context where a written, signed minute is the source of
+      truth for decisions and actions. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - business
+    - meeting
+    - minutes
+    - board
+    - governance
+    - decisions
+    - actions
+    sections_shape:
+    - module
+    - kv-list
+    - sections-grid
+    - module
+    - clause-list
+    - module
+    - module
+    - module
+    - callout
+    - module
+    - data-table
+    - kv-list
+    - signature-block
     - module
   business-proposal-letter:
     namespace: katib
@@ -209,6 +248,41 @@ recipes:
     - module
     - module
     - module
+  financial-credit-note:
+    namespace: katib
+    version: 0.1.0
+    description: UAE Federal-Decree-Law-compliant tax credit note — references the original invoice and
+      the reason for credit (return, post-issuance discount, or correction). Letterhead + Issued By/To
+      + meta strip + reason callout + line-items + totals (TOTAL CREDIT) + refund-method block + VAT-regulation
+      footer. Pairs with financial/invoice.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: UAE Federal-Decree-Law-compliant tax credit note for refunds, returned goods, post-issuance
+      discounts, or invoice corrections. Must reference the original invoice number and reason for issuance.
+      Pairs with financial/invoice. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - financial
+    - credit
+    - note
+    - refund
+    - vat
+    - uae
+    - fta
+    - tax
+    sections_shape:
+    - letterhead
+    - sections-grid
+    - kv-list
+    - callout
+    - data-table
+    - financial-summary
+    - callout
+    - sections-grid
+    - module
   financial-invoice:
     namespace: katib
     version: 1.0.1
@@ -240,6 +314,40 @@ recipes:
     - financial-summary
     - callout
     - sections-grid
+    - module
+  financial-purchase-order:
+    namespace: katib
+    version: 0.1.0
+    description: UAE-style commercial purchase order — letterhead commercial + From/To parties + meta
+      strip (PO no, PO date, required-by, currency) + line-items table + totals (subtotal, est. VAT, total
+      commitment) + delivery & terms grid + acceptance signature block. Pairs with financial/quote → financial/purchase-order
+      → financial/invoice in the procurement flow.
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 2
+    page_limit: 2
+    when: B2B purchase order issued by a buyer to a supplier — line items, agreed pricing, delivery date,
+      incoterms, payment terms, authorised signature. Often required by procurement workflows for goods
+      or services worth more than a department's signing limit. EN-only; AR deferred pending inputs_by_lang
+      schema.
+    keywords:
+    - financial
+    - purchase
+    - order
+    - po
+    - procurement
+    - b2b
+    - uae
+    sections_shape:
+    - letterhead
+    - sections-grid
+    - kv-list
+    - data-table
+    - financial-summary
+    - sections-grid
+    - signature-block
     - module
   financial-quote:
     namespace: katib
@@ -479,6 +587,48 @@ recipes:
     - module
     - module
     - signature-field-block
+  legal-statement-of-work:
+    namespace: katib
+    version: 0.1.0
+    description: SOW under a parent service-agreement — engagement summary + objectives + deliverables
+      table + milestone timeline + acceptance criteria + commercial summary + assumptions + signatures.
+      Distinct from a service agreement (which sets the master legal terms) — the SOW is the operational,
+      scoped, time-boxed work order that hangs off it.
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 3
+    page_limit: 4
+    when: Engagement-specific SOW for consulting / professional services delivered under a parent Service
+      Agreement. Captures what will be delivered, by when, against what acceptance criteria, and at what
+      price. EN-only; AR deferred pending inputs_by_lang schema.
+    keywords:
+    - legal
+    - sow
+    - statement-of-work
+    - consulting
+    - services
+    - deliverables
+    - milestones
+    - uae
+    sections_shape:
+    - module
+    - kv-list
+    - module
+    - objectives-box
+    - module
+    - data-table
+    - module
+    - timeline
+    - module
+    - clause-list
+    - module
+    - financial-summary
+    - module
+    - clause-list
+    - multi-party-signature-block
+    - module
   personal-bio:
     namespace: katib
     version: 1.0.1
@@ -567,6 +717,47 @@ recipes:
     - gcc
     sections_shape:
     - cv-layout
+  personal-employment-offer-letter:
+    namespace: katib
+    version: 0.1.0
+    description: UAE-style employment offer letter — letterhead + recipient block + offer summary table
+      (role, start date, probation, salary, gratuity-eligible) + numbered terms (compensation, leave,
+      benefits, probation, termination, confidentiality, governing law) + acceptance signature row. Drafted
+      to align with the UAE Federal Decree-Law No. 33 of 2021 on labour relations and its 2026 amendments.
+      Replace bracketed fields and have legal counsel review before issuing.
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 3
+    page_limit: 4
+    when: Formal written offer of employment in the UAE — confirms role, salary breakdown (basic + housing
+      + transport per the standard UAE structure), probation, joining date, leave entitlement, and acceptance
+      requirements. Issued ahead of MOHRE work-permit application. EN-only; AR deferred pending inputs_by_lang
+      schema.
+    keywords:
+    - personal
+    - employment
+    - offer
+    - hr
+    - uae
+    - labour
+    - mohre
+    sections_shape:
+    - letterhead
+    - module
+    - kv-list
+    - module
+    - data-table
+    - module
+    - module
+    - module
+    - clause-list
+    - module
+    - clause-list
+    - callout
+    - multi-party-signature-block
+    - module
   phase-1-trivial:
     namespace: katib
     version: 0.1.0
@@ -1233,6 +1424,103 @@ recipes:
     - module
     - kv-list
     - module
+  bom-citizen-tier-v1:
+    namespace: user
+    version: 0.1.0
+    description: AI Agriculture Platform — Citizen-tier BOM v1 (ADR-014). 5 use-case sensor BOMs against
+      the AED 5,000 ceiling, HAL multi-vendor coverage matrix, procurement priorities for Ibrahim's China
+      trip, and open questions blocking acceptance.
+    languages:
+    - en
+    target_pages:
+    - 9
+    - 14
+    page_limit: 16
+    when: Internal procurement and engineering reference for the AI Agriculture Platform's citizen-tier
+      sensor BOM. Renders ADR-014 as a print-ready PDF for Ibrahim's China procurement trip and founder-level
+      review.
+    keywords:
+    - ai-agriculture-platform
+    - bom
+    - citizen-tier
+    - adr-014
+    - sensors
+    - procurement
+    - ibrahim-trip
+    sections_shape:
+    - cover-page
+    - executive-summary
+    - module
+    - kv-list
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - module
+    - data-table
+    - data-table
+    - summary
+    - whats-next
+  china-vendor-trip-plan:
+    namespace: user
+    version: 0.1.0
+    description: AI Agriculture Platform — China vendor trip planning for Ibrahim (~2026-05-07). 5 cluster
+      routes (Shenzhen, Hangzhou, Shanghai, Hunan, Beijing/Wuhan), per-vendor visit details with addresses
+      + contacts + flagship samples, suggested itineraries, and pre-trip checklist.
+    languages:
+    - en
+    target_pages:
+    - 10
+    - 16
+    page_limit: 18
+    when: Procurement playbook for Ibrahim's China sensor-vendor trip. Distills the 27-vendor catalogue
+      into route-able cluster visits with addresses, contacts, sample lists, and what-to-ask per vendor.
+    keywords:
+    - ai-agriculture-platform
+    - trip-planning
+    - china
+    - procurement
+    - vendor-visits
+    - ibrahim
+    - bom
+    sections_shape:
+    - cover-page
+    - executive-summary
+    - kv-list
+    - module
+    - data-table
+    - module
+    - module
+    - module
+    - module
+    - module
+    - data-table
+    - module
+    - module
+    - module
+    - module
+    - data-table
+    - module
+    - data-table
+    - module
+    - module
+    - module
+    - data-table
+    - summary
+    - whats-next
   online-news-story:
     namespace: user
     version: 0.1.0
@@ -1324,7 +1612,7 @@ components:
     description: Boxed message with left accent border and tinted background. Tones map to conventional
       UX patterns — `info | warn | danger | tip` for status messages; `neutral` for non-status highlighted
       boxes (subject lines, non-binding notices, inline callout paragraphs).
-    used_in_recipes: 14
+    used_in_recipes: 17
   citation:
     namespace: katib
     tier: primitive
@@ -1349,7 +1637,7 @@ components:
       legal-body structure where clause references must render prominently. Items are plain-text strings
       (or trusted HTML via raw items). Replaces the Day-0 `recitals-block` plan — v1 evidence shows legal-domain
       body uses numbered-clause lists, not WHEREAS preambles.
-    used_in_recipes: 8
+    used_in_recipes: 11
   code-block:
     namespace: katib
     tier: primitive
@@ -1380,7 +1668,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 6
+    used_in_recipes: 13
   eyebrow:
     namespace: katib
     tier: primitive
@@ -1457,7 +1745,7 @@ components:
     description: Named-party block for formal documents — renders signatories (closing signature blocks)
       or addressees (recipient blocks) depending on variant. Supports name + title + organization + location
       + date + label.
-    used_in_recipes: 3
+    used_in_recipes: 5
   signature-field-block:
     namespace: katib
     tier: primitive
@@ -1484,6 +1772,20 @@ components:
       as name + horizontal bar filled to a level-driven percentage (l1=20%, l5=100%). Used for CV Languages
       + Core Skills sections; future portfolio/bio proficiency displays. Reusable across personal-domain
       recipes for any named-proficiency rendering.
+    used_in_recipes: 0
+  status-banner:
+    namespace: katib
+    tier: primitive
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Full-width status ribbon — DRAFT, FOR REVIEW, FINAL, CONFIDENTIAL, or any short uppercase
+      label. Sits above any content section to mark a document's lifecycle state. Tone (info, warn, success,
+      danger, neutral) drives the colour. Used at the top of work-in-progress meeting minutes, draft contracts,
+      internal-only briefs, or to flag a final-approved document on archival.
     used_in_recipes: 0
   step-circle:
     namespace: katib
@@ -1525,7 +1827,7 @@ components:
   appendix-page:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1540,7 +1842,7 @@ components:
   chart-bar:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1551,7 +1853,7 @@ components:
   chart-donut:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1564,7 +1866,7 @@ components:
   chart-sparkline:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1574,10 +1876,25 @@ components:
     description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological
       convention). Inline-svg only.
     used_in_recipes: 1
-  cv-layout:
+  comparison-table:
     namespace: katib
     tier: section
     version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Feature × option comparison grid — rows are features, columns are options (vendors /
+      tiers / variants), cells are check / cross / value / text. Used for pricing tables, vendor evaluations,
+      RFP responses, and any "this vs that" decision document. Distinct from `data-table` which is a generic
+      spreadsheet — comparison-table has semantic check / cross cells, recommended-column highlighting,
+      and built-in row eyebrows for grouping.
+    used_in_recipes: 0
+  cv-layout:
+    namespace: katib
+    tier: section
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1601,7 +1918,7 @@ components:
     description: Key takeaways box for the top of reports, proposals, and white-papers. Header + 2-4 labeled
       bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent
       rail for visual separation from regular flow.
-    used_in_recipes: 6
+    used_in_recipes: 8
   financial-summary:
     namespace: katib
     tier: section
@@ -1615,7 +1932,7 @@ components:
       side; one emphasized Total row with accent background. Container is flex-end positioned (70mm wide)
       so it naturally aligns to the trailing edge of the page. Optional currency code shown alongside
       totals. Used by financial/invoice and financial/quote.
-    used_in_recipes: 2
+    used_in_recipes: 5
   front-matter:
     namespace: katib
     tier: section
@@ -1655,11 +1972,11 @@ components:
     description: Term + value pairs rendered as a two-column grid. Definitions, glossaries, cheat-sheet
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
-    used_in_recipes: 8
+    used_in_recipes: 15
   landscape-section:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1681,7 +1998,7 @@ components:
     description: Two-column header strip for letters, NOCs, invoices, quotes. Brand/company on the leading
       side; meta block (ref code + date + custom lines) on the trailing side. Sits above body content
       on page 1 — does NOT force a page break (that's `front-matter`'s job).
-    used_in_recipes: 5
+    used_in_recipes: 8
   masthead-personal:
     namespace: katib
     tier: section
@@ -1697,7 +2014,7 @@ components:
   module:
     namespace: katib
     tier: section
-    version: 0.3.0
+    version: 0.3.1
     languages:
     - en
     - ar
@@ -1708,7 +2025,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 31
+    used_in_recipes: 38
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1722,7 +2039,7 @@ components:
     description: Multi-party signature grid — side-by-side signature boxes for formal documents (NOC,
       MOU, contracts). Each party has name + optional title + optional email. Responsive grid auto-flows
       based on party count (2+ parties supported).
-    used_in_recipes: 2
+    used_in_recipes: 4
   objectives-box:
     namespace: katib
     tier: section
@@ -1734,7 +2051,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 4
+    used_in_recipes: 5
   reference-strip:
     namespace: katib
     tier: section
@@ -1762,6 +2079,21 @@ components:
       docs. Supports one of the three major citation styles via variant — Chicago (author-first), APA
       (year-first), or a generic minimal style.
     used_in_recipes: 2
+  risk-matrix:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Likelihood × impact heatmap with risk items pinned into cells. Grid axes are configurable
+      (3×3 or 4×4); cells are tinted from green (low) through amber (medium) to red (high) so the visual
+      order tells the risk story before the reader reads any text. Items are pinned via {label, likelihood,
+      impact}. Used for SOWs, project plans, audit reports, and any risk-register summary that benefits
+      from a single-page visual.
+    used_in_recipes: 0
   section-divider-page:
     namespace: katib
     tier: section
@@ -1781,7 +2113,7 @@ components:
   sections-grid:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1791,11 +2123,11 @@ components:
     description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
-    used_in_recipes: 6
+    used_in_recipes: 9
   slide-frame:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1818,7 +2150,7 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 8
+    used_in_recipes: 10
   timeline:
     namespace: katib
     tier: section
@@ -1833,7 +2165,7 @@ components:
       and status (done | active | upcoming — controls node tint). For progress reports, project plans,
       onboarding sequences, company histories. Rail flips to right side for RTL so the reading order is
       date-left → content-right in EN and date-right → content-left in AR.
-    used_in_recipes: 4
+    used_in_recipes: 5
   toc:
     namespace: katib
     tier: section
@@ -1876,7 +2208,7 @@ components:
   two-column-page:
     namespace: katib
     tier: section
-    version: 0.1.0
+    version: 0.1.1
     languages:
     - en
     - ar
@@ -1897,7 +2229,7 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
-    used_in_recipes: 4
+    used_in_recipes: 6
   cover-page:
     namespace: katib
     tier: cover
@@ -1913,11 +2245,11 @@ components:
     description: Full-page document opener. Four variants — minimalist-typographic (CSS-only), image-background
       (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial
       canvas, dark text on warm off-white image, no scrim).
-    used_in_recipes: 8
+    used_in_recipes: 10
   landscape-diagram:
     namespace: user
     tier: section
-    version: 1.0.0
+    version: 1.0.1
     languages:
     - en
     - ar

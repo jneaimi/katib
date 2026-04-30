@@ -1,0 +1,139 @@
+name: financial-purchase-order
+version: 0.1.0
+namespace: katib
+description: UAE-style commercial purchase order — letterhead commercial + From/To parties + meta strip (PO no, PO date, required-by, currency) + line-items table + totals (subtotal, est. VAT, total commitment) + delivery & terms grid + acceptance signature block. Pairs with financial/quote → financial/purchase-order → financial/invoice in the procurement flow.
+languages: [en]
+target_pages: [1, 2]
+page_limit: 2
+when: B2B purchase order issued by a buyer to a supplier — line items, agreed pricing, delivery date, incoterms, payment terms, authorised signature. Often required by procurement workflows for goods or services worth more than a department's signing limit. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [financial, purchase, order, po, procurement, b2b, uae]
+
+sections:
+  # 1. Letterhead — commercial variant
+  - component: letterhead
+    variant: commercial
+    inputs:
+      company: "Acme | Katib"
+      reference_code: "PO-2026-0042"
+      date: "2026-04-30"
+      doc_title: "Purchase Order"
+
+  # 2. From / To parties — sections-grid bordered (mirrors invoice Bill From/To)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - eyebrow: "From (Buyer)"
+          title: "Acme | Katib"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Buyer street address]<br>[PO Box, City — UAE]<br>[Procurement: alex@acme.test]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">TRN: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[100000000000003]</span></div>
+        - eyebrow: "To (Supplier)"
+          title: "[Supplier Legal Name LLC]"
+          raw_body: |
+            <div style="font-size: 9pt; line-height: 1.5; color: var(--text-secondary); margin-bottom: 4pt;">[Supplier street address]<br>[PO Box, City — UAE]<br>[Attn: Sales contact]</div>
+            <div style="font-size: 9pt; color: var(--accent); font-weight: 600;">Vendor Code: <span style="font-variant-numeric: tabular-nums; letter-spacing: 0.02em;">[VEN-00427]</span></div>
+
+  # 3. Meta strip — PO Date, Required-By, Quote Reference, Currency
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "PO Date", value: "2026-04-30"}
+        - {term: "Required By", value: "2026-05-21"}
+        - {term: "Quote Ref", value: "QTE-2026-0042"}
+        - {term: "Currency", value: "AED"}
+
+  # 4. Line items — data-table dense (same shape as invoice; no VAT column —
+  #    PO captures committed cost; VAT is finalised on the invoice)
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "#"
+          align: num
+          width: "24pt"
+        - label: "Description"
+        - label: "SKU / Code"
+          width: "60pt"
+        - label: "Qty"
+          align: num
+          width: "40pt"
+        - label: "Unit"
+          width: "40pt"
+        - label: "Unit Price"
+          align: num
+          width: "70pt"
+        - label: "Line Total (AED)"
+          align: num
+          width: "80pt"
+      rows:
+        - - "1"
+          - {text: "[Service or product description]", sub: "[Spec note — model, version, scope, contract reference]"}
+          - "[SKU-001]"
+          - "10"
+          - "ea"
+          - "500.00"
+          - "5,000.00"
+        - - "2"
+          - {text: "[Second line item]", sub: "[Optional spec or delivery note]"}
+          - "[SKU-002]"
+          - "1"
+          - "lot"
+          - "12,000.00"
+          - "12,000.00"
+        - - "3"
+          - {text: "[Service line — implementation hours]", sub: "[Rate × hours; deliverable scope cited above]"}
+          - "[SVC-003]"
+          - "40"
+          - "hr"
+          - "300.00"
+          - "12,000.00"
+
+  # 5. Totals — financial-summary (estimated; VAT confirmed on invoice)
+  - component: financial-summary
+    inputs:
+      currency: "AED"
+      rows:
+        - {label: "Subtotal (excl. VAT)", value: "29,000.00"}
+        - {label: "Discount", value: "0.00"}
+        - {label: "VAT (estimated, 5%)", value: "1,450.00"}
+        - {label: "TOTAL COMMITMENT", value: "30,450.00", variant: total}
+
+  # 6. Delivery + Terms — sections-grid bordered (2-col)
+  - component: sections-grid
+    variant: bordered
+    inputs:
+      columns: 2
+      items:
+        - title: "Delivery & Incoterms"
+          raw_body: |
+            <dl style="display: grid; grid-template-columns: 75pt 1fr; gap: 2pt 8pt; margin: 0; font-size: 9pt;">
+              <dt style="color: var(--text-secondary);">Ship To</dt><dd style="margin: 0; font-weight: 600;">[Buyer warehouse address]</dd>
+              <dt style="color: var(--text-secondary);">Incoterms</dt><dd style="margin: 0; font-weight: 600;">DAP — Buyer site (Incoterms 2020)</dd>
+              <dt style="color: var(--text-secondary);">Carrier</dt><dd style="margin: 0; font-weight: 600;">Supplier's choice, prepaid</dd>
+              <dt style="color: var(--text-secondary);">Required By</dt><dd style="margin: 0; font-weight: 600;">2026-05-21</dd>
+            </dl>
+        - title: "Payment & Acceptance"
+          raw_body: |
+            <p style="margin: 0 0 6pt 0; font-size: 9.5pt; line-height: 1.55;"><strong>Net 30 days</strong> from receipt of a tax-compliant invoice referencing this PO number.</p>
+            <p style="margin: 0; font-size: 9pt; color: var(--text-secondary); line-height: 1.5;">Goods/services accepted only after inspection against the spec above. Defective items will be returned at supplier's cost.</p>
+
+  # 7. Authorised signature
+  - component: signature-block
+    inputs:
+      role: "Authorised Signatory · Procurement"
+      name: "[Name]"
+      title: "[Title]"
+      date_label: "Date"
+      date: "2026-04-30"
+
+  # 8. Footer — conditions + governance + contact in one tight block
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.55;">
+          <p style="margin: 3pt 0;"><strong style="color: var(--text);">Conditions.</strong> This PO is issued under the buyer's procurement policy. The supplier must not commence work until receipt of this signed PO. All invoices must quote the PO number above. No price increase, scope change, or delivery extension is binding unless issued as a written PO amendment signed by the buyer's authorised signatory. Supplier confirms compliance with UAE Federal Decree-Law No. 8 of 2017 (VAT) and any sector regulations applicable to the goods or services supplied.</p>
+          <p style="margin: 3pt 0;">This Purchase Order is governed by the laws of the United Arab Emirates. All amounts in AED unless noted otherwise. Questions: <a href="mailto:alex@acme.test" style="color: var(--accent); text-decoration: none;">alex@acme.test</a>.</p>
+        </div>

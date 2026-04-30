@@ -1,0 +1,150 @@
+.katib-risk-matrix {
+    margin: 1em 0 1.4em 0;
+    font-family: var(--font-primary);
+}
+
+.katib-risk-matrix__eyebrow {
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6pt;
+}
+
+.katib-risk-matrix__title {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 12pt 0;
+}
+
+.katib-risk-matrix__wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+
+/* Axis-y label was previously vertical-rl + rotate which mirrored on
+   WeasyPrint. The rail-y already prints the likelihood band names, so
+   we drop the rotated word and use a small label above the rail. */
+.katib-risk-matrix__axis-y {
+    display: none;
+}
+
+.katib-risk-matrix__grid-wrap {
+    flex: 1;
+}
+
+/* 3x3 grid: rail-y column + 3 cells; 4x4: rail-y + 4 cells. The first
+   column of each row is the likelihood label rail. */
+.katib-risk-matrix__grid {
+    display: grid;
+    grid-template-columns: 56pt repeat(3, 1fr);
+    gap: 4pt;
+}
+
+.katib-risk-matrix--4x4 .katib-risk-matrix__grid {
+    grid-template-columns: 56pt repeat(4, 1fr);
+}
+
+.katib-risk-matrix__rail-y {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-inline-end: 8pt;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: end;
+}
+
+.katib-risk-matrix__cell {
+    min-height: 56pt;
+    padding: 6pt;
+    border-radius: 3pt;
+    display: flex;
+    flex-direction: column;
+    gap: 4pt;
+    border: 0.5pt solid var(--border);
+}
+
+.katib-risk-matrix--4x4 .katib-risk-matrix__cell {
+    min-height: 48pt;
+}
+
+.katib-risk-matrix__cell--low {
+    background: var(--callout-tip-bg);
+    border-color: color-mix(in srgb, var(--callout-tip-accent) 40%, transparent);
+}
+
+.katib-risk-matrix__cell--medium {
+    background: var(--callout-warn-bg);
+    border-color: color-mix(in srgb, var(--callout-warn-accent) 40%, transparent);
+}
+
+.katib-risk-matrix__cell--high {
+    background: var(--callout-danger-bg);
+    border-color: color-mix(in srgb, var(--callout-danger-accent) 40%, transparent);
+}
+
+.katib-risk-matrix__pin {
+    background: rgba(255, 255, 255, 0.92);
+    border: 0.5pt solid var(--border);
+    border-radius: 2.5pt;
+    padding: 3pt 6pt;
+    display: flex;
+    align-items: center;
+    gap: 5pt;
+    font-size: 8.5pt;
+    line-height: 1.35;
+}
+
+.katib-risk-matrix__pin-id {
+    flex-shrink: 0;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-weight: 700;
+    font-size: 7.5pt;
+    letter-spacing: 0.04em;
+    padding: 1pt 5pt;
+    border-radius: 8pt;
+    font-variant-numeric: tabular-nums;
+}
+
+.katib-risk-matrix__pin-label {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.katib-risk-matrix__rail-x {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4pt;
+    padding-inline-start: 60pt;
+    margin-top: 4pt;
+}
+
+.katib-risk-matrix--4x4 .katib-risk-matrix__rail-x {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.katib-risk-matrix__rail-x-cell {
+    text-align: center;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding: 4pt 0 0 0;
+}
+
+.katib-risk-matrix__axis-x {
+    margin-top: 4pt;
+    text-align: center;
+    padding-inline-start: 60pt;
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
