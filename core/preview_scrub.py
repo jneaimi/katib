@@ -34,7 +34,7 @@ from typing import Any
 
 # Tag classes for HTML scrubbing. Anything inside one of these stays
 # verbatim — they carry structural value, not narrative content.
-_VERBATIM_TAGS = {"svg", "style", "script", "defs", "symbol"}
+_VERBATIM_TAGS = {"style", "script", "defs", "symbol"}
 
 
 # Lorem corpora — fixed, deterministic. Used to fill prose text nodes so
@@ -117,7 +117,9 @@ class _PreviewScrubber(HTMLParser):
     elements (<strong>, <em>) emit their own short lorem inline so
     typography emphasis still shows up.
 
-    `_VERBATIM_TAGS` (svg, style, script, defs, symbol) pass through as-is.
+    `_VERBATIM_TAGS` (style, script, defs, symbol) pass through as-is.
+    SVG `<text>` content IS scrubbed — diagram labels often carry the
+    same kind of user-specific framing that prose paragraphs do.
     Whitespace between tags is preserved (it affects layout).
     """
 
@@ -334,12 +336,38 @@ def _humanize_key(key: str, *, lang: str = "en") -> str:
     return key.replace("_", " ").replace("-", " ").strip().capitalize() or "Field"
 
 
+_SVG_CAMELCASE_ATTRS = (
+    "viewBox preserveAspectRatio clipPath clipPathUnits gradientTransform "
+    "gradientUnits lengthAdjust markerHeight markerUnits markerWidth "
+    "maskContentUnits maskUnits patternContentUnits patternTransform "
+    "patternUnits primitiveUnits refX refY spreadMethod startOffset "
+    "stdDeviation stitchTiles surfaceScale systemLanguage tableValues "
+    "targetX targetY textLength xChannelSelector yChannelSelector zoomAndPan"
+).split()
+_SVG_CAMELCASE_RE = re.compile(
+    r"\b(" + "|".join(re.escape(a.lower()) for a in _SVG_CAMELCASE_ATTRS) + r")=",
+    re.IGNORECASE,
+)
+_SVG_CAMELCASE_LOOKUP = {a.lower(): a for a in _SVG_CAMELCASE_ATTRS}
+
+
+def _restore_svg_attribute_case(html: str) -> str:
+    # Python's html.parser lowercases all attribute names. SVG is case-
+    # sensitive — `viewBox` MUST keep its capitals or browsers/WeasyPrint
+    # ignore it and the diagram renders without a viewport. Run the
+    # scrubbed HTML through a regex pass that restores the small set
+    # of camelCase SVG attributes used in real-world packs.
+    return _SVG_CAMELCASE_RE.sub(
+        lambda m: _SVG_CAMELCASE_LOOKUP[m.group(1).lower()] + "=", html
+    )
+
+
 def _scrub_string(key: str, value: str, *, lang: str) -> str:
     if _looks_like_html(value):
         parser = _PreviewScrubber(lang=lang)
         parser.feed(value)
         parser.close()
-        return parser.output
+        return _restore_svg_attribute_case(parser.output)
     # Plain string. Empty strings pass through (they're often layout sentinels).
     if not value.strip():
         return value
