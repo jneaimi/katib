@@ -102,6 +102,7 @@ class PackManifest:
     license: str | None = None
     description: str | None = None
     tags: list[str] = field(default_factory=list)
+    languages: list[str] = field(default_factory=list)
     domain: str | None = None
     marketplace: dict[str, Any] | None = None
 
@@ -127,6 +128,8 @@ class PackManifest:
             d["description"] = self.description
         if self.tags:
             d["tags"] = list(self.tags)
+        if self.languages:
+            d["languages"] = list(self.languages)
         if self.domain:
             d["domain"] = self.domain
         if self.marketplace:
@@ -192,6 +195,7 @@ def load_manifest(path: Path) -> PackManifest:
         license=raw.get("license"),
         description=raw.get("description"),
         tags=raw.get("tags", []),
+        languages=raw.get("languages", []),
         domain=raw.get("domain"),
         marketplace=raw.get("marketplace"),
     )
@@ -522,6 +526,13 @@ def _brand_metadata(bpath: Path) -> dict:
     return _read_yaml(bpath)
 
 
+def _infer_domain(artifact_name: str) -> str | None:
+    # Recipe filenames follow `<domain>-<rest>` (legal-nda, financial-invoice).
+    # Single-word names (tutorial) have no implicit domain.
+    head, sep, _ = artifact_name.partition("-")
+    return head if sep and head else None
+
+
 def export_component(
     name: str,
     *,
@@ -564,6 +575,7 @@ def export_component(
         author=author_dict or None,
         description=description,
         tags=tags,
+        languages=sorted(languages),
     )
 
     out_dir = out_dir or DEFAULT_OUT_DIR
@@ -644,6 +656,8 @@ def export_recipe(
         author=author_dict or None,
         description=description,
         tags=tags,
+        languages=sorted(languages),
+        domain=_infer_domain(name),
         marketplace=marketplace,
     )
 
@@ -815,6 +829,8 @@ def export_bundle(
         author=author_dict or None,
         description=description,
         tags=tags,
+        languages=sorted(languages),
+        domain=_infer_domain(recipe_name),
     )
 
     out_dir = out_dir or DEFAULT_OUT_DIR
