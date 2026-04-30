@@ -1,0 +1,39 @@
+name: risk-matrix
+tier: section
+version: 0.1.0
+namespace: katib
+description: Likelihood × impact heatmap with risk items pinned into cells. Grid axes are configurable (3×3 or 4×4); cells are tinted from green (low) through amber (medium) to red (high) so the visual order tells the risk story before the reader reads any text. Items are pinned via {label, likelihood, impact}. Used for SOWs, project plans, audit reports, and any risk-register summary that benefits from a single-page visual.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border, callout_tip_bg, callout_tip_accent, callout_warn_bg, callout_warn_accent, callout_danger_bg, callout_danger_accent]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the matrix (e.g. "RISK REGISTER", "TOP RISKS").
+    - title:
+        type: string
+        required: false
+        description: Optional heading above the matrix.
+    - size:
+        type: string
+        required: false
+        description: '"3x3" (default) or "4x4". Controls the matrix dimensions and label set.'
+    - likelihood_labels:
+        type: array
+        required: false
+        description: Override likelihood labels (leading axis). Default 3x3 — ["Low", "Medium", "High"]. Default 4x4 — ["Rare", "Unlikely", "Likely", "Almost Certain"].
+    - impact_labels:
+        type: array
+        required: false
+        description: Override impact labels (top axis). Default 3x3 — ["Low", "Medium", "High"]. Default 4x4 — ["Minor", "Moderate", "Major", "Severe"].
+    - items:
+        type: array
+        required: true
+        description: 'Risk items to plot. Each item is {id, label, likelihood, impact}. `likelihood` and `impact` are 1-indexed integers within the matrix size (1=lowest, n=highest). Multiple items in the same cell stack vertically.'
+variants:
+  - default
+page_behavior:
+  mode: atomic

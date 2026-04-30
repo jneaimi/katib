@@ -1,0 +1,157 @@
+.katib-comparison-table {
+    margin: 1em 0 1.4em 0;
+    font-family: var(--font-primary);
+}
+
+.katib-comparison-table__eyebrow {
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6pt;
+}
+
+.katib-comparison-table__title {
+    font-family: var(--font-display);
+    font-size: 14pt;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 10pt 0;
+}
+
+.katib-comparison-table__wrap {
+    overflow: hidden;
+    border-radius: 4pt;
+    border: 0.5pt solid var(--border);
+}
+
+.katib-comparison-table__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+}
+
+.katib-comparison-table__th {
+    padding: 9pt 10pt;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    border-inline-start: 0.5pt solid color-mix(in srgb, var(--accent) 80%, white 20%);
+    vertical-align: middle;
+}
+
+.katib-comparison-table__th:first-child {
+    border-inline-start: 0;
+    text-align: start;
+}
+
+.katib-comparison-table__th--feature {
+    background: var(--accent);
+}
+
+.katib-comparison-table__th--recommended {
+    background: color-mix(in srgb, var(--accent) 75%, black 25%);
+}
+
+.katib-comparison-table__opt-label {
+    font-weight: 700;
+    font-size: 10pt;
+    letter-spacing: 0.02em;
+}
+
+.katib-comparison-table__opt-sublabel {
+    font-size: 8.5pt;
+    opacity: 0.85;
+    margin-top: 2pt;
+    font-weight: 400;
+}
+
+.katib-comparison-table__opt-pill {
+    display: inline-block;
+    margin-top: 4pt;
+    padding: 1.5pt 7pt;
+    background: var(--accent-on);
+    color: var(--accent);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 8pt;
+}
+
+.katib-comparison-table__group-row {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.katib-comparison-table__group-label {
+    padding: 6pt 12pt;
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.katib-comparison-table__row {
+    border-top: 0.5pt solid var(--border);
+}
+
+.katib-comparison-table__feature {
+    padding: 7pt 12pt;
+    vertical-align: top;
+    background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+
+.katib-comparison-table__feature-label {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.katib-comparison-table__feature-sub {
+    margin-top: 2pt;
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+.katib-comparison-table__cell {
+    padding: 7pt 10pt;
+    text-align: center;
+    vertical-align: middle;
+    border-inline-start: 0.5pt solid var(--border);
+    color: var(--text);
+}
+
+.katib-comparison-table__cell--recommended {
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+.katib-comparison-table__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18pt;
+    height: 18pt;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 11pt;
+    background: var(--callout-tip-bg);
+    color: var(--callout-tip-accent);
+}
+
+.katib-comparison-table__icon--cross {
+    background: var(--callout-danger-bg);
+    color: var(--callout-danger-accent);
+}
+
+.katib-comparison-table__value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.katib-comparison-table__note {
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}

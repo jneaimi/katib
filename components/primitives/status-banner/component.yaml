@@ -1,0 +1,27 @@
+name: status-banner
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: Full-width status ribbon — DRAFT, FOR REVIEW, FINAL, CONFIDENTIAL, or any short uppercase label. Sits above any content section to mark a document's lifecycle state. Tone (info, warn, success, danger, neutral) drives the colour. Used at the top of work-in-progress meeting minutes, draft contracts, internal-only briefs, or to flag a final-approved document on archival.
+languages: [en, ar]
+requires:
+  tokens: [accent, callout_info_bg, callout_info_accent, callout_warn_bg, callout_warn_accent, callout_tip_bg, callout_tip_accent, callout_danger_bg, callout_danger_accent, border, text_secondary, page_bg]
+  fonts: [primary]
+accepts:
+  inputs:
+    - label:
+        type: string
+        required: true
+        description: Short uppercase label rendered in the centre of the ribbon (e.g. "DRAFT", "FOR REVIEW", "FINAL", "CONFIDENTIAL"). Caller is responsible for casing — the component does not auto-uppercase.
+    - tone:
+        type: string
+        required: false
+        description: Visual tone — one of "info" (default — accent blue), "warn" (amber, for DRAFT/FOR REVIEW), "success" (green, for FINAL/APPROVED), "danger" (red, for STOP/RECALL), "neutral" (grey).
+    - sublabel:
+        type: string
+        required: false
+        description: Optional smaller text on the trailing side (e.g. revision number, reviewer initials, lifecycle date).
+variants:
+  - default
+page_behavior:
+  mode: atomic

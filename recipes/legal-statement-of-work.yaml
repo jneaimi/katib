@@ -1,0 +1,178 @@
+name: legal-statement-of-work
+version: 0.1.0
+namespace: katib
+description: SOW under a parent service-agreement — engagement summary + objectives + deliverables table + milestone timeline + acceptance criteria + commercial summary + assumptions + signatures. Distinct from a service agreement (which sets the master legal terms) — the SOW is the operational, scoped, time-boxed work order that hangs off it.
+languages: [en]
+target_pages: [2, 3]
+page_limit: 4
+when: Engagement-specific SOW for consulting / professional services delivered under a parent Service Agreement. Captures what will be delivered, by when, against what acceptance criteria, and at what price. EN-only; AR deferred pending inputs_by_lang schema.
+keywords: [legal, sow, statement-of-work, consulting, services, deliverables, milestones, uae]
+
+sections:
+  # 1. Masthead
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="text-align: center; padding-bottom: 16pt; border-bottom: 2pt solid var(--accent); margin-bottom: 14pt;">
+          <div style="font-size: 9pt; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 10pt;">Statement of Work</div>
+          <h1 style="font-size: 22pt; margin: 0 0 6pt 0; font-weight: 500; color: var(--text);">SOW · [Engagement Name]</h1>
+          <div style="font-size: 12pt; color: var(--text-secondary); font-style: italic; margin-bottom: 4pt;">[One-line engagement summary]</div>
+          <div style="font-size: 10pt; color: var(--text-tertiary);">SOW-2026-0014 · Issued 2026-04-30 · Under MSA-2025-0007</div>
+        </div>
+
+  # 2. Engagement summary — kv-list boxed (parties, parent agreement, term, value)
+  - component: kv-list
+    variant: boxed
+    inputs:
+      items:
+        - {term: "Service Provider", value: "Acme | Katib"}
+        - {term: "Client", value: "[Client Legal Name LLC]"}
+        - {term: "Parent MSA", value: "MSA-2025-0007"}
+        - {term: "Engagement Term", value: "8 weeks · 2026-05-05 → 2026-06-30"}
+        - {term: "Total Value", value: "AED 96,000 (excl. VAT)"}
+
+  # 3. §1 Objectives — module numbered + objectives-box
+  - component: module
+    variant: numbered
+    inputs:
+      number: 1
+      title: "Objectives"
+      raw_body: |
+        <p style="margin: 0 0 10pt 0; font-size: 10pt; line-height: 1.6;">This SOW is issued under the Parent MSA referenced above and governs a discrete, time-bound engagement to deliver the outcomes listed below. All terms not redefined here inherit from the MSA.</p>
+
+  - component: objectives-box
+    inputs:
+      label: "What this engagement will achieve"
+      items:
+        - "[Objective 1 — measurable outcome with a verb and a noun]"
+        - "[Objective 2 — written so success is testable, not aspirational]"
+        - "[Objective 3 — tied to a specific business metric or capability]"
+
+  # 4. §2 Deliverables — module numbered + data-table
+  - component: module
+    variant: numbered
+    inputs:
+      number: 2
+      title: "Deliverables"
+      raw_body: |
+        <p style="margin: 0 0 8pt 0; font-size: 10pt; line-height: 1.6;">The following artefacts will be produced and handed over. Each deliverable is accepted independently against the acceptance criteria in §4.</p>
+
+  - component: data-table
+    variant: dense
+    inputs:
+      columns:
+        - label: "ID"
+          width: "44pt"
+        - label: "Deliverable"
+        - label: "Format"
+          width: "80pt"
+        - label: "Owner"
+          width: "75pt"
+        - label: "Due"
+          width: "68pt"
+      rows:
+        - - "D1"
+          - {text: "[Discovery report]", sub: "Stakeholder interviews, current-state map, gap analysis"}
+          - "PDF · 20–30pp"
+          - "Provider"
+          - "Week 2"
+        - - "D2"
+          - {text: "[Solution architecture]", sub: "Component diagram, data flows, security model, vendor shortlist"}
+          - "PDF · 15–20pp"
+          - "Provider"
+          - "Week 4"
+        - - "D3"
+          - {text: "[Working prototype]", sub: "Two end-to-end flows on a staging environment"}
+          - "Code repo + URL"
+          - "Provider"
+          - "Week 6"
+        - - "D4"
+          - {text: "[Handover pack]", sub: "Runbook, ops guide, training session, 30-day support window"}
+          - "PDF + recording"
+          - "Provider"
+          - "Week 8"
+
+  # 5. §3 Milestones — module numbered + timeline
+  - component: module
+    variant: numbered
+    inputs:
+      number: 3
+      title: "Milestones"
+
+  - component: timeline
+    inputs:
+      events:
+        - {date: "2026-05-05", title: "Kick-off", body: "Joint kick-off, access provisioning, stakeholder list locked.", status: "done"}
+        - {date: "2026-05-19", title: "Discovery handover (D1)", body: "D1 delivered. Client review window opens.", status: "active"}
+        - {date: "2026-06-02", title: "Architecture handover (D2)", body: "D2 delivered. Final scope confirmation.", status: "upcoming"}
+        - {date: "2026-06-16", title: "Prototype demo (D3)", body: "Live demo on staging. UAT begins.", status: "upcoming"}
+        - {date: "2026-06-30", title: "Final handover (D4)", body: "Runbook, training, kickoff of 30-day support window.", status: "upcoming"}
+
+  # 6. §4 Acceptance criteria — module numbered + clause-list (correct
+  #    items shape: array of strings, not {title, body})
+  - component: module
+    variant: numbered
+    inputs:
+      number: 4
+      title: "Acceptance Criteria"
+
+  - component: clause-list
+    inputs:
+      items:
+        - "Each deliverable is reviewed by the Client within five (5) business days of handover. Acceptance is by written confirmation; silence beyond ten (10) business days constitutes deemed acceptance."
+        - "If the Client raises material defects, the Provider will resolve them at no extra cost within five (5) business days. Re-review applies the same five-day window."
+        - "Out-of-scope requests raised during review are not blockers to acceptance and will be quoted as a SOW addendum."
+        - "Final invoice for the milestone is issued only after written or deemed acceptance of the corresponding deliverable."
+
+  # 7. §5 Commercial summary — module numbered + financial-summary
+  - component: module
+    variant: numbered
+    inputs:
+      number: 5
+      title: "Commercial Summary"
+      raw_body: |
+        <p style="margin: 0 0 8pt 0; font-size: 10pt; line-height: 1.6;">Fees are fixed for the scope above and invoiced against milestones D1–D4 (25% each). VAT is added per UAE Federal Decree-Law No. 8 of 2017.</p>
+
+  - component: financial-summary
+    inputs:
+      currency: "AED"
+      rows:
+        - {label: "Engagement fee (excl. VAT)", value: "96,000.00"}
+        - {label: "VAT (5%)", value: "4,800.00"}
+        - {label: "TOTAL ENGAGEMENT", value: "100,800.00", variant: total}
+
+  # 8. §6 Assumptions & Exclusions — module numbered + clause-list
+  - component: module
+    variant: numbered
+    inputs:
+      number: 6
+      title: "Assumptions & Exclusions"
+
+  - component: clause-list
+    inputs:
+      items:
+        - "Client provides timely access to systems, stakeholders, and existing documentation; provider's milestone dates assume requested access is granted within two (2) business days of request."
+        - "Provider's work is carried out remotely. Onsite presence is by mutual agreement and chargeable at the rates in §5."
+        - "Production deployment, ongoing support beyond the 30-day handover window, and any third-party software or licence costs are excluded and quoted separately."
+        - "Either party may pause work in writing for up to ten (10) business days; longer pauses re-baseline the timeline."
+
+  # 9. Signature block — multi-party (provider + client)
+  - component: multi-party-signature-block
+    inputs:
+      parties:
+        - role: "For the Service Provider"
+          name: "[Name]"
+          title: "[Title — Acme | Katib]"
+          date_label: "Date"
+        - role: "For the Client"
+          name: "[Name]"
+          title: "[Title — Client Legal Name LLC]"
+          date_label: "Date"
+
+  # 10. Footer — governance
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="padding-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8.5pt; color: var(--text-tertiary); line-height: 1.55;">
+          <p style="margin: 3pt 0;">This SOW is governed by, and forms part of, the Master Services Agreement referenced above (MSA-2025-0007). In the event of conflict, the MSA prevails.</p>
+        </div>
