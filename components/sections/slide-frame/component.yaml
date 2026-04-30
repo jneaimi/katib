@@ -1,6 +1,6 @@
 name: slide-frame
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Single 16:9 landscape page sized for slide-deck content — keynote, talk slides, pitch frames. Each slide is atomic (one slide = one page). Use multiple slide-frame sections in a row to build a full deck. Variants — title-only, content, two-column, image-background — cover the common slide layouts.
 languages: [en, ar]

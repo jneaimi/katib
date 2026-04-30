@@ -1,6 +1,6 @@
 name: landscape-section
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Wraps content in a landscape-oriented page. Use for wide data tables, timelines, horizontal charts, or any content that overflows A4 portrait. Forces a page break before and after so the landscape page stands alone in the flow.
 languages: [en, ar]
