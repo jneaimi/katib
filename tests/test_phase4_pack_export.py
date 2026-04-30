@@ -134,6 +134,28 @@ def test_export_unknown_recipe_fails(tmp_path: Path):
         pack_mod.export_recipe("does-not-exist-xyz", out_dir=tmp_path)
 
 
+def test_export_recipe_emits_languages_and_domain(tmp_path: Path):
+    # Bilingual recipe with a `<domain>-<rest>` filename: legal-nda → domain=legal.
+    result = pack_mod.export_recipe(
+        "legal-nda", author=_author_from_test_env(), out_dir=tmp_path
+    )
+    contents = _extract_pack(Path(result.pack_path))
+    manifest = yaml.safe_load(contents["pack.yaml"])
+    assert manifest["languages"] == ["ar", "en"]
+    assert manifest["domain"] == "legal"
+
+
+def test_export_recipe_no_dash_omits_domain(tmp_path: Path):
+    # Single-word recipe name has no implicit domain.
+    result = pack_mod.export_recipe(
+        "tutorial", author=_author_from_test_env(), out_dir=tmp_path
+    )
+    contents = _extract_pack(Path(result.pack_path))
+    manifest = yaml.safe_load(contents["pack.yaml"])
+    assert "domain" not in manifest
+    assert manifest["languages"] == ["ar", "en"]
+
+
 # ---------------------------------------------------------------------------
 # Brand export
 # ---------------------------------------------------------------------------

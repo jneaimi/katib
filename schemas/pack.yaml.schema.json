@@ -163,6 +163,15 @@
         "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
       }
     },
+    "languages": {
+      "type": "array",
+      "uniqueItems": true,
+      "description": "Language codes (BCP-47 lowercase) the pack renders in. Distinct from `tags` so the registry can filter by language without parsing tag conventions.",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z]{2,3}(-[a-z0-9]+)*$"
+      }
+    },
     "domain": {
       "type": "string",
       "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
