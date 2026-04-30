@@ -1,5 +1,5 @@
 name: editorial-article
-version: 1.0.0
+version: 1.0.1
 namespace: katib
 description: Long-form editorial article — hero title + byline + lead + two-column body flow + inline numbered citations + references-list at the end. For opinion pieces, long reads, analysis essays. Demonstrates the citation + references-list pairing. Bilingual EN+AR.
 languages:
