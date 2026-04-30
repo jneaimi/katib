@@ -219,7 +219,12 @@ def _cmd_export(args) -> int:
 
     try:
         if kind == "component":
-            result = pack_mod.export_component(name, author=author, out_dir=out_dir)
+            result = pack_mod.export_component(
+                name,
+                author=author,
+                out_dir=out_dir,
+                with_previews=bool(getattr(args, "with_previews", False)),
+            )
         elif kind == "recipe":
             result = pack_mod.export_recipe(
                 name,

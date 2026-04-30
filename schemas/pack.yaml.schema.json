@@ -185,7 +185,7 @@
         "documentation_url": { "type": "string", "format": "uri" },
         "previews": {
           "type": "array",
-          "description": "Slice B — captured HTML previews of what this pack renders. Populated by `pack export --with-previews`. Each entry points at a file inside the pack tarball under `previews/<recipe-or-component>.<lang>.html`.",
+          "description": "Slice B — captured PNG previews of what this pack renders. Populated by `pack export --with-previews`. Each entry points at a file inside the pack tarball under `previews/<recipe-or-component>.<lang>.pageN.png`. PNG previews replaced HTML iframes in v2 to give cleaner card thumbnails and better mobile UX. The historical `.html` form is still accepted for backward compatibility with packs published under v1.",
           "items": {
             "type": "object",
             "required": ["path", "lang"],
@@ -193,8 +193,8 @@
             "properties": {
               "path": {
                 "type": "string",
-                "pattern": "^previews/[a-z0-9][a-z0-9_-]*\\.(en|ar)\\.html$",
-                "description": "Pack-relative path. Must live under previews/ and end in <lang>.html."
+                "pattern": "^previews/[a-z0-9][a-z0-9_-]*\\.(en|ar)(\\.page[0-9]+)?\\.(png|html)$",
+                "description": "Pack-relative path. Must live under previews/ and end in <lang>[.pageN].(png|html)."
               },
               "recipe": {
                 "type": "string",
@@ -209,6 +209,11 @@
               "lang": {
                 "type": "string",
                 "enum": ["en", "ar"]
+              },
+              "page": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "1-based page number when the preview spans multiple PNGs. Page 1 is the canonical browse-card thumbnail."
               }
             },
             "oneOf": [

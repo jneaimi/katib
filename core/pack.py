@@ -538,12 +538,19 @@ def export_component(
     *,
     author: dict[str, str] | None = None,
     out_dir: Path | None = None,
+    with_previews: bool = False,
 ) -> ExportResult:
     """Pack a single component into a `.katib-pack` file.
 
     Resolves the component in user tier first, then bundled. The
     resulting pack contains everything in the component dir that
     Katib renders from (HTML variants, CSS, README, fixture).
+
+    When `with_previews=True`, a one-section wrapper recipe is
+    synthesized around the component and rasterized to PNG via the
+    same pipeline as recipe previews — gives the marketplace a
+    "what does this look like in a document" sample without ever
+    rendering author-specific content.
     """
     found = _find_component(name)
     if found is None:
@@ -557,6 +564,20 @@ def export_component(
     languages = list(meta.get("languages") or [])
 
     file_pairs = _collect_component_files(cdir, tier, name)
+
+    marketplace: dict[str, Any] | None = None
+    if with_previews:
+        # Lazy import — pulls WeasyPrint + pypdfium2 transitively.
+        from core.previews import render_component_previews
+
+        preview_entries = render_component_previews(meta)
+        if preview_entries:
+            for entry in preview_entries:
+                file_pairs.append((entry.arcname, entry.body))
+            marketplace = {
+                "previews": [e.manifest_entry for e in preview_entries]
+            }
+
     body = build_canonical_tar_body(file_pairs)
     content_hash = compute_content_hash(body)
 
@@ -576,6 +597,7 @@ def export_component(
         description=description,
         tags=tags,
         languages=sorted(languages),
+        marketplace=marketplace,
     )
 
     out_dir = out_dir or DEFAULT_OUT_DIR

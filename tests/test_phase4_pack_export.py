@@ -88,6 +88,39 @@ def test_export_unknown_component_fails(tmp_path: Path):
         pack_mod.export_component("does-not-exist-xyz", out_dir=tmp_path)
 
 
+def test_export_component_with_previews_emits_pngs(tmp_path: Path):
+    """`pack export --component --with-previews` synthesizes a wrapper
+    recipe, runs through the same render pipeline as recipes, and
+    rasterizes to PNG. Each declared lang produces at least one
+    page1.png and a `marketplace.previews[]` manifest entry.
+    """
+    # `eyebrow` is a tiny bundled primitive — fast to render. Declares
+    # both en and ar so we get two preview files.
+    result = pack_mod.export_component(
+        "eyebrow",
+        author=_author_from_test_env(),
+        out_dir=tmp_path,
+        with_previews=True,
+    )
+    contents = _extract_pack(Path(result.pack_path))
+
+    # Both lang previews land under previews/ as PNGs.
+    assert "previews/eyebrow.en.page1.png" in contents
+    assert "previews/eyebrow.ar.page1.png" in contents
+    # PNGs are real images (PNG magic bytes).
+    assert contents["previews/eyebrow.en.page1.png"][:8] == b"\x89PNG\r\n\x1a\n"
+
+    # Manifest declares the previews so the marketplace publisher can
+    # find them and post URLs to the registry.
+    manifest = yaml.safe_load(contents["pack.yaml"].decode("utf-8"))
+    previews = (manifest.get("marketplace") or {}).get("previews") or []
+    paths = {p["path"] for p in previews}
+    assert "previews/eyebrow.en.page1.png" in paths
+    assert "previews/eyebrow.ar.page1.png" in paths
+    # Component-kind previews carry `component:` not `recipe:`.
+    assert all("component" in p and "recipe" not in p for p in previews)
+
+
 def test_export_component_manifest_well_formed(tmp_path: Path):
     """Manifest must pass schema validation when re-loaded."""
     result = pack_mod.export_component("eyebrow", author=_author_from_test_env(), out_dir=tmp_path)
