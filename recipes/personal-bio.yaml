@@ -1,5 +1,5 @@
 name: personal-bio
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: Short professional bio — masthead + narrative + highlight bullets. For speaker pages, press kits, about-me pages, panel introductions. Bilingual EN+AR. Pairs with personal-cv for fuller background.
 languages:

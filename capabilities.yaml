@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-30T05:23:52+00:00'
+generated_at: '2026-04-30T05:28:48+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -481,7 +481,7 @@ recipes:
     - signature-field-block
   personal-bio:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: Short professional bio — masthead + narrative + highlight bullets. For speaker pages,
       press kits, about-me pages, panel introductions. Bilingual EN+AR. Pairs with personal-cv for fuller
       background.
