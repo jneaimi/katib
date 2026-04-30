@@ -22,7 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 def test_module_version_bumped_to_030():
     c = load_component("module")
-    assert c["version"] == "0.3.0"
+    assert c["version"] == "0.3.1"
 
 
 def test_module_title_is_optional_in_030():

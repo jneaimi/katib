@@ -1,6 +1,6 @@
 name: appendix-page
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: |
   Appendix content with a distinct running header. Uses a named @page rule that emits "Appendix" (localized) in the top margin, so the reader always knows which section they're in. Flows across multiple pages — appendix material is usually long-form (raw data, supporting references, derivations). Always starts on a new page.

@@ -1,6 +1,6 @@
 name: chart-donut
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Proportional breakdown chart. Data is always inline-svg — factual, deterministic, brand-palette-driven.
 languages: [en, ar]
