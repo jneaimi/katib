@@ -1,5 +1,5 @@
 name: legal-service-agreement
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: UAE bilateral Service Agreement — masthead + Template Notice + 2-party callouts + 12 numbered clauses + 2-party signature grid. Covers scope, fees, term, liability, IP, termination, and governing law. Bilingual EN+AR.
 languages:
