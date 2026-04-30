@@ -1,0 +1,166 @@
+.katib-process-flow {
+    margin: 1em 0 1.4em 0;
+    font-family: var(--font-primary);
+}
+
+.katib-process-flow__eyebrow {
+    font-size: 8.5pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6pt;
+}
+
+.katib-process-flow[lang="ar"] .katib-process-flow__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10pt;
+}
+
+.katib-process-flow__title {
+    font-family: var(--font-display);
+    font-size: 16pt;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0 0 14pt 0;
+}
+
+.katib-process-flow__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* ---- Horizontal layout ---- */
+
+.katib-process-flow--horizontal .katib-process-flow__steps {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    align-items: stretch;
+}
+
+.katib-process-flow--horizontal .katib-process-flow__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 0 6pt;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Connector line drawn between nodes (horizontal). */
+.katib-process-flow--horizontal .katib-process-flow__step::before {
+    content: "";
+    position: absolute;
+    top: 18pt;
+    left: -50%;
+    right: 50%;
+    height: 1.2pt;
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+    z-index: 0;
+}
+
+.katib-process-flow--horizontal .katib-process-flow__step:first-child::before {
+    display: none;
+}
+
+.katib-process-flow--horizontal .katib-process-flow__node {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 8pt;
+}
+
+.katib-process-flow--horizontal .katib-process-flow__copy {
+    max-width: 100%;
+    width: 100%;
+}
+
+.katib-process-flow--horizontal .katib-process-flow__body {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ---- Vertical layout ---- */
+
+.katib-process-flow--vertical .katib-process-flow__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14pt;
+}
+
+.katib-process-flow--vertical .katib-process-flow__step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14pt;
+    position: relative;
+}
+
+.katib-process-flow--vertical .katib-process-flow__step::after {
+    content: "";
+    position: absolute;
+    top: 36pt;
+    bottom: -16pt;
+    width: 1.2pt;
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.katib-process-flow--vertical[lang="en"] .katib-process-flow__step::after,
+.katib-process-flow--vertical[dir="ltr"] .katib-process-flow__step::after {
+    left: 17pt;
+}
+
+.katib-process-flow--vertical[lang="ar"] .katib-process-flow__step::after,
+.katib-process-flow--vertical[dir="rtl"] .katib-process-flow__step::after {
+    right: 17pt;
+}
+
+.katib-process-flow--vertical .katib-process-flow__step:last-child::after {
+    display: none;
+}
+
+/* ---- Shared node ---- */
+
+.katib-process-flow__node {
+    flex-shrink: 0;
+    width: 36pt;
+    height: 36pt;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--accent-on);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 16pt;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.katib-process-flow__num {
+    line-height: 1;
+}
+
+.katib-process-flow__copy {
+    flex: 1;
+    min-width: 0;
+}
+
+.katib-process-flow__label {
+    margin: 0 0 4pt 0;
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.35;
+}
+
+.katib-process-flow__body {
+    margin: 0;
+    font-size: 9.5pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}

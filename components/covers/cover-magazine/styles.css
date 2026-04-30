@@ -1,0 +1,187 @@
+.katib-cover-magazine {
+    /* Pull out of the @page 20mm margin to reach the page edges. */
+    margin: -20mm;
+    min-height: 297mm;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--page-bg);
+    font-family: var(--font-primary);
+    color: var(--text);
+    overflow: hidden;
+}
+
+.katib-cover-magazine__strip {
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--font-display);
+    font-size: 9.5pt;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 6mm 20mm;
+    flex-shrink: 0;
+}
+
+.katib-cover-magazine[lang="ar"] .katib-cover-magazine__strip {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-cover-magazine__split {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.katib-cover-magazine__hero {
+    flex: 0 0 48%;
+    background: color-mix(in srgb, var(--accent) 14%, var(--page-bg));
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    overflow: hidden;
+}
+
+.katib-cover-magazine__hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.katib-cover-magazine__hero-fallback {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--accent) 28%, var(--page-bg)),
+        color-mix(in srgb, var(--accent) 12%, var(--page-bg)));
+}
+
+.katib-cover-magazine__monogram {
+    font-family: var(--font-display);
+    font-size: 180pt;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--accent);
+    opacity: 0.55;
+}
+
+.katib-cover-magazine__copy {
+    flex: 1;
+    padding: 36mm 18mm 18mm 18mm;
+    min-width: 0;
+}
+
+.katib-cover-magazine__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14pt;
+}
+
+.katib-cover-magazine[lang="ar"] .katib-cover-magazine__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12pt;
+}
+
+.katib-cover-magazine__title {
+    font-family: var(--font-display);
+    font-size: 36pt;
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin: 0;
+    overflow-wrap: break-word;
+}
+
+.katib-cover-magazine[lang="ar"] .katib-cover-magazine__title {
+    font-size: 38pt;
+    letter-spacing: 0;
+    line-height: 1.2;
+}
+
+.katib-cover-magazine__subtitle {
+    font-size: 14pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    margin: 18pt 0 0 0;
+}
+
+.katib-cover-magazine__byline {
+    margin-top: 20pt;
+    font-size: 10pt;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+}
+
+.katib-cover-magazine[lang="ar"] .katib-cover-magazine__byline {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-cover-magazine__lineup {
+    flex-shrink: 0;
+    padding: 10mm 20mm 14mm 20mm;
+    border-top: 1pt solid var(--border);
+    background: color-mix(in srgb, var(--accent) 4%, var(--page-bg));
+}
+
+.katib-cover-magazine__lineup-label {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8pt;
+}
+
+.katib-cover-magazine[lang="ar"] .katib-cover-magazine__lineup-label {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10.5pt;
+}
+
+.katib-cover-magazine__lineup-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4pt 24pt;
+}
+
+.katib-cover-magazine__lineup-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8pt;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    padding: 3pt 0;
+    border-bottom: 0.4pt dotted var(--border);
+}
+
+.katib-cover-magazine__lineup-title {
+    flex: 1;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.katib-cover-magazine__lineup-page {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    letter-spacing: 0.04em;
+}

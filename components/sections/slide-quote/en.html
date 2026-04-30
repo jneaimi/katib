@@ -1,0 +1,15 @@
+<section class="katib-section katib-slide-quote" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-slide-quote__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+    <div class="katib-slide-quote__mark katib-slide-quote__mark--open" aria-hidden="true">&ldquo;</div>
+    <blockquote class="katib-slide-quote__body">{{ input.quote }}</blockquote>
+    <div class="katib-slide-quote__rule" aria-hidden="true"></div>
+    <div class="katib-slide-quote__author">{{ input.author }}</div>
+{%- if input.role %}
+    <div class="katib-slide-quote__role">{{ input.role }}</div>
+{%- endif %}
+{%- if input.source %}
+    <div class="katib-slide-quote__source">{{ input.source }}</div>
+{%- endif %}
+</section>
