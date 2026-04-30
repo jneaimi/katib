@@ -1,6 +1,6 @@
 name: cv-layout
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: 2-column sidebar+main page layout for CV / profile / portfolio recipes. Emits a full-page CSS grid with 70mm sidebar (dark accent background) + 1fr main column. Sidebar and main content are supplied as raw HTML via `sidebar_html` and `main_html` inputs — callers compose sidebar primitives (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural shape; future reuse expected for portfolio and profile pages.
 languages: [en, ar]

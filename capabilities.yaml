@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-30T08:13:11+00:00'
+generated_at: '2026-04-30T10:42:02+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -1917,7 +1917,7 @@ components:
   landscape-diagram:
     namespace: user
     tier: section
-    version: 0.1.2
+    version: 1.0.0
     languages:
     - en
     - ar
@@ -1930,7 +1930,7 @@ components:
   photo-collage:
     namespace: user
     tier: section
-    version: 0.1.0
+    version: 1.0.0
     languages:
     - en
     - ar
@@ -1951,7 +1951,7 @@ components:
   polaroid-wall:
     namespace: user
     tier: section
-    version: 0.1.0
+    version: 1.0.0
     languages:
     - en
     - ar
@@ -1972,7 +1972,7 @@ components:
   video-card:
     namespace: user
     tier: section
-    version: 0.1.0
+    version: 1.0.0
     languages:
     - en
     - ar

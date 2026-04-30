@@ -1,6 +1,6 @@
 name: two-column-page
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Newspaper/magazine-style two-column text flow. Content flows across the two columns within a page, and across multiple pages if the body is long. Title spans both columns as a header band. Best for editorial essays, long-form articles, or long primary-source excerpts where a single column feels lonely.
 languages: [en, ar]

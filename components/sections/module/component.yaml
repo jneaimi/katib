@@ -1,6 +1,6 @@
 name: module
 tier: section
-version: 0.3.0
+version: 0.3.1
 namespace: katib
 description: Flexible body unit — optional numbered eyebrow, heading, intro, and body content. All heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables, inline SVG, pull-quotes, callouts) for recipe-supplied content.
 languages: [en, ar]

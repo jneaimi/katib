@@ -1,6 +1,6 @@
 name: sections-grid
 tier: section
-version: 0.1.0
+version: 0.1.1
 namespace: katib
 description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager 2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
 languages: [en, ar]
