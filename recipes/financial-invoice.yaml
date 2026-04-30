@@ -1,5 +1,5 @@
 name: financial-invoice
-version: 1.0.0
+version: 1.0.1
 namespace: katib
 description: UAE tax invoice — letterhead commercial variant + Bill From/Bill To parties + 4-field meta strip + line-items table (with desc+sub cells) + totals box + amount-in-words callout + payment block + footer. First production consumer of financial-summary (Day 15 component) and letterhead commercial variant (Day 2). Fifth production consumer of data-table (with first-ever use of {text, sub} cell feature). Validates the financial domain's full stack.
 languages: [en]

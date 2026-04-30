@@ -55,7 +55,7 @@ def test_mou_loads():
     r = load_recipe(RECIPE_NAME)
     assert r["name"] == RECIPE_NAME
     assert r["namespace"] == "katib"
-    assert r["version"] == "1.0.0"
+    assert r["version"] == "1.0.1"
 
 
 def test_mou_bilingual():
