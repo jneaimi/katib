@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-30T05:28:48+00:00'
+generated_at: '2026-04-30T07:23:46+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -144,7 +144,7 @@ recipes:
     - module
   editorial-article:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: Long-form editorial article — hero title + byline + lead + two-column body flow + inline
       numbered citations + references-list at the end. For opinion pieces, long reads, analysis essays.
       Demonstrates the citation + references-list pairing. Bilingual EN+AR.
@@ -211,7 +211,7 @@ recipes:
     - module
   financial-invoice:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: UAE tax invoice — letterhead commercial variant + Bill From/Bill To parties + 4-field
       meta strip + line-items table (with desc+sub cells) + totals box + amount-in-words callout + payment
       block + footer. First production consumer of financial-summary (Day 15 component) and letterhead
@@ -243,7 +243,7 @@ recipes:
     - module
   financial-quote:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: UAE commercial quotation — letterhead commercial + meta strip + Prepared-For callout
       + numbered Scope/Pricing/Acceptance + line-items table + compact totals + 2x2 terms grid + signature
       block. Zero new components. First production consumer of financial-summary compact variant (24-hour
@@ -398,7 +398,7 @@ recipes:
     - signature-field-block
   legal-nda:
     namespace: katib
-    version: 1.0.0
+    version: 1.0.1
     description: UAE mutual Non-Disclosure Agreement — centered masthead + Template Notice + 2-party callouts
       + 9 numbered clauses with clause-list + 2-party signature grid. Bilingual EN+AR. Follows the same
       component shape as legal-mou — structural consistency across the legal domain is intentional.
@@ -542,7 +542,7 @@ recipes:
     - module
   personal-cv:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: Professional CV with 2-col sidebar+main layout. FIRST production consumer of cv-layout,
       skill-bar-list, and tag-chips (all Day-18 infra; 24-hour ship discipline — 4th consecutive application).
       Single-section recipe — fewest sections ever in Phase-3. Closes the personal domain (cover-letter
@@ -796,7 +796,7 @@ recipes:
     - references-list
   report-progress:
     namespace: katib
-    version: 0.1.0
+    version: 1.0.0
     description: Project progress report — exec summary, headline metrics, timeline of milestones, findings
       narrative, next-period focus, and optional appendix. Composes the full Phase-3c content library
       into a production-ready report. Bilingual EN+AR.
@@ -980,7 +980,7 @@ recipes:
     - module
   tutorial:
     namespace: katib
-    version: 1.3.0
+    version: 1.3.1
     description: Long-form bilingual tutorial template — cover, objectives box, content modules with rich
       body (tables, inline SVG diagrams, pull-quotes, callouts), summary, next-steps, and reference strip.
       For framework guides, technical onboarding, and educational long-form documents.

@@ -45,7 +45,7 @@ def test_invoice_loads():
     r = load_recipe(RECIPE_NAME)
     assert r["name"] == RECIPE_NAME
     assert r["namespace"] == "katib"
-    assert r["version"] == "0.1.0"
+    assert r["version"] == "1.0.0"
 
 
 def test_invoice_en_only():

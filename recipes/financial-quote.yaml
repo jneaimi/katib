@@ -1,5 +1,5 @@
 name: financial-quote
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: UAE commercial quotation — letterhead commercial + meta strip + Prepared-For callout + numbered Scope/Pricing/Acceptance + line-items table + compact totals + 2x2 terms grid + signature block. Zero new components. First production consumer of financial-summary compact variant (24-hour ship from Day-15 default). Closes the financial domain with financial-invoice.
 languages:
