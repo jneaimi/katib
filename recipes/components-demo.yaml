@@ -1,0 +1,103 @@
+name: components-demo
+version: 0.1.0
+namespace: katib
+description: Smoke-render recipe for the new editorial component pack — magazine cover, slide-quote, slide-stat, feature-row, process-flow, and org-chart composed end-to-end so each component can be inspected on its own page.
+languages: [en, ar]
+target_pages: [5, 9]
+page_limit: 12
+when: Visual smoke test for the six new editorial / slide / diagram components.
+keywords: [components, demo, slide, cover, magazine, process, org-chart, feature-row]
+
+sections:
+  # 1. Magazine cover (atomic — own page)
+  - component: cover-magazine
+    variant: default
+    inputs:
+      issue_meta: "Issue 04 · April 2026 · 12 min read"
+      eyebrow: "COVER STORY"
+      title: "The Bilingual Document Engine"
+      subtitle: "How katib turns markdown into print-grade PDFs that work in Arabic and English without the usual layout pain."
+      byline: "By Jasem Al-Neaimi"
+      lineup:
+        - title: "Inside the marketplace"
+          page: 3
+        - title: "Why bilingual is hard"
+          page: 7
+        - title: "Behind the scenes"
+          page: 12
+        - title: "What's next"
+          page: 18
+
+  # 2. Feature row — flowing
+  - component: feature-row
+    variant: default
+    inputs:
+      eyebrow: "WHAT'S INCLUDED"
+      title: "How katib works"
+      layout: stacked
+      rows:
+        - icon: "1"
+          heading: "Install the engine"
+          body: "One command — npx @jasemal/katib install — drops the engine into your local cache. No SaaS account, no dashboard."
+        - icon: "2"
+          heading: "Browse the marketplace"
+          body: "44+ packs — templates and components — installable with a single command. Each pack is versioned and reproducible."
+        - icon: "3"
+          heading: "Render print-grade PDFs"
+          body: "Bilingual EN+AR by default. WeasyPrint produces A4 with proper margins, page breaks, and OpenType ligatures."
+
+  # 3. Process-flow — flowing
+  - component: process-flow
+    variant: default
+    inputs:
+      eyebrow: "HOW IT WORKS"
+      title: "Three steps to a print-grade PDF"
+      orientation: horizontal
+      steps:
+        - label: "Author"
+          body: "Write your content in markdown — bilingual EN+AR side by side."
+        - label: "Compose"
+          body: "Pick a template, fill in the recipe, drop in components."
+        - label: "Render"
+          body: "WeasyPrint produces an A4 PDF with proper page breaks."
+
+  # 4. Org-chart — atomic
+  - component: org-chart
+    variant: default
+    inputs:
+      eyebrow: "GOVERNANCE"
+      title: "Project leadership"
+      root:
+        label: "Jasem Al-Neaimi"
+        role: "Founder & Chief Architect"
+      children:
+        - label: "Layla Al-Mansoori"
+          role: "Engineering Lead"
+        - label: "Omar Faraj"
+          role: "Design Lead"
+        - label: "Hessa Al-Suwaidi"
+          role: "Product Lead"
+        - label: "Yousef Khalid"
+          role: "Operations"
+
+  # 5. Slide-quote (slide page)
+  - component: slide-quote
+    variant: default
+    inputs:
+      eyebrow: "TESTIMONIAL"
+      quote: "katib changed how we ship reports. What used to take a week of design back-and-forth now takes an afternoon — and the Arabic looks as good as the English."
+      author: "Layla Al-Mansoori"
+      role: "Head of Engineering"
+      source: "Internal review, March 2026"
+
+  # 6. Slide-stat (slide page)
+  - component: slide-stat
+    variant: default
+    inputs:
+      eyebrow: "TRACTION"
+      value: "44"
+      unit: "packs"
+      delta: "+8 this month"
+      delta_tone: success
+      label: "Marketplace inventory"
+      body: "Templates and components combined. Every pack is versioned, signed, and installable with one command."

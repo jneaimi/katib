@@ -1,0 +1,45 @@
+name: cover-magazine
+tier: cover
+version: 0.1.0
+namespace: katib
+description: Magazine-style full-page cover — hero image (or color block) on one side, big editorial title on the other, plus an "in this issue" lineup of 3–5 sub-headlines. Distinct from `cover-page` (which is a doc opener) — `cover-magazine` is for editorial publications, brand magazines, customer newsletters, and quarterly content drops.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border, page_bg]
+  fonts: [display, primary]
+  brand_fields: [logo.primary]
+accepts:
+  inputs:
+    - issue_meta:
+        type: string
+        required: false
+        description: 'Top accent strip text (e.g. "Issue 04 · April 2026 · 12 min read"). Optional.'
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title (e.g. "FEATURE", "COVER STORY").
+    - title:
+        type: string
+        required: true
+        description: The headline — short, editorial, scannable.
+    - subtitle:
+        type: string
+        required: false
+        description: Subhead under the title (deck — one or two sentences).
+    - byline:
+        type: string
+        required: false
+        description: Author / contributors line (e.g. "By Jasem Al-Neaimi").
+    - image:
+        type: image
+        required: false
+        sources_accepted: [user-file, url, gemini]
+        description: Hero image rendered on the leading half. Falls back to a solid accent block if absent.
+    - lineup:
+        type: array
+        required: false
+        description: '"Inside this issue" list — array of {title, page?} entries shown as a small contents lineup on the cover.'
+variants:
+  - default
+page_behavior:
+  mode: atomic

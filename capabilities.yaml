@@ -2,7 +2,7 @@
 # Do not hand-edit. Regenerate with:
 #     uv run scripts/generate_capabilities.py
 
-generated_at: '2026-04-30T15:54:14+00:00'
+generated_at: '2026-04-30T17:12:31+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -181,6 +181,36 @@ recipes:
     - data-table
     - module
     - module
+  components-demo:
+    namespace: katib
+    version: 0.1.0
+    description: Smoke-render recipe for the new editorial component pack — magazine cover, slide-quote,
+      slide-stat, feature-row, process-flow, and org-chart composed end-to-end so each component can be
+      inspected on its own page.
+    languages:
+    - en
+    - ar
+    target_pages:
+    - 5
+    - 9
+    page_limit: 12
+    when: Visual smoke test for the six new editorial / slide / diagram components.
+    keywords:
+    - components
+    - demo
+    - slide
+    - cover
+    - magazine
+    - process
+    - org-chart
+    - feature-row
+    sections_shape:
+    - cover-magazine
+    - feature-row
+    - process-flow
+    - org-chart
+    - slide-quote
+    - slide-stat
   editorial-article:
     namespace: katib
     version: 1.0.1
@@ -1474,6 +1504,48 @@ recipes:
     - data-table
     - summary
     - whats-next
+  bom-use-cases-showcase:
+    namespace: user
+    version: 0.1.0
+    description: AI Agriculture Platform — visual showcase of the 5 citizen-tier BOM use cases (ADR-014).
+      Pairs each schematic diagram with a photorealistic UAE installation image and brief description
+      for stakeholder decks and procurement-trip reference.
+    languages:
+    - en
+    target_pages:
+    - 11
+    - 14
+    page_limit: 16
+    when: Visual companion to ADR-014. Each use case gets a photorealistic install render plus the schematic
+      sensor-placement diagram with a one-paragraph description, BOM total, and key SKUs.
+    keywords:
+    - ai-agriculture-platform
+    - bom
+    - citizen-tier
+    - use-cases
+    - visual
+    - showcase
+    - ibrahim-trip
+    sections_shape:
+    - cover-page
+    - module
+    - module
+    - figure-with-caption
+    - figure-with-caption
+    - module
+    - figure-with-caption
+    - figure-with-caption
+    - module
+    - figure-with-caption
+    - figure-with-caption
+    - module
+    - figure-with-caption
+    - figure-with-caption
+    - module
+    - figure-with-caption
+    - figure-with-caption
+    - summary
+    - whats-next
   china-vendor-trip-plan:
     namespace: user
     version: 0.1.0
@@ -1692,7 +1764,7 @@ components:
     - full-width
     - inset
     description: Image with optional caption below — core visual primitive.
-    used_in_recipes: 0
+    used_in_recipes: 1
   metric-block:
     namespace: katib
     tier: primitive
@@ -1919,6 +1991,21 @@ components:
       bullet rows + optional footer. Sets reader expectations before the body. Rendered with a left-accent
       rail for visual separation from regular flow.
     used_in_recipes: 8
+  feature-row:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Repeating row pattern with an icon (or thumbnail image) on the leading side, a heading,
+      and a body paragraph. Use for "what we do", "key features", "what's included", or "how it works"
+      sections — anywhere the same visual pattern repeats 3–6 times for parallel ideas. Distinct from
+      `kv-list` (terms + values) and `objectives-box` (bullets) — feature-row carries enough body text
+      to stand on its own.
+    used_in_recipes: 1
   financial-summary:
     namespace: katib
     tier: section
@@ -2025,7 +2112,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 38
+    used_in_recipes: 39
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -2052,6 +2139,33 @@ components:
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
     used_in_recipes: 5
+  org-chart:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Two-level org chart. Renders a single root node (the leader / the parent unit) connected
+      by lines to a row of child nodes (direct reports / sub-units). Each node carries a name and a role/title.
+      Use for org structures, governance diagrams, parent-and-children team layouts, or any one-to-many
+      hierarchy.
+    used_in_recipes: 1
+  process-flow:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Numbered step-by-step flow diagram. Renders 3–6 steps as connected nodes (horizontal
+      row or vertical column), each with a number, label, and optional one-line description. Use for "how
+      it works", process diagrams, onboarding flows, or any sequence where the order matters.
+    used_in_recipes: 1
   reference-strip:
     namespace: katib
     tier: section
@@ -2141,6 +2255,33 @@ components:
       to build a full deck. Variants — title-only, content, two-column, image-background — cover the common
       slide layouts.
     used_in_recipes: 1
+  slide-quote:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Single 16:9 landscape slide carrying a dramatic centered pull quote with attribution.
+      For testimonial slides, founder-vision slides, customer-quote slides — any moment in a deck where
+      the message is "let one person's words do the work". Use multiple slide-quote sections in a row
+      to build a "what people are saying" sequence. Page-size matches slide-frame.
+    used_in_recipes: 1
+  slide-stat:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Single 16:9 landscape slide carrying one massive stat with a label and an optional supporting
+      paragraph. For traction slides, market-size slides, "single moment of impact" slides in any deck.
+      The stat dominates the slide visually so the audience reads the number first and the prose second.
+    used_in_recipes: 1
   summary:
     namespace: katib
     tier: section
@@ -2150,7 +2291,7 @@ components:
     - ar
     variants: []
     description: End-of-document recap — heading plus short paragraph and/or bulleted takeaways.
-    used_in_recipes: 10
+    used_in_recipes: 11
   timeline:
     namespace: katib
     tier: section
@@ -2229,7 +2370,21 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
-    used_in_recipes: 6
+    used_in_recipes: 7
+  cover-magazine:
+    namespace: katib
+    tier: cover
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: Magazine-style full-page cover — hero image (or color block) on one side, big editorial
+      title on the other, plus an "in this issue" lineup of 3–5 sub-headlines. Distinct from `cover-page`
+      (which is a doc opener) — `cover-magazine` is for editorial publications, brand magazines, customer
+      newsletters, and quarterly content drops.
+    used_in_recipes: 1
   cover-page:
     namespace: katib
     tier: cover
@@ -2245,7 +2400,7 @@ components:
     description: Full-page document opener. Four variants — minimalist-typographic (CSS-only), image-background
       (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial
       canvas, dark text on warm off-white image, no scrim).
-    used_in_recipes: 10
+    used_in_recipes: 11
   landscape-diagram:
     namespace: user
     tier: section

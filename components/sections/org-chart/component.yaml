@@ -1,0 +1,31 @@
+name: org-chart
+tier: section
+version: 0.1.0
+namespace: katib
+description: Two-level org chart. Renders a single root node (the leader / the parent unit) connected by lines to a row of child nodes (direct reports / sub-units). Each node carries a name and a role/title. Use for org structures, governance diagrams, parent-and-children team layouts, or any one-to-many hierarchy.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border, page_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the section heading.
+    - title:
+        type: string
+        required: false
+        description: Section heading above the chart.
+    - root:
+        type: object
+        required: true
+        description: 'The top node — `{label, role?, image?}`. `label` is the name; `role` is the title (optional).'
+    - children:
+        type: array
+        required: true
+        description: 'Array of child nodes — `[{label, role?, image?}]`. 2–5 entries recommended.'
+variants:
+  - default
+page_behavior:
+  mode: atomic

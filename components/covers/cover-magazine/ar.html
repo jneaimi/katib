@@ -1,0 +1,43 @@
+<section class="katib-cover-magazine" lang="ar" dir="rtl">
+{%- if input.issue_meta %}
+    <div class="katib-cover-magazine__strip">{{ input.issue_meta }}</div>
+{%- endif %}
+    <div class="katib-cover-magazine__split">
+        <div class="katib-cover-magazine__copy">
+{%- if input.eyebrow %}
+            <div class="katib-cover-magazine__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+            <h1 class="katib-cover-magazine__title">{{ input.title }}</h1>
+{%- if input.subtitle %}
+            <p class="katib-cover-magazine__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+{%- if input.byline %}
+            <div class="katib-cover-magazine__byline">{{ input.byline }}</div>
+{%- endif %}
+        </div>
+        <div class="katib-cover-magazine__hero">
+{%- if input.image %}
+            <img class="katib-cover-magazine__hero-img" src="{{ input.image.path or input.image }}" alt="" />
+{%- else %}
+            <div class="katib-cover-magazine__hero-fallback" aria-hidden="true">
+                <span class="katib-cover-magazine__monogram">{{ (input.title or '·')[:1] }}</span>
+            </div>
+{%- endif %}
+        </div>
+    </div>
+{%- if input.lineup %}
+    <div class="katib-cover-magazine__lineup">
+        <div class="katib-cover-magazine__lineup-label">في هذا العدد</div>
+        <ul class="katib-cover-magazine__lineup-list">
+{%- for item in input.lineup %}
+            <li class="katib-cover-magazine__lineup-item">
+                <span class="katib-cover-magazine__lineup-title">{{ item.title }}</span>
+{%- if item.page %}
+                <span class="katib-cover-magazine__lineup-page">ص. {{ item.page }}</span>
+{%- endif %}
+            </li>
+{%- endfor %}
+        </ul>
+    </div>
+{%- endif %}
+</section>
