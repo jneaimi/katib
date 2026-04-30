@@ -1,5 +1,5 @@
 name: legal-nda
-version: 0.1.0
+version: 1.0.0
 namespace: katib
 description: UAE mutual Non-Disclosure Agreement — centered masthead + Template Notice + 2-party callouts + 9 numbered clauses with clause-list + 2-party signature grid. Bilingual EN+AR. Follows the same component shape as legal-mou — structural consistency across the legal domain is intentional.
 languages:
