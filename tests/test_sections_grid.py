@@ -22,7 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def test_sections_grid_loads_against_schema():
     c = load_component("sections-grid")
     assert c["tier"] == "section"
-    assert c["version"] == "0.1.0"
+    assert c["version"] == "0.1.1"
     assert c["namespace"] == "katib"
     assert set(c["languages"]) == {"en", "ar"}
 
