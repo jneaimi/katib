@@ -124,9 +124,17 @@
     border-right: 2pt solid var(--accent);
 }
 
-/* Image-background variant — full slide bg image with scrim for legibility */
+/* Image-background variant — full slide bg image with scrim for legibility.
+   Negative margin pulls the section out past the @page slide's 18mm margin
+   so the background image touches the physical page edges (full-bleed).
+   Equivalent inner padding keeps text/eyebrow inside their original inset. */
 .katib-slide-frame--has-image {
     color: #ffffff;
+    margin: -18mm;
+    padding: 18mm 22mm;
+    width: 297mm;
+    min-height: 210mm;
+    box-sizing: border-box;
 }
 
 .katib-slide-frame__bg {
