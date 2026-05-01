@@ -240,6 +240,7 @@ def _cmd_export(args) -> int:
                 include_brand=getattr(args, "include_brand", None),
                 author=author,
                 out_dir=out_dir,
+                with_previews=bool(getattr(args, "with_previews", False)),
             )
     except ValueError as e:
         return _emit_error(e, json_out=args.json)

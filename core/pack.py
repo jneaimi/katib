@@ -745,6 +745,7 @@ def export_bundle(
     include_brand: str | None = None,
     author: dict[str, str] | None = None,
     out_dir: Path | None = None,
+    with_previews: bool = False,
 ) -> ExportResult:
     """Pack a recipe + its user-tier component dependencies into one pack.
 
@@ -757,6 +758,13 @@ def export_bundle(
        `<name>-assets/` dir are also included; bundled brands are
        declared in `requires.bundled_brands[]` (consistent with
        components — explicit, not silent).
+
+    When `with_previews=True`, the recipe's HTML previews per declared
+    language are rendered, inlined to be self-contained, and stamped
+    into the pack under `previews/<name>.<lang>.html` plus a
+    `marketplace.previews` block in the manifest. Mirrors the recipe
+    export's Slice B feature so bundle exports don't lose their
+    marketplace cards just because they ship their component deps.
 
     Refuses (with clear error) if any referenced component cannot be
     resolved in either tier.
@@ -817,6 +825,21 @@ def export_bundle(
     else:
         included_brands = []
 
+    marketplace: dict[str, Any] | None = None
+    if with_previews:
+        # Lazy import — pulls in WeasyPrint/Jinja transitively. The
+        # default --no-previews export path stays cheap. Mirrors
+        # export_recipe's Slice B preview block exactly.
+        from core.previews import render_recipe_previews
+
+        preview_entries = render_recipe_previews(recipe_meta)
+        if preview_entries:
+            for entry in preview_entries:
+                file_pairs.append((entry.arcname, entry.body))
+            marketplace = {
+                "previews": [e.manifest_entry for e in preview_entries]
+            }
+
     body = build_canonical_tar_body(file_pairs)
     content_hash = compute_content_hash(body)
 
@@ -839,7 +862,9 @@ def export_bundle(
     if bundled_brands:
         requires["bundled_brands"] = bundled_brands
 
-    tags = sorted({"bundle", *languages})
+    # `kind` carries the semantic ("bundle" vs "recipe"); duplicating it
+    # in `tags` only pollutes keyword search. Drop it from tags.
+    tags = sorted({*languages})
 
     manifest = PackManifest(
         pack_format=PACK_FORMAT_VERSION,
@@ -853,6 +878,7 @@ def export_bundle(
         tags=tags,
         languages=sorted(languages),
         domain=_infer_domain(recipe_name),
+        marketplace=marketplace,
     )
 
     out_dir = out_dir or DEFAULT_OUT_DIR
