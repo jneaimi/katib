@@ -110,12 +110,6 @@ def test_post_clone_install_steps_produce_expected_tree(tmp_path):
 
     CONFIG_FILE="$HOME/.config/katib/config.yaml"
     cat > "$CONFIG_FILE" <<EOF
-output:
-  destination: custom
-  vault_path: ~/vault/content/katib
-  custom_path: ~/Documents/katib
-  always_create_manifest: true
-
 memory:
   location: ~/.katib/memory
   per_domain_rollup: true

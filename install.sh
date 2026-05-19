@@ -167,25 +167,15 @@ if [ -f "$SKILL_DIR/seed-manifest.yaml" ]; then
   fi
 fi
 
-# Seed ~/.config/katib/config.yaml with a vault-aware default
+# Seed ~/.config/katib/config.yaml with v2 defaults.
+# Output routing is OS-standard (~/Documents/katib/ by default, override via $KATIB_OUTPUT_ROOT
+# env var; see core/output.py). No `output:` config block — that schema was v1-only.
 CONFIG_FILE="$HOME/.config/katib/config.yaml"
 if [ ! -f "$CONFIG_FILE" ]; then
-  if [ -d "$HOME/vault" ]; then
-    DEFAULT_DEST="vault"
-    DEFAULT_OUT="~/vault/content/katib"
-  else
-    DEFAULT_DEST="custom"
-    DEFAULT_OUT="~/Documents/katib"
-  fi
   cat > "$CONFIG_FILE" <<EOF
 # Katib user config — edit freely.
 # Precedence: CLI flag → <project>/.katib/config.yaml → this file → skill default.
-
-output:
-  destination: $DEFAULT_DEST
-  vault_path: ~/vault/content/katib
-  custom_path: $DEFAULT_OUT
-  always_create_manifest: true
+# Output routing in v2 is OS-standard: ~/Documents/katib/ by default, override via \$KATIB_OUTPUT_ROOT env var.
 
 memory:
   location: ~/.katib/memory
@@ -203,7 +193,7 @@ image_model:
   fallback: gemini-2.5-flash-image
   api_key_env: GEMINI_API_KEY
 EOF
-  ok "wrote $CONFIG_FILE (output → $DEFAULT_OUT)"
+  ok "wrote $CONFIG_FILE"
 else
   ok "$CONFIG_FILE already exists (left alone)"
 fi

@@ -5,6 +5,19 @@ All notable changes to Katib are documented here. Format loosely follows
 
 ## [Unreleased] — 2026-04-28 Phase 6 Slice B (HTML previews)
 
+### Removed
+
+- **Dead v1 `output:` block** in the seed config (`install.sh`) and matching
+  test fixture (`tests/test_phase5_install_release.py`). v2's output resolver
+  (`core/output.py`) reads `KATIB_OUTPUT_ROOT` env var → `~/Documents/katib/`
+  and never touched the YAML config — the four keys (`destination`,
+  `vault_path`, `custom_path`, `always_create_manifest`) were orphaned schema
+  surviving only because the install seed kept writing them. Fresh installs
+  now get a clean v2-aligned config; existing configs are untouched (the
+  block is silently ignored). Surfaced by ADR-008 assumption-rate audit
+  against the soul-hub vault on 2026-05-19.
+
+
 Marketplace HTML previews — visitors see what a pack renders before
 they install. Previews are captured from the same `compose()` output
 the PDF renderer uses, scrubbed to template form (real content
