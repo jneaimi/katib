@@ -1,0 +1,19 @@
+{%- set cols = input.columns or 4 -%}
+<section class="katib-section katib-logo-wall katib-logo-wall--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-logo-wall__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h2 class="katib-logo-wall__heading">{{ input.heading }}</h2>
+{%- endif %}
+    <div class="katib-logo-wall__grid katib-logo-wall__grid--cols-{{ cols }}">
+{%- for logo_item in input.logos %}
+        <div class="katib-logo-wall__cell">
+            <img class="katib-logo-wall__logo" src="{{ logo_item.image }}" alt="{{ logo_item.name or '' }}" />
+{%- if logo_item.name %}
+            <span class="katib-logo-wall__name">{{ logo_item.name }}</span>
+{%- endif %}
+        </div>
+{%- endfor %}
+    </div>
+</section>

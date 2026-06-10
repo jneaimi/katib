@@ -1,0 +1,28 @@
+{%- set cols = input.columns or 3 -%}
+<section class="katib-section katib-team-grid katib-team-grid--{{ variant or 'default' }}" lang="en">
+{%- if input.eyebrow %}
+    <div class="katib-team-grid__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h2 class="katib-team-grid__heading">{{ input.heading }}</h2>
+{%- endif %}
+    <div class="katib-team-grid__grid katib-team-grid__grid--cols-{{ cols }}">
+{%- for member in input.members %}
+        <article class="katib-team-grid__member">
+{%- if member.photo %}
+            <img class="katib-team-grid__photo" src="{{ member.photo }}" alt="{{ member.name }}" />
+{%- else %}
+            <div class="katib-team-grid__photo katib-team-grid__photo--placeholder">{{ member.name[:1] }}</div>
+{%- endif %}
+            <h3 class="katib-team-grid__name">{{ member.name }}</h3>
+            <div class="katib-team-grid__role">{{ member.role }}</div>
+{%- if member.credentials %}
+            <div class="katib-team-grid__credentials">{{ member.credentials }}</div>
+{%- endif %}
+{%- if member.bio %}
+            <p class="katib-team-grid__bio">{{ member.bio }}</p>
+{%- endif %}
+        </article>
+{%- endfor %}
+    </div>
+</section>

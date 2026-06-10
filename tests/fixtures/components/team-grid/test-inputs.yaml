@@ -1,0 +1,30 @@
+# Test inputs for `team-grid` isolated render.
+inputs:
+  eyebrow: "Leadership"
+  heading: "The people behind the work"
+  columns: 3
+  members:
+    - name: "Layla Al-Hashimi"
+      role: "Chief Executive Officer"
+      credentials: "MBA, INSEAD"
+      bio: "Twenty years scaling regional consultancies, with a focus on public-sector transformation across the GCC."
+    - name: "Omar Saeed"
+      role: "Head of Engineering"
+      credentials: "MSc, PMP"
+      bio: "Leads delivery for the platform and data practices and owns the technical roadmap."
+    - name: "Mariam Khalifa"
+      role: "Director of Strategy"
+      bio: "Connects client ambition to measurable outcomes through disciplined planning."
+    - name: "Yousef Rahman"
+      role: "Principal Designer"
+      credentials: "BFA"
+      bio: "Shapes the design language that runs through every engagement."
+    - name: "Noor Abdullah"
+      role: "Client Partner"
+      bio: "First point of contact for our largest accounts."
+    - name: "Hassan Tariq"
+      role: "Finance Lead"
+      credentials: "CPA"
+      bio: "Keeps the numbers honest and the planning grounded."
+brand: null
+variant: null

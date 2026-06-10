@@ -1,0 +1,51 @@
+name: back-cover
+tier: cover
+version: 0.1.0
+namespace: katib
+description: >
+  Closing / contact page — the back-matter counterpart to cover-page. Logo, a
+  closing statement (eyebrow + title + message), a labelled contact block, and
+  a footer strip. Two variants: minimalist-typographic (CSS-only) and
+  image-background (full-bleed photo + dark scrim, light text). Starts on a
+  fresh page.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_2, border_strong]
+  fonts: [display, primary]
+  brand_fields: [logo.primary, identity.author_name]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Kicker above the closing title (e.g. "Get in touch", "Let's talk").
+    - title:
+        type: string
+        required: false
+        description: Closing statement headline (e.g. "Let's build what's next").
+    - message:
+        type: string
+        required: false
+        description: One short closing paragraph below the title.
+    - contacts:
+        type: array
+        required: false
+        description: >
+          Array of labelled contact rows. Each: {label (e.g. "Email", "Phone",
+          "Web"), value (the address / number / URL)}.
+    - reference_code:
+        type: string
+        required: false
+        description: Monospace code in the footer strip (document ref, version).
+    - image:
+        type: image
+        required: false
+        sources_accepted: [user-file, url]
+        description: Full-bleed background image. Used only by the image-background variant.
+variants:
+  - minimalist-typographic
+  - image-background
+page_behavior:
+  mode: atomic
+  break_before: always
+  min_height: 253mm

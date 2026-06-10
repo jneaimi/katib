@@ -1,0 +1,107 @@
+.katib-testimonial-card {
+    margin: 1.2em 0;
+    color: var(--text);
+    font-family: var(--font-primary);
+}
+
+.katib-testimonial-card__eyebrow {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-testimonial-card__heading {
+    font-family: var(--font-display, inherit);
+    font-size: 14pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0.2em 0 0.9em 0;
+}
+
+.katib-testimonial-card__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14pt;
+    margin: 0;
+}
+
+.katib-testimonial-card--cols-2 .katib-testimonial-card__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 14pt 16pt;
+}
+
+.katib-testimonial-card__card {
+    border: 0.5pt solid var(--border);
+    border-radius: 5pt;
+    padding: 26pt 16pt 14pt;
+    margin: 0;
+    position: relative;
+}
+
+/* Opening quotation mark, accent-tinted, anchored top-start. */
+.katib-testimonial-card__card::before {
+    content: "\201C";
+    position: absolute;
+    top: 6pt;
+    left: 14pt;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 30pt;
+    line-height: 1;
+    color: var(--accent);
+}
+
+.katib-testimonial-card[lang="ar"] .katib-testimonial-card__card::before {
+    left: auto;
+    right: 14pt;
+}
+
+.katib-testimonial-card__quote {
+    font-family: var(--font-display);
+    font-size: 11.5pt;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--text);
+    margin: 0 0 12pt 0;
+}
+
+.katib-testimonial-card[lang="ar"] .katib-testimonial-card__quote {
+    font-style: normal;
+    line-height: 1.7;
+}
+
+.katib-testimonial-card__source {
+    display: flex;
+    align-items: center;
+    gap: 9pt;
+}
+
+.katib-testimonial-card__photo {
+    width: 30pt;
+    height: 30pt;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 0.5pt solid var(--border);
+    flex-shrink: 0;
+    display: block;
+}
+
+.katib-testimonial-card__person {
+    display: flex;
+    flex-direction: column;
+}
+
+.katib-testimonial-card__author {
+    font-weight: 700;
+    font-size: 9.5pt;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+.katib-testimonial-card__role {
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}

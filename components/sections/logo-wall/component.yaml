@@ -1,0 +1,41 @@
+name: logo-wall
+tier: section
+version: 0.1.0
+namespace: katib
+description: >
+  Client / partner logo wall — a centered grid of logos in 3-6 columns with
+  uniform sizing, optional per-logo caption, and an optional boxed treatment.
+  For "trusted by", "our clients", "partners", and "as featured in" bands in
+  company profiles, proposals, and decks.
+languages: [en, ar]
+requires:
+  tokens: [text_tertiary, border, page_bg]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Optional uppercase kicker above the heading (e.g. "Our clients").
+    - heading:
+        type: string
+        required: false
+        description: 'Optional understated heading (e.g. "Trusted by leading organisations").'
+    - columns:
+        type: int
+        required: false
+        description: "Logos per row: 3, 4 (default), 5, or 6."
+    - logos:
+        type: array
+        required: true
+        description: >
+          Array of logo objects. Each logo: {image (required path to a logo
+          file - SVG or transparent PNG works best), name (optional caption /
+          alt text rendered under the mark)}.
+variants:
+  - default
+  - boxed
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-logo-wall__cell

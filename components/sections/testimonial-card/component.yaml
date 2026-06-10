@@ -1,0 +1,41 @@
+name: testimonial-card
+tier: section
+version: 0.1.0
+namespace: katib
+description: >
+  Client testimonial cards — each card carries a quote, the author's name,
+  and an optional role / company and photo. Renders one per row (stacked) or
+  two-up. For social-proof sections in company profiles, proposals, and
+  case-study decks. Distinct from pull-quote (a single editorial blockquote);
+  testimonial-card is a repeating, attributed, card-framed pattern.
+languages: [en, ar]
+requires:
+  tokens: [accent, text, text_secondary, border]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Optional uppercase kicker above the heading (e.g. "What clients say").
+    - heading:
+        type: string
+        required: false
+        description: Optional section heading above the cards.
+    - columns:
+        type: int
+        required: false
+        description: "Cards per row: 1 (default, stacked) or 2 (two-up)."
+    - testimonials:
+        type: array
+        required: true
+        description: >
+          Array of testimonial objects. Each: {quote (required), author
+          (required), role (optional), company (optional), photo (optional
+          image path - a small circular avatar)}.
+variants:
+  - default
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-testimonial-card__card

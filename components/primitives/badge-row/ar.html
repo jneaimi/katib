@@ -1,0 +1,14 @@
+<div class="katib-badge-row katib-badge-row--{{ variant or 'default' }}" lang="ar" dir="rtl">
+{%- for item in input.items %}
+{%- if item is mapping %}
+    <span class="katib-badge-row__badge">
+        <span class="katib-badge-row__label">{{ item.label }}</span>
+{%- if item.sublabel %}
+        <span class="katib-badge-row__sublabel">{{ item.sublabel }}</span>
+{%- endif %}
+    </span>
+{%- else %}
+    <span class="katib-badge-row__badge"><span class="katib-badge-row__label">{{ item }}</span></span>
+{%- endif %}
+{%- endfor %}
+</div>

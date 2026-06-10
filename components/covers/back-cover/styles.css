@@ -1,0 +1,202 @@
+/* Layout note: WeasyPrint honours neither flex main-axis `margin: auto`
+   distribution NOR `bottom:`-anchored absolute positioning against a
+   min-height box (both silently fail / overlap). So this cover uses plain
+   normal flow: the logo sits at the top and the statement + contact block
+   are composed in an upper-middle band via a fixed top margin. The page box
+   keeps its full height via `min-height` so the sheet reads as a full page. */
+.katib-back-cover {
+    position: relative;
+    min-height: 253mm;
+    padding: 0;
+    margin: 0;
+}
+
+.katib-back-cover__logo {
+    display: block;
+    max-height: 18mm;
+    margin: 0;
+}
+
+.katib-back-cover__body {
+    margin-top: 82mm;
+}
+
+.katib-back-cover__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin-bottom: 14pt;
+}
+
+.katib-back-cover__title {
+    font-family: var(--font-display);
+    font-size: 34pt;
+    font-weight: 700;
+    line-height: 1.08;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.015em;
+    max-width: 16em;
+}
+
+.katib-back-cover__message {
+    font-family: var(--font-primary);
+    font-size: 13pt;
+    color: var(--text-secondary);
+    margin: 16pt 0 0 0;
+    line-height: 1.5;
+    max-width: 32em;
+}
+
+/* Contact strip — flows below the statement (normal flow; see layout note). */
+.katib-back-cover__contact {
+    margin-top: 30pt;
+}
+
+.katib-back-cover__contacts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8pt 28pt;
+    padding-bottom: 14pt;
+}
+
+.katib-back-cover__contact-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.katib-back-cover__contact-label {
+    font-family: var(--font-display);
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 2pt;
+}
+
+.katib-back-cover__contact-value {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    color: var(--text);
+}
+
+.katib-back-cover__footer {
+    padding-top: 0.8em;
+    border-top: 1px solid var(--border-strong);
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.katib-back-cover__author {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.katib-back-cover__ref {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    letter-spacing: 0.04em;
+    font-size: 9pt;
+}
+
+/* ---- Arabic / RTL ---- */
+.katib-back-cover[lang="ar"] .katib-back-cover__eyebrow,
+.katib-back-cover[lang="ar"] .katib-back-cover__contact-label {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.katib-back-cover[lang="ar"] .katib-back-cover__title {
+    font-size: 36pt;
+    letter-spacing: 0;
+    line-height: 1.25;
+}
+
+/* ---- image-background variant: full-bleed photo + dark scrim, light text ---- */
+/* Zero-margin named page for true bleed — the negative-margin trick leaves a
+   page-background band at the bottom edge in WeasyPrint (see cover-page). */
+@page back-cover-bleed {
+    size: A4;
+    margin: 0;
+}
+
+.katib-back-cover--has-image {
+    page: back-cover-bleed;
+    position: relative;
+    overflow: hidden;
+    width: 210mm;
+    height: 297mm;          /* definite — required for bg/scrim to resolve */
+    margin: 0;
+    padding: 38mm 36mm;     /* content inset from the now-zero page margin */
+    box-sizing: border-box;
+}
+
+.katib-back-cover--has-image .katib-back-cover__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;           /* explicit A4 — percentages collapse here */
+    height: 297mm;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.katib-back-cover--has-image .katib-back-cover__bg > svg {
+    width: 210mm;
+    height: 297mm;
+}
+
+.katib-back-cover--has-image .katib-back-cover__scrim {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    height: 297mm;
+    background: linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.82) 100%);
+    z-index: 1;
+}
+
+.katib-back-cover--has-image .katib-back-cover__logo,
+.katib-back-cover--has-image .katib-back-cover__body,
+.katib-back-cover--has-image .katib-back-cover__contact {
+    position: relative;
+    z-index: 2;
+}
+
+.katib-back-cover--has-image .katib-back-cover__body {
+    margin-top: 64mm;
+}
+
+.katib-back-cover--has-image .katib-back-cover__title,
+.katib-back-cover--has-image .katib-back-cover__contact-value {
+    color: #ffffff;
+}
+
+.katib-back-cover--has-image .katib-back-cover__message {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.katib-back-cover--has-image .katib-back-cover__eyebrow {
+    color: #ffffff;
+    opacity: 0.85;
+}
+
+.katib-back-cover--has-image .katib-back-cover__contact-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.katib-back-cover--has-image .katib-back-cover__footer {
+    color: rgba(255, 255, 255, 0.7);
+    border-top-color: rgba(255, 255, 255, 0.25);
+}
+
+.katib-back-cover--has-image .katib-back-cover__author {
+    color: rgba(255, 255, 255, 0.85);
+}

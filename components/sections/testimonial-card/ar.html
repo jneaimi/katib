@@ -1,0 +1,27 @@
+{%- set cols = input.columns or 1 -%}
+<section class="katib-section katib-testimonial-card katib-testimonial-card--cols-{{ cols }}" lang="ar" dir="rtl">
+{%- if input.eyebrow %}
+    <div class="katib-testimonial-card__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.heading %}
+    <h2 class="katib-testimonial-card__heading">{{ input.heading }}</h2>
+{%- endif %}
+    <div class="katib-testimonial-card__grid">
+{%- for t in input.testimonials %}
+        <figure class="katib-testimonial-card__card">
+            <blockquote class="katib-testimonial-card__quote">{{ t.quote }}</blockquote>
+            <figcaption class="katib-testimonial-card__source">
+{%- if t.photo %}
+                <img class="katib-testimonial-card__photo" src="{{ t.photo }}" alt="{{ t.author }}" />
+{%- endif %}
+                <span class="katib-testimonial-card__person">
+                    <span class="katib-testimonial-card__author">{{ t.author }}</span>
+{%- if t.role or t.company %}
+                    <span class="katib-testimonial-card__role">{{ t.role }}{% if t.role and t.company %}، {% endif %}{{ t.company }}</span>
+{%- endif %}
+                </span>
+            </figcaption>
+        </figure>
+{%- endfor %}
+    </div>
+</section>

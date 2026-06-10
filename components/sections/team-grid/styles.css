@@ -1,0 +1,113 @@
+.katib-team-grid {
+    margin: 1.2em 0;
+    color: var(--text);
+    font-family: var(--font-primary);
+}
+
+.katib-team-grid__eyebrow {
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-team-grid__heading {
+    font-family: var(--font-display, inherit);
+    font-size: 14pt;
+    font-weight: 700;
+    margin: 0.2em 0 0.9em 0;
+    color: var(--text);
+}
+
+.katib-team-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18pt 22pt;
+    margin: 0;
+}
+
+.katib-team-grid__grid--cols-2 { grid-template-columns: repeat(2, 1fr); }
+.katib-team-grid__grid--cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* A member card is a flex column so a fixed-width avatar sits at the
+   inline-start edge in both LTR and RTL while text blocks still fill the
+   cell width (align-items: stretch). */
+.katib-team-grid__member {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.katib-team-grid__photo {
+    width: 76pt;
+    height: 76pt;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 0.5pt solid var(--border);
+    margin-bottom: 9pt;
+    display: block;
+}
+
+.katib-team-grid__photo--placeholder {
+    border: none;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--font-display);
+    font-size: 30pt;
+    font-weight: 700;
+    line-height: 76pt;
+    text-align: center;
+}
+
+.katib-team-grid__name {
+    font-family: var(--font-display);
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0 0 2pt 0;
+    line-height: 1.25;
+}
+
+.katib-team-grid__role {
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 5pt;
+    line-height: 1.3;
+}
+
+.katib-team-grid__credentials {
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 6pt;
+}
+
+.katib-team-grid__bio {
+    font-size: 9pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* Bordered variant — each member sits in a framed card. */
+.katib-team-grid--bordered .katib-team-grid__member {
+    border: 0.5pt solid var(--border);
+    border-radius: 4pt;
+    padding: 14pt 14pt 16pt;
+}
+
+/* ---- Arabic / RTL ---- */
+.katib-team-grid[lang="ar"] .katib-team-grid__eyebrow,
+.katib-team-grid[lang="ar"] .katib-team-grid__credentials {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.katib-team-grid[lang="ar"] .katib-team-grid__bio {
+    line-height: 1.7;
+}

@@ -1,0 +1,23 @@
+# Test inputs for `testimonial-card` isolated render.
+inputs:
+  eyebrow: "What clients say"
+  heading: "In their words"
+  columns: 2
+  testimonials:
+    - quote: "They reframed the problem before writing a single line of code. The result paid for itself within a quarter."
+      author: "Fatima Al-Rashid"
+      role: "Chief Operating Officer"
+      company: "Gulf Logistics"
+    - quote: "The most disciplined delivery team we have worked with anywhere in the region."
+      author: "James Carter"
+      role: "VP Engineering"
+      company: "Meridian"
+    - quote: "Clear thinking, honest timelines, and work that held up under real load."
+      author: "Aisha Mansour"
+      role: "Director of Digital"
+      company: "National Bank"
+    - quote: "They treated our budget like their own and shipped exactly what we needed."
+      author: "Khalid Otaibi"
+      company: "Vista Retail"
+brand: null
+variant: null

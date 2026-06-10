@@ -1,0 +1,10 @@
+# Test inputs for `badge-row` isolated render.
+inputs:
+  items:
+    - { label: "ISO 9001", sublabel: "Quality" }
+    - { label: "ISO 27001", sublabel: "Security" }
+    - { label: "Great Place to Work", sublabel: "Certified 2024" }
+    - { label: "AWS Advanced Partner" }
+    - "Member, GCC BPO Council"
+brand: null
+variant: null

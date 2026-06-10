@@ -1,0 +1,44 @@
+name: team-grid
+tier: section
+version: 0.1.0
+namespace: katib
+description: >
+  Leadership / team member grid — each member is a card with a photo (or an
+  initial-placeholder), name, role, optional credentials line, and a short
+  bio. Lays out in 2-4 columns. For company-profile leadership pages,
+  about-us team sections, advisory boards, and any people-with-bios layout.
+  Distinct from org-chart (hierarchy, no photos/bios) and feature-row
+  (parallel ideas, not people).
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, accent_on, border]
+  fonts: [primary, display]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Optional uppercase label above the heading (e.g. "Our team").
+    - heading:
+        type: string
+        required: false
+        description: Optional section heading above the grid.
+    - columns:
+        type: int
+        required: false
+        description: "Column count: 2, 3 (default), or 4. Use 2 for fuller bios, 4 for name+role rosters."
+    - members:
+        type: array
+        required: true
+        description: >
+          Array of member objects. Each member: {name (required), role
+          (required), photo (optional image path - square crops best, falls
+          back to a coloured initial), credentials (optional short line such
+          as "MBA, PMP"), bio (optional one-paragraph blurb)}.
+variants:
+  - default
+  - bordered
+page_behavior:
+  mode: flowing-protect-items
+  protect_items:
+    - .katib-team-grid__member

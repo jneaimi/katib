@@ -1,0 +1,28 @@
+name: badge-row
+tier: primitive
+version: 0.1.0
+namespace: katib
+description: >
+  Certification / award / accreditation badges — a row of bordered pills, each
+  with a label and an optional smaller sublabel. Heavier and more structured
+  than tag-chips (which is for keywords/tags); use badge-row for ISO marks,
+  memberships, ratings, awards, and accreditation strips on company profiles
+  and capability statements.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, accent, accent_on, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - items:
+        type: array
+        required: true
+        description: >
+          Array of badge items. Each item is either a plain string (renders as
+          a single-line badge) or an object {label (required), sublabel
+          (optional smaller line below, e.g. "Certified 2024")}.
+variants:
+  - default
+  - solid
+page_behavior:
+  mode: atomic

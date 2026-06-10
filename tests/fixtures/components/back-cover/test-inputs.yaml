@@ -1,0 +1,12 @@
+# Test inputs for `back-cover` isolated render.
+inputs:
+  eyebrow: "Get in touch"
+  title: "Let's build what's next."
+  message: "Tell us where you're headed and we'll show you the shortest credible path to get there."
+  contacts:
+    - { label: "Email", value: "hello@acme.com" }
+    - { label: "Phone", value: "+971 4 000 0000" }
+    - { label: "Web", value: "acme.com" }
+  reference_code: "PROFILE-2026"
+brand: null
+variant: null

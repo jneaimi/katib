@@ -1,0 +1,17 @@
+# Test inputs for `logo-wall` isolated render.
+# Uses the repo placeholder logo (resolves against REPO_ROOT base_url).
+inputs:
+  eyebrow: "Our clients"
+  heading: "Trusted by leading organisations"
+  columns: 4
+  logos:
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Aramco" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Emirates" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "SABIC" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Mubadala" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Etihad" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Majid Al Futtaim" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "stc" }
+    - { image: "brands/fixtures/placeholder-logo.svg", name: "Ma'aden" }
+brand: null
+variant: null
