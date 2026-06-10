@@ -299,7 +299,10 @@ def render_context(tokens: dict[str, Any], lang: str) -> dict[str, Any]:
             continue
         seen_bases.add(key)
         if lang == "ar":
-            ar_sibling = identity_raw.get(f"{key}_ar")
+            # Arabic value can come from a separate `identity_ar:` block (the
+            # documented brand-profile schema) or an inline `<key>_ar` sibling.
+            ar_block = tokens.get("identity_ar", {}) or {}
+            ar_sibling = ar_block.get(key) or identity_raw.get(f"{key}_ar")
             if ar_sibling:
                 identity[key] = ar_sibling
                 continue

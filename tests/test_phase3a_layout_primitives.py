@@ -161,3 +161,73 @@ def test_layout_components_declare_expected_page_behavior():
         assert pb.get("mode") == mode, f"{name} page_behavior.mode: got {pb.get('mode')!r}, expected {mode!r}"
         assert pb.get("break_before") == before, f"{name} break_before: got {pb.get('break_before')!r}, expected {before!r}"
         assert pb.get("break_after") == after, f"{name} break_after: got {pb.get('break_after')!r}, expected {after!r}"
+
+
+def test_full_bleed_page_embeds_raster_image(tmp_path):
+    """Regression: full-bleed-page must actually RENDER a raster image, not
+    collapse it to a black page.
+
+    WeasyPrint resolves an absolutely-positioned image's size (and `object-fit`)
+    only against a container with a *definite* height. The container previously
+    used `min-height`, so the image, scrim, and bottom/center overlay positions
+    silently collapsed to zero — producing a black page. The earlier orientation
+    test never caught it because a black page is still portrait.
+
+    A collapsed image yields a ~19 KB PDF; a correctly embedded raster is
+    hundreds of KB. Assert the image is actually present, and that the atomic
+    page does not overflow to a second (blank) page.
+    """
+    raster = REPO_ROOT / "tests" / "fixtures" / "cover-bg.jpg"
+    assert raster.exists(), "test fixture cover-bg.jpg missing"
+
+    recipe = tmp_path / "fb-regression.yaml"
+    recipe.write_text(
+        "name: fb-regression\n"
+        "version: 0.1.0\n"
+        "namespace: katib\n"
+        "description: Regression recipe — full-bleed-page must embed a raster image.\n"
+        "languages: [en]\n"
+        "target_pages: [1, 1]\n"
+        "page_limit: 1\n"
+        "when: test only\n"
+        "keywords: [test, full-bleed, raster]\n"
+        "sections:\n"
+        "- component: full-bleed-page\n"
+        "  variant: with-overlay\n"
+        "  inputs:\n"
+        "    position: bottom-left\n"
+        "    title: \"Image must render\"\n"
+        "    image:\n"
+        "      source: user-file\n"
+        f"      path: {raster}\n"
+        "      alt_text: regression fixture\n",
+        encoding="utf-8",
+    )
+    out = tmp_path / "fb-regression.pdf"
+    r = subprocess.run(
+        [sys.executable, "scripts/build.py", str(recipe),
+         "--lang", "en", "--out", str(out), "--skip-audit-check"],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=120,
+    )
+    assert r.returncode == 0, f"build failed:\n{r.stderr}\n{r.stdout}"
+
+    reader = PdfReader(str(out))
+    assert len(reader.pages) == 1, "atomic full-bleed overflowed to a second page"
+
+    # Direct check: a real image XObject must be drawn on the page. When the
+    # container loses its definite height the image collapses to zero and no
+    # image XObject is emitted (the page is pure black) — that is the bug this
+    # guards against. (A PDF-size threshold is unreliable: small fixtures embed
+    # tiny streams even when correct.)
+    page = reader.pages[0]
+    xobjects = page.get("/Resources", {}).get("/XObject")
+    image_xobjects = []
+    if xobjects is not None:
+        for name, ref in xobjects.get_object().items():
+            obj = ref.get_object()
+            if obj.get("/Subtype") == "/Image" and int(obj.get("/Width", 0)) > 1:
+                image_xobjects.append(name)
+    assert image_xobjects, (
+        "full-bleed raster collapsed — no image XObject on the page; the "
+        "container likely lost its definite height again"
+    )

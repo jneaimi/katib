@@ -1,19 +1,20 @@
+/* Normal flow (not flex): WeasyPrint does not honour flex main-axis
+   `margin: auto`, so the old flex column could not push the footer to the
+   page bottom — and overlapped once a logo was present. The page box keeps
+   full height via `min-height`; the body drops in via a fixed top margin. */
 .katib-cover {
     min-height: 253mm;
-    display: flex;
-    flex-direction: column;
     padding: 0;
     margin: 0;
 }
 
 .katib-cover__logo {
-    margin: 0 0 auto 0;
+    margin: 0;
     max-height: 18mm;
 }
 
 .katib-cover__body {
     margin-top: 60mm;
-    margin-bottom: auto;
 }
 
 .katib-cover__eyebrow {
@@ -60,7 +61,7 @@
 }
 
 .katib-cover__footer {
-    margin-top: auto;
+    margin-top: 44pt;
     padding-top: 0.8em;
     border-top: 1px solid var(--border-strong);
     font-family: var(--font-primary);
@@ -81,15 +82,23 @@
 
 /* ---- Image-backed variants (image-background, neural-cartography) ---- */
 
+/* True full-bleed needs a zero-margin named page. The negative-margin trick
+   (margin: -20mm against the base 20mm @page) does NOT reach the bottom edge
+   in WeasyPrint — it leaves a page-background band at the foot of the sheet.
+   This is the same approach full-bleed-page uses, which bleeds correctly. */
+@page cover-bleed {
+    size: A4;
+    margin: 0;
+}
+
 .katib-cover--has-image {
-    /* Full-bleed: pull out of the @page 20mm margin so the image reaches the
-       physical page edges, and compensate with equivalent internal padding
-       so the title/subtitle keep their original inset from the page edge. */
+    page: cover-bleed;
     position: relative;
     overflow: hidden;
-    margin: -20mm;
-    padding: 38mm 36mm;
-    min-height: 297mm;
+    width: 210mm;
+    height: 297mm;          /* definite — required for the bg to resolve */
+    margin: 0;
+    padding: 38mm 36mm;     /* content inset from the now-zero page margin */
     box-sizing: border-box;
 }
 
@@ -97,8 +106,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 210mm;           /* explicit A4 — percentages collapse here */
+    height: 297mm;
     object-fit: cover;
     z-index: 0;
 }

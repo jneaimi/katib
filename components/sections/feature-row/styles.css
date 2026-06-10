@@ -12,6 +12,12 @@
     margin-bottom: 6pt;
 }
 
+/* RTL: letter-spacing + uppercase break Arabic cursive joining — drop them. */
+.katib-feature-row[lang="ar"] .katib-feature-row__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
 .katib-feature-row__title {
     font-family: var(--font-display);
     font-size: 16pt;

@@ -9,9 +9,13 @@
 .katib-full-bleed {
     page: full-bleed;
     position: relative;
-    /* A4 is 210×297mm. Min-height hits the full page so WeasyPrint
-       doesn't short-layout the section when content is thin. */
-    min-height: 297mm;
+    /* A4 is 210×297mm. A *definite* height (not just min-height) is required
+       so that absolutely-positioned children resolve their percentage sizes
+       and `top`/`bottom`/`%` offsets against it. With only min-height,
+       WeasyPrint treats the container height as auto for that resolution, and
+       the image, scrim, and bottom/center overlay positions all collapse to
+       zero. This is the single root cause of the "black full-bleed page" bug. */
+    height: 297mm;
     width: 210mm;
     margin: 0;
     padding: 0;
@@ -20,13 +24,15 @@
 }
 
 .katib-full-bleed__image {
+    /* Explicit A4 dimensions, not percentages. Every child here is absolutely
+       positioned, so the parent has no in-flow height and `height: 100%`
+       collapses to zero in WeasyPrint (the image silently renders empty).
+       The named @page is fixed A4, so hard-set the image to the sheet size. */
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 210mm;
+    height: 297mm;
     object-fit: cover;
     z-index: 0;
 }
@@ -37,11 +43,13 @@
 }
 
 .katib-full-bleed__scrim {
+    /* Explicit A4 size — same reason as __image: percentage/all-inset sizing
+       collapses to zero here because every child is absolutely positioned. */
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
+    width: 210mm;
+    height: 297mm;
     background: linear-gradient(180deg,
         rgba(0,0,0,0.35) 0%,
         rgba(0,0,0,0.15) 40%,
