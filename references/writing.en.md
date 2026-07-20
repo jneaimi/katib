@@ -6,6 +6,33 @@ recipe and component; recipe-specific tuning goes in each recipe's
 
 ---
 
+## House voice — the shared canon (aligns with TeamSoul ADR-040)
+
+One voice runs across all of Jasem's tooling — TeamSoul, Katib, and every skill
+that authors prose. Its anchor: **answer-first · short · active · outcome-named ·
+ask-explicit.** The Brand voice and Core rules below *are* that canon, tuned for
+print-grade bilingual documents; the per-family notes are the document-specific
+surface map layered on top.
+
+The same canon governs TeamSoul's AI authoring — decision **`ADR-040`** (teamsoul
+project) and its `tsoul` skill. Katib's version is deliberately *richer*: it adds
+per-family register, bilingual (EN↔AR) conventions, and the mechanical
+`content_lint.py` + 5-dimension quality gate that the shared canon otherwise
+leaves to human judgement. **When you edit voice here, keep the anchor identical
+so the two never drift.** This file stays self-contained — it names the canon, it
+does not import it.
+
+**Anchor ↔ rule map** (proof it's one voice, not a second style):
+
+| Canon anchor | Where it lives below |
+|---|---|
+| answer-first (BLUF) | Rule 1 — Lead with the point |
+| short / varied rhythm | Rule 3 — cut hedges · Rule 5 — vary sentence length |
+| active, human subjects | Rule 6 — Make people the subject |
+| outcome-named | Rule 2 — Data over adjectives · Rule 4 — Specific nouns |
+| ask-explicit | the per-family CTA / next-step notes (proposal, letter, marketing-print) — a doc that *should* ask, asks in one line; a report or NOC correctly does not |
+| no slop | Rule 10 — No AI tells + `content_lint.py` |
+
 ## Brand voice (EN)
 
 Three qualities, never traded off:
