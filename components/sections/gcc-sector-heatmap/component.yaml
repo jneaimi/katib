@@ -1,0 +1,35 @@
+name: gcc-sector-heatmap
+tier: section
+version: 0.1.0
+namespace: katib
+description: Finding × sector heatmap. Each cell carries a relevance label (HIGH / MED / LOW or operator-defined) that tints the cell from amber (high) through cream (medium) to pale (low). Sector columns are configurable; default is GCC-tuned (Banking, Government, Real Estate, Energy, SME / SMB). Used as Figure 3 in Signal Forge peer briefings.
+languages: [en, ar]
+requires:
+  tokens: [accent, text-secondary]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the heatmap.
+    - title:
+        type: string
+        required: false
+        description: Optional heading rendered above the eyebrow.
+    - sectors:
+        type: array
+        required: false
+        description: Column headers (sectors). Defaults to ["Banking", "Government", "Real Estate", "Energy", "SME / SMB"].
+    - rows:
+        type: array
+        required: true
+        description: 'Findings to plot. Each row is {label, cells} where `cells` is an array of strings, one per sector, each one of "HIGH" | "MED" | "LOW" (or any custom label — colour mapping defaults to high/med/low only).'
+    - caption:
+        type: string
+        required: false
+        description: Italic note rendered below the heatmap.
+variants:
+  - default
+page_behavior:
+  mode: atomic

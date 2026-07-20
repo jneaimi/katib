@@ -1,0 +1,94 @@
+.katib-signal-cluster-bar {
+    margin: 1.4em 0;
+}
+
+.katib-signal-cluster-bar__title {
+    margin: 0 0 0.4em 0;
+    font-size: 14pt;
+    line-height: 1.3;
+    color: var(--text);
+}
+
+.katib-signal-cluster-bar__eyebrow {
+    font-size: 9pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 0.6em;
+}
+
+.katib-signal-cluster-bar__figure {
+    margin: 0;
+}
+
+.katib-signal-cluster-bar__svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    font-family: var(--font-primary, "Newsreader", Georgia, serif);
+}
+
+.katib-signal-cluster-bar__axis-label {
+    font-size: 8pt;
+    fill: var(--text-secondary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.katib-signal-cluster-bar__grid-line {
+    stroke: var(--border);
+    stroke-width: 0.5;
+}
+
+.katib-signal-cluster-bar__baseline {
+    stroke: var(--text-secondary);
+    stroke-width: 0.75;
+}
+
+.katib-signal-cluster-bar__bar {
+    fill: var(--accent);
+}
+
+.katib-signal-cluster-bar__bar--high {
+    fill: #F59E0B;
+}
+
+.katib-signal-cluster-bar__bar--mid {
+    fill: #FB923C;
+}
+
+.katib-signal-cluster-bar__bar--low {
+    fill: #A1A1AA;
+}
+
+.katib-signal-cluster-bar__label {
+    font-size: 10pt;
+    fill: var(--text);
+}
+
+.katib-signal-cluster-bar__value {
+    font-size: 10pt;
+    fill: var(--text);
+    font-weight: 600;
+}
+
+.katib-signal-cluster-bar__caption {
+    font-size: 8.5pt;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 0.3em;
+    line-height: 1.45;
+}
+
+.katib-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

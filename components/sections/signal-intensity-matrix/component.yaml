@@ -1,0 +1,43 @@
+name: signal-intensity-matrix
+tier: section
+version: 0.1.0
+namespace: katib
+description: Two-column dot-grid matrix for comparing intensity scores (e.g., global discourse vs regional resonance) across N findings. Each row shows N dots filled per column tier; below threshold dots are outlined. Columns are configurable; default is "global vs GCC". Used as Figure 2 in Signal Forge peer briefings.
+languages: [en, ar]
+requires:
+  tokens: [accent, text-secondary]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the matrix.
+    - title:
+        type: string
+        required: false
+        description: Optional heading rendered above the eyebrow.
+    - column_a_label:
+        type: string
+        required: false
+        description: Header for the first intensity column. Defaults to "GLOBAL DISCOURSE".
+    - column_b_label:
+        type: string
+        required: false
+        description: Header for the second intensity column. Defaults to "GCC RESONANCE".
+    - max_intensity:
+        type: number
+        required: false
+        description: Number of dots per cell (intensity scale). Defaults to 5.
+    - rows:
+        type: array
+        required: true
+        description: 'Findings to plot. Each row is {label, a, b} where `a` and `b` are integers from 0 to max_intensity.'
+    - caption:
+        type: string
+        required: false
+        description: Italic note rendered below the matrix.
+variants:
+  - default
+page_behavior:
+  mode: atomic

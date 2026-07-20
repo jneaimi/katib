@@ -1,0 +1,12 @@
+# Mirrors today's Signal Forge Figure 2 (2026-05-14).
+inputs:
+  eyebrow: "Figure 2 · Signal-intensity matrix · global discourse vs GCC resonance"
+  rows:
+    - { label: "Protocol war resolved (24h)", a: 5, b: 3 }
+    - { label: "Claude Code as team-productivity platform", a: 5, b: 4 }
+    - { label: "GCC dual-track (enterprise vs SMB)", a: 3, b: 5 }
+    - { label: "Agent memory architecture", a: 4, b: 3 }
+    - { label: "Non-tech monetisation · Arabic gap", a: 2, b: 3 }
+  caption: "Today's GCC column carries weight, unlike yesterday's read where every row sat at zero."
+brand: null
+variant: null

@@ -1,0 +1,17 @@
+# Mirrors today's Signal Forge Figure 3 (2026-05-14).
+inputs:
+  eyebrow: "Figure 3 · GCC sector relevance · finding × sector"
+  rows:
+    - label: "Protocol war resolved"
+      cells: [HIGH, MED, HIGH, LOW, MED]
+    - label: "Claude Code · team-productivity"
+      cells: [HIGH, HIGH, MED, MED, HIGH]
+    - label: "GCC dual-track (enterprise vs SMB)"
+      cells: [HIGH, HIGH, MED, HIGH, HIGH]
+    - label: "Agent memory architecture"
+      cells: [HIGH, HIGH, LOW, HIGH, LOW]
+    - label: "Non-tech monetisation · Arabic gap"
+      cells: [LOW, LOW, LOW, LOW, HIGH]
+  caption: "Banking and Government carry the most HIGH cells (3 each). SME/SMB pulls HIGH on three of five findings — the highest dispersion across any sector and the segment with the thinnest current vendor coverage."
+brand: null
+variant: null

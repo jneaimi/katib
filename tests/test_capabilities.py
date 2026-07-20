@@ -64,8 +64,10 @@ def test_rank_keyword_overlap():
 
 def test_rank_returns_empty_on_no_overlap():
     caps = load_capabilities()
-    # Gibberish should produce zero matches
-    matches = rank_recipes("xyzzyzzy nothing-here-blarg", caps, top_k=3)
+    # Gibberish should produce zero matches. Keep every token a genuine
+    # non-word — "nothing-here-blarg" split to a real token ("here") that
+    # overlapped a recipe description once the library grew.
+    matches = rank_recipes("xyzzyzzy qwbvfz blargnix", caps, top_k=3)
     assert matches == []
 
 

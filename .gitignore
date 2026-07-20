@@ -53,3 +53,6 @@ brands/*.yaml
 brands/*.yml
 !brands/example.yaml
 !brands/fixtures/
+
+# Local agent runtime state (not shared)
+.claude/

@@ -1,0 +1,33 @@
+# Test inputs for `signal-cluster-bar` isolated render.
+# Mirrors a real Signal Forge miner-daily Figure 1 (2026-05-14).
+inputs:
+  eyebrow: "Figure 1 · Cluster discourse density · 24-hour pull, 7-day window"
+  x_axis_label: "CROSS-PLATFORM VIEWS · 24-HOUR PULL · 7-DAY WINDOW"
+  items:
+    - label: "Claude Code adoption"
+      value: 1830000
+      value_display: "1.83M"
+      intensity: high
+    - label: "Agentic commerce resolution"
+      value: 1770000
+      value_display: "1.77M"
+      intensity: high
+    - label: "Agent memory architecture"
+      value: 340000
+      value_display: "~340K"
+      intensity: mid
+    - label: "GCC AI agents · dual track"
+      value: 240000
+      value_display: "240K"
+      intensity: mid
+    - label: "Arabic AI safety (single signal)"
+      value: 211000
+      value_display: "211K"
+      intensity: mid
+    - label: "Non-tech Claude monetisation"
+      value: 21000
+      value_display: "~21K"
+      intensity: low
+  caption: "Two clusters carry the day at near-equal weight (Claude Code adoption, agentic commerce resolution). The Arabic AI safety bar is one video at 211,054 views; it appears in the chart because a single signal at that scale is itself the analytical content."
+brand: null
+variant: null

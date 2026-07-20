@@ -1,0 +1,72 @@
+# Mirrors today (2026-05-14) trend block.
+inputs:
+  eyebrow: Figure 0 · 14-day cluster trajectory · today = 14 May
+  x_ticks:
+  - x: 40.0
+    label: 30 Apr
+  - x: 107.5
+    label: 1 May
+  - x: 175.0
+    label: 4 May
+  - x: 242.5
+    label: 5 May
+  - x: 310.0
+    label: 7 May
+  - x: 377.5
+    label: 8 May
+  - x: 445.0
+    label: 11 May
+  - x: 512.5
+    label: 12 May
+  - x: 580.0
+    label: 14 May
+  y_ticks:
+  - y: 210.0
+    label: '0'
+  - y: 146.66666666666669
+    label: '200'
+  - y: 83.33333333333334
+    label: '400'
+  - y: 20.0
+    label: '600'
+  today_index: 8
+  today_x: 580.0
+  y_max: 600
+  chart_geometry:
+    view_w: 600
+    view_h: 240
+    chart_top: 20
+    chart_bottom: 210
+    chart_left: 40
+    chart_right: 580
+  bands:
+  - cluster: AI agents in GCC
+    color: '#F59E0B'
+    points: 40.0,182.4 107.5,178.3 175.0,182.4 242.5,178.7 310.0,183.1 377.5,173.9 445.0,178.7 512.5,168.8 580.0,149.5 580.0,210.0
+      512.5,210.0 445.0,210.0 377.5,210.0 310.0,210.0 242.5,210.0 175.0,210.0 107.5,210.0 40.0,210.0
+    today_value: 191
+  - cluster: Claude Code
+    color: '#FB923C'
+    points: 40.0,182.4 107.5,178.3 175.0,182.4 242.5,178.7 310.0,183.1 377.5,173.9 445.0,178.7 512.5,168.8 580.0,94.7 580.0,149.5
+      512.5,168.8 445.0,178.7 377.5,173.9 310.0,183.1 242.5,178.7 175.0,182.4 107.5,178.3 40.0,182.4
+    today_value: 173
+  - cluster: Agentic Commerce Protocol War
+    color: '#FDBA74'
+    points: 40.0,182.4 107.5,178.3 175.0,182.4 242.5,178.7 310.0,183.1 377.5,173.9 445.0,178.7 512.5,168.8 580.0,43.8 580.0,94.7
+      512.5,168.8 445.0,178.7 377.5,173.9 310.0,183.1 242.5,178.7 175.0,182.4 107.5,178.3 40.0,182.4
+    today_value: 161
+  - cluster: Agentic Commerce
+    color: '#FED7AA'
+    points: 40.0,182.4 107.5,178.3 175.0,182.4 242.5,128.3 310.0,183.1 377.5,173.9 445.0,178.7 512.5,168.8 580.0,39.6 580.0,43.8
+      512.5,168.8 445.0,178.7 377.5,173.9 310.0,183.1 242.5,178.7 175.0,182.4 107.5,178.3 40.0,182.4
+    today_value: 13
+  - cluster: Other clusters
+    color: '#A1A1AA'
+    points: 40.0,95.4 107.5,92.8 175.0,70.7 242.5,87.1 310.0,55.5 377.5,50.4 445.0,81.8 512.5,40.0 580.0,24.8 580.0,39.6 512.5,168.8
+      445.0,178.7 377.5,173.9 310.0,183.1 242.5,128.3 175.0,182.4 107.5,178.3 40.0,182.4
+    today_value: 47
+  caption: Stacked daily signal volume across 9 run-days in the last 14 days (30 Apr–14 May). Top 4 clusters of today are coloured;
+    everything else folds into the grey 'Other' band. Days with no market-signal collection are omitted from the x-axis. Today
+    is 34% above the 8-day mean.
+brand: null
+variant: null

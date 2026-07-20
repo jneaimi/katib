@@ -27,4 +27,7 @@
 {%- elif v == 'content' and input.raw_body %}
     <div class="katib-slide-frame__body">{{ input.raw_body | safe }}</div>
 {%- endif %}
+{%- if logo and logo.primary %}
+    <img class="katib-slide-frame__logo" src="{{ logo.primary }}" alt="{{ name or '' }}">
+{%- endif %}
 </section>

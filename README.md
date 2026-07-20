@@ -36,7 +36,7 @@ npx @jasemal/katib@0 install
 | **Migration guide:** | [MIGRATING.md](MIGRATING.md) — v0.x → v1.0.0 |
 | **Archived source:** | v0 code under `v1-reference/` (read-only) |
 | **Architecture notes:** | See [CHANGELOG.md](CHANGELOG.md) for phase-by-phase design decisions |
-| **Component library** | 59 components · 18 primitives, 38 sections, 3 covers |
+| **Component library** | 63 components · 18 primitives, 42 sections, 3 covers |
 | **Starter recipes** | 21 bilingual (EN + AR) across business, editorial, financial, formal, legal, personal, report, and tutorial domains |
 | **Pack format** | `pack_format: 1` frozen — see [PACK-FORMAT.md](PACK-FORMAT.md) |
 | **Per-project defaults** | Drop a `.katib.yaml` at any project root to pin `brand` / `lang` defaults — see [SKILL.md §Per-project defaults](SKILL.md#per-project-defaults--katibyaml) |

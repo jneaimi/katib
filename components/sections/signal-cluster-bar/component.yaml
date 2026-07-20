@@ -1,0 +1,35 @@
+name: signal-cluster-bar
+tier: section
+version: 0.1.0
+namespace: katib
+description: Data-driven horizontal cluster-density bar chart for signal/intelligence briefs. Bars auto-scale to the longest value, color-coded by intensity tier (high amber, mid orange, low grey). Value labels render adjacent to bar ends; bars never overflow the viewBox. Renders the SVG inline from structured data, unlike chart-bar which wraps a hand-crafted SVG.
+languages: [en, ar]
+requires:
+  tokens: [accent, text, text-secondary, border]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the chart (e.g., "FIGURE 1 · CLUSTER DISCOURSE DENSITY").
+    - title:
+        type: string
+        required: false
+        description: Optional heading rendered above the eyebrow.
+    - x_axis_label:
+        type: string
+        required: false
+        description: Single-line label rendered just inside the chart, top-right (e.g., "CROSS-PLATFORM VIEWS · 24-HOUR PULL").
+    - items:
+        type: array
+        required: true
+        description: 'Bars to plot. Each item is {label, value, value_display, intensity}. `value` is a number used for bar width scaling. `value_display` is the string shown next to the bar (e.g., "1.83M", "~340K"). `intensity` is one of "high" | "mid" | "low" and maps to color tier.'
+    - caption:
+        type: string
+        required: false
+        description: Italic note rendered below the chart.
+variants:
+  - default
+page_behavior:
+  mode: atomic

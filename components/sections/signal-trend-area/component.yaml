@@ -1,0 +1,50 @@
+name: signal-trend-area
+tier: section
+version: 0.1.0
+namespace: katib
+description: Stacked-area trend chart for signal-volume-by-cluster over time. Renders pre-computed polygon points (helper script `extract-signal-trend.py` does the SQL + math). Today's column is highlighted with a vertical rule and TODAY annotation. Used as Figure 0 in Signal Forge peer briefings to contextualise today against the last N run-days.
+languages: [en, ar]
+requires:
+  tokens: [accent, text-secondary]
+  fonts: [primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+    - title:
+        type: string
+        required: false
+    - bands:
+        type: array
+        required: true
+        description: 'Stacked area bands, bottom to top. Each band is {cluster, color, points, today_value}.'
+    - x_ticks:
+        type: array
+        required: true
+        description: 'X-axis tick labels. Each tick is {x, label}.'
+    - y_ticks:
+        type: array
+        required: true
+        description: 'Y-axis tick labels. Each tick is {y, label}.'
+    - today_x:
+        type: number
+        required: false
+        description: X coordinate for the today highlight rule.
+    - today_index:
+        type: number
+        required: false
+    - y_max:
+        type: number
+        required: false
+    - chart_geometry:
+        type: object
+        required: true
+        description: 'SVG geometry. {view_w, view_h, chart_top, chart_bottom, chart_left, chart_right}.'
+    - caption:
+        type: string
+        required: false
+variants:
+  - default
+page_behavior:
+  mode: atomic

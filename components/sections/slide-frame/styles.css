@@ -6,6 +6,15 @@
 @page slide {
     size: A4 landscape;
     margin: 18mm;
+    /* Auto slide number in the bottom-center margin (n / N). Centered so it
+       never collides with a PDF reader's own corner page overlay, and renders
+       in the page margin — outside the content box, never over the slide art. */
+    @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: 'IBM Plex Mono', 'Courier New', monospace;
+        font-size: 8pt;
+        color: var(--text-tertiary, #8A8270);
+    }
 }
 
 .katib-slide-frame {
@@ -178,6 +187,27 @@
 
 .katib-slide-frame--has-image .katib-slide-frame__subtitle {
     color: rgba(255, 255, 255, 0.88);
+}
+
+/* Brand logo — small, consistent corner mark on every slide */
+.katib-slide-frame__logo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    max-height: 7mm;
+    width: auto;
+    z-index: 3;
+}
+
+/* On dark image-background slides, the logo insets into the full-bleed
+   padding so it reads against the photo + scrim. NOTE: CSS `filter` is
+   unsupported by WeasyPrint (parse warning → build fails), so we cannot
+   auto-invert a dark logo to white here. For a white mark on dark slides,
+   pass a pre-inverted asset (e.g. logo.primary_light) rather than filtering. */
+.katib-slide-frame--has-image .katib-slide-frame__logo {
+    right: 22mm;
+    bottom: 18mm;
+    opacity: 0.92;
 }
 
 /* Title-only variant — center the title block vertically */
