@@ -32,14 +32,18 @@ def _load_yaml(p: Path) -> dict:
     return yaml.safe_load(p.read_text(encoding="utf-8")) or {}
 
 
-def collect_components() -> dict[str, dict]:
+def collect_components(bundled_only: bool = False) -> dict[str, dict]:
     """Collect components from bundled AND user tiers. User-tier components
     shadow bundled ones of the same name (last-wins since user is processed
-    second) — matches the render-time precedent in compose."""
+    second) — matches the render-time precedent in compose.
+
+    `bundled_only=True` skips the user tier entirely — used to generate the
+    COMMITTED capabilities.yaml, which must never carry private (namespace:
+    user) content into the public repo.
+    """
     out: dict[str, dict] = {}
-    component_dirs = [
-        d for d in (COMPONENTS_DIR, user_components_dir()) if d.exists()
-    ]
+    tiers = [COMPONENTS_DIR] if bundled_only else [COMPONENTS_DIR, user_components_dir()]
+    component_dirs = [d for d in tiers if d.exists()]
     for base in component_dirs:
         for tier_dirname in TIER_DIRS:
             tier_dir = base / tier_dirname
@@ -63,13 +67,16 @@ def collect_components() -> dict[str, dict]:
     return out
 
 
-def collect_recipes(components: dict[str, dict]) -> dict[str, dict]:
+def collect_recipes(components: dict[str, dict], bundled_only: bool = False) -> dict[str, dict]:
     """Collect recipes from bundled AND user tiers. User-tier recipes with
     the same name as a bundled recipe shadow the bundled one (last-wins
     since user tier is processed second).
+
+    `bundled_only=True` skips the user tier — see collect_components().
     """
     out: dict[str, dict] = {}
-    recipe_dirs = [d for d in (RECIPES_DIR, user_recipes_dir()) if d.exists()]
+    tiers = [RECIPES_DIR] if bundled_only else [RECIPES_DIR, user_recipes_dir()]
+    recipe_dirs = [d for d in tiers if d.exists()]
     seen: set[str] = set()
     for rdir in recipe_dirs:
         for rfile in sorted(rdir.glob("*.yaml")):
@@ -128,9 +135,9 @@ def governance() -> dict:
     }
 
 
-def build_capabilities() -> dict:
-    components = collect_components()
-    recipes = collect_recipes(components)
+def build_capabilities(bundled_only: bool = False) -> dict:
+    components = collect_components(bundled_only=bundled_only)
+    recipes = collect_recipes(components, bundled_only=bundled_only)
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "schema_version": SCHEMA_VERSION,
@@ -143,14 +150,24 @@ def build_capabilities() -> dict:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default=str(DEFAULT_OUT), help="Output path.")
+    ap.add_argument(
+        "--bundled-only",
+        action="store_true",
+        help="Exclude the user tier (~/.katib). REQUIRED for the committed "
+        "capabilities.yaml so private (namespace: user) content never enters "
+        "the public repo.",
+    )
     args = ap.parse_args(argv)
 
-    caps = build_capabilities()
+    caps = build_capabilities(bundled_only=args.bundled_only)
     text = yaml.safe_dump(caps, sort_keys=False, allow_unicode=True, width=100)
     banner = (
         "# capabilities.yaml — AUTO-GENERATED from components/ + recipes/.\n"
-        "# Do not hand-edit. Regenerate with:\n"
-        "#     uv run scripts/generate_capabilities.py\n\n"
+        "# Do not hand-edit. Regenerate the COMMITTED manifest with:\n"
+        "#     uv run scripts/generate_capabilities.py --bundled-only\n"
+        "# --bundled-only excludes the user tier (~/.katib) so private content\n"
+        "# never enters the public repo. A pre-commit guard rejects any\n"
+        "# 'namespace: user' entry here.\n\n"
     )
     out_path = Path(args.out)
     out_path.write_text(banner + text, encoding="utf-8")

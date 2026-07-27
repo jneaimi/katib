@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Guard: the committed capabilities.yaml must be bundled-only. A 'namespace:
+# user' entry means a runtime-merged manifest (private ~/.katib content) is
+# about to be committed to the public repo. Regenerate with:
+#   uv run scripts/generate_capabilities.py --bundled-only
+set -euo pipefail
+f=capabilities.yaml
+if [ -f "$f" ] && grep -vE '^[[:space:]]*#' "$f" | grep -q 'namespace: user'; then
+  echo "pre-commit: BLOCKED — capabilities.yaml carries private 'namespace: user' entries." >&2
+  echo "  Regenerate: uv run scripts/generate_capabilities.py --bundled-only" >&2
+  exit 1
+fi

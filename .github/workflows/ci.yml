@@ -64,3 +64,22 @@ jobs:
         run: bash -n install.sh
       - name: bash -n uninstall.sh
         run: bash -n uninstall.sh
+
+  capabilities-guard:
+    name: capabilities.yaml has no private (user-tier) content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Reject namespace-user entries in committed manifest
+        # The committed capabilities.yaml MUST be bundled-only. A user-tier
+        # (namespace: user) entry means a runtime-merged manifest — carrying
+        # private ~/.katib recipe/component descriptions — was committed to the
+        # public repo. Regenerate with:
+        #   uv run scripts/generate_capabilities.py --bundled-only
+        run: |
+          if grep -vE '^[[:space:]]*#' capabilities.yaml | grep -q 'namespace: user'; then
+            echo "::error file=capabilities.yaml::Private 'namespace: user' entry found. Regenerate with --bundled-only." >&2
+            grep -nE 'namespace: user' capabilities.yaml | head >&2
+            exit 1
+          fi
+          echo "OK: capabilities.yaml is bundled-only (no namespace: user)."
