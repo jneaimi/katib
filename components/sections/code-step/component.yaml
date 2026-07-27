@@ -1,0 +1,54 @@
+name: code-step
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  The verification unit for software tutorials: a code block with optional
+  per-line annotations and an optional "expected output" panel that lets
+  the reader confirm success without running anything. Composes the
+  bundled code-block primitive convention.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border, page_bg, tag_bg, code_bg, code_fg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - label:
+        type: string
+        required: false
+        description: Optional filename or context label rendered above the code (e.g., "stripe-server.ts" or "$ install").
+    - language:
+        type: string
+        required: false
+        description: |
+          Language tag for syntax-highlight hint and the "lang" badge — e.g.
+          "typescript", "bash", "python". Cosmetic only — no syntax
+          highlighting is rendered (this is print PDF, not a web doc).
+    - code:
+        type: string
+        required: true
+        description: Code content. Pass as a literal block scalar; preserves whitespace.
+    - annotations:
+        type: array
+        required: false
+        description: |
+          Array of {line, note} objects. `line` is whatever line indicator
+          the reader will recognise (an integer line number, a function
+          name, "the import line", etc.). `note` is a short prose
+          explanation. Rendered below the code block as a notes list.
+    - output:
+        type: string
+        required: false
+        description: |
+          Optional "expected output" — what the reader should see when they
+          run the code. Rendered as a terminal-style block below the
+          annotations. Pass as a literal block scalar.
+    - output_label:
+        type: string
+        required: false
+        description: Defaults per-language to "Expected output" / "المخرجات المتوقعة".
+variants:
+  - terminal
+  - editor
+page_behavior:
+  mode: atomic

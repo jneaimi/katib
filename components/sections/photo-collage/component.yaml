@@ -1,0 +1,94 @@
+name: photo-collage
+tier: section
+version: 1.0.0
+namespace: katib
+description: |
+  Magazine-style asymmetric photo collage. Six images in a mosaic — one
+  hero on the left at full collage height, three stacked supporting images
+  in the right column, and two more in a wide bottom row. Optional
+  eyebrow, title, subtitle and source attribution. Bilingual EN+AR.
+  Designed for news galleries, event coverage, photo essays.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - text_tertiary
+    - border
+    - border_strong
+    - accent
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title (e.g. "معرض الصور").
+    - title:
+        type: string
+        required: false
+        description: Section heading rendered above the collage.
+    - subtitle:
+        type: string
+        required: false
+        description: Optional one-line subtitle under the heading.
+    - hero_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Feature image — left column, full collage height.
+    - hero_caption:
+        type: string
+        required: false
+    - top_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Right-column top image.
+    - top_caption:
+        type: string
+        required: false
+    - middle_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Right-column middle image.
+    - middle_caption:
+        type: string
+        required: false
+    - bottom_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Right-column bottom image.
+    - bottom_caption:
+        type: string
+        required: false
+    - wide_left_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Bottom-row left image.
+    - wide_left_caption:
+        type: string
+        required: false
+    - wide_right_image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Bottom-row right image.
+    - wide_right_caption:
+        type: string
+        required: false
+    - source_attribution:
+        type: string
+        required: false
+        description: Tiny source/credit line at the bottom of the collage.
+variants:
+  - default
+page_behavior:
+  mode: atomic

@@ -1,0 +1,17 @@
+# Test inputs for `video-card` — uses the actual TikTok thumbnail and QR.
+inputs:
+  eyebrow: "مقطع فيديو"
+  title: "تصوير ومونتاج عرض قصصي ضمن مهرجان القلعة"
+  body: "لقطات مختارة من فعاليات المهرجان."
+  thumbnail:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  qr_code:
+    source: user-file
+    path: "tests/fixtures/tutorial-step.png"
+  url: "https://example.com/video"
+  platform: "TikTok"
+  author: "@example.studio"
+  duration: "0:42"
+brand: null
+variant: null

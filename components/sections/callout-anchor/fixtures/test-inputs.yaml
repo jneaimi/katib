@@ -1,0 +1,22 @@
+# Test inputs for `callout-anchor` isolated render.
+inputs:
+  image:
+    source: user-file
+    path: tests/fixtures/tutorial-step.png
+  alt_text: "Annotated UI diagram"
+  caption: "Stripe Dashboard — webhook configuration screen"
+  pins:
+    - n: 1
+      x: 18
+      y: 22
+      label: "Endpoint URL — paste your server's webhook URL here. Must be HTTPS."
+    - n: 2
+      x: 60
+      y: 38
+      label: "Events to send — start with checkout.session.completed only."
+    - n: 3
+      x: 82
+      y: 65
+      label: "Signing secret — copy this and set as STRIPE_WEBHOOK_SECRET in your .env."
+brand: null
+variant: solid

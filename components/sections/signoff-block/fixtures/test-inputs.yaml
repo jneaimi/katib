@@ -1,0 +1,19 @@
+# Test inputs for `signoff-block` isolated render.
+inputs:
+  heading: "Acceptance"
+  parties:
+    - label: "Prepared by"
+      fields:
+        - { label: "Name", value: "Alex Rivera" }
+        - { label: "Title", value: "Founder & Managing Director" }
+        - { label: "Signature" }
+        - { label: "Date" }
+      stamp: true
+    - label: "Client"
+      fields:
+        - { label: "Organization", value: "Example Org" }
+        - { label: "Name & Title" }
+        - { label: "Signature" }
+        - { label: "Date" }
+brand: example
+variant: null

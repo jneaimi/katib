@@ -1,0 +1,34 @@
+<section class="katib-section katib-code-step katib-code-step--{{ variant or 'terminal' }}" lang="ar" dir="rtl">
+    <div class="katib-code-step__code">
+{%- if input.label or input.language %}
+        <div class="katib-code-step__head">
+{%- if input.label %}
+            <span class="katib-code-step__label">{{ input.label }}</span>
+{%- endif %}
+{%- if input.language %}
+            <span class="katib-code-step__lang">{{ input.language }}</span>
+{%- endif %}
+        </div>
+{%- endif %}
+        <pre class="katib-code-step__pre"><code>{{ input.code | safe }}</code></pre>
+    </div>
+{%- if input.annotations %}
+    <div class="katib-code-step__annotations">
+        <div class="katib-code-step__annotations-label">ملاحظات</div>
+        <ul class="katib-code-step__annotations-list">
+{%- for annotation in input.annotations %}
+            <li class="katib-code-step__annotation">
+                <span class="katib-code-step__annotation-line">{{ annotation.line }}</span>
+                <span class="katib-code-step__annotation-note">{{ annotation.note }}</span>
+            </li>
+{%- endfor %}
+        </ul>
+    </div>
+{%- endif %}
+{%- if input.output %}
+    <div class="katib-code-step__output">
+        <div class="katib-code-step__output-label">{{ input.output_label or 'المخرجات المتوقعة' }}</div>
+        <pre class="katib-code-step__output-pre"><code>{{ input.output | safe }}</code></pre>
+    </div>
+{%- endif %}
+</section>

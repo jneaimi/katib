@@ -1,0 +1,45 @@
+name: before-after
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Paired panels showing initial vs final state with the same aspect ratio
+  enforced. Makes deltas legible — same camera angle, same crop, same
+  framing — so the reader's eye fixes on what changed instead of
+  recomposing the scene. Variants: side-by-side, stacked, filmstrip
+  (3-up: before / middle / after).
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border, page_bg, tag_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Before & after" / "قبل وبعد".
+    - before:
+        type: object
+        required: true
+        description: |
+          Panel 1 — the initial state. {image, label, caption?}. `image`
+          must be a user-file or screenshot (no gemini, the comparison is
+          factual). `label` is the small badge ("Before"). `caption` is
+          optional prose under the panel.
+    - after:
+        type: object
+        required: true
+        description: Panel 2 — the final state. Same shape as `before`.
+    - middle:
+        type: object
+        required: false
+        description: |
+          Optional middle panel for the `filmstrip` variant — an interim
+          state. Same shape as `before` and `after`. Ignored for
+          side-by-side and stacked variants.
+variants:
+  - side-by-side
+  - stacked
+  - filmstrip
+page_behavior:
+  mode: atomic

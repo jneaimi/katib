@@ -1,0 +1,18 @@
+# Test inputs for `decision-branch` isolated render.
+inputs:
+  heading: "Choose your path"
+  prompt: "Which runtime are you targeting?"
+  branches:
+    - label: "Node.js 20+"
+      when: "Recommended — broadest ecosystem support"
+      primary: true
+      body: "Install the SDK with `npm install [package]`. Initialise the client at module load with `new [SDK](process.env.[KEY])`. The rest of this tutorial assumes the Node.js path."
+    - label: "Python 3.11+"
+      when: "If you're on a Python service"
+      body: "Install with `pip install [package]`. The Python SDK has parity with Node.js for the methods used here, but the helper namespace differs — see the appendix on page 7."
+    - label: "Ruby 3.2+"
+      when: "Rails / Sinatra apps"
+      body: "Install with `bundle add [gem]`. The Ruby SDK requires explicit configuration of the API version — pin it in an initializer to avoid surprises."
+  alternates_label: "Other runtimes"
+brand: null
+variant: branched-list

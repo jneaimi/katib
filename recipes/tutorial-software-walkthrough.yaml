@@ -1,0 +1,237 @@
+name: tutorial-software-walkthrough
+version: 0.1.0
+namespace: katib
+description: |
+  Stripe-style developer walkthrough — A4 portrait software tutorial.
+  Composes meta-strip + outcome-preview + objectives-box +
+  prerequisites-grid + code-step (with annotations and expected output)
+  + checkpoint + common-mistakes + cheat-sheet (data-table) +
+  whats-next. Lorem ipsum + bracket placeholders.
+languages: [en]
+target_pages: [6, 10]
+page_limit: 12
+when: Developer-facing implementation walkthrough — building a working integration, configuring a service, or shipping a feature end-to-end. Pairs the four Phase-B tutorial components (code-step, callout-anchor, common-mistakes, before-after) with all four Phase-A components.
+keywords: [tutorial, software, developer, walkthrough, integration, code, programming, guide]
+
+sections:
+
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "DEVELOPER WALKTHROUGH"
+      title: "[Build the thing]"
+      subtitle: "[A short line — the integration, feature, or end state]"
+
+  - component: meta-strip
+    variant: outline
+    inputs:
+      align: start
+      items:
+        - label: "Time"
+          value: "[XX min]"
+        - label: "Difficulty"
+          value: "[Beginner / Intermediate / Advanced]"
+        - label: "Stack"
+          value: "[Node.js + React + Stripe]"
+        - label: "Yield"
+          value: "[1 working integration]"
+
+  - component: outcome-preview
+    variant: image-leading
+    inputs:
+      eyebrow: "WHAT YOU'LL BUILD"
+      title: "[The end state in one line]"
+      subtitle: "[A second line of context — the scenario, the user flow]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Replace this with the framing — what success looks like, what the reader will be able to do."
+      caption: "[Optional: caveats, constraints, alternative paths]"
+
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "What you'll learn"
+      items:
+        - "How to [thing 1 — e.g. configure the service]"
+        - "How to [thing 2 — e.g. wire up the SDK]"
+        - "How to [thing 3 — e.g. verify webhook signatures]"
+        - "How to [thing 4 — e.g. handle the failure modes]"
+
+  - component: prerequisites-grid
+    variant: grid
+    inputs:
+      heading: "Before you start"
+      columns: 2
+      items:
+        - name: "[Runtime — e.g. Node.js 20+]"
+          detail: "Verify with `node -v`"
+        - name: "[An account — e.g. Stripe]"
+          detail: "Free tier is fine for testing"
+        - name: "[CLI — e.g. stripe-cli]"
+          detail: "brew install stripe/stripe-cli/stripe"
+        - name: "[Optional skill]"
+          required: false
+          detail: "Helpful but not strictly needed"
+
+  - component: module
+    inputs:
+      title: "Step 1 — [Set up the foundation]"
+      body: "Lorem ipsum — frame what this group of steps accomplishes. Total of [N] code-steps in this group."
+
+  - component: code-step
+    variant: terminal
+    inputs:
+      label: "$ install"
+      language: "bash"
+      code: |
+        # Install the SDK
+        npm install [package]
+
+        # Add credentials to .env
+        echo "[KEY]=sk_test_..." >> .env
+      annotations:
+        - line: 2
+          note: "Use the official package — third-party wrappers lag behind the API."
+        - line: 5
+          note: "Use a TEST key, never a live key, for development."
+      output: |
+        added 4 packages, audited 412 packages in 2s
+
+  - component: code-step
+    variant: editor
+    inputs:
+      label: "src/server.ts"
+      language: "typescript"
+      code: |
+        import { [SDK] } from "[package]";
+
+        const client = new [SDK](process.env.[KEY]);
+
+        // ...
+      annotations:
+        - line: 1
+          note: "Named import is the modern convention; default-export is legacy."
+        - line: 3
+          note: "Initialise once at module load, not per-request."
+      output: |
+        ✓ Server listening on :4242
+
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "Foundation ready"
+      body: "Lorem ipsum — by this point, you should have the SDK installed, your test key in .env, and the server starting cleanly. If `npm run dev` exits with an error here, jump to the Common Mistakes block and check the [KEY] format."
+
+  - component: module
+    inputs:
+      title: "Step 2 — [Wire up the feature]"
+      body: "Lorem ipsum — the meat of the walkthrough. [N] more code-steps."
+
+  - component: code-step
+    variant: editor
+    inputs:
+      label: "src/handler.ts"
+      language: "typescript"
+      code: |
+        app.post("/[endpoint]", async (req, res) => {
+          const sig = req.headers["[signature-header]"];
+          const event = client.[verify](
+            req.body,
+            sig,
+            process.env.[WEBHOOK_SECRET]
+          );
+
+          switch (event.type) {
+            case "[event.type.you.care.about]":
+              break;
+          }
+
+          res.json({ received: true });
+        });
+      annotations:
+        - line: 2
+          note: "The signature header proves the event came from your service, not a forger."
+        - line: 3-7
+          note: "constructEvent throws if the signature doesn't verify — let it bubble. Do not silently catch."
+        - line: 9
+          note: "Handle only the event types you care about. Ignore the rest with a no-op default."
+
+  - component: code-step
+    variant: terminal
+    inputs:
+      label: "$ test the endpoint"
+      language: "bash"
+      code: |
+        # Listen for events
+        [cli] listen --forward-to localhost:4242/[endpoint]
+
+        # In another terminal, trigger a test event
+        [cli] trigger [event.type.you.care.about]
+      output: |
+        > [event.type.you.care.about] [evt_test_xxx]
+        ✓ 200 OK from localhost:4242/[endpoint]
+
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "Endpoint verified"
+      body: "Lorem ipsum — your endpoint should now respond 200 OK to a test event. If you see 401, the signature is wrong. If you see 500, your event handler threw."
+
+  - component: module
+    inputs:
+      title: "Step 3 — [Production hardening]"
+      body: "Lorem ipsum — the last group. [N] code-steps that turn a demo into something you'd ship."
+
+  - component: code-step
+    variant: editor
+    inputs:
+      label: "src/index.ts"
+      language: "typescript"
+      code: |
+        const seen = new Set<string>();
+        if (seen.has(event.id)) return res.json({ skipped: true });
+        seen.add(event.id);
+      annotations:
+        - line: 1-3
+          note: "Events can be delivered multiple times. Idempotency makes that safe."
+
+  - component: checkpoint
+    variant: success
+    inputs:
+      title: "Done"
+      body: "Lorem ipsum — you now have a verified, idempotent integration. From here, you can swap [event.type.you.care.about] for whatever your real business event is."
+
+  - component: common-mistakes
+    variant: cards
+    inputs:
+      heading: "Common mistakes"
+      items:
+        - symptom: "401 Unauthorized when the [endpoint] fires"
+          cause: "[KEY] in your .env doesn't match the one [service] is signing with. The secret is per-endpoint and rotates if you delete and recreate the endpoint."
+          fix: "Open the [service] dashboard → [path to secret] → reveal. Copy and paste into .env, then restart the server."
+        - symptom: "Hangs forever on `[cli] listen`"
+          cause: "[cli] is logged into the wrong account, or no account at all. The CLI silently retries authentication instead of failing loudly."
+          fix: "Run `[cli] login` and confirm the device. The CLI prints the bound account — confirm it matches your dashboard."
+        - symptom: "events arrive but req.body is undefined"
+          cause: "Express body-parser is consuming the raw body before the verifier sees it. constructEvent needs the unparsed Buffer."
+          fix: "Mount the [endpoint] route BEFORE express.json(): `app.post('/[endpoint]', express.raw({type: 'application/json'}), handler)`. Order matters."
+
+  - component: data-table
+    inputs:
+      caption: "Cheat-sheet — environment variables and key commands"
+      columns:
+        - "Variable / Command"
+        - "Purpose"
+        - "Where it comes from"
+      rows:
+        - ["[KEY]", "Authenticates SDK calls to [service]", "[service] dashboard → API keys"]
+        - ["[WEBHOOK_SECRET]", "Verifies inbound [endpoint] signatures", "[service] dashboard → [endpoint] settings"]
+        - ["`[cli] listen`", "Forwards live events to localhost", "[cli] CLI"]
+        - ["`[cli] trigger`", "Fires a test event from your machine", "[cli] CLI"]
+        - ["`npm run dev`", "Starts the local server", "package.json scripts"]
+
+  - component: whats-next
+    inputs:
+      heading: "What to do next"
+      items:
+        - "[Next step 1 — a related integration to add on top]"
+        - "[Next step 2 — a hardening task — rate-limiting, retries, observability]"
+        - "[Next step 3 — a related tutorial that builds on this one]"

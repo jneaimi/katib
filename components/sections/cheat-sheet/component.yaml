@@ -1,0 +1,45 @@
+name: cheat-sheet
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Quick-reference recap of commands, env vars, shortcuts, or formulas
+  grouped by topic. Visually distinct from `data-table` by intent: a
+  cheat-sheet is for rapid scanning at the end of a tutorial (label →
+  value lookups), where data-table is for prose-tabular comparison
+  with explicit headers. Two variants: `card-grid` lays group-cards
+  out in a 2- or 3-column grid; `dense-table` renders a single-column
+  recap with bolded labels and right-aligned values.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, page_bg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Cheat sheet" / "البطاقة المرجعية".
+    - subtitle:
+        type: string
+        required: false
+        description: Optional 1-line subtitle, e.g. "Print this page".
+    - columns:
+        type: integer
+        required: false
+        description: Column count for `card-grid` variant. 2 or 3. Default 2.
+    - groups:
+        type: array
+        required: true
+        description: |
+          Array of `{heading, items: [{label, value, hint?}]}`. Each
+          group is a topic cluster (e.g. "Environment variables", "CLI
+          commands", "Common shortcuts"). `label` is the headword
+          (rendered in display font), `value` is the recap value
+          (rendered in monospace if it looks codey, otherwise primary
+          font), `hint` is an optional 1-line gloss.
+variants:
+  - card-grid
+  - dense-table
+page_behavior:
+  mode: atomic

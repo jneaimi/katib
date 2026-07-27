@@ -1,0 +1,53 @@
+name: slide-cover-photo
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Full-bleed photographic slide cover for A4-landscape decks. The image
+  fills the entire page; the title block sits on the photo's negative
+  space. Two text treatments: `ink` lays dark brand text over a light
+  photo behind a soft page-tint wash (no dark scrim), `scrim` lays white
+  text over a dark gradient for dark or busy photos. Companion to
+  slide-frame — use this when the cover is a photograph rather than type
+  on paper.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - accent
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Full-bleed cover photograph. Light images pair with the ink variant, dark images with scrim.
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title (e.g. "EXAMPLE CORP · PRODUCT BRIEF").
+    - title:
+        type: string
+        required: true
+        description: Cover headline.
+    - subtitle:
+        type: string
+        required: false
+        description: One or two lines under the title.
+    - alt_text:
+        type: string
+        required: false
+        description: Accessibility description of the photograph.
+variants:
+  - ink
+  - scrim
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

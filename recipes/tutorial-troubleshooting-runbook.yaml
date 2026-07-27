@@ -1,0 +1,121 @@
+name: tutorial-troubleshooting-runbook
+version: 0.1.0
+namespace: katib
+description: |
+  Paired error → cause → fix runbook for ops/support teams. Cover +
+  when-to-use module + N×common-mistakes blocks (one per failure
+  category) + cheat-sheet (error-code index via data-table) +
+  whats-next. Generic placeholders + lorem ipsum body — drop in your
+  own service's failure catalogue. Decision-branch (Sprint 3) will
+  upgrade the top-level routing once that component ships.
+languages: [en]
+target_pages: [4, 7]
+page_limit: 8
+when: Operational runbook for an on-call team, support team, or first-line responder. Reader has hit a failure and needs to find the matching diagnosis + fix without reading the upstream tutorial. Use after the underlying system has been documented in a tutorial-software-walkthrough.
+keywords: [tutorial, troubleshooting, runbook, operations, on-call, support, debugging, error-codes]
+
+sections:
+
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "OPS RUNBOOK"
+      title: "[Service / Feature] failure catalogue"
+      subtitle: "[Last updated YYYY-MM-DD] · [Owner team]"
+
+  - component: module
+    inputs:
+      title: "When to use this runbook"
+      body: |
+        Lorem ipsum — describe the entry conditions. The reader has hit a
+        failure in [service] and needs to find the matching fix.
+
+        - **Symptom is a 4xx HTTP status** — see § Authentication failures
+        - **Symptom is a 5xx HTTP status** — see § Backend failures
+        - **Symptom is silent / hung** — see § Connectivity failures
+        - **Symptom is intermittent** — see § Timing & ordering failures
+
+        If your symptom doesn't match any of the above, escalate to [team]
+        via [channel].
+
+  - component: common-mistakes
+    variant: cards
+    inputs:
+      heading: "Authentication failures (4xx)"
+      items:
+        - symptom: "401 Unauthorized on every request"
+          cause: "[KEY] in the environment is wrong, expired, or for the wrong environment (test key in production / vice-versa)."
+          fix: "Confirm the env via `env | grep [KEY]`. Re-issue the key from [service] dashboard → API keys → reveal. Restart the deployment."
+        - symptom: "403 Forbidden on specific resources"
+          cause: "Key has the right type but is scoped to a subset of resources. Common when using restricted keys with overly tight scopes."
+          fix: "Check the key's permissions in [service] dashboard. Either widen the scope or use a different key for this resource class."
+        - symptom: "401 only on webhook endpoints"
+          cause: "[WEBHOOK_SECRET] doesn't match what [service] is signing with — the secret rotates if you delete and recreate the webhook."
+          fix: "Re-copy the secret from [service] dashboard → webhooks → signing secret. Update env. Restart."
+
+  - component: common-mistakes
+    variant: cards
+    inputs:
+      heading: "Backend failures (5xx)"
+      items:
+        - symptom: "500 Internal Server Error with no body"
+          cause: "Unhandled exception in the request handler — likely a missing-field or null-deref bug. Logs are the source of truth."
+          fix: "Pull `[log-source]` for the request id from the response headers. Locate the stack trace, then patch the handler to reject the bad input upstream with a 400."
+        - symptom: "502 Bad Gateway"
+          cause: "Upstream [dependency] is unreachable. Either the dependency is down or the network path is broken."
+          fix: "Check [dependency] status page. If it's up, check VPC/firewall rules in [infra]. If both are clean, restart the load-balancer health check."
+        - symptom: "504 Gateway Timeout"
+          cause: "Request handler is slower than the gateway timeout. Common when an unbatched DB query slips into a hot path."
+          fix: "Identify the slow query via `[apm-tool]`. Add an index, batch the call, or move to a background job. As a temp mitigation, raise the gateway timeout."
+
+  - component: common-mistakes
+    variant: cards
+    inputs:
+      heading: "Connectivity & routing failures"
+      items:
+        - symptom: "Hung connections, no response, no error"
+          cause: "DNS / TCP path blocked at a network boundary — VPC security group, IP allowlist, or proxy."
+          fix: "Run `dig [host]` from the source machine — confirm DNS resolves. Run `nc -vz [host] [port]` — confirm TCP. If either fails, check security groups + allowlists in [infra]."
+        - symptom: "Connection reset by peer"
+          cause: "[service] closing the TCP connection mid-request. Usually means TLS / cipher mismatch or stale keep-alive pool."
+          fix: "Bump the TLS version to 1.3. Drain the keep-alive pool with a process restart. If it persists, check [service]'s TLS deprecation schedule."
+
+  - component: common-mistakes
+    variant: cards
+    inputs:
+      heading: "Timing & ordering failures"
+      items:
+        - symptom: "Events arrive, but in the wrong order"
+          cause: "Multiple delivery paths (e.g. webhook + polling) racing. Last-write-wins on whichever path arrives second."
+          fix: "Pick one canonical delivery path. If you need both for redundancy, make the handler idempotent + ordered by event timestamp, not arrival time."
+        - symptom: "Same event processed twice"
+          cause: "[service] retried delivery before the first response was acknowledged. Standard at-least-once semantics."
+          fix: "Track processed event ids in [storage]. On replay, no-op and return 200. This is idempotency hygiene — assume it, don't hope for it."
+
+  - component: data-table
+    inputs:
+      caption: "Error code index — quick reference"
+      columns:
+        - "Code"
+        - "Symptom"
+        - "First action"
+        - "See § "
+      rows:
+        - ["401", "Unauthorized", "Check [KEY] env value", "Authentication"]
+        - ["403", "Forbidden", "Check key scopes", "Authentication"]
+        - ["500", "Internal Server Error", "Check application logs", "Backend"]
+        - ["502", "Bad Gateway", "Check upstream status page", "Backend"]
+        - ["504", "Gateway Timeout", "Check slow-query logs", "Backend"]
+        - ["—", "Hung connection", "Run `dig` and `nc -vz`", "Connectivity"]
+        - ["—", "Reset by peer", "Bump TLS, drain keep-alive", "Connectivity"]
+        - ["—", "Out-of-order events", "Pick one delivery path", "Timing"]
+        - ["—", "Duplicate processing", "Add idempotency tracking", "Timing"]
+
+  - component: whats-next
+    inputs:
+      heading: "Escalation paths"
+      items:
+        - "[Team / channel] — for failures not in this catalogue"
+        - "[Service status page URL] — check upstream incidents first"
+        - "[Internal wiki link] — historical incidents and post-mortems"
+        - "[Original tutorial-software-walkthrough] — to re-validate the happy-path setup"

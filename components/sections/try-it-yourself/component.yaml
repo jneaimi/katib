@@ -1,0 +1,51 @@
+name: try-it-yourself
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Exercise + answer block — the static-print substitute for the
+  interactive knowledge-check quiz. Two variants: `inline-answer`
+  reveals the answer right under the question (acceptable when peeking
+  is fine); `flipped-answer` rotates the answer 180° (the puzzle-book
+  convention — the reader has to flip the page to read it, so they're
+  forced to attempt the exercise first). A `hint` input is optional in
+  both variants.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, page_bg, callout_tip_bg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Try it yourself" / "جرّب بنفسك".
+    - prompt:
+        type: string
+        required: true
+        description: |
+          The exercise prompt. Multi-line markdown OK. This is what the
+          reader is being asked to do.
+    - hint:
+        type: string
+        required: false
+        description: |
+          Optional 1-2 line nudge if the reader is stuck. Rendered in a
+          muted box below the prompt. Cite the relevant page if useful.
+    - answer:
+        type: string
+        required: true
+        description: |
+          The canonical answer or worked solution. In the inline-answer
+          variant, this is rendered right under the prompt. In the
+          flipped-answer variant, it's rotated 180° at the foot of the
+          block so the reader must commit before peeking.
+    - answer_label:
+        type: string
+        required: false
+        description: Header for the answer block. Defaults to "Answer" / "الإجابة".
+variants:
+  - inline-answer
+  - flipped-answer
+page_behavior:
+  mode: atomic

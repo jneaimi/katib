@@ -1,0 +1,39 @@
+name: prerequisites-grid
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Gating list of required items — tools, skills, materials, accounts — that
+  the reader needs before starting. Variants: `checklist` (1-col with
+  checkbox) and `grid` (N-col cards, optional checkbox). Distinct from
+  `sections-grid` by tighter density and a checkbox column. Implements
+  Mayer's pre-training principle.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border, page_bg, tag_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: |
+          Heading above the list. Defaults per-language to "Before you start"
+          / "قبل أن تبدأ".
+    - items:
+        type: array
+        required: true
+        description: |
+          Array of {name, detail?, required?} objects. `name` is the item
+          itself ("Node.js 20+", "Sharp knife"). `detail` is an optional
+          short qualifier. `required: true` (default) prints a filled
+          checkbox; `required: false` prints an outlined one (nice-to-have).
+    - columns:
+        type: int
+        required: false
+        description: 1, 2, 3, or 4. Ignored for the `checklist` variant which is always 1-col. Default 2.
+variants:
+  - checklist
+  - grid
+page_behavior:
+  mode: atomic

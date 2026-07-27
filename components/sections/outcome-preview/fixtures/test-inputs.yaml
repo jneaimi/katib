@@ -1,0 +1,15 @@
+# Test inputs for `outcome-preview` isolated render.
+# Used by `katib component test outcome-preview`.
+# Image points at a shipped katib test fixture so the harness can render.
+inputs:
+  eyebrow: "WHAT YOU'LL BUILD"
+  title: "A working Stripe payment flow in 15 minutes"
+  subtitle: "Customer hits Pay → Stripe Checkout → success page → webhook fires."
+  body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. By the end you'll have a complete server + checkout + webhook handler running locally on localhost:4242."
+  image:
+    source: user-file
+    path: tests/fixtures/tutorial-step.png
+  alt_text: "Stripe Checkout success screen"
+  caption: "Final state — what you should see after step 8."
+brand: null
+variant: image-leading

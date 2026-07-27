@@ -1,0 +1,51 @@
+<section class="katib-section katib-prepared-by-page" lang="en">
+  <div class="katib-prepared-by-page__inner">
+    <div class="katib-prepared-by-page__titleblock">
+{%- if input.eyebrow %}
+      <div class="katib-prepared-by-page__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+      <div class="katib-prepared-by-page__title">{{ input.title }}</div>
+{%- endif %}
+{%- if input.reference %}
+      <div class="katib-prepared-by-page__reference">{{ input.reference }}</div>
+{%- endif %}
+    </div>
+
+    <div class="katib-prepared-by-page__signblock">
+      <div class="katib-prepared-by-page__label">{{ input.label or 'Prepared by' }}</div>
+      <table class="katib-prepared-by-page__table">
+{%- for f in input.fields %}
+        <tr>
+          <td class="katib-prepared-by-page__key">{{ f.label }}</td>
+{%- if f.image %}
+          <td class="katib-prepared-by-page__val"><img class="katib-prepared-by-page__sig-img" src="{{ f.image }}" alt="{{ f.label }}"></td>
+{%- elif f.value %}
+          <td class="katib-prepared-by-page__val">{{ f.value }}</td>
+{%- else %}
+          <td class="katib-prepared-by-page__val katib-prepared-by-page__val--blank">&nbsp;</td>
+{%- endif %}
+        </tr>
+{%- endfor %}
+{%- if input.stamp_image %}
+        <tr>
+          <td class="katib-prepared-by-page__key katib-prepared-by-page__key--stamp">Company Stamp</td>
+          <td class="katib-prepared-by-page__val"><img class="katib-prepared-by-page__stamp-img" src="{{ input.stamp_image }}" alt="Company Stamp"></td>
+        </tr>
+{%- elif input.stamp %}
+        <tr>
+          <td class="katib-prepared-by-page__key katib-prepared-by-page__key--stamp">Company Stamp</td>
+          <td class="katib-prepared-by-page__val"><div class="katib-prepared-by-page__stamp-box"></div></td>
+        </tr>
+{%- endif %}
+      </table>
+    </div>
+
+{%- if input.on_behalf_of %}
+    <div class="katib-prepared-by-page__behalf">
+      <div class="katib-prepared-by-page__behalf-label">For and on behalf of</div>
+      <div class="katib-prepared-by-page__behalf-name">{{ input.on_behalf_of }}</div>
+    </div>
+{%- endif %}
+  </div>
+</section>

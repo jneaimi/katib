@@ -1,0 +1,16 @@
+# Test inputs for `prerequisites-grid` isolated render.
+inputs:
+  heading: "Before you start"
+  columns: 2
+  items:
+    - name: "Node.js 20 or later"
+      detail: "Verify with `node -v`"
+    - name: "A Stripe account"
+      detail: "Free tier is fine for testing"
+    - name: "stripe-cli installed"
+      detail: "brew install stripe/stripe-cli/stripe"
+    - name: "Basic terminal familiarity"
+      required: false
+      detail: "Helpful, not strictly needed"
+brand: null
+variant: grid

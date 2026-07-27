@@ -1,0 +1,28 @@
+<section class="katib-section katib-outcome-preview katib-outcome-preview--{{ variant or 'image-leading' }}" lang="ar" dir="rtl">
+    <div class="katib-outcome-preview__media">
+{%- if input.image and input.image.resolved_path %}
+        <img class="katib-outcome-preview__image"
+             src="{{ input.image.resolved_path }}"
+             alt="{{ input.alt_text or 'معاينة النتيجة' }}">
+{%- else %}
+        <div class="katib-outcome-preview__placeholder" aria-hidden="true">
+            <span>ضع صورة النتيجة هنا</span>
+        </div>
+{%- endif %}
+{%- if input.caption %}
+        <figcaption class="katib-outcome-preview__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    </div>
+    <div class="katib-outcome-preview__text">
+{%- if input.eyebrow %}
+        <div class="katib-outcome-preview__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <h2 class="katib-outcome-preview__title">{{ input.title }}</h2>
+{%- if input.subtitle %}
+        <p class="katib-outcome-preview__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+{%- if input.body %}
+        <p class="katib-outcome-preview__body">{{ input.body }}</p>
+{%- endif %}
+    </div>
+</section>

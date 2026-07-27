@@ -1,0 +1,41 @@
+<section class="katib-news-cover" lang="en">
+    <header class="katib-news-cover__masthead">
+{%- if input.eyebrow %}
+        <div class="katib-news-cover__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <div class="katib-news-cover__rule katib-news-cover__rule--top"></div>
+        <h1 class="katib-news-cover__title">{{ input.title }}</h1>
+        <div class="katib-news-cover__rule katib-news-cover__rule--thin"></div>
+    </header>
+
+{%- if input.image and (input.image.resolved_path or input.image.resolved_svg) %}
+    <figure class="katib-news-cover__figure">
+{%- if input.image.resolved_svg %}
+        <div class="katib-news-cover__image">{{ input.image.resolved_svg | safe }}</div>
+{%- else %}
+        <img class="katib-news-cover__image" src="{{ input.image.resolved_path }}" alt="{{ input.caption or '' }}">
+{%- endif %}
+{%- if input.caption %}
+        <figcaption class="katib-news-cover__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    </figure>
+{%- endif %}
+
+    <div class="katib-news-cover__deck">
+{%- if input.byline %}
+        <div class="katib-news-cover__byline">{{ input.byline }}</div>
+{%- endif %}
+{%- if input.subtitle %}
+        <p class="katib-news-cover__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </div>
+
+    <div class="katib-news-cover__footer">
+{%- if identity and identity.author_name %}
+        <span class="katib-news-cover__author">{{ identity.author_name }}</span>
+{%- endif %}
+{%- if input.reference_code %}
+        <span class="katib-news-cover__ref">{{ input.reference_code }}</span>
+{%- endif %}
+    </div>
+</section>

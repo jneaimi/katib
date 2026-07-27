@@ -1,0 +1,32 @@
+name: meta-strip
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Horizontal row of small badges (time, difficulty, yield, stack, level, etc.)
+  sitting directly under a title. 3-6 items typical. Lets the reader triage a
+  tutorial, recipe, or briefing before committing.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border, page_bg, tag_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - items:
+        type: array
+        required: true
+        description: |
+          Array of {label, value, icon?} objects. `label` is the metric name
+          ("Time", "Yield"), `value` is the readout ("15 min", "4 servings").
+          `icon` is an optional short string (single glyph or 1-2 chars) shown
+          before the label.
+    - align:
+        type: string
+        required: false
+        description: Horizontal alignment of the strip. `start` (default), `center`, or `space-between`.
+variants:
+  - outline
+  - solid
+  - minimal
+page_behavior:
+  mode: atomic

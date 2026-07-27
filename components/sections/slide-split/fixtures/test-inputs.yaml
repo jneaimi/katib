@@ -1,0 +1,9 @@
+inputs:
+  image: {source: user-file, path: tests/fixtures/cover-bg.jpg}
+  eyebrow: "THE GATE, LIVE · 04"
+  title: "AI can author. It can't approve itself."
+  subtitle: "Every AI-authored item waits for a human accept. Self-accept returns a 403."
+  caption: "The review queue, live in Sample Product"
+  alt_text: "Sample Product review queue screenshot."
+brand: example
+variant: image-right

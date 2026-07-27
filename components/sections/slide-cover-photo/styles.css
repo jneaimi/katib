@@ -1,0 +1,149 @@
+/* slide-cover-photo — full-bleed photographic cover for A4-landscape decks.
+   Same full-bleed geometry as slide-frame--has-image: negative margin pulls
+   the section past the @page slide 18mm margin so the photo touches the
+   physical page edges. */
+@page slide {
+    size: A4 landscape;
+    margin: 18mm;
+    @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: 'IBM Plex Mono', 'Courier New', monospace;
+        font-size: 8pt;
+        color: var(--text-tertiary, #8A8270);
+    }
+}
+
+.katib-slide-cover-photo {
+    page: slide;
+    position: relative;
+    margin: -18mm;
+    width: 297mm;
+    min-height: 210mm;
+    box-sizing: border-box;
+    padding: 22mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.katib-slide-cover-photo__bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* Wash — legibility layer over the photo. Direction-aware: it shades the
+   text side and fades out toward the photo's subject. */
+.katib-slide-cover-photo__wash {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* ink: light photo, dark brand text, soft page-tint wash on the text side */
+.katib-slide-cover-photo--ink .katib-slide-cover-photo__wash {
+    background: linear-gradient(90deg,
+        rgba(245, 241, 230, 0.85) 0%,
+        rgba(245, 241, 230, 0.45) 42%,
+        rgba(245, 241, 230, 0) 62%);
+}
+
+[lang="ar"].katib-slide-cover-photo--ink .katib-slide-cover-photo__wash {
+    background: linear-gradient(270deg,
+        rgba(245, 241, 230, 0.85) 0%,
+        rgba(245, 241, 230, 0.45) 42%,
+        rgba(245, 241, 230, 0) 62%);
+}
+
+/* scrim: dark photo, white text, classic dark gradient */
+.katib-slide-cover-photo--scrim .katib-slide-cover-photo__wash {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.18));
+}
+
+.katib-slide-cover-photo__content {
+    position: relative;
+    z-index: 2;
+    max-width: 58%;
+}
+
+.katib-slide-cover-photo__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14pt;
+}
+
+.katib-slide-cover-photo[lang="ar"] .katib-slide-cover-photo__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-slide-cover-photo__title {
+    font-family: var(--font-display);
+    font-size: 42pt;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0;
+}
+
+.katib-slide-cover-photo[lang="ar"] .katib-slide-cover-photo__title {
+    font-size: 44pt;
+    letter-spacing: 0;
+    line-height: 1.3;
+}
+
+.katib-slide-cover-photo__subtitle {
+    font-family: var(--font-primary);
+    font-size: 14.5pt;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin: 14pt 0 0 0;
+    max-width: 34em;
+}
+
+.katib-slide-cover-photo--scrim .katib-slide-cover-photo__eyebrow {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.katib-slide-cover-photo--scrim .katib-slide-cover-photo__title {
+    color: #ffffff;
+}
+
+.katib-slide-cover-photo--scrim .katib-slide-cover-photo__subtitle {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.katib-slide-cover-photo__logo {
+    position: absolute;
+    right: 22mm;
+    bottom: 18mm;
+    max-height: 8mm;
+    width: auto;
+    z-index: 3;
+}
+
+.katib-slide-cover-photo[lang="ar"] .katib-slide-cover-photo__logo {
+    right: auto;
+    left: 22mm;
+}
+
+.katib-slide-cover-photo--scrim .katib-slide-cover-photo__logo {
+    filter: brightness(0) invert(1);
+    opacity: 0.92;
+}

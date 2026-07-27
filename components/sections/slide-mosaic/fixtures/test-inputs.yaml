@@ -1,0 +1,13 @@
+inputs:
+  eyebrow: "ONE SYSTEM · 09"
+  title: "One tracker for the whole loop"
+  raw_body: "<p>Knowledge, planning, design, build, and client reporting share one spine.</p>"
+  image_large: {source: user-file, path: tests/fixtures/cover-bg.jpg}
+  image_small_a: {source: user-file, path: tests/fixtures/cover-bg.jpg}
+  label_a: "The board"
+  image_small_b: {source: user-file, path: tests/fixtures/cover-bg.jpg}
+  label_b: "The client portal"
+  caption: "The team knowledge base with its health card"
+  alt_text: "Sample Product knowledge base screenshot."
+brand: example
+variant: large-right

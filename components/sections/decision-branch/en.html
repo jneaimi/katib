@@ -1,0 +1,49 @@
+<section class="katib-section katib-decision-branch katib-decision-branch--{{ variant or 'branched-list' }}" lang="en">
+    <h3 class="katib-decision-branch__heading">{{ input.heading or 'Choose your path' }}</h3>
+{%- if input.prompt %}
+    <p class="katib-decision-branch__prompt">{{ input.prompt }}</p>
+{%- endif %}
+{%- if (variant or 'branched-list') == 'tabs-static' %}
+    <div class="katib-decision-branch__tabs" role="tablist">
+{%- for branch in input.branches %}
+        <div class="katib-decision-branch__tab katib-decision-branch__tab--{{ 'primary' if branch.primary else 'alternate' }}">
+            <span class="katib-decision-branch__tab-label">{{ branch.label }}</span>
+{%- if branch.primary %}
+            <span class="katib-decision-branch__tab-marker">●</span>
+{%- endif %}
+        </div>
+{%- endfor %}
+    </div>
+{%- endif %}
+{%- for branch in input.branches if branch.primary %}
+    <div class="katib-decision-branch__primary">
+{%- if (variant or 'branched-list') == 'branched-list' %}
+        <div class="katib-decision-branch__primary-head">
+            <span class="katib-decision-branch__primary-marker">▶</span>
+            <span class="katib-decision-branch__primary-label">{{ branch.label }}</span>
+{%- if branch.when %}
+            <span class="katib-decision-branch__primary-when">— {{ branch.when }}</span>
+{%- endif %}
+        </div>
+{%- endif %}
+        <div class="katib-decision-branch__primary-body">{{ branch.body }}</div>
+    </div>
+{%- endfor %}
+{%- set alternates = input.branches | rejectattr('primary') | list %}
+{%- if alternates %}
+    <div class="katib-decision-branch__alternates">
+        <h4 class="katib-decision-branch__alternates-heading">{{ input.alternates_label or 'Other paths' }}</h4>
+        <ul class="katib-decision-branch__alternates-list">
+{%- for branch in alternates %}
+            <li class="katib-decision-branch__alternate">
+                <span class="katib-decision-branch__alternate-label">{{ branch.label }}</span>
+{%- if branch.when %}
+                <span class="katib-decision-branch__alternate-when">— {{ branch.when }}</span>
+{%- endif %}
+                <div class="katib-decision-branch__alternate-body">{{ branch.body }}</div>
+            </li>
+{%- endfor %}
+        </ul>
+    </div>
+{%- endif %}
+</section>

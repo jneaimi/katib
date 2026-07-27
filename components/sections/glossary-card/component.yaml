@@ -1,0 +1,42 @@
+name: glossary-card
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Term + definition card — the static-print substitute for the hover
+  tooltip. Pre-defines jargon at the point of first use (margin-card
+  variant), inline as a definition row inside body text (inline-row),
+  or batched at the end of a chapter (grid). Optional `pronunciation`
+  for terms loaned from another language (e.g. an Arabic gloss for an
+  English technical term, or vice-versa). Optional `see_also` cross-
+  references peer terms in the same glossary.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, page_bg, callout_tip_bg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Glossary" / "المعجم".
+    - columns:
+        type: integer
+        required: false
+        description: Column count for `grid` variant. 1, 2, or 3. Default 2. Ignored on other variants.
+    - items:
+        type: array
+        required: true
+        description: |
+          Array of `{term, definition, pronunciation?, see_also?}`. `term`
+          is the headword (rendered in display font). `definition` is the
+          1-2 sentence gloss. `pronunciation` is an optional phonetic or
+          loan-origin hint (rendered as muted secondary text under the
+          term). `see_also` is an optional comma-separated string of peer
+          terms.
+variants:
+  - margin-card
+  - inline-row
+  - grid
+page_behavior:
+  mode: atomic

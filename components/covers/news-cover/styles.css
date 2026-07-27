@@ -1,0 +1,168 @@
+/* news-cover — newspaper-style stacked cover page.
+   Layout: eyebrow + thick rule + headline + thin rule + image rectangle
+           + caption + thin rule + byline + subtitle/deck + footer. */
+
+.katib-news-cover {
+    min-height: 253mm;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    color: var(--text);
+    background: var(--page-bg);
+}
+
+/* ---- Masthead (eyebrow + title + rules) ---- */
+
+.katib-news-cover__masthead {
+    margin: 0 0 14mm 0;
+}
+
+.katib-news-cover__eyebrow {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-2);
+    margin: 0 0 8pt 0;
+}
+
+.katib-news-cover[lang="ar"] .katib-news-cover__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 12pt;
+}
+
+.katib-news-cover__rule {
+    border-bottom: 0.5pt solid var(--border);
+    width: 100%;
+}
+
+.katib-news-cover__rule--top {
+    border-bottom: 2.4pt solid var(--text);
+    margin: 0 0 14pt 0;
+}
+
+.katib-news-cover__rule--thin {
+    border-bottom: 0.5pt solid var(--border);
+    margin: 14pt 0 0 0;
+}
+
+.katib-news-cover__title {
+    font-family: var(--font-display);
+    font-size: 30pt;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.012em;
+    max-width: 22em;
+}
+
+.katib-news-cover[lang="ar"] .katib-news-cover__title {
+    font-size: 30pt;
+    letter-spacing: 0;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+/* ---- Image rectangle ---- */
+
+.katib-news-cover__figure {
+    margin: 0 0 12mm 0;
+    padding: 0;
+}
+
+.katib-news-cover__image {
+    display: block;
+    width: 100%;
+    height: 90mm;
+    object-fit: cover;
+    border: 0.5pt solid var(--border-strong);
+    background: var(--border);
+}
+
+/* When an inline SVG is provided, it sits inside a sized box */
+div.katib-news-cover__image > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.katib-news-cover__caption {
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    font-style: italic;
+    color: var(--text-tertiary);
+    margin: 6pt 0 0 0;
+    line-height: 1.4;
+}
+
+.katib-news-cover[lang="ar"] .katib-news-cover__caption {
+    font-style: normal;
+    font-size: 10pt;
+}
+
+/* ---- Deck (byline + subtitle) ---- */
+
+.katib-news-cover__deck {
+    margin: 0 0 auto 0;
+}
+
+.katib-news-cover__byline {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    font-weight: 600;
+    color: var(--text-secondary);
+    padding-bottom: 8pt;
+    margin-bottom: 12pt;
+    border-bottom: 0.5pt solid var(--border);
+    letter-spacing: 0.02em;
+}
+
+.katib-news-cover[lang="ar"] .katib-news-cover__byline {
+    font-size: 11pt;
+    letter-spacing: 0;
+}
+
+.katib-news-cover__subtitle {
+    font-family: var(--font-primary);
+    font-size: 14pt;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 32em;
+}
+
+.katib-news-cover[lang="ar"] .katib-news-cover__subtitle {
+    font-size: 15pt;
+    line-height: 1.7;
+}
+
+/* ---- Footer (author + ref code) ---- */
+
+.katib-news-cover__footer {
+    margin-top: auto;
+    padding-top: 8pt;
+    border-top: 0.5pt solid var(--border-strong);
+    font-family: var(--font-primary);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.katib-news-cover__author {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.katib-news-cover__ref {
+    font-family: var(--font-mono, "JetBrains Mono", monospace);
+    letter-spacing: 0.04em;
+    font-size: 9pt;
+    color: var(--text-tertiary);
+}

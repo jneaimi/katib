@@ -1,0 +1,9 @@
+# Test inputs for `try-it-yourself` isolated render.
+inputs:
+  heading: "Try it yourself"
+  prompt: "Given the webhook handler on page 4, what HTTP status should the server return if the signature header is missing or malformed? Why?"
+  hint: "Think about whether this is a client error or a server error — and which side has the wrong information."
+  answer: "A 401 Unauthorized. The signature header is required for verification, and without it the request cannot be trusted as authentic. Returning 400 (Bad Request) would imply the body itself was malformed; returning 500 would imply the server failed. 401 correctly signals 'I cannot authenticate this request'."
+  answer_label: "Answer"
+brand: null
+variant: inline-answer

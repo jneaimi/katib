@@ -5,7 +5,7 @@
 # never enters the public repo. A pre-commit guard rejects any
 # 'namespace: user' entry here.
 
-generated_at: '2026-07-27T10:35:52+00:00'
+generated_at: '2026-07-27T11:55:37+00:00'
 schema_version: 1
 governance:
   adding_component:
@@ -56,6 +56,51 @@ recipes:
     - module
     - module
     - module
+  business-briefing-deck:
+    namespace: katib
+    version: 0.1.0
+    description: 'Business briefing deck — generic 8-slide A4 landscape template for
+
+      presenting a measured trial result to senior decision-makers. Cover,
+
+      hero stat, methodology flow, objection-killer quote, KPI grid, real
+
+      trial photo, commercial impact, next-step CTA. Companion to the
+
+      report-trial-case-study recipe (the leave-behind PDF) — same brand,
+
+      same numbers, but reframed for projection in front of a customer
+
+      (one idea per slide).
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 8
+    - 8
+    page_limit: 8
+    when: Live customer pitch following a trial or pilot. Project full-screen on a meeting display, or
+      send as a self-paced PDF preview before a sales call. Use the report-trial-case-study recipe for
+      the leave-behind document; this is the talk track.
+    keywords:
+    - pitch-deck
+    - presentation
+    - slides
+    - executive
+    - trial
+    - briefing
+    - customer-pitch
+    - sales-deck
+    sections_shape:
+    - slide-frame
+    - slide-stat
+    - slide-frame
+    - slide-quote
+    - slide-frame
+    - slide-frame
+    - slide-frame
+    - slide-frame
   business-meeting-minutes:
     namespace: katib
     version: 0.1.0
@@ -662,6 +707,57 @@ recipes:
     - clause-list
     - multi-party-signature-block
     - module
+  peer-meeting-quick-ref:
+    namespace: katib
+    version: 0.1.0
+    description: 'Pre-meeting quick-reference card — a 2-page glanceable distillation of
+
+      a strategic positioning briefing for a high-stakes peer meeting where
+
+      you are not selling. Eyebrow + hero + 3-bullet identity reframe +
+
+      4-asset grid + deployment-by-meeting-phase table + patterns to avoid
+
+      + anchor pull-quote. Internal personal use; carry it on the way in,
+
+      read once, leave it behind.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 2
+    - 2
+    page_limit: 2
+    when: 'Pre-meeting briefing card for a high-stakes peer conversation where
+
+      the goal is trust and memorability, not a follow-up. Use when you are
+
+      walking into a room as a peer (not a vendor, not a consultant) and
+
+      need a glanceable reminder of who you are, what you carry silently,
+
+      and how to deploy it across the meeting. Companion to a longer
+
+      strategic briefing note — this is the read-once card you take with you.
+
+      '
+    keywords:
+    - meeting-prep
+    - quick-ref
+    - personal-brief
+    - peer-meeting
+    - executive
+    - networking
+    - strategy
+    sections_shape:
+    - module
+    - module
+    - module
+    - sections-grid
+    - module
+    - module
+    - module
   personal-bio:
     namespace: katib
     version: 1.0.1
@@ -1056,6 +1152,62 @@ recipes:
     - module
     - clause-list
     - module
+  tutorial-assembly-guide:
+    namespace: katib
+    version: 0.1.0
+    description: 'IKEA/LEGO-style assembly guide — physical-world step-by-step.
+
+      Composes prerequisites-grid (tools and parts) + tutorial-step +
+
+      callout-anchor (annotated diagrams with numbered pins) + before-after
+
+      (paired panels showing assembled vs unassembled state) + checkpoint
+
+      (interim verifications). Generic placeholders + lorem ipsum body —
+
+      drop in your own product, parts list, and assembly steps.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 4
+    - 8
+    page_limit: 10
+    when: Physical-world assembly tutorial — flat-pack furniture, hardware kit, model build, embroidery
+      hoop, anything where the reader follows pictograms-plus-text to put a thing together. Pairs all
+      four Phase C tutorial components except glossary/cheat-sheet/try-it-yourself, which are language-heavy
+      components better suited to course modules.
+    keywords:
+    - tutorial
+    - assembly
+    - ikea
+    - lego
+    - hardware
+    - build-guide
+    - instructions
+    - kit
+    sections_shape:
+    - cover-page
+    - meta-strip
+    - outcome-preview
+    - prerequisites-grid
+    - checkpoint
+    - module
+    - tutorial-step
+    - tutorial-step
+    - callout-anchor
+    - tutorial-step
+    - checkpoint
+    - module
+    - tutorial-step
+    - tutorial-step
+    - before-after
+    - module
+    - tutorial-step
+    - checkpoint
+    - module
+    - whats-next
   tutorial-cheatsheet:
     namespace: katib
     version: 0.1.0
@@ -1081,6 +1233,59 @@ recipes:
     - module
     - sections-grid
     - module
+  tutorial-course-module:
+    namespace: katib
+    version: 0.1.0
+    description: 'Microsoft Learn-style course module — A4 portrait, structured around
+
+      objectives → vocabulary → instruction → checks → recap. Composes
+
+      objectives-box + glossary-card + tutorial-step + checkpoint +
+
+      try-it-yourself + cheat-sheet + whats-next. The pedagogical
+
+      flagship of the tutorial pack — exercises every Phase C component
+
+      in their canonical roles. Generic placeholders + lorem ipsum body.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 6
+    - 12
+    page_limit: 14
+    when: Course-style learning module — a structured unit of instruction within a larger curriculum.
+      The reader is here to LEARN something (a concept, a framework, a methodology), not to BUILD something.
+      Pairs all four Phase C tutorial components (glossary-card, decision-branch, try-it-yourself, cheat-sheet)
+      with objectives-box and checkpoint scaffolding.
+    keywords:
+    - tutorial
+    - course
+    - module
+    - microsoft-learn
+    - education
+    - learning
+    - classroom
+    - pedagogy
+    sections_shape:
+    - cover-page
+    - meta-strip
+    - outcome-preview
+    - objectives-box
+    - glossary-card
+    - module
+    - tutorial-step
+    - tutorial-step
+    - checkpoint
+    - try-it-yourself
+    - module
+    - tutorial-step
+    - tutorial-step
+    - try-it-yourself
+    - cheat-sheet
+    - checkpoint
+    - whats-next
   tutorial-handoff:
     namespace: katib
     version: 0.1.0
@@ -1202,6 +1407,151 @@ recipes:
     - module
     - sections-grid
     - module
+  tutorial-recipe-card:
+    namespace: katib
+    version: 0.1.1
+    description: 'Cookbook-style recipe card — A4 portrait, single recipe per spread.
+
+      Composes meta-strip (yield/time/difficulty) + outcome-preview (finished
+
+      dish hero) + prerequisites-grid (ingredients) + tutorial-step (numbered
+
+      method) + checkpoint (interim cues like "the dough should pull from the
+
+      bowl"). Generic placeholders + lorem ipsum body — drop in your own
+
+      dish, ingredients, and method.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 1
+    - 3
+    page_limit: 4
+    when: Cookbook-style recipe card for a single dish, suitable for personal-brand food content, a recipe
+      column in a newsletter, or a printed cookbook spread. Pairs the four Phase-A tutorial components
+      (meta-strip, outcome-preview, prerequisites-grid, checkpoint) with the existing tutorial-step section.
+    keywords:
+    - tutorial
+    - recipe
+    - cookbook
+    - food
+    - cooking
+    - kitchen
+    - hospitality
+    - recipe-card
+    sections_shape:
+    - cover-page
+    - meta-strip
+    - outcome-preview
+    - prerequisites-grid
+    - module
+    - tutorial-step
+    - tutorial-step
+    - tutorial-step
+    - checkpoint
+    - tutorial-step
+    - tutorial-step
+    - tutorial-step
+    - checkpoint
+    - module
+    - whats-next
+  tutorial-software-walkthrough:
+    namespace: katib
+    version: 0.1.0
+    description: 'Stripe-style developer walkthrough — A4 portrait software tutorial.
+
+      Composes meta-strip + outcome-preview + objectives-box +
+
+      prerequisites-grid + code-step (with annotations and expected output)
+
+      + checkpoint + common-mistakes + cheat-sheet (data-table) +
+
+      whats-next. Lorem ipsum + bracket placeholders.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 6
+    - 10
+    page_limit: 12
+    when: Developer-facing implementation walkthrough — building a working integration, configuring a
+      service, or shipping a feature end-to-end. Pairs the four Phase-B tutorial components (code-step,
+      callout-anchor, common-mistakes, before-after) with all four Phase-A components.
+    keywords:
+    - tutorial
+    - software
+    - developer
+    - walkthrough
+    - integration
+    - code
+    - programming
+    - guide
+    sections_shape:
+    - cover-page
+    - meta-strip
+    - outcome-preview
+    - objectives-box
+    - prerequisites-grid
+    - module
+    - code-step
+    - code-step
+    - checkpoint
+    - module
+    - code-step
+    - code-step
+    - checkpoint
+    - module
+    - code-step
+    - checkpoint
+    - common-mistakes
+    - data-table
+    - whats-next
+  tutorial-troubleshooting-runbook:
+    namespace: katib
+    version: 0.1.0
+    description: 'Paired error → cause → fix runbook for ops/support teams. Cover +
+
+      when-to-use module + N×common-mistakes blocks (one per failure
+
+      category) + cheat-sheet (error-code index via data-table) +
+
+      whats-next. Generic placeholders + lorem ipsum body — drop in your
+
+      own service''s failure catalogue. Decision-branch (Sprint 3) will
+
+      upgrade the top-level routing once that component ships.
+
+      '
+    languages:
+    - en
+    target_pages:
+    - 4
+    - 7
+    page_limit: 8
+    when: Operational runbook for an on-call team, support team, or first-line responder. Reader has hit
+      a failure and needs to find the matching diagnosis + fix without reading the upstream tutorial.
+      Use after the underlying system has been documented in a tutorial-software-walkthrough.
+    keywords:
+    - tutorial
+    - troubleshooting
+    - runbook
+    - operations
+    - on-call
+    - support
+    - debugging
+    - error-codes
+    sections_shape:
+    - cover-page
+    - module
+    - common-mistakes
+    - common-mistakes
+    - common-mistakes
+    - common-mistakes
+    - data-table
+    - whats-next
   tutorial:
     namespace: katib
     version: 1.3.2
@@ -1323,7 +1673,7 @@ components:
       numeric columns (right-aligned + tabular-nums) and cells with optional sub-text (invoice description
       lines). Used by white-paper (numeric time-series), proposal (deliverables), invoice (line items),
       onboarding (30/60/90 windows).
-    used_in_recipes: 10
+    used_in_recipes: 12
   eyebrow:
     namespace: katib
     tier: primitive
@@ -1494,6 +1844,49 @@ components:
 
       '
     used_in_recipes: 1
+  before-after:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - side-by-side
+    - stacked
+    - filmstrip
+    description: 'Paired panels showing initial vs final state with the same aspect ratio
+
+      enforced. Makes deltas legible — same camera angle, same crop, same
+
+      framing — so the reader''s eye fixes on what changed instead of
+
+      recomposing the scene. Variants: side-by-side, stacked, filmstrip
+
+      (3-up: before / middle / after).
+
+      '
+    used_in_recipes: 1
+  callout-anchor:
+    namespace: katib
+    tier: section
+    version: 0.1.1
+    languages:
+    - en
+    - ar
+    variants:
+    - solid
+    - outline
+    description: 'Image with numbered pins overlaid + a matching legend list. The annotated
+
+      diagram pattern from technical drawing — leader-line semantics translated
+
+      to a static PDF where leader lines don''t survive. Pins are positioned by
+
+      logical-x/y coordinates (0-100%) so RTL builds mirror correctly.
+
+      '
+    used_in_recipes: 1
   chart-bar:
     namespace: katib
     tier: section
@@ -1531,6 +1924,96 @@ components:
     description: Compact trendline. Line direction is always left-to-right regardless of lang (chronological
       convention). Inline-svg only.
     used_in_recipes: 1
+  cheat-sheet:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - card-grid
+    - dense-table
+    description: 'Quick-reference recap of commands, env vars, shortcuts, or formulas
+
+      grouped by topic. Visually distinct from `data-table` by intent: a
+
+      cheat-sheet is for rapid scanning at the end of a tutorial (label →
+
+      value lookups), where data-table is for prose-tabular comparison
+
+      with explicit headers. Two variants: `card-grid` lays group-cards
+
+      out in a 2- or 3-column grid; `dense-table` renders a single-column
+
+      recap with bolded labels and right-aligned values.
+
+      '
+    used_in_recipes: 1
+  checkpoint:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - neutral
+    - success
+    description: 'Boxed "you should now have…" panel between step groups. Lets the reader
+
+      verify they''re on the right track before continuing. Title (defaults
+
+      per-language to "Checkpoint" / "نقطة تحقق") + body + optional interim
+
+      screenshot. Variants: success (green-tinted) / neutral. Implements
+
+      Mayer''s segmenting principle.
+
+      '
+    used_in_recipes: 4
+  code-step:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - terminal
+    - editor
+    description: 'The verification unit for software tutorials: a code block with optional
+
+      per-line annotations and an optional "expected output" panel that lets
+
+      the reader confirm success without running anything. Composes the
+
+      bundled code-block primitive convention.
+
+      '
+    used_in_recipes: 1
+  common-mistakes:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - cards
+    - table
+    description: 'Structured error → cause → fix table for tutorial troubleshooting.
+
+      Distinct from `callout warn` (a single inline warning) — this is a
+
+      multi-row block where each row is a complete failure mode: the symptom
+
+      the reader will observe, why it happens, and how to fix it. Optional
+
+      screenshot per row anchors the symptom to a real failure state.
+
+      '
+    used_in_recipes: 2
   comparison-table:
     namespace: katib
     tier: section
@@ -1560,6 +2043,32 @@ components:
       (skill-bar-list, tag-chips) and main sections inline. Designed specifically for the CV structural
       shape; future reuse expected for portfolio and profile pages.
     used_in_recipes: 1
+  decision-branch:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - tabs-static
+    - branched-list
+    description: 'Static-print substitute for the interactive tabbed-tutorial control
+
+      ("Node.js / Python / Ruby" tabs, "Linux / macOS / Windows" tabs).
+
+      Picks one canonical branch, lays it out in full, and demotes the
+
+      alternates to a compact appendix block. Two variants: `tabs-static`
+
+      shows tab chrome at the top with the selected tab highlighted (so the
+
+      reader can see all options exist); `branched-list` skips the chrome
+
+      and presents the choice as inline branched prose.
+
+      '
+    used_in_recipes: 0
   executive-summary:
     namespace: katib
     tier: section
@@ -1642,6 +2151,33 @@ components:
       default is GCC-tuned (Banking, Government, Real Estate, Energy, SME / SMB). Used as Figure 3 in
       Signal Forge peer briefings.
     used_in_recipes: 0
+  glossary-card:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - margin-card
+    - inline-row
+    - grid
+    description: 'Term + definition card — the static-print substitute for the hover
+
+      tooltip. Pre-defines jargon at the point of first use (margin-card
+
+      variant), inline as a definition row inside body text (inline-row),
+
+      or batched at the end of a chapter (grid). Optional `pronunciation`
+
+      for terms loaned from another language (e.g. an Arabic gloss for an
+
+      English technical term, or vice-versa). Optional `see_also` cross-
+
+      references peer terms in the same glossary.
+
+      '
+    used_in_recipes: 1
   kv-list:
     namespace: katib
     tier: section
@@ -1657,6 +2193,19 @@ components:
       reference pairs, metadata summaries, and (as of 0.2.0) field-summary boxes for formal documents
       (NOC employee details, invoice meta blocks).
     used_in_recipes: 11
+  landscape-diagram:
+    namespace: katib
+    tier: section
+    version: 1.0.1
+    languages:
+    - en
+    - ar
+    variants: []
+    description: Single-page landscape diagram block — guarantees a complex diagram (SVG, HTML) fits on
+      exactly one landscape A4 page without overflow or splitting. Optional eyebrow, title, and caption
+      surround the diagram canvas; the diagram itself is constrained to the available canvas height so
+      SVGs with viewBox auto-scale to fit.
+    used_in_recipes: 0
   landscape-section:
     namespace: katib
     tier: section
@@ -1711,6 +2260,25 @@ components:
       location) on trailing side. Bottom accent rule. For personal-brand documents (cover-letter, CV,
       bio). Distinct from `letterhead` (which is for organizational/company identity).
     used_in_recipes: 2
+  meta-strip:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - outline
+    - solid
+    - minimal
+    description: 'Horizontal row of small badges (time, difficulty, yield, stack, level, etc.)
+
+      sitting directly under a title. 3-6 items typical. Lets the reader triage a
+
+      tutorial, recipe, or briefing before committing.
+
+      '
+    used_in_recipes: 4
   module:
     namespace: katib
     tier: section
@@ -1725,7 +2293,7 @@ components:
       heading fields are optional; use without a title for continuous-prose sections (letter bodies, abstract
       paragraphs, recitals). `body` is auto-escaped plain text; `raw_body` accepts trusted HTML (tables,
       inline SVG, pull-quotes, callouts) for recipe-supplied content.
-    used_in_recipes: 29
+    used_in_recipes: 35
   multi-party-signature-block:
     namespace: katib
     tier: section
@@ -1751,7 +2319,7 @@ components:
     - boxed
     - minimal
     description: Labeled bullet list — "What you'll learn", module objectives, or scope items.
-    used_in_recipes: 5
+    used_in_recipes: 7
   org-chart:
     namespace: katib
     tier: section
@@ -1766,6 +2334,100 @@ components:
       Use for org structures, governance diagrams, parent-and-children team layouts, or any one-to-many
       hierarchy.
     used_in_recipes: 1
+  outcome-preview:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - image-leading
+    - image-trailing
+    - image-top
+    description: 'Hero "what you''ll build" block. Title + subtitle + image (user-file or
+
+      screenshot — factual, not decorative) + optional body. Pairs with covers
+
+      as page 2: the visual target that anchors the rest of the tutorial.
+
+      '
+    used_in_recipes: 4
+  photo-collage:
+    namespace: katib
+    tier: section
+    version: 1.0.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Magazine-style asymmetric photo collage. Six images in a mosaic — one
+
+      hero on the left at full collage height, three stacked supporting images
+
+      in the right column, and two more in a wide bottom row. Optional
+
+      eyebrow, title, subtitle and source attribution. Bilingual EN+AR.
+
+      Designed for news galleries, event coverage, photo essays.
+
+      '
+    used_in_recipes: 0
+  polaroid-wall:
+    namespace: katib
+    tier: section
+    version: 1.0.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Scrapbook-style scattered Polaroid wall. Seven images rendered as
+
+      Polaroids with white frames, slight rotations, drop shadows, and
+
+      natural overlap — anchored by an optional handwritten-style note in
+
+      the center. Bilingual EN+AR. Designed for editorial photo essays,
+
+      year-in-review posts, casual feature spreads.
+
+      '
+    used_in_recipes: 0
+  prepared-by-page:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    variants: []
+    description: Standalone signature title page for proposals. Centred proposal title block (eyebrow,
+      title, reference), a Prepared-by table with printed and blank ruled fields plus an optional signature
+      and company-stamp image, and a for-and-on-behalf-of company line. Fills its own page.
+    used_in_recipes: 0
+  prerequisites-grid:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - checklist
+    - grid
+    description: 'Gating list of required items — tools, skills, materials, accounts — that
+
+      the reader needs before starting. Variants: `checklist` (1-col with
+
+      checkbox) and `grid` (N-col cards, optional checkbox). Distinct from
+
+      `sections-grid` by tighter density and a checkbox column. Implements
+
+      Mayer''s pre-training principle.
+
+      '
+    used_in_recipes: 3
   process-flow:
     namespace: katib
     tier: section
@@ -1850,7 +2512,7 @@ components:
     description: Titled-card grid — N cards arranged in 2, 3, or 4 columns. Each card has a title and
       either plain-text body or trusted HTML raw_body. Serves cheatsheet sections (6 cards), one-pager
       2x2 body grids, contact-card layouts, and any "group of peer sections" shape.
-    used_in_recipes: 8
+    used_in_recipes: 9
   signal-cluster-bar:
     namespace: katib
     tier: section
@@ -1893,6 +2555,46 @@ components:
       highlighted with a vertical rule and TODAY annotation. Used as Figure 0 in Signal Forge peer briefings
       to contextualise today against the last N run-days.
     used_in_recipes: 0
+  signoff-block:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    variants:
+    - grid
+    - stacked
+    description: Fill-in sign-off block for proposals and contracts. Renders one or more party cards,
+      each with a label and a list of fields that are either printed (label plus value) or blank ruled
+      lines to write on; an optional company-stamp box. Use for a Prepared-by sign-off and for Client
+      and Provider acceptance grids.
+    used_in_recipes: 0
+  slide-cover-photo:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - ink
+    - scrim
+    description: 'Full-bleed photographic slide cover for A4-landscape decks. The image
+
+      fills the entire page; the title block sits on the photo''s negative
+
+      space. Two text treatments: `ink` lays dark brand text over a light
+
+      photo behind a soft page-tint wash (no dark scrim), `scrim` lays white
+
+      text over a dark gradient for dark or busy photos. Companion to
+
+      slide-frame — use this when the cover is a photograph rather than type
+
+      on paper.
+
+      '
+    used_in_recipes: 0
   slide-frame:
     namespace: katib
     tier: section
@@ -1909,7 +2611,31 @@ components:
       frames. Each slide is atomic (one slide = one page). Use multiple slide-frame sections in a row
       to build a full deck. Variants — title-only, content, two-column, image-background — cover the common
       slide layouts.
-    used_in_recipes: 1
+    used_in_recipes: 2
+  slide-mosaic:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - large-right
+    - large-left
+    description: 'Magazine-style asymmetric slide for A4-landscape decks: a text column
+
+      with eyebrow, title and body on one side, a large framed feature image
+
+      filling the other side, and up to two small labelled tiles under the
+
+      text column. Stays inside the page margins (framed, editorial) — the
+
+      full-bleed counterpart is slide-split. Variants pick the feature-image
+
+      side: large-right or large-left.
+
+      '
+    used_in_recipes: 0
   slide-quote:
     namespace: katib
     tier: section
@@ -1923,7 +2649,31 @@ components:
       For testimonial slides, founder-vision slides, customer-quote slides — any moment in a deck where
       the message is "let one person's words do the work". Use multiple slide-quote sections in a row
       to build a "what people are saying" sequence. Page-size matches slide-frame.
-    used_in_recipes: 1
+    used_in_recipes: 2
+  slide-split:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - image-left
+    - image-right
+    description: 'Magazine-style split slide for A4-landscape decks: one half of the page
+
+      is a full-bleed image (to three physical edges), the other half is a
+
+      text column with eyebrow, title, subtitle and optional HTML body.
+
+      Variants pick the image side: image-left or image-right. Made for
+
+      product-screenshot feature slides and editorial photo spreads where
+
+      slide-frame''s centered layouts feel too document-like.
+
+      '
+    used_in_recipes: 0
   slide-stat:
     namespace: katib
     tier: section
@@ -1936,7 +2686,7 @@ components:
     description: Single 16:9 landscape slide carrying one massive stat with a label and an optional supporting
       paragraph. For traction slides, market-size slides, "single moment of impact" slides in any deck.
       The stat dominates the slide visually so the audience reads the number first and the prose second.
-    used_in_recipes: 1
+    used_in_recipes: 2
   summary:
     namespace: katib
     tier: section
@@ -2009,6 +2759,32 @@ components:
       entries (label + level + page) — recipes know their own structure better than any auto-generation
       pass. Supports up to 3 nesting levels.
     used_in_recipes: 1
+  try-it-yourself:
+    namespace: katib
+    tier: section
+    version: 0.1.0
+    languages:
+    - en
+    - ar
+    variants:
+    - inline-answer
+    - flipped-answer
+    description: 'Exercise + answer block — the static-print substitute for the
+
+      interactive knowledge-check quiz. Two variants: `inline-answer`
+
+      reveals the answer right under the question (acceptable when peeking
+
+      is fine); `flipped-answer` rotates the answer 180° (the puzzle-book
+
+      convention — the reader has to flip the page to read it, so they''re
+
+      forced to attempt the exercise first). A `hint` input is optional in
+
+      both variants.
+
+      '
+    used_in_recipes: 1
   tutorial-step:
     namespace: katib
     tier: section
@@ -2019,7 +2795,7 @@ components:
     variants: []
     description: Numbered tutorial step — step circle + title + description + optional screenshot. Screenshots
       are factual; gemini source is deliberately excluded.
-    used_in_recipes: 3
+    used_in_recipes: 6
   two-column-image-text:
     namespace: katib
     tier: section
@@ -2047,6 +2823,27 @@ components:
       Best for editorial essays, long-form articles, or long primary-source excerpts where a single column
       feels lonely.
     used_in_recipes: 2
+  video-card:
+    namespace: katib
+    tier: section
+    version: 1.0.0
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Video preview card for print PDFs. Horizontal layout — portrait
+
+      thumbnail on the left with play button overlay and platform badge,
+
+      metadata block on the right (title, author, duration, clickable URL,
+
+      QR code). Bilingual EN+AR. Designed for embedding TikToks, YouTube
+
+      Shorts, and Instagram Reels into print-grade documents.
+
+      '
+    used_in_recipes: 0
   whats-next:
     namespace: katib
     tier: section
@@ -2058,7 +2855,7 @@ components:
     - bullet
     - numbered
     description: Forward-pointing CTA — heading plus list of next actions. Bulleted or numbered.
-    used_in_recipes: 4
+    used_in_recipes: 9
   back-cover:
     namespace: katib
     tier: cover
@@ -2105,4 +2902,27 @@ components:
     description: Full-page document opener. Four variants — minimalist-typographic (CSS-only), image-background
       (full-bleed + dark scrim), neural-cartography (Gemini + dark scrim), framed-canvas (light editorial
       canvas, dark text on warm off-white image, no scrim).
-    used_in_recipes: 5
+    used_in_recipes: 10
+  news-cover:
+    namespace: katib
+    tier: cover
+    version: 1.0.1
+    languages:
+    - en
+    - ar
+    variants:
+    - default
+    description: 'Newspaper-style cover page — stacked layout: eyebrow + thick top rule +
+
+      large headline at the top, rectangular image in the middle, optional
+
+      caption + byline strip + subtitle/deck under the image, and a footer
+
+      with author and reference code. Bilingual EN+AR. Designed for digital
+
+      news stories and print article openers; mirrors front-page feature
+
+      layouts in Al Ittihad / Al Bayan / The National.
+
+      '
+    used_in_recipes: 0

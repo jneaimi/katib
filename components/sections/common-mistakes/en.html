@@ -1,0 +1,26 @@
+<section class="katib-section katib-common-mistakes katib-common-mistakes--{{ variant or 'cards' }}" lang="en">
+    <h3 class="katib-common-mistakes__heading">{{ input.heading or 'Common mistakes' }}</h3>
+    <ol class="katib-common-mistakes__items">
+{%- for item in input.items %}
+        <li class="katib-common-mistakes__item">
+            <div class="katib-common-mistakes__symptom">
+                <span class="katib-common-mistakes__label">If you see</span>
+                <div class="katib-common-mistakes__symptom-text">{{ item.symptom }}</div>
+{%- if item.screenshot and item.screenshot.resolved_path %}
+                <img class="katib-common-mistakes__screenshot"
+                     src="{{ item.screenshot.resolved_path }}"
+                     alt="Symptom screenshot">
+{%- endif %}
+            </div>
+            <div class="katib-common-mistakes__cause">
+                <span class="katib-common-mistakes__label">Cause</span>
+                <div class="katib-common-mistakes__text">{{ item.cause }}</div>
+            </div>
+            <div class="katib-common-mistakes__fix">
+                <span class="katib-common-mistakes__label">Fix</span>
+                <div class="katib-common-mistakes__text">{{ item.fix }}</div>
+            </div>
+        </li>
+{%- endfor %}
+    </ol>
+</section>

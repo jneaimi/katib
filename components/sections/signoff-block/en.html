@@ -1,0 +1,33 @@
+{%- set effective_variant = variant or 'grid' %}
+<section class="katib-section katib-signoff-block katib-signoff-block--{{ effective_variant }}" lang="en">
+  <div class="katib-signoff-block__grid">
+{%- for party in input.parties %}
+    <div class="katib-signoff-block__card">
+      <table class="katib-signoff-block__table">
+{%- if party.label %}
+        <thead>
+          <tr><th class="katib-signoff-block__th" colspan="2" scope="colgroup">{{ party.label }}</th></tr>
+        </thead>
+{%- endif %}
+        <tbody>
+{%- for f in party.fields %}
+          <tr>
+            <td class="katib-signoff-block__key">{{ f.label }}</td>
+{%- if f.value %}
+            <td class="katib-signoff-block__val">{{ f.value }}</td>
+{%- else %}
+            <td class="katib-signoff-block__val katib-signoff-block__val--blank">&nbsp;</td>
+{%- endif %}
+          </tr>
+{%- endfor %}
+{%- if party.stamp %}
+          <tr>
+            <td class="katib-signoff-block__stamp-cell" colspan="2"><div class="katib-signoff-block__stamp">Company Stamp</div></td>
+          </tr>
+{%- endif %}
+        </tbody>
+      </table>
+    </div>
+{%- endfor %}
+  </div>
+</section>

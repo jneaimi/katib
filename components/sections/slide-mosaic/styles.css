@@ -1,0 +1,172 @@
+/* slide-mosaic — framed magazine grid inside the page margins:
+   text column + small tiles on one side, large feature image on the other. */
+@page slide {
+    size: A4 landscape;
+    margin: 18mm;
+    @bottom-center {
+        content: counter(page) " / " counter(pages);
+        font-family: 'IBM Plex Mono', 'Courier New', monospace;
+        font-size: 8pt;
+        color: var(--text-tertiary, #8A8270);
+    }
+}
+
+.katib-slide-mosaic {
+    page: slide;
+    position: relative;
+    min-height: 174mm;
+    display: flex;
+    flex-direction: row;
+    gap: 10mm;
+    overflow: hidden;
+}
+
+.katib-slide-mosaic--large-left {
+    flex-direction: row-reverse;
+}
+
+.katib-slide-mosaic[lang="ar"] {
+    flex-direction: row-reverse;
+}
+
+.katib-slide-mosaic[lang="ar"].katib-slide-mosaic--large-left {
+    flex-direction: row;
+}
+
+/* Text column with the small tiles pinned to its bottom (absolute —
+   WeasyPrint ignores margin-top:auto inside flex columns) */
+.katib-slide-mosaic__col--text {
+    flex: 0 0 42%;
+    position: relative;
+    padding-bottom: 46mm;
+    box-sizing: border-box;
+}
+
+.katib-slide-mosaic__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12pt;
+}
+
+.katib-slide-mosaic[lang="ar"] .katib-slide-mosaic__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-slide-mosaic__title {
+    font-family: var(--font-display);
+    font-size: 26pt;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0;
+}
+
+.katib-slide-mosaic[lang="ar"] .katib-slide-mosaic__title {
+    font-size: 28pt;
+    letter-spacing: 0;
+    line-height: 1.32;
+}
+
+.katib-slide-mosaic__body {
+    font-family: var(--font-primary);
+    font-size: 11pt;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 12pt;
+}
+
+.katib-slide-mosaic__tiles {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 6mm;
+}
+
+.katib-slide-mosaic__tile {
+    flex: 1;
+    margin: 0;
+}
+
+.katib-slide-mosaic__tile img {
+    width: 100%;
+    height: 34mm;
+    object-fit: cover;
+    object-position: left top;
+    border: 0.75pt solid var(--border);
+    border-radius: 4pt;
+    display: block;
+}
+
+.katib-slide-mosaic__tile figcaption {
+    font-family: var(--font-primary);
+    font-size: 8pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-tertiary, var(--text-secondary));
+    margin-top: 4pt;
+}
+
+.katib-slide-mosaic[lang="ar"] .katib-slide-mosaic__tile figcaption {
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+/* Feature column — one large framed image at full column height */
+.katib-slide-mosaic__col--feature {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border: 0.75pt solid var(--border);
+    border-radius: 5pt;
+}
+
+.katib-slide-mosaic__feature {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: left top;
+}
+
+.katib-slide-mosaic__caption {
+    position: absolute;
+    left: 6mm;
+    bottom: 5mm;
+    max-width: 75%;
+    padding: 4pt 9pt;
+    font-family: var(--font-primary);
+    font-size: 8.5pt;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 3pt;
+    z-index: 2;
+}
+
+.katib-slide-mosaic__logo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    max-height: 7mm;
+    width: auto;
+    z-index: 3;
+}
+
+.katib-slide-mosaic[lang="ar"] .katib-slide-mosaic__logo {
+    right: auto;
+    left: 0;
+}

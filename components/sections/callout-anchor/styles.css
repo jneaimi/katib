@@ -1,0 +1,130 @@
+/* callout-anchor — image with overlaid numbered pins + legend list.
+   Pins are positioned absolutely against the image-wrap container so
+   they scale with the image. Coordinates are logical-leading: x is
+   measured from the leading edge (left in EN, right in AR), y is
+   measured from the top in both directions. */
+.katib-callout-anchor {
+    margin: 1.4em 0;
+    page-break-inside: avoid;
+}
+
+.katib-callout-anchor__image-wrap {
+    position: relative;
+    display: block;
+    width: 100%;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    overflow: hidden;
+}
+
+.katib-callout-anchor__image {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.katib-callout-anchor__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90mm;
+    background: var(--page-bg);
+    border: 1pt dashed var(--border);
+    border-radius: 3pt;
+}
+
+.katib-callout-anchor__placeholder-text {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.katib-callout-anchor[lang="ar"] .katib-callout-anchor__placeholder-text {
+    font-style: normal;
+}
+
+.katib-callout-anchor__pin {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 18pt;
+    height: 18pt;
+    line-height: 16pt;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    border: 1.5pt solid var(--page-bg);
+    border-radius: 50%;
+}
+
+.katib-callout-anchor[lang="ar"] .katib-callout-anchor__pin {
+    transform: translate(50%, -50%);
+}
+
+.katib-callout-anchor__caption {
+    margin: 6pt 0 0 0;
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.katib-callout-anchor__legend {
+    list-style: none;
+    margin: 10pt 0 0 0;
+    padding: 10pt 12pt;
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+}
+
+.katib-callout-anchor__legend-item {
+    display: flex;
+    align-items: baseline;
+    gap: 9pt;
+    padding: 3pt 0;
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.katib-callout-anchor__legend-item + .katib-callout-anchor__legend-item {
+    border-top: 0.5pt solid var(--border);
+    margin-top: 3pt;
+    padding-top: 6pt;
+}
+
+.katib-callout-anchor__legend-marker {
+    flex-shrink: 0;
+    width: 16pt;
+    height: 16pt;
+    line-height: 14pt;
+    text-align: center;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    border-radius: 50%;
+}
+
+.katib-callout-anchor__legend-label {
+    flex: 1;
+    color: var(--text);
+}
+
+/* Variant: outline — pins and legend markers are outlined circles
+   instead of solid. Better for dense / colourful background images
+   where solid pins clash with the underlying art. */
+.katib-callout-anchor--outline .katib-callout-anchor__pin,
+.katib-callout-anchor--outline .katib-callout-anchor__legend-marker {
+    background: var(--page-bg);
+    color: var(--accent);
+    border: 1.5pt solid var(--accent);
+    line-height: 14pt;
+}
+

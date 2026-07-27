@@ -1,0 +1,38 @@
+# Test inputs for `polaroid-wall` isolated render.
+# Reuses the locally-downloaded the old fort images.
+inputs:
+  eyebrow: "معرض الصور"
+  title: "نموذج اختباري لجدار الصور"
+  subtitle: "سبع صور بأنماط متباينة لاختبار التخطيط."
+  center_note: "Test '26"
+  source_attribution: "Test fixture"
+  photo_1:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_1_caption: "Hero"
+  photo_2:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_2_caption: "Fortress"
+  photo_3:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_3_caption: "Tower"
+  photo_4:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_4_caption: "Night"
+  photo_5:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_5_caption: "Watchtower"
+  photo_6:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_6_caption: "Structure"
+  photo_7:
+    source: user-file
+    path: "tests/fixtures/cover-bg.jpg"
+  photo_7_caption: "Skyline"
+brand: null
+variant: null

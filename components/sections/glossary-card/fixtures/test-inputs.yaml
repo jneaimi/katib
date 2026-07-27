@@ -1,0 +1,18 @@
+# Test inputs for `glossary-card` isolated render.
+inputs:
+  heading: "Glossary"
+  columns: 2
+  items:
+    - term: "Idempotency"
+      definition: "Property of an operation that produces the same result whether applied once or many times. Critical for at-least-once delivery systems."
+      pronunciation: "/ˌaɪ.dəm.poʊˈtɛn.si/"
+      see_also: "Side effect, Replay"
+    - term: "Webhook"
+      definition: "An HTTP callback fired by a third-party system when an event of interest occurs."
+      see_also: "Event, Signature verification"
+    - term: "Replay attack"
+      definition: "An attacker re-submits a captured legitimate request, hoping the server treats it as new. Mitigated by signed timestamps and one-time tokens."
+    - term: "Signature header"
+      definition: "An HTTP header containing a cryptographic signature of the request body. Lets the receiver verify the sender."
+brand: null
+variant: grid

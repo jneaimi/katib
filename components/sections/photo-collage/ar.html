@@ -1,0 +1,60 @@
+{%- macro img_cell(slot, caption_slot) -%}
+{%- set img = input[slot] -%}
+{%- set cap = input[caption_slot] -%}
+<figure class="katib-photo-collage__cell">
+{%- if img and img.resolved_path %}
+  <img class="katib-photo-collage__img" src="{{ img.resolved_path }}" alt="{{ cap or '' }}">
+{%- elif img and img.resolved_svg %}
+  <div class="katib-photo-collage__img">{{ img.resolved_svg | safe }}</div>
+{%- endif %}
+{%- if cap %}
+  <figcaption class="katib-photo-collage__caption">{{ cap }}</figcaption>
+{%- endif %}
+</figure>
+{%- endmacro -%}
+<section class="katib-photo-collage" lang="ar" dir="rtl">
+{%- if input.eyebrow or input.title or input.subtitle %}
+    <header class="katib-photo-collage__header">
+{%- if input.eyebrow %}
+        <div class="katib-photo-collage__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-photo-collage__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.subtitle %}
+        <p class="katib-photo-collage__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </header>
+{%- endif %}
+
+    <table class="katib-photo-collage__grid" cellspacing="0" cellpadding="0" dir="rtl">
+        <tr>
+            <td class="katib-photo-collage__hero" colspan="2" rowspan="2">
+                {{ img_cell('hero_image', 'hero_caption') }}
+            </td>
+            <td class="katib-photo-collage__small">
+                {{ img_cell('top_image', 'top_caption') }}
+            </td>
+            <td class="katib-photo-collage__small">
+                {{ img_cell('middle_image', 'middle_caption') }}
+            </td>
+        </tr>
+        <tr>
+            <td class="katib-photo-collage__right-wide" colspan="2">
+                {{ img_cell('bottom_image', 'bottom_caption') }}
+            </td>
+        </tr>
+        <tr>
+            <td class="katib-photo-collage__wide" colspan="2">
+                {{ img_cell('wide_left_image', 'wide_left_caption') }}
+            </td>
+            <td class="katib-photo-collage__wide" colspan="2">
+                {{ img_cell('wide_right_image', 'wide_right_caption') }}
+            </td>
+        </tr>
+    </table>
+
+{%- if input.source_attribution %}
+    <div class="katib-photo-collage__source">{{ input.source_attribution }}</div>
+{%- endif %}
+</section>

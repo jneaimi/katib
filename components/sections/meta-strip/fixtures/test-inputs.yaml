@@ -1,0 +1,15 @@
+# Test inputs for `meta-strip` isolated render.
+# Used by `katib component test meta-strip`.
+inputs:
+  items:
+    - label: "Time"
+      value: "15 min"
+    - label: "Difficulty"
+      value: "Beginner"
+    - label: "Stack"
+      value: "Next.js + Stripe"
+    - label: "Yield"
+      value: "1 working integration"
+  align: "start"
+brand: null
+variant: outline

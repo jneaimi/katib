@@ -1,0 +1,27 @@
+{%- set v = variant or 'image-right' %}
+{%- set img = input.image %}
+<section class="katib-section katib-slide-split katib-slide-split--{{ v }}" lang="ar" dir="rtl">
+    <div class="katib-slide-split__media">
+{%- if img and img.resolved_path %}
+        <img class="katib-slide-split__img" src="{{ img.resolved_path }}" alt="{{ input.alt_text or '' }}">
+{%- endif %}
+{%- if input.caption %}
+        <div class="katib-slide-split__caption">{{ input.caption }}</div>
+{%- endif %}
+    </div>
+    <div class="katib-slide-split__text">
+{%- if input.eyebrow %}
+        <div class="katib-slide-split__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <h2 class="katib-slide-split__title">{{ input.title }}</h2>
+{%- if input.subtitle %}
+        <p class="katib-slide-split__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+{%- if input.raw_body %}
+        <div class="katib-slide-split__body">{{ input.raw_body | safe }}</div>
+{%- endif %}
+    </div>
+{%- if logo and logo.primary %}
+    <img class="katib-slide-split__logo" src="{{ logo.primary }}" alt="{{ name or '' }}">
+{%- endif %}
+</section>

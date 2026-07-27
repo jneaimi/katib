@@ -1,0 +1,42 @@
+<section class="katib-section katib-before-after katib-before-after--{{ variant or 'side-by-side' }}" lang="ar" dir="rtl">
+{%- if input.heading %}
+    <h3 class="katib-before-after__heading">{{ input.heading }}</h3>
+{%- endif %}
+    <div class="katib-before-after__panels">
+        <figure class="katib-before-after__panel katib-before-after__panel--before">
+{%- if input.before.image and input.before.image.resolved_path %}
+            <img class="katib-before-after__image"
+                 src="{{ input.before.image.resolved_path }}"
+                 alt="{{ input.before.alt_text or 'قبل' }}">
+{%- endif %}
+            <span class="katib-before-after__label katib-before-after__label--before">{{ input.before.label or 'قبل' }}</span>
+{%- if input.before.caption %}
+            <figcaption class="katib-before-after__caption">{{ input.before.caption }}</figcaption>
+{%- endif %}
+        </figure>
+{%- if variant == 'filmstrip' and input.middle %}
+        <figure class="katib-before-after__panel katib-before-after__panel--middle">
+{%- if input.middle.image and input.middle.image.resolved_path %}
+            <img class="katib-before-after__image"
+                 src="{{ input.middle.image.resolved_path }}"
+                 alt="{{ input.middle.alt_text or 'حالة وسيطة' }}">
+{%- endif %}
+            <span class="katib-before-after__label katib-before-after__label--middle">{{ input.middle.label or 'حالة وسيطة' }}</span>
+{%- if input.middle.caption %}
+            <figcaption class="katib-before-after__caption">{{ input.middle.caption }}</figcaption>
+{%- endif %}
+        </figure>
+{%- endif %}
+        <figure class="katib-before-after__panel katib-before-after__panel--after">
+{%- if input.after.image and input.after.image.resolved_path %}
+            <img class="katib-before-after__image"
+                 src="{{ input.after.image.resolved_path }}"
+                 alt="{{ input.after.alt_text or 'بعد' }}">
+{%- endif %}
+            <span class="katib-before-after__label katib-before-after__label--after">{{ input.after.label or 'بعد' }}</span>
+{%- if input.after.caption %}
+            <figcaption class="katib-before-after__caption">{{ input.after.caption }}</figcaption>
+{%- endif %}
+        </figure>
+    </div>
+</section>

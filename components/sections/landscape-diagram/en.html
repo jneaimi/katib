@@ -1,0 +1,18 @@
+<section class="katib-section katib-landscape-diagram" lang="en">
+{%- if input.eyebrow or input.title %}
+    <header class="katib-landscape-diagram__head">
+{%- if input.eyebrow %}
+        <div class="katib-eyebrow katib-eyebrow--accent" lang="en">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-landscape-diagram__title">{{ input.title }}</h2>
+{%- endif %}
+    </header>
+{%- endif %}
+    <div class="katib-landscape-diagram__canvas">
+        {{ input.raw_body | safe }}
+    </div>
+{%- if input.caption %}
+    <figcaption class="katib-landscape-diagram__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+</section>

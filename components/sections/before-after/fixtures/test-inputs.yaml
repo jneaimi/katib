@@ -1,0 +1,17 @@
+# Test inputs for `before-after` isolated render.
+inputs:
+  heading: "Before & after"
+  before:
+    image:
+      source: user-file
+      path: tests/fixtures/tutorial-step.png
+    label: "Before"
+    caption: "Initial state — express body-parser consumes the raw body before constructEvent sees it. Webhook returns 401."
+  after:
+    image:
+      source: user-file
+      path: tests/fixtures/tutorial-step.png
+    label: "After"
+    caption: "Fixed — express.raw() runs only on the /webhook route, leaving the rest of the app on JSON parsing. Webhook returns 200."
+brand: null
+variant: side-by-side

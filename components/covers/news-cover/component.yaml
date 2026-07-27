@@ -1,0 +1,70 @@
+name: news-cover
+tier: cover
+version: 1.0.1
+namespace: katib
+description: |
+  Newspaper-style cover page — stacked layout: eyebrow + thick top rule +
+  large headline at the top, rectangular image in the middle, optional
+  caption + byline strip + subtitle/deck under the image, and a footer
+  with author and reference code. Bilingual EN+AR. Designed for digital
+  news stories and print article openers; mirrors front-page feature
+  layouts in Al Ittihad / Al Bayan / The National.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - text_tertiary
+    - accent_2
+    - border
+    - border_strong
+    - page_bg
+  fonts:
+    - display
+    - primary
+  brand_fields:
+    - identity.author_name
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Category label rendered uppercase (EN) or as-is (AR) above the headline.
+    - title:
+        type: string
+        required: true
+        description: Headline. Display font, ~36pt EN / ~38pt AR, auto-wraps.
+    - subtitle:
+        type: string
+        required: false
+        description: Deck or sub-headline rendered under the image, secondary color.
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        fallback: gemini
+        fallback_prompt: "editorial newspaper hero image, rectangular composition, neutral palette, no text"
+        description: Hero image rendered as a rectangle (~3:2 aspect) below the headline.
+    - caption:
+        type: string
+        required: false
+        description: Optional caption shown beneath the image in muted italic.
+    - byline:
+        type: string
+        required: false
+        description: |
+          Full byline strip rendered between the image and subtitle.
+          Convention — "By Author · City · Date · Reading time" (EN)
+          or "بقلم X · المدينة · التاريخ · زمن القراءة" (AR).
+    - reference_code:
+        type: string
+        required: false
+        description: Monospace code rendered in the footer-right.
+variants:
+  - default
+page_behavior:
+  mode: atomic
+  break_after: always
+  min_height: 253mm

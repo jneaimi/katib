@@ -1,0 +1,17 @@
+<section class="katib-section katib-try-it-yourself katib-try-it-yourself--{{ variant or 'inline-answer' }}" lang="ar" dir="rtl">
+    <div class="katib-try-it-yourself__head">
+        <span class="katib-try-it-yourself__icon" aria-hidden="true">؟</span>
+        <h3 class="katib-try-it-yourself__heading">{{ input.heading or 'جرّب بنفسك' }}</h3>
+    </div>
+    <div class="katib-try-it-yourself__prompt">{{ input.prompt }}</div>
+{%- if input.hint %}
+    <div class="katib-try-it-yourself__hint">
+        <span class="katib-try-it-yourself__hint-label">تلميح</span>
+        <span class="katib-try-it-yourself__hint-text">{{ input.hint }}</span>
+    </div>
+{%- endif %}
+    <div class="katib-try-it-yourself__answer">
+        <div class="katib-try-it-yourself__answer-label">{{ input.answer_label or 'الإجابة' }}</div>
+        <div class="katib-try-it-yourself__answer-text">{{ input.answer }}</div>
+    </div>
+</section>

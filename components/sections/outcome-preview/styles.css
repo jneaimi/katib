@@ -1,0 +1,133 @@
+/* outcome-preview — the "what you'll build" anchor block.
+   Splits a section into media + text. The leading/trailing variants
+   put the image on one side; image-top stacks them with the image
+   on top (useful when the image is wide/landscape). */
+.katib-outcome-preview {
+    margin: 1.4em 0 1.8em 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 18pt;
+    page-break-inside: avoid;
+}
+
+.katib-outcome-preview--image-leading { flex-direction: row; }
+.katib-outcome-preview--image-trailing { flex-direction: row-reverse; }
+.katib-outcome-preview--image-top { flex-direction: column; gap: 12pt; }
+
+/* AR (RTL): physical flex direction needs to mirror so the logical-leading
+   side (the AR right) keeps its semantic role. row + dir=rtl already
+   reverses; force image-trailing to truly trail in AR by flipping back. */
+.katib-outcome-preview[lang="ar"].katib-outcome-preview--image-trailing { flex-direction: row; }
+.katib-outcome-preview[lang="ar"].katib-outcome-preview--image-leading { flex-direction: row-reverse; }
+
+.katib-outcome-preview__media {
+    flex: 0 0 52%;
+    margin: 0;
+}
+
+.katib-outcome-preview--image-top .katib-outcome-preview__media {
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.katib-outcome-preview__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 110mm;
+    object-fit: cover;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    background: var(--page-bg);
+}
+
+.katib-outcome-preview--image-top .katib-outcome-preview__image {
+    max-height: 90mm;
+}
+
+.katib-outcome-preview__caption {
+    margin: 6pt 0 0 0;
+    font-size: 8.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+}
+
+.katib-outcome-preview__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 90mm;
+    background: var(--page-bg);
+    border: 1.5pt dashed var(--border);
+    border-radius: 3pt;
+    color: var(--text-tertiary);
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 12pt;
+}
+
+.katib-outcome-preview[lang="ar"] .katib-outcome-preview__placeholder {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 11pt;
+}
+
+.katib-outcome-preview__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-top: 4pt;
+}
+
+.katib-outcome-preview__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 8pt 0;
+}
+
+.katib-outcome-preview[lang="ar"] .katib-outcome-preview__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-outcome-preview__title {
+    font-family: var(--font-display);
+    font-size: 22pt;
+    line-height: 1.18;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.005em;
+    font-weight: 700;
+}
+
+.katib-outcome-preview[lang="ar"] .katib-outcome-preview__title {
+    letter-spacing: 0;
+    font-size: 24pt;
+    line-height: 1.4;
+}
+
+.katib-outcome-preview__subtitle {
+    font-family: var(--font-primary);
+    font-size: 12pt;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    margin: 8pt 0 0 0;
+    font-weight: 400;
+}
+
+.katib-outcome-preview__body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 12pt 0 0 0;
+}

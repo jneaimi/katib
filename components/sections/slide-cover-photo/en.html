@@ -1,0 +1,20 @@
+{%- set v = variant or 'ink' %}
+{%- set img = input.image %}
+<section class="katib-section katib-slide-cover-photo katib-slide-cover-photo--{{ v }}" lang="en">
+{%- if img and img.resolved_path %}
+    <img class="katib-slide-cover-photo__bg" src="{{ img.resolved_path }}" alt="{{ input.alt_text or '' }}">
+{%- endif %}
+    <div class="katib-slide-cover-photo__wash"></div>
+    <div class="katib-slide-cover-photo__content">
+{%- if input.eyebrow %}
+        <div class="katib-slide-cover-photo__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <h1 class="katib-slide-cover-photo__title">{{ input.title }}</h1>
+{%- if input.subtitle %}
+        <p class="katib-slide-cover-photo__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </div>
+{%- if logo and logo.primary %}
+    <img class="katib-slide-cover-photo__logo" src="{{ logo.primary }}" alt="{{ name or '' }}">
+{%- endif %}
+</section>

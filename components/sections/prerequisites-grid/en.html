@@ -1,0 +1,16 @@
+<section class="katib-section katib-prerequisites-grid katib-prerequisites-grid--{{ variant or 'checklist' }} katib-prerequisites-grid--cols-{{ input.columns or 2 }}" lang="en">
+    <h3 class="katib-prerequisites-grid__heading">{{ input.heading or 'Before you start' }}</h3>
+    <ul class="katib-prerequisites-grid__items">
+{%- for item in input.items %}
+        <li class="katib-prerequisites-grid__item katib-prerequisites-grid__item--{{ 'optional' if item.required is false else 'required' }}">
+            <span class="katib-prerequisites-grid__check" aria-hidden="true"></span>
+            <div class="katib-prerequisites-grid__text">
+                <div class="katib-prerequisites-grid__name">{{ item.name }}</div>
+{%- if item.detail %}
+                <div class="katib-prerequisites-grid__detail">{{ item.detail }}</div>
+{%- endif %}
+            </div>
+        </li>
+{%- endfor %}
+    </ul>
+</section>

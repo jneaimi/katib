@@ -1,0 +1,46 @@
+{%- macro polaroid(slot, caption_slot, slot_class) -%}
+{%- set img = input[slot] -%}
+{%- set cap = input[caption_slot] -%}
+<figure class="katib-polaroid-wall__polaroid {{ slot_class }}">
+{%- if img and img.resolved_path %}
+  <img class="katib-polaroid-wall__img" src="{{ img.resolved_path }}" alt="{{ cap or '' }}">
+{%- elif img and img.resolved_svg %}
+  <div class="katib-polaroid-wall__img">{{ img.resolved_svg | safe }}</div>
+{%- endif %}
+{%- if cap %}
+  <figcaption class="katib-polaroid-wall__caption">{{ cap }}</figcaption>
+{%- endif %}
+</figure>
+{%- endmacro -%}
+<section class="katib-polaroid-wall" lang="ar" dir="rtl">
+{%- if input.eyebrow or input.title or input.subtitle %}
+    <header class="katib-polaroid-wall__header">
+{%- if input.eyebrow %}
+        <div class="katib-polaroid-wall__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+{%- if input.title %}
+        <h2 class="katib-polaroid-wall__title">{{ input.title }}</h2>
+{%- endif %}
+{%- if input.subtitle %}
+        <p class="katib-polaroid-wall__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </header>
+{%- endif %}
+
+    <div class="katib-polaroid-wall__stage">
+        {{ polaroid('photo_1', 'photo_1_caption', 'katib-polaroid-wall__slot-1') }}
+        {{ polaroid('photo_2', 'photo_2_caption', 'katib-polaroid-wall__slot-2') }}
+        {{ polaroid('photo_3', 'photo_3_caption', 'katib-polaroid-wall__slot-3') }}
+        {{ polaroid('photo_4', 'photo_4_caption', 'katib-polaroid-wall__slot-4') }}
+        {{ polaroid('photo_5', 'photo_5_caption', 'katib-polaroid-wall__slot-5') }}
+        {{ polaroid('photo_6', 'photo_6_caption', 'katib-polaroid-wall__slot-6') }}
+        {{ polaroid('photo_7', 'photo_7_caption', 'katib-polaroid-wall__slot-7') }}
+{%- if input.center_note %}
+        <div class="katib-polaroid-wall__note">{{ input.center_note }}</div>
+{%- endif %}
+    </div>
+
+{%- if input.source_attribution %}
+    <div class="katib-polaroid-wall__source">{{ input.source_attribution }}</div>
+{%- endif %}
+</section>

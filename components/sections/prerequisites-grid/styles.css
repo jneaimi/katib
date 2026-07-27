@@ -1,0 +1,101 @@
+/* prerequisites-grid — gating checklist before a tutorial starts.
+   Two layouts: checklist (1-col, dense, terminal-style) and grid
+   (N-col cards). The checkbox is an empty box for required items
+   (the reader fills it as they verify each one) and a hollow box
+   for optional items. */
+.katib-prerequisites-grid {
+    margin: 1.2em 0 1.6em 0;
+}
+
+.katib-prerequisites-grid__heading {
+    font-family: var(--font-display);
+    font-size: 10pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 8pt 0;
+}
+
+.katib-prerequisites-grid[lang="ar"] .katib-prerequisites-grid__heading {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12pt;
+}
+
+.katib-prerequisites-grid__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.katib-prerequisites-grid__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8pt;
+    color: var(--text);
+}
+
+.katib-prerequisites-grid__check {
+    flex-shrink: 0;
+    width: 11pt;
+    height: 11pt;
+    margin-top: 2.5pt;
+    border: 1pt solid var(--accent);
+    border-radius: 1.5pt;
+    background: var(--page-bg);
+    box-sizing: border-box;
+}
+
+.katib-prerequisites-grid__item--optional .katib-prerequisites-grid__check {
+    border-style: dashed;
+    border-color: var(--text-tertiary);
+}
+
+.katib-prerequisites-grid__text {
+    flex: 1;
+    min-width: 0;
+}
+
+.katib-prerequisites-grid__name {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text);
+}
+
+.katib-prerequisites-grid__detail {
+    font-family: var(--font-primary);
+    font-size: 9.5pt;
+    color: var(--text-tertiary);
+    line-height: 1.4;
+    margin-top: 1pt;
+}
+
+/* Variant: checklist — single column, vertical rhythm */
+.katib-prerequisites-grid--checklist .katib-prerequisites-grid__items {
+    display: flex;
+    flex-direction: column;
+    gap: 6pt;
+}
+
+/* Variant: grid — N-column card layout. Each item gets a faint border
+   and a tag-bg fill, distinct from sections-grid by smaller padding
+   and the persistent checkbox in the leading corner. */
+.katib-prerequisites-grid--grid .katib-prerequisites-grid__items {
+    display: grid;
+    gap: 8pt;
+}
+
+.katib-prerequisites-grid--grid.katib-prerequisites-grid--cols-1 .katib-prerequisites-grid__items { grid-template-columns: 1fr; }
+.katib-prerequisites-grid--grid.katib-prerequisites-grid--cols-2 .katib-prerequisites-grid__items { grid-template-columns: repeat(2, 1fr); }
+.katib-prerequisites-grid--grid.katib-prerequisites-grid--cols-3 .katib-prerequisites-grid__items { grid-template-columns: repeat(3, 1fr); }
+.katib-prerequisites-grid--grid.katib-prerequisites-grid--cols-4 .katib-prerequisites-grid__items { grid-template-columns: repeat(4, 1fr); }
+
+.katib-prerequisites-grid--grid .katib-prerequisites-grid__item {
+    padding: 9pt 11pt;
+    background: var(--tag-bg);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+}
