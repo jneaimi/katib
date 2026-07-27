@@ -53,3 +53,10 @@
 {"recipe": "legal-statement-of-work", "namespace": "katib", "action": "create", "at": "2026-04-30T16:30:00Z", "from_graduation": null, "note": "Marketplace pack — bilingual statement of work for service engagements"}
 {"recipe": "personal-employment-offer-letter", "namespace": "katib", "action": "create", "at": "2026-04-30T16:30:00Z", "from_graduation": null, "note": "Marketplace pack — bilingual employment offer letter"}
 {"recipe": "components-demo", "namespace": "katib", "action": "create", "at": "2026-04-30T17:14:00Z", "from_graduation": null, "note": "Smoke render for the new editorial component pack — magazine cover + slides + flow + org-chart"}
+{"recipe": "tutorial-assembly-guide", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "tutorial-course-module", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "tutorial-recipe-card", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "tutorial-software-walkthrough", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "tutorial-troubleshooting-runbook", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "business-briefing-deck", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
+{"recipe": "peer-meeting-quick-ref", "namespace": "katib", "action": "create", "at": "2026-07-27T12:02:17Z", "from_graduation": null, "note": "Generic recipe contribution \u2014 audit entry backfilled"}
