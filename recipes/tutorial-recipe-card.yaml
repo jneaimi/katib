@@ -1,0 +1,151 @@
+name: tutorial-recipe-card
+version: 0.1.1
+namespace: katib
+description: |
+  Cookbook-style recipe card — A4 portrait, single recipe per spread.
+  Composes meta-strip (yield/time/difficulty) + outcome-preview (finished
+  dish hero) + prerequisites-grid (ingredients) + tutorial-step (numbered
+  method) + checkpoint (interim cues like "the dough should pull from the
+  bowl"). Generic placeholders + lorem ipsum body — drop in your own
+  dish, ingredients, and method.
+languages: [en]
+target_pages: [1, 3]
+page_limit: 4
+when: Cookbook-style recipe card for a single dish, suitable for personal-brand food content, a recipe column in a newsletter, or a printed cookbook spread. Pairs the four Phase-A tutorial components (meta-strip, outcome-preview, prerequisites-grid, checkpoint) with the existing tutorial-step section.
+keywords: [tutorial, recipe, cookbook, food, cooking, kitchen, hospitality, recipe-card]
+
+sections:
+
+  # 1. Cover — recipe title + author + region
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "RECIPE · [SEASON / OCCASION]"
+      title: "[Dish Name]"
+      subtitle: "[A short descriptive line — region, technique, flavour profile]"
+
+  # 2. Meta strip — at-a-glance triage info
+  - component: meta-strip
+    variant: outline
+    inputs:
+      align: start
+      items:
+        - label: "Yield"
+          value: "[N servings]"
+        - label: "Active time"
+          value: "[XX min]"
+        - label: "Total time"
+          value: "[XX min]"
+        - label: "Difficulty"
+          value: "[Beginner / Intermediate / Advanced]"
+
+  # 3. Outcome preview — finished-dish hero photo
+  - component: outcome-preview
+    variant: image-leading
+    inputs:
+      eyebrow: "WHAT YOU'LL MAKE"
+      title: "[The finished dish in one line]"
+      subtitle: "[A short story-line: why this dish, what makes it work, who it's for]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Replace this with the headnote — the 'why this works' framing that distinguishes a recipe from a list of instructions."
+      caption: "[Optional: serving suggestion, garnish notes, plating cue]"
+      # To add a hero shot, add an `image:` block:
+      #   image:
+      #     source: user-file
+      #     path: /absolute/path/to/your-finished-dish.jpg
+      #   alt_text: "Your finished dish"
+
+  # 4. Ingredients — prerequisites-grid (grid variant works as ingredients block)
+  - component: prerequisites-grid
+    variant: grid
+    inputs:
+      heading: "Ingredients"
+      columns: 2
+      items:
+        - name: "[Ingredient 1]"
+          detail: "[Quantity + prep — e.g. 250 g, finely chopped]"
+        - name: "[Ingredient 2]"
+          detail: "[Quantity + prep]"
+        - name: "[Ingredient 3]"
+          detail: "[Quantity + prep]"
+        - name: "[Ingredient 4]"
+          detail: "[Quantity + prep]"
+        - name: "[Ingredient 5]"
+          detail: "[Quantity + prep]"
+        - name: "[Optional ingredient]"
+          required: false
+          detail: "[For variation / garnish / scaling]"
+
+  # 5. Method — numbered tutorial-steps
+  - component: module
+    inputs:
+      title: "Method"
+      body: "Lorem ipsum dolor sit amet — a 1-2 line transition from ingredients to method. Set expectations: total active time, anything that needs to happen ahead (resting, marinating, preheating)."
+
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "[Step 1 — what to do]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Describe the action, the technique, and the sensory cue (what it should look, smell, or feel like)."
+
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "[Step 2 — what to do]"
+      body: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lean on verbs and timing: 'Whisk for 90 seconds until pale and ribbony.'"
+
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "[Step 3 — what to do]"
+      body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+
+  # 6. Checkpoint — interim sensory cue
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "How it should look"
+      body: "Lorem ipsum — describe the should-be state at this midpoint. Texture, colour, smell. If the reader's mixture doesn't match, this is where to flag the most likely cause."
+
+  - component: tutorial-step
+    inputs:
+      number: 4
+      title: "[Step 4 — what to do]"
+      body: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+
+  - component: tutorial-step
+    inputs:
+      number: 5
+      title: "[Step 5 — what to do]"
+      body: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+  - component: tutorial-step
+    inputs:
+      number: 6
+      title: "[Step 6 — finishing]"
+      body: "Final assembly, plating, and serving. Mention temperature, resting time, slicing direction, and any last-second additions (citrus, fresh herbs, a finishing oil)."
+
+  # 7. Final-result success checkpoint
+  - component: checkpoint
+    variant: success
+    inputs:
+      title: "Done"
+      body: "Lorem ipsum — describe the finished dish in 1-2 lines. What it should taste, look, and smell like when it's right. The reader's confidence cue that they nailed it."
+
+  # 8. Storage + make-ahead block (cheat-sheet placeholder until Sprint 3 ships cheat-sheet)
+  - component: module
+    inputs:
+      title: "Storage, make-ahead, and scaling"
+      body: |
+        **Storage** — [refrigerator: N days; freezer: N months; reheat at temperature for time]
+        **Make-ahead** — [what can be done a day before; what must be made fresh]
+        **Scaling** — [doubles cleanly / scales to N servings; adjustments for larger batches]
+        **Substitutions** — [common ingredient swaps that work / don't work]
+
+  # 9. What to serve with / variations
+  - component: whats-next
+    inputs:
+      heading: "Serve it with"
+      items:
+        - "[Pairing 1 — a side, drink, or sauce that complements]"
+        - "[Pairing 2]"
+        - "[Variation: a one-line riff on the same recipe — different protein, different region, different season]"

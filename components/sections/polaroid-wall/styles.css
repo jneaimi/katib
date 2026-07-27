@@ -1,0 +1,252 @@
+/* polaroid-wall — scattered scrapbook-style photo collage.
+   Seven Polaroid frames absolutely positioned, slightly rotated,
+   overlapping naturally, with an optional handwritten note in the
+   center. Background is a soft cream "table" surface. */
+
+.katib-polaroid-wall {
+    margin: 8mm 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* ---- Header ---- */
+
+.katib-polaroid-wall__header {
+    margin-bottom: 4mm;
+}
+
+.katib-polaroid-wall__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-polaroid-wall[lang="ar"] .katib-polaroid-wall__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-polaroid-wall__title {
+    font-family: var(--font-display);
+    font-size: 17pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.katib-polaroid-wall[lang="ar"] .katib-polaroid-wall__title {
+    font-size: 18pt;
+    line-height: 1.3;
+}
+
+.katib-polaroid-wall__subtitle {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    margin: 4pt 0 0 0;
+    line-height: 1.45;
+}
+
+/* ---- Stage (relative positioning surface) ---- */
+
+.katib-polaroid-wall__stage {
+    position: relative;
+    width: 100%;
+    height: 142mm;
+    background: linear-gradient(160deg, #FAF6EE 0%, #F0E8D6 100%);
+    border-radius: 4pt;
+    overflow: hidden;
+    /* Subtle inner shadow to feel like a real surface */
+    border: 0.3pt solid var(--border);
+}
+
+/* ---- Polaroid frame (shared) ---- */
+
+.katib-polaroid-wall__polaroid {
+    position: absolute;
+    background: #ffffff;
+    padding: 2.5mm 2.5mm 7mm 2.5mm;
+    margin: 0;
+    box-shadow: 1.5pt 1.5pt 3pt rgba(0, 0, 0, 0.18),
+                0.5pt 0.5pt 1.5pt rgba(0, 0, 0, 0.12);
+    border: 0.3pt solid #DDDDDD;
+    overflow: hidden;
+}
+
+.katib-polaroid-wall__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+div.katib-polaroid-wall__img > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Caption inside Polaroid bottom strip — handwritten look */
+.katib-polaroid-wall__caption {
+    position: absolute;
+    bottom: 1mm;
+    left: 2mm;
+    right: 2mm;
+    font-family: var(--font-primary);
+    font-size: 7pt;
+    line-height: 1.2;
+    text-align: center;
+    color: #5A4A35;
+    font-style: italic;
+    margin: 0;
+}
+
+.katib-polaroid-wall[lang="ar"] .katib-polaroid-wall__caption {
+    font-size: 7.5pt;
+    font-style: normal;
+}
+
+/* ---- 7 Slot positions (absolute) ----
+   Container: ~175mm × 142mm. All sizes & angles tuned for natural overlap. */
+
+/* Slot 1 — top-left, portrait orientation */
+.katib-polaroid-wall__slot-1 {
+    top: 1mm;
+    left: 2mm;
+    width: 44mm;
+    height: 56mm;
+    transform: rotate(-7deg);
+    z-index: 1;
+}
+.katib-polaroid-wall__slot-1 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 2 — top-mid-left, landscape */
+.katib-polaroid-wall__slot-2 {
+    top: 4mm;
+    left: 40mm;
+    width: 52mm;
+    height: 40mm;
+    transform: rotate(4deg);
+    z-index: 2;
+}
+.katib-polaroid-wall__slot-2 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 3 — top-mid-right, portrait */
+.katib-polaroid-wall__slot-3 {
+    top: 0mm;
+    left: 88mm;
+    width: 42mm;
+    height: 52mm;
+    transform: rotate(-4deg);
+    z-index: 3;
+}
+.katib-polaroid-wall__slot-3 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 4 — top-right, landscape */
+.katib-polaroid-wall__slot-4 {
+    top: 5mm;
+    left: 130mm;
+    width: 50mm;
+    height: 42mm;
+    transform: rotate(6deg);
+    z-index: 2;
+}
+.katib-polaroid-wall__slot-4 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 5 — bottom-left, landscape */
+.katib-polaroid-wall__slot-5 {
+    top: 78mm;
+    left: 4mm;
+    width: 60mm;
+    height: 48mm;
+    transform: rotate(5deg);
+    z-index: 4;
+}
+.katib-polaroid-wall__slot-5 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 6 — bottom-center, portrait — anchor near the note */
+.katib-polaroid-wall__slot-6 {
+    top: 65mm;
+    left: 60mm;
+    width: 46mm;
+    height: 58mm;
+    transform: rotate(-3deg);
+    z-index: 5;
+}
+.katib-polaroid-wall__slot-6 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* Slot 7 — bottom-right, landscape */
+.katib-polaroid-wall__slot-7 {
+    top: 75mm;
+    left: 108mm;
+    width: 60mm;
+    height: 52mm;
+    transform: rotate(-6deg);
+    z-index: 4;
+}
+.katib-polaroid-wall__slot-7 .katib-polaroid-wall__img {
+    height: calc(100% - 5mm);
+}
+
+/* ---- Handwritten center note ---- */
+
+.katib-polaroid-wall__note {
+    position: absolute;
+    top: 50mm;
+    left: 115mm;
+    width: 40mm;
+    padding: 4mm 5mm;
+    background: #FCF7E8;
+    border: 0.3pt solid #C9B98E;
+    box-shadow: 1.5pt 1.5pt 3pt rgba(0, 0, 0, 0.20);
+    transform: rotate(-3deg);
+    z-index: 10;
+
+    font-family: "Bradley Hand", "Marker Felt", "Comic Sans MS", var(--font-display);
+    font-size: 17pt;
+    font-weight: 700;
+    color: #5A4A35;
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+}
+
+.katib-polaroid-wall[lang="ar"] .katib-polaroid-wall__note {
+    font-family: var(--font-display);
+    font-size: 18pt;
+    letter-spacing: 0;
+}
+
+/* ---- Source attribution ---- */
+
+.katib-polaroid-wall__source {
+    margin-top: 4pt;
+    text-align: center;
+    font-family: var(--font-primary);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.katib-polaroid-wall[lang="ar"] .katib-polaroid-wall__source {
+    font-style: normal;
+    font-size: 9pt;
+}

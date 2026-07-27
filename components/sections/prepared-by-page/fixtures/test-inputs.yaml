@@ -1,0 +1,16 @@
+# Test inputs for `prepared-by-page` isolated render.
+inputs:
+  eyebrow: "Commercial Offer"
+  title: "Sample Training Program"
+  reference: "REF-2026-002"
+  label: "Prepared by"
+  fields:
+    - { label: "Name", value: "Alex Rivera" }
+    - { label: "Title", value: "Founder & Managing Director" }
+    - { label: "Company", value: "Example Corp" }
+    - { label: "Signature" }
+    - { label: "Date", value: "2026-06-02" }
+  stamp: true
+  on_behalf_of: "Example Corp"
+brand: example
+variant: null

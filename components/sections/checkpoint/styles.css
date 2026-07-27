@@ -1,0 +1,95 @@
+/* checkpoint — periodic "you should now have..." panel.
+   Sits between step groups and gives the reader a chance to verify they
+   reached the expected state before moving on. */
+.katib-checkpoint {
+    margin: 1.4em 0;
+    padding: 12pt 16pt;
+    border-radius: 4pt;
+    border: 0.5pt solid var(--border);
+    background: var(--page-bg);
+    page-break-inside: avoid;
+}
+
+.katib-checkpoint--neutral {
+    background: var(--callout-tip-bg);
+    border-left: 3pt solid var(--accent);
+}
+
+.katib-checkpoint--success {
+    background: rgba(34, 197, 94, 0.08);
+    border-left: 3pt solid #16a34a;
+}
+
+.katib-checkpoint[lang="ar"].katib-checkpoint--neutral,
+.katib-checkpoint[lang="ar"].katib-checkpoint--success {
+    border-left: 0.5pt solid var(--border);
+}
+.katib-checkpoint[lang="ar"].katib-checkpoint--neutral {
+    border-right: 3pt solid var(--accent);
+}
+.katib-checkpoint[lang="ar"].katib-checkpoint--success {
+    border-right: 3pt solid #16a34a;
+}
+
+.katib-checkpoint__head {
+    display: flex;
+    align-items: center;
+    gap: 8pt;
+    margin-bottom: 6pt;
+}
+
+.katib-checkpoint__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16pt;
+    height: 16pt;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--page-bg);
+    font-size: 9pt;
+    font-weight: 700;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.katib-checkpoint--success .katib-checkpoint__icon {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.katib-checkpoint__title {
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin: 0;
+}
+
+.katib-checkpoint[lang="ar"] .katib-checkpoint__title {
+    letter-spacing: 0;
+    font-size: 12pt;
+}
+
+.katib-checkpoint__body {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: var(--text);
+    margin: 0;
+}
+
+.katib-checkpoint__figure {
+    margin: 10pt 0 0 0;
+}
+
+.katib-checkpoint__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 60mm;
+    object-fit: cover;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+}

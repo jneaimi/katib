@@ -1,0 +1,31 @@
+name: landscape-diagram
+tier: section
+version: 1.0.1
+namespace: katib
+description: Single-page landscape diagram block — guarantees a complex diagram (SVG, HTML) fits on exactly one landscape A4 page without overflow or splitting. Optional eyebrow, title, and caption surround the diagram canvas; the diagram itself is constrained to the available canvas height so SVGs with viewBox auto-scale to fit.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, border]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the heading (e.g. "FIGURE 1", "APPENDIX B").
+    - title:
+        type: string
+        required: false
+        description: Heading at the top of the landscape page. Omit for a diagram-only page.
+    - caption:
+        type: string
+        required: false
+        description: One-line description placed below the diagram (figcaption-style).
+    - raw_body:
+        type: string
+        required: true
+        description: Trusted HTML body containing the diagram — typically an inline SVG with viewBox so it auto-scales to fit the canvas. NOT auto-escaped — only use for recipe-authored content.
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

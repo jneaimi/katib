@@ -1,0 +1,55 @@
+<section class="katib-video-card" lang="en">
+    <div class="katib-video-card__inner">
+
+        <!-- ── Thumbnail (left) ─────────────────────────────────── -->
+        <div class="katib-video-card__thumb-wrap">
+{%- if input.thumbnail and input.thumbnail.resolved_path %}
+            <img class="katib-video-card__thumb" src="{{ input.thumbnail.resolved_path }}" alt="{{ input.title }}">
+{%- elif input.thumbnail and input.thumbnail.resolved_svg %}
+            <div class="katib-video-card__thumb">{{ input.thumbnail.resolved_svg | safe }}</div>
+{%- endif %}
+            <div class="katib-video-card__scrim"></div>
+{%- if input.platform %}
+            <div class="katib-video-card__platform">{{ input.platform }}</div>
+{%- endif %}
+{%- if input.duration %}
+            <div class="katib-video-card__duration">{{ input.duration }}</div>
+{%- endif %}
+            <div class="katib-video-card__play">
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="30" r="28" fill="rgba(255,255,255,0.92)"/>
+                    <polygon points="24,18 24,42 44,30" fill="#1a1a1a"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- ── Metadata (right) ─────────────────────────────────── -->
+        <div class="katib-video-card__meta">
+{%- if input.eyebrow %}
+            <div class="katib-video-card__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+            <h3 class="katib-video-card__title">{{ input.title }}</h3>
+{%- if input.body %}
+            <p class="katib-video-card__description">{{ input.body }}</p>
+{%- endif %}
+{%- if input.author or input.duration %}
+            <div class="katib-video-card__byline">
+{%- if input.author %}<span class="katib-video-card__author">{{ input.author }}</span>{%- endif %}
+{%- if input.author and input.duration %} · {%- endif %}
+{%- if input.duration %}<span class="katib-video-card__dur">{{ input.duration }}</span>{%- endif %}
+            </div>
+{%- endif %}
+
+            <div class="katib-video-card__bottom">
+                <a class="katib-video-card__url" href="{{ input.url }}">{{ input.url }}</a>
+{%- if input.qr_code and input.qr_code.resolved_path %}
+                <div class="katib-video-card__qr-wrap">
+                    <img class="katib-video-card__qr" src="{{ input.qr_code.resolved_path }}" alt="QR code to video">
+                    <div class="katib-video-card__qr-label">SCAN</div>
+                </div>
+{%- endif %}
+            </div>
+        </div>
+
+    </div>
+</section>

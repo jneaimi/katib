@@ -1,0 +1,55 @@
+name: outcome-preview
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Hero "what you'll build" block. Title + subtitle + image (user-file or
+  screenshot — factual, not decorative) + optional body. Pairs with covers
+  as page 2: the visual target that anchors the rest of the tutorial.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, page_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small uppercase label above the title — e.g. "WHAT YOU'LL BUILD" or "OUTCOME".
+    - title:
+        type: string
+        required: true
+        description: The promise — what the reader will have at the end.
+    - subtitle:
+        type: string
+        required: false
+        description: Optional secondary line under the title.
+    - body:
+        type: string
+        required: false
+        description: Optional 1-2 line paragraph framing the outcome.
+    - image:
+        type: image
+        required: false
+        sources_accepted: [user-file, screenshot]
+        description: |
+          The target image — finished UI screenshot, finished dish, completed
+          assembled object, etc. No gemini source: outcome previews are
+          factual representations of the actual end state, not aspirational
+          renders. If absent, a "swap your hero shot here" placeholder
+          renders in the same slot — useful for shipping recipe templates
+          before adopters bring their own assets.
+    - alt_text:
+        type: string
+        required: false
+        description: Alt text for the image. Falls back to "Outcome preview".
+    - caption:
+        type: string
+        required: false
+        description: Optional caption under the image.
+variants:
+  - image-leading
+  - image-trailing
+  - image-top
+page_behavior:
+  mode: atomic

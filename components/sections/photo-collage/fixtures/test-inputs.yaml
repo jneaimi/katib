@@ -1,0 +1,34 @@
+# Test inputs for `photo-collage` isolated render.
+# All six images point at a shipped repo placeholder so the component renders
+# without external assets or Gemini credits during tests.
+inputs:
+  eyebrow: "معرض الصور"
+  title: "نموذج اختباري للكولاج"
+  subtitle: "ست صور بأحجام متباينة لاختبار التخطيط."
+  hero_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  hero_caption: "Hero — القلعة"
+  top_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  top_caption: "Top"
+  middle_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  middle_caption: "Middle"
+  bottom_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  bottom_caption: "Bottom"
+  wide_left_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  wide_left_caption: "Wide left"
+  wide_right_image:
+    source: user-file
+    path: tests/fixtures/cover-bg.jpg
+  wide_right_caption: "Wide right"
+  source_attribution: "Test fixture — placeholder images only"
+brand: null
+variant: null

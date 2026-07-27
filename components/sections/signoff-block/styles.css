@@ -1,0 +1,85 @@
+.katib-signoff-block {
+  margin: 1em 0;
+}
+
+.katib-signoff-block__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16pt;
+  align-items: stretch;
+}
+
+.katib-signoff-block--stacked .katib-signoff-block__grid {
+  display: block;
+}
+
+.katib-signoff-block--stacked .katib-signoff-block__card {
+  width: 100%;
+  margin-bottom: 16pt;
+}
+
+.katib-signoff-block--stacked .katib-signoff-block__card:last-child {
+  margin-bottom: 0;
+}
+
+.katib-signoff-block__card {
+  box-sizing: border-box;
+  flex: 1 1 200pt;
+  min-width: 170pt;
+}
+
+.katib-signoff-block__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-primary);
+  font-size: 10pt;
+  color: var(--text);
+}
+
+.katib-signoff-block__th {
+  background: var(--accent);
+  color: var(--accent-on);
+  text-align: left;
+  font-weight: 500;
+  font-size: 9.5pt;
+  padding: 7pt 10pt;
+}
+
+.katib-signoff-block__key {
+  width: 96pt;
+  padding: 7pt 10pt;
+  border-bottom: 0.5pt solid var(--border);
+  color: var(--text-tertiary);
+  font-size: 9pt;
+  vertical-align: bottom;
+}
+
+.katib-signoff-block__val {
+  padding: 7pt 10pt;
+  border-bottom: 0.5pt solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  vertical-align: bottom;
+}
+
+.katib-signoff-block__val--blank {
+  font-weight: 400;
+  height: 12pt;
+}
+
+.katib-signoff-block__stamp-cell {
+  padding: 12pt 10pt 2pt;
+}
+
+.katib-signoff-block__stamp {
+  border: 0.5pt dashed var(--border-strong);
+  border-radius: 3pt;
+  height: 50pt;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}

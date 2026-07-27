@@ -1,0 +1,118 @@
+/* landscape-diagram — single-page A4 landscape canvas for complex diagrams.
+ *
+ * Geometry (A4 landscape, 20mm margins):
+ *   page width  = 297mm − 40mm = 257mm
+ *   page height = 210mm − 40mm = 170mm
+ *
+ * Of the 170mm vertical:
+ *   header (eyebrow + title + rule) ≈ 22mm when present
+ *   caption                          ≈ 10mm when present
+ *   canvas (the diagram itself)      = remainder
+ *
+ * The canvas uses an explicit max-height plus `overflow: hidden`, and
+ * inline SVGs scale to fit via `width: 100%; height: 100%` on a
+ * positioned ancestor. That way an SVG with a viewBox auto-shrinks
+ * (preserveAspectRatio meet) instead of overflowing onto a second page.
+ */
+
+@page landscape-diagram {
+    size: A4 landscape;
+    margin: 20mm;
+}
+
+/* Apply the named landscape page to the compose engine's section wrapper
+ * (`<div id="katib-section-N">`), not just the inner section. WeasyPrint
+ * resolves a page's type from the FIRST element on that page — which is
+ * the wrapper. Setting `page:` on the inner section alone leaves the new
+ * page portrait. `:has()` lets us target the wrapper from inside the
+ * component without the engine knowing about us. WeasyPrint 60+ supports
+ * `:has()` selectors. */
+[id^="katib-section-"]:has(> .katib-landscape-diagram) {
+    page: landscape-diagram;
+    page-break-inside: avoid;
+}
+
+.katib-landscape-diagram {
+    page: landscape-diagram;
+    page-break-inside: avoid;
+    /* No fixed height — head/canvas/caption stack naturally; canvas is
+     * the only element with a fixed height, sized so head + canvas +
+     * caption together fit inside the 170mm landscape content area. */
+}
+
+.katib-landscape-diagram__head {
+    margin-bottom: 4mm;
+    padding-bottom: 3mm;
+    border-bottom: 0.5pt solid var(--border);
+}
+
+.katib-landscape-diagram__title {
+    font-family: var(--font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0.3em 0 0;
+    line-height: 1.2;
+}
+
+.katib-landscape-diagram[lang="ar"] .katib-landscape-diagram__title {
+    font-size: 20pt;
+    line-height: 1.4;
+}
+
+.katib-landscape-diagram__canvas {
+    /* Fixed height reserved for the diagram. Computed as:
+     *   170mm landscape content area
+     *   − ~30mm head (eyebrow + title + rule + margins)
+     *   − ~16mm caption (rule + text + margins)
+     *   = ~124mm canvas
+     * Conservative: when head or caption is omitted, the canvas just
+     * sits in more whitespace — still single-page. WeasyPrint flex
+     * shrinking with intrinsic SVG aspect ratios is unreliable, so we
+     * use a hard pixel height instead. */
+    width: 100%;
+    height: 124mm;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Inline SVGs fill the canvas; viewBox + preserveAspectRatio="xMidYMid meet"
+ * (the SVG default) makes them shrink uniformly to fit. */
+.katib-landscape-diagram__canvas > svg,
+.katib-landscape-diagram__canvas > figure > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* HTML-table or div-based diagrams scale to width and clip vertically if too tall. */
+.katib-landscape-diagram__canvas > table,
+.katib-landscape-diagram__canvas > figure > table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Raster images (rare for diagrams but supported) keep aspect ratio inside the canvas. */
+.katib-landscape-diagram__canvas img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.katib-landscape-diagram__caption {
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 0.5pt solid var(--border);
+    font-family: var(--font-primary);
+    font-size: 9pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+    text-align: center;
+}
+
+.katib-landscape-diagram[lang="ar"] .katib-landscape-diagram__caption {
+    font-size: 10pt;
+    font-style: normal;
+}

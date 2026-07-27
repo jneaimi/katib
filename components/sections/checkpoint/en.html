@@ -1,0 +1,14 @@
+<section class="katib-section katib-checkpoint katib-checkpoint--{{ variant or 'neutral' }}" lang="en">
+    <div class="katib-checkpoint__head">
+        <span class="katib-checkpoint__icon" aria-hidden="true">✓</span>
+        <h3 class="katib-checkpoint__title">{{ input.title or 'Checkpoint' }}</h3>
+    </div>
+    <p class="katib-checkpoint__body">{{ input.body }}</p>
+{%- if input.screenshot and input.screenshot.resolved_path %}
+    <figure class="katib-checkpoint__figure">
+        <img class="katib-checkpoint__image"
+             src="{{ input.screenshot.resolved_path }}"
+             alt="{{ input.alt_text or 'Checkpoint state' }}">
+    </figure>
+{%- endif %}
+</section>

@@ -1,0 +1,75 @@
+name: slide-mosaic
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Magazine-style asymmetric slide for A4-landscape decks: a text column
+  with eyebrow, title and body on one side, a large framed feature image
+  filling the other side, and up to two small labelled tiles under the
+  text column. Stays inside the page margins (framed, editorial) — the
+  full-bleed counterpart is slide-split. Variants pick the feature-image
+  side: large-right or large-left.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - accent
+    - border
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title.
+    - title:
+        type: string
+        required: true
+        description: Slide headline.
+    - raw_body:
+        type: string
+        required: false
+        description: Trusted HTML under the title — a short paragraph or receipts.
+    - image_large:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: The feature image — fills the large panel at full column height.
+    - image_small_a:
+        type: image
+        required: false
+        sources_accepted: [user-file, url, gemini]
+        description: First small tile under the text column.
+    - label_a:
+        type: string
+        required: false
+        description: One-line label under the first small tile.
+    - image_small_b:
+        type: image
+        required: false
+        sources_accepted: [user-file, url, gemini]
+        description: Second small tile under the text column.
+    - label_b:
+        type: string
+        required: false
+        description: One-line label under the second small tile.
+    - caption:
+        type: string
+        required: false
+        description: One-line caption chip overlaid at the bottom of the large image.
+    - alt_text:
+        type: string
+        required: false
+        description: Accessibility description of the feature image.
+variants:
+  - large-right
+  - large-left
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

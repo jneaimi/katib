@@ -1,0 +1,15 @@
+# Test inputs for `common-mistakes` isolated render.
+inputs:
+  heading: "Common mistakes"
+  items:
+    - symptom: "401 Unauthorized when the webhook fires"
+      cause: "STRIPE_WEBHOOK_SECRET in your .env doesn't match the one Stripe is signing with. The secret is per-endpoint and rotates if you delete and recreate the webhook."
+      fix: "Open the Stripe Dashboard → Developers → Webhooks → your endpoint → Signing secret → Reveal. Copy and paste into .env, then restart the server."
+    - symptom: "Hangs forever on stripe-cli listen"
+      cause: "stripe-cli is logged into the wrong Stripe account, or no account at all. The CLI silently retries authentication instead of failing loudly."
+      fix: "Run `stripe login` and confirm the device. The CLI will print the account it's now bound to — check it matches the dashboard you've been clicking around in."
+    - symptom: "events arrive but req.body is undefined"
+      cause: "Express body-parser is consuming the raw body before Stripe's signature verifier sees it. constructEvent needs the unparsed Buffer."
+      fix: "Mount the webhook route BEFORE express.json(): `app.post('/webhook', express.raw({type: 'application/json'}), handler)`. Order matters."
+brand: null
+variant: cards

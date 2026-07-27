@@ -1,0 +1,143 @@
+/* common-mistakes — structured symptom → cause → fix block.
+   Each item is a 3-row card (or 3-col row in the table variant) so
+   the reader can scan: "what does my failure look like? oh, that's
+   row 2; here's why; here's the fix." */
+.katib-common-mistakes {
+    margin: 1.4em 0;
+}
+
+.katib-common-mistakes__heading {
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 10pt 0;
+}
+
+.katib-common-mistakes[lang="ar"] .katib-common-mistakes__heading {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13pt;
+}
+
+.katib-common-mistakes__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: mistake;
+}
+
+.katib-common-mistakes__item {
+    counter-increment: mistake;
+    margin-bottom: 12pt;
+    padding: 12pt 14pt;
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    border-radius: 4pt;
+    page-break-inside: avoid;
+}
+
+.katib-common-mistakes__item:last-child { margin-bottom: 0; }
+
+.katib-common-mistakes__symptom,
+.katib-common-mistakes__cause,
+.katib-common-mistakes__fix {
+    margin-bottom: 8pt;
+}
+
+.katib-common-mistakes__fix {
+    margin-bottom: 0;
+    padding-top: 8pt;
+    border-top: 0.5pt dashed var(--border);
+}
+
+.katib-common-mistakes__label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 3pt;
+}
+
+.katib-common-mistakes[lang="ar"] .katib-common-mistakes__label {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.katib-common-mistakes__symptom .katib-common-mistakes__label {
+    color: #b91c1c;
+}
+
+.katib-common-mistakes__fix .katib-common-mistakes__label {
+    color: #16a34a;
+}
+
+.katib-common-mistakes__symptom-text {
+    font-family: var(--font-mono);
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--text);
+    background: var(--callout-warn-bg);
+    padding: 6pt 9pt;
+    border-radius: 3pt;
+    border-left: 2.5pt solid #b91c1c;
+}
+
+.katib-common-mistakes[lang="ar"] .katib-common-mistakes__symptom-text {
+    border-left: 0;
+    border-right: 2.5pt solid #b91c1c;
+    direction: rtl;
+}
+
+.katib-common-mistakes__text {
+    font-family: var(--font-primary);
+    font-size: 10pt;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.katib-common-mistakes__screenshot {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 50mm;
+    margin-top: 6pt;
+    object-fit: cover;
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+}
+
+/* Variant: table — collapses each item into a 3-col row instead of
+   stacked panels. Best when items are very short (1-line each) and
+   you have 5+ of them. */
+.katib-common-mistakes--table .katib-common-mistakes__item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12pt;
+    padding: 10pt 12pt;
+}
+
+.katib-common-mistakes--table .katib-common-mistakes__symptom,
+.katib-common-mistakes--table .katib-common-mistakes__cause,
+.katib-common-mistakes--table .katib-common-mistakes__fix {
+    margin-bottom: 0;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.katib-common-mistakes--table .katib-common-mistakes__symptom-text {
+    font-size: 8.5pt;
+    padding: 4pt 7pt;
+}
+
+.katib-common-mistakes--table .katib-common-mistakes__text {
+    font-size: 9pt;
+}

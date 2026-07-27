@@ -1,0 +1,40 @@
+name: checkpoint
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Boxed "you should now have…" panel between step groups. Lets the reader
+  verify they're on the right track before continuing. Title (defaults
+  per-language to "Checkpoint" / "نقطة تحقق") + body + optional interim
+  screenshot. Variants: success (green-tinted) / neutral. Implements
+  Mayer's segmenting principle.
+languages: [en, ar]
+requires:
+  tokens: [text, accent, border, page_bg, callout_tip_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - title:
+        type: string
+        required: false
+        description: |
+          Override for the checkpoint heading. Defaults to "Checkpoint" in
+          EN and "نقطة تحقق" in AR if absent.
+    - body:
+        type: string
+        required: true
+        description: The "you should now have…" / "if you got here…" text. Plain prose.
+    - screenshot:
+        type: image
+        required: false
+        sources_accepted: [user-file, screenshot]
+        description: Optional interim-state screenshot. Factual only — no gemini source.
+    - alt_text:
+        type: string
+        required: false
+        description: Alt text for the screenshot. Falls back to "Checkpoint state".
+variants:
+  - neutral
+  - success
+page_behavior:
+  mode: atomic

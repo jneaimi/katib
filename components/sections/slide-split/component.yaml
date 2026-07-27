@@ -1,0 +1,60 @@
+name: slide-split
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Magazine-style split slide for A4-landscape decks: one half of the page
+  is a full-bleed image (to three physical edges), the other half is a
+  text column with eyebrow, title, subtitle and optional HTML body.
+  Variants pick the image side: image-left or image-right. Made for
+  product-screenshot feature slides and editorial photo spreads where
+  slide-frame's centered layouts feel too document-like.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - accent
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - image:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: The half-page image. Cropped to fill (cover); anchor is the top-left corner, which suits app screenshots.
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title (e.g. "THE GATE, LIVE · 04").
+    - title:
+        type: string
+        required: true
+        description: Slide headline on the text half.
+    - subtitle:
+        type: string
+        required: false
+        description: Supporting line under the title.
+    - raw_body:
+        type: string
+        required: false
+        description: Trusted HTML rendered under the subtitle — receipts, short bullets, a small stat row.
+    - caption:
+        type: string
+        required: false
+        description: One-line caption chip overlaid at the bottom of the image half.
+    - alt_text:
+        type: string
+        required: false
+        description: Accessibility description of the image.
+variants:
+  - image-left
+  - image-right
+page_behavior:
+  mode: atomic
+  break_before: always
+  break_after: always

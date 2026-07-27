@@ -1,0 +1,168 @@
+/* photo-collage — magazine-style asymmetric image mosaic.
+   Layout: 4-column × 3-row grid implemented via <table> with rowspan/colspan.
+
+   ┌─────────────┬─────┬─────┐
+   │             │  2  │  3  │
+   │   HERO 1    ├─────┴─────┤
+   │   (2×2)     │     4     │
+   ├──────┬──────┼─────┬─────┤
+   │   5         │     6     │
+   └─────────────┴───────────┘
+*/
+
+.katib-photo-collage {
+    margin: 8mm 0;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* ---- Header (eyebrow + title + subtitle) ---- */
+
+.katib-photo-collage__header {
+    margin-bottom: 4mm;
+}
+
+.katib-photo-collage__eyebrow {
+    font-family: var(--font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4pt;
+}
+
+.katib-photo-collage[lang="ar"] .katib-photo-collage__eyebrow {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 11pt;
+}
+
+.katib-photo-collage__title {
+    font-family: var(--font-display);
+    font-size: 17pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.katib-photo-collage[lang="ar"] .katib-photo-collage__title {
+    font-size: 18pt;
+    line-height: 1.3;
+}
+
+.katib-photo-collage__subtitle {
+    font-family: var(--font-primary);
+    font-size: 10.5pt;
+    color: var(--text-secondary);
+    margin: 4pt 0 0 0;
+    line-height: 1.45;
+}
+
+/* ---- Grid (table-based for WeasyPrint compatibility) ---- */
+
+.katib-photo-collage__grid {
+    width: 100%;
+    border-collapse: separate;
+    /* Tight 2pt spacing for seamless mosaic feel */
+    border-spacing: 2pt;
+    table-layout: fixed;
+}
+
+/* Hero — left half, full collage height (2 rows) */
+.katib-photo-collage__hero {
+    width: 50%;
+    height: 64mm;
+    vertical-align: top;
+    padding: 0;
+}
+
+/* Right-column small images (top-row right, two cells) */
+.katib-photo-collage__small {
+    width: 25%;
+    height: 32mm;
+    vertical-align: top;
+    padding: 0;
+}
+
+/* Right-column wide image (middle row, spans both right columns) */
+.katib-photo-collage__right-wide {
+    width: 50%;
+    height: 32mm;
+    vertical-align: top;
+    padding: 0;
+}
+
+/* Bottom-row wide images (50/50) */
+.katib-photo-collage__wide {
+    width: 50%;
+    height: 36mm;
+    vertical-align: top;
+    padding: 0;
+}
+
+/* ---- Cells (figure containers) ---- */
+
+.katib-photo-collage__cell {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    /* Hairline border for crisp print edges, kept very thin */
+    border: 0.3pt solid var(--border-strong);
+    background: var(--border);
+    display: block;
+    position: relative;
+}
+
+.katib-photo-collage__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Cover = crop to fill cell, no letterboxing — seamless mosaic feel */
+    object-fit: cover;
+}
+
+div.katib-photo-collage__img > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ---- Captions (subtle overlay at bottom of each cell) ---- */
+
+.katib-photo-collage__caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4pt 6pt 3pt 6pt;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%);
+    color: #ffffff;
+    font-family: var(--font-primary);
+    font-size: 7.5pt;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.katib-photo-collage[lang="ar"] .katib-photo-collage__caption {
+    font-size: 8.5pt;
+}
+
+/* ---- Source attribution ---- */
+
+.katib-photo-collage__source {
+    margin-top: 4pt;
+    text-align: center;
+    font-family: var(--font-primary);
+    font-size: 8pt;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.katib-photo-collage[lang="ar"] .katib-photo-collage__source {
+    font-style: normal;
+    font-size: 9pt;
+}

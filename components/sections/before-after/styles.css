@@ -1,0 +1,104 @@
+/* before-after — paired panels with enforced same aspect ratio.
+   The point of this component is that the reader's eye lands on what
+   changed, not on recomposing the scene. So we lock both panels to
+   the same dimensions and force object-fit: cover — irregular source
+   images get cropped consistently rather than reflowing the layout. */
+.katib-before-after {
+    margin: 1.4em 0;
+    page-break-inside: avoid;
+}
+
+.katib-before-after__heading {
+    font-family: var(--font-display);
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin: 0 0 10pt 0;
+}
+
+.katib-before-after[lang="ar"] .katib-before-after__heading {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13pt;
+}
+
+.katib-before-after__panels {
+    display: flex;
+    gap: 12pt;
+    align-items: stretch;
+}
+
+.katib-before-after__panel {
+    position: relative;
+    flex: 1;
+    margin: 0;
+    background: var(--page-bg);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    overflow: hidden;
+}
+
+.katib-before-after__image {
+    display: block;
+    width: 100%;
+    height: 70mm;
+    object-fit: cover;
+    background: var(--tag-bg);
+}
+
+.katib-before-after__label {
+    position: absolute;
+    top: 6pt;
+    left: 6pt;
+    padding: 3pt 8pt;
+    background: var(--accent);
+    color: var(--accent-on);
+    font-family: var(--font-display);
+    font-size: 8pt;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    border-radius: 2pt;
+}
+
+.katib-before-after[lang="ar"] .katib-before-after__label {
+    left: auto;
+    right: 6pt;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 9.5pt;
+}
+
+.katib-before-after__label--after { background: #16a34a; }
+.katib-before-after__label--middle { background: var(--text-tertiary); }
+
+.katib-before-after__caption {
+    padding: 6pt 9pt;
+    margin: 0;
+    font-family: var(--font-primary);
+    font-size: 9pt;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--page-bg);
+    border-top: 0.5pt solid var(--border);
+}
+
+/* Variant: stacked — panels stack vertically. Best for landscape source
+   images where side-by-side would shrink each too small. */
+.katib-before-after--stacked .katib-before-after__panels {
+    flex-direction: column;
+    gap: 10pt;
+}
+
+.katib-before-after--stacked .katib-before-after__image {
+    height: 80mm;
+}
+
+/* Variant: filmstrip — 3-up: before / middle / after. Each panel
+   shrinks proportionally; the middle panel surfaces an interim state
+   useful for "the dough rose" / "the truck mid-install" type cues. */
+.katib-before-after--filmstrip .katib-before-after__image {
+    height: 55mm;
+}

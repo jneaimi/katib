@@ -1,0 +1,45 @@
+name: decision-branch
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Static-print substitute for the interactive tabbed-tutorial control
+  ("Node.js / Python / Ruby" tabs, "Linux / macOS / Windows" tabs).
+  Picks one canonical branch, lays it out in full, and demotes the
+  alternates to a compact appendix block. Two variants: `tabs-static`
+  shows tab chrome at the top with the selected tab highlighted (so the
+  reader can see all options exist); `branched-list` skips the chrome
+  and presents the choice as inline branched prose.
+languages: [en, ar]
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border, page_bg, callout_tip_bg, tag_bg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Choose your path" / "اختر مسارك".
+    - prompt:
+        type: string
+        required: false
+        description: Optional question being branched on, e.g. "Operating system?". Rendered above the branches.
+    - branches:
+        type: array
+        required: true
+        description: |
+          Array of `{label, when?, body, primary?: bool}`. Exactly one
+          branch should set `primary: true` — that branch is laid out in
+          full. All others are demoted to a compact "alternates" block.
+          `label` is the option name (e.g. "macOS"). `when` is an
+          optional 1-line condition ("If you're on Apple silicon"). `body`
+          is the branch instructions.
+    - alternates_label:
+        type: string
+        required: false
+        description: Header for the alternates appendix. Defaults to "Other paths" / "مسارات أخرى".
+variants:
+  - tabs-static
+  - branched-list
+page_behavior:
+  mode: atomic

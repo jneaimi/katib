@@ -1,0 +1,32 @@
+# Test inputs for `code-step` isolated render.
+inputs:
+  label: "stripe-server.ts"
+  language: "typescript"
+  code: |
+    import { Stripe } from "stripe";
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    app.post("/webhook", async (req, res) => {
+      const sig = req.headers["stripe-signature"];
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
+      res.json({ received: true });
+    });
+  annotations:
+    - line: 1
+      note: "Official Stripe Node SDK. Add via `npm i stripe`."
+    - line: 2
+      note: "Initialise once at module load — never per-request."
+    - line: 5
+      note: "The signature header proves the event came from Stripe."
+    - line: 6-10
+      note: "constructEvent throws if the signature doesn't verify — let it bubble; do not silently catch."
+  output: |
+    ✓ Server listening on :4242
+    ✓ Webhook handler registered at POST /webhook
+    [12:34:56] event customer.subscription.created received
+brand: null
+variant: terminal

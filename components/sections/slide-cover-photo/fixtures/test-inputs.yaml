@@ -1,0 +1,8 @@
+inputs:
+  image: {source: user-file, path: tests/fixtures/cover-bg.jpg}
+  eyebrow: "EXAMPLE CORP · PRODUCT BRIEF"
+  title: "AI does the work. You hold the gates."
+  subtitle: "Sample Product — a one-line description of what the product does."
+  alt_text: "Overhead workspace flat-lay on manila paper."
+brand: example
+variant: ink

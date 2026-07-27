@@ -1,0 +1,195 @@
+name: tutorial-course-module
+version: 0.1.0
+namespace: katib
+description: |
+  Microsoft Learn-style course module — A4 portrait, structured around
+  objectives → vocabulary → instruction → checks → recap. Composes
+  objectives-box + glossary-card + tutorial-step + checkpoint +
+  try-it-yourself + cheat-sheet + whats-next. The pedagogical
+  flagship of the tutorial pack — exercises every Phase C component
+  in their canonical roles. Generic placeholders + lorem ipsum body.
+languages: [en]
+target_pages: [6, 12]
+page_limit: 14
+when: Course-style learning module — a structured unit of instruction within a larger curriculum. The reader is here to LEARN something (a concept, a framework, a methodology), not to BUILD something. Pairs all four Phase C tutorial components (glossary-card, decision-branch, try-it-yourself, cheat-sheet) with objectives-box and checkpoint scaffolding.
+keywords: [tutorial, course, module, microsoft-learn, education, learning, classroom, pedagogy]
+
+sections:
+
+  # 1. Cover
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "MODULE [N] · [TRACK NAME]"
+      title: "[Module title]"
+      subtitle: "[A short descriptive line — what the learner walks away with]"
+
+  # 2. Meta strip
+  - component: meta-strip
+    variant: outline
+    inputs:
+      align: start
+      items:
+        - label: "Level"
+          value: "[Beginner / Intermediate / Advanced]"
+        - label: "Duration"
+          value: "[XX min]"
+        - label: "Units"
+          value: "[N units]"
+        - label: "Prerequisites"
+          value: "[Module N or equivalent]"
+
+  # 3. Outcome preview — what the learner will know
+  - component: outcome-preview
+    variant: image-leading
+    inputs:
+      eyebrow: "BY THE END OF THIS MODULE"
+      title: "[The capability or understanding the learner will gain]"
+      subtitle: "[The framing — why this knowledge matters, where it fits in the curriculum]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Replace this with a 2-3 sentence framing that tells the learner what success looks like at the end of the module. Concrete, observable, demonstrable."
+
+  # 4. Learning objectives
+  - component: objectives-box
+    variant: boxed
+    inputs:
+      label: "Learning objectives"
+      items:
+        - "[Identify — explain what X is and where it fits]"
+        - "[Compare — distinguish X from Y in a worked scenario]"
+        - "[Apply — choose the right X-pattern for a given problem]"
+        - "[Evaluate — critique an existing implementation against the patterns covered]"
+
+  # 5. Glossary — pre-define vocabulary the learner will need
+  - component: glossary-card
+    variant: grid
+    inputs:
+      heading: "Vocabulary"
+      columns: 2
+      items:
+        - term: "[Term 1]"
+          definition: "Lorem ipsum dolor sit amet — the 1-2 sentence working definition of this term as used in the module."
+          see_also: "[Term 2], [Term 3]"
+        - term: "[Term 2]"
+          definition: "Sed do eiusmod tempor incididunt — definition that doesn't depend on Term 1 or 3."
+        - term: "[Term 3]"
+          definition: "Ut enim ad minim veniam — definition. If pronunciation is helpful, add a `pronunciation:` field."
+          pronunciation: "[/ˈɛk.sæm.pəl/]"
+        - term: "[Term 4]"
+          definition: "Duis aute irure dolor — last definition. Choose 4-6 terms; a glossary should be lean."
+          see_also: "[Term 1]"
+
+  # 6. Unit 1 — instruction
+  - component: module
+    inputs:
+      title: "Unit 1 — [Concept introduction]"
+      body: "Lorem ipsum — frame the unit. What concept is being introduced, why does it matter, what comes next. 1-2 short paragraphs."
+
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "[The core idea]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Replace this with the substantive explanation of the concept — the worked example, the diagram in prose, the analogy that makes it stick."
+
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "[The first refinement]"
+      body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Build on step 1 — the first edge case, the first complication, the first 'but-also'."
+
+  # 7. Mid-unit checkpoint
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "Quick check — Unit 1"
+      body: "Lorem ipsum — at this point, you should be able to articulate [Term 1] in your own words and tell me why it matters in context. If you can't, re-read step 1; the rest of the module assumes it."
+
+  # 8. Knowledge check — try-it-yourself
+  - component: try-it-yourself
+    variant: inline-answer
+    inputs:
+      heading: "Knowledge check — Unit 1"
+      prompt: "Lorem ipsum — pose a short scenario that requires the learner to apply Unit 1's concept. Make the scenario concrete enough that there's a specific right answer, not a wishy-washy 'it depends'."
+      hint: "Re-read step 1. The trigger is in the third sentence."
+      answer: "Lorem ipsum — the canonical answer. 1-3 sentences. Explain the WHY, not just the answer. The reader should leave understanding why their answer was right or wrong, not just whether it was."
+
+  # 9. Unit 2 — instruction
+  - component: module
+    inputs:
+      title: "Unit 2 — [Application]"
+      body: "Lorem ipsum — Unit 2 picks up where 1 ended. Now we apply the concept to a realistic problem."
+
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "[The applied scenario]"
+      body: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. The worked-example scenario, sized to one screen of reading. Set it up, walk through the application, surface the trade-offs."
+
+  - component: tutorial-step
+    inputs:
+      number: 4
+      title: "[The trade-offs and gotchas]"
+      body: "Lorem ipsum — what the learner needs to know about WHEN this concept doesn't apply, or applies with caveats. The rule first, then the exception."
+
+  # 10. Hard problem — flipped-answer try-it-yourself
+  - component: try-it-yourself
+    variant: flipped-answer
+    inputs:
+      heading: "Apply it — Unit 2"
+      prompt: "Lorem ipsum — a harder scenario that requires applying both Unit 1 and Unit 2. The reader should have to commit to an answer before peeking — that's why this is the flipped-answer variant."
+      hint: "There's a tension between the Unit 1 rule and the Unit 2 exception. Which one wins here, and why?"
+      answer: "Lorem ipsum — the canonical answer, deliberately rotated 180° in the rendered PDF. The reader has to flip the page to read it. By the time they do, they've already attempted the problem and their answer is locked."
+
+  # 11. End-of-module recap — cheat-sheet
+  - component: cheat-sheet
+    variant: card-grid
+    inputs:
+      heading: "Module recap"
+      subtitle: "Print this and pin it to your monitor."
+      columns: 2
+      groups:
+        - heading: "Key terms"
+          items:
+            - label: "[Term 1]"
+              value: "[1-line definition]"
+              hint: "Where it appears: Unit 1, step 1"
+            - label: "[Term 2]"
+              value: "[1-line definition]"
+            - label: "[Term 3]"
+              value: "[1-line definition]"
+        - heading: "Decision rules"
+          items:
+            - label: "When to apply [pattern]"
+              value: "[Trigger condition]"
+              hint: "Default unless edge-case triggers"
+            - label: "When NOT to"
+              value: "[Anti-pattern marker]"
+              hint: "See Unit 2, step 4"
+        - heading: "Common mistakes"
+          items:
+            - label: "Conflating X with Y"
+              value: "X applies pre-action; Y is post-action"
+            - label: "Skipping the check"
+              value: "If you can't articulate Term 1, you're not ready for Unit 2"
+        - heading: "Further reading"
+          items:
+            - label: "Module [N+1]"
+              value: "Builds on this"
+              hint: "Picks up where Unit 2 ends"
+            - label: "Reference doc"
+              value: "[URL or vault path]"
+
+  # 12. Final checkpoint — module complete
+  - component: checkpoint
+    variant: success
+    inputs:
+      title: "Module complete"
+      body: "Lorem ipsum — celebrate the finish, but also put a stake in the ground: by now, the learner should be able to explain Term 1 in their own words AND apply the Unit 2 trade-off in a new scenario. If either of those still feels shaky, the module hasn't landed — go back and re-read whichever unit is weak."
+
+  # 13. What's next
+  - component: whats-next
+    inputs:
+      heading: "What to do next"
+      items:
+        - "[Practice — apply this module's concepts to your own [project / domain] in the next 48 hours, while it's fresh]"
+        - "[Read deeper — the [reference doc] expands on the Unit 2 edge cases this module skipped]"
+        - "[Move on — Module N+1 picks up where this one ends, building [next concept] on top of [Term 1, Term 2]]"

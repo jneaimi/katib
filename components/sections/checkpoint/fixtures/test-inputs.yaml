@@ -1,0 +1,5 @@
+# Test inputs for `checkpoint` isolated render.
+inputs:
+  body: "You should now see a 200 OK response from /webhook with the event_id printed in your terminal. If the response is 401, your STRIPE_WEBHOOK_SECRET env var is wrong — re-run step 4 to copy it from the Stripe dashboard."
+brand: null
+variant: neutral

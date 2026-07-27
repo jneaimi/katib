@@ -1,0 +1,24 @@
+<section class="katib-section katib-glossary-card katib-glossary-card--{{ variant or 'grid' }}{% if (variant or 'grid') == 'grid' %} katib-glossary-card--cols-{{ input.columns or 2 }}{% endif %}" lang="ar" dir="rtl">
+{%- if (variant or 'grid') != 'inline-row' %}
+    <h3 class="katib-glossary-card__heading">{{ input.heading or 'المعجم' }}</h3>
+{%- endif %}
+    <dl class="katib-glossary-card__items">
+{%- for item in input.items %}
+        <div class="katib-glossary-card__item">
+            <dt class="katib-glossary-card__term">
+                <span class="katib-glossary-card__headword">{{ item.term }}</span>
+{%- if item.pronunciation %}
+                <span class="katib-glossary-card__pronunciation">{{ item.pronunciation }}</span>
+{%- endif %}
+            </dt>
+            <dd class="katib-glossary-card__definition">{{ item.definition }}</dd>
+{%- if item.see_also %}
+            <dd class="katib-glossary-card__see-also">
+                <span class="katib-glossary-card__see-also-label">انظر أيضاً</span>
+                <span class="katib-glossary-card__see-also-list">{{ item.see_also }}</span>
+            </dd>
+{%- endif %}
+        </div>
+{%- endfor %}
+    </dl>
+</section>

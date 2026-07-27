@@ -1,0 +1,98 @@
+name: polaroid-wall
+tier: section
+version: 1.0.0
+namespace: katib
+description: |
+  Scrapbook-style scattered Polaroid wall. Seven images rendered as
+  Polaroids with white frames, slight rotations, drop shadows, and
+  natural overlap — anchored by an optional handwritten-style note in
+  the center. Bilingual EN+AR. Designed for editorial photo essays,
+  year-in-review posts, casual feature spreads.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - text_tertiary
+    - border
+    - accent
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title.
+    - title:
+        type: string
+        required: false
+        description: Section heading rendered above the wall.
+    - subtitle:
+        type: string
+        required: false
+        description: One-line subtitle under the heading.
+    - photo_1:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_1_caption:
+        type: string
+        required: false
+    - photo_2:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_2_caption:
+        type: string
+        required: false
+    - photo_3:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_3_caption:
+        type: string
+        required: false
+    - photo_4:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_4_caption:
+        type: string
+        required: false
+    - photo_5:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_5_caption:
+        type: string
+        required: false
+    - photo_6:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_6_caption:
+        type: string
+        required: false
+    - photo_7:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+    - photo_7_caption:
+        type: string
+        required: false
+    - center_note:
+        type: string
+        required: false
+        description: Handwritten-style note rendered on a small paper card in the center of the wall (e.g., "Summer '25" or "الحصن '26").
+    - source_attribution:
+        type: string
+        required: false
+        description: Tiny credit line below the wall.
+variants:
+  - default
+page_behavior:
+  mode: atomic

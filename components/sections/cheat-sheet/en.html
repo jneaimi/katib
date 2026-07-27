@@ -1,0 +1,26 @@
+<section class="katib-section katib-cheat-sheet katib-cheat-sheet--{{ variant or 'card-grid' }}{% if (variant or 'card-grid') == 'card-grid' %} katib-cheat-sheet--cols-{{ input.columns or 2 }}{% endif %}" lang="en">
+    <header class="katib-cheat-sheet__head">
+        <h3 class="katib-cheat-sheet__heading">{{ input.heading or 'Cheat sheet' }}</h3>
+{%- if input.subtitle %}
+        <p class="katib-cheat-sheet__subtitle">{{ input.subtitle }}</p>
+{%- endif %}
+    </header>
+    <div class="katib-cheat-sheet__groups">
+{%- for group in input.groups %}
+        <div class="katib-cheat-sheet__group">
+            <h4 class="katib-cheat-sheet__group-heading">{{ group.heading }}</h4>
+            <dl class="katib-cheat-sheet__items">
+{%- for item in (group['items'] or []) %}
+                <div class="katib-cheat-sheet__item">
+                    <dt class="katib-cheat-sheet__label">{{ item.label }}</dt>
+                    <dd class="katib-cheat-sheet__value">{{ item.value }}</dd>
+{%- if item.hint %}
+                    <dd class="katib-cheat-sheet__hint">{{ item.hint }}</dd>
+{%- endif %}
+                </div>
+{%- endfor %}
+            </dl>
+        </div>
+{%- endfor %}
+    </div>
+</section>

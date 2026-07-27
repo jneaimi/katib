@@ -1,0 +1,35 @@
+name: common-mistakes
+tier: section
+version: 0.1.0
+namespace: katib
+description: |
+  Structured error → cause → fix table for tutorial troubleshooting.
+  Distinct from `callout warn` (a single inline warning) — this is a
+  multi-row block where each row is a complete failure mode: the symptom
+  the reader will observe, why it happens, and how to fix it. Optional
+  screenshot per row anchors the symptom to a real failure state.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, border, page_bg, callout_warn_bg]
+  fonts: [display, primary, mono]
+accepts:
+  inputs:
+    - heading:
+        type: string
+        required: false
+        description: Section heading. Defaults per-language to "Common mistakes" / "أخطاء شائعة".
+    - items:
+        type: array
+        required: true
+        description: |
+          Array of {symptom, cause, fix, screenshot?} objects. `symptom` is
+          what the reader observes ("401 Unauthorized response"), `cause`
+          explains why ("STRIPE_WEBHOOK_SECRET env var is wrong"), `fix` is
+          the remediation step ("Re-copy from the Stripe dashboard webhook
+          settings panel"). `screenshot` is an optional image anchoring
+          the symptom to a real failure state.
+variants:
+  - cards
+  - table
+page_behavior:
+  mode: atomic

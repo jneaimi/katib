@@ -1,0 +1,48 @@
+# Test inputs for `cheat-sheet` isolated render.
+inputs:
+  heading: "Cheat sheet"
+  subtitle: "Print this page and pin it to your monitor."
+  columns: 2
+  groups:
+    - heading: "Environment variables"
+      items:
+        - label: "[KEY]"
+          value: "sk_test_..."
+          hint: "Authenticates SDK calls to [service]"
+        - label: "[WEBHOOK_SECRET]"
+          value: "whsec_..."
+          hint: "Verifies inbound webhook signatures"
+        - label: "[ENDPOINT]"
+          value: "/webhook"
+          hint: "Path that receives event POSTs"
+    - heading: "CLI commands"
+      items:
+        - label: "stripe listen"
+          value: "--forward-to localhost:4242/webhook"
+          hint: "Forwards live test events to localhost"
+        - label: "stripe trigger"
+          value: "[event.type]"
+          hint: "Fires a test event from the CLI"
+        - label: "stripe login"
+          value: "--account [account-id]"
+    - heading: "HTTP statuses you'll see"
+      items:
+        - label: "200"
+          value: "Acknowledged"
+          hint: "Your handler ran cleanly — return this on success"
+        - label: "401"
+          value: "Signature wrong"
+          hint: "Re-copy [WEBHOOK_SECRET]"
+        - label: "500"
+          value: "Handler threw"
+          hint: "Check application logs"
+    - heading: "Idempotency rules"
+      items:
+        - label: "Track event.id"
+          value: "Set<string>"
+          hint: "Skip if already seen"
+        - label: "Order by"
+          value: "event.created"
+          hint: "Not arrival time — multiple paths can race"
+brand: null
+variant: card-grid

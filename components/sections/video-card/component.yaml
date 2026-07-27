@@ -1,0 +1,68 @@
+name: video-card
+tier: section
+version: 1.0.0
+namespace: katib
+description: |
+  Video preview card for print PDFs. Horizontal layout — portrait
+  thumbnail on the left with play button overlay and platform badge,
+  metadata block on the right (title, author, duration, clickable URL,
+  QR code). Bilingual EN+AR. Designed for embedding TikToks, YouTube
+  Shorts, and Instagram Reels into print-grade documents.
+languages:
+  - en
+  - ar
+requires:
+  tokens:
+    - text
+    - text_secondary
+    - text_tertiary
+    - accent
+    - border
+    - border_strong
+  fonts:
+    - display
+    - primary
+accepts:
+  inputs:
+    - eyebrow:
+        type: string
+        required: false
+        description: Small label above the title (e.g. "مقطع فيديو" / "WATCH").
+    - title:
+        type: string
+        required: true
+        description: Video title or one-line description.
+    - body:
+        type: string
+        required: false
+        description: Optional second line under the title for additional context.
+    - thumbnail:
+        type: image
+        required: true
+        sources_accepted: [user-file, url, gemini]
+        description: Video thumbnail. Portrait 9:16 works best for TikTok/Reels; landscape 16:9 for YouTube.
+    - qr_code:
+        type: image
+        required: false
+        sources_accepted: [user-file, url]
+        description: Pre-generated QR code PNG that resolves to the video URL.
+    - url:
+        type: string
+        required: true
+        description: The video's full URL — rendered as a clickable, monospace link strip below the title.
+    - platform:
+        type: string
+        required: false
+        description: Platform name shown as a badge over the thumbnail (e.g. "TikTok", "YouTube Short", "Instagram Reel").
+    - author:
+        type: string
+        required: false
+        description: Creator handle or name (e.g. "@example.studio").
+    - duration:
+        type: string
+        required: false
+        description: Duration label (e.g. "0:42").
+variants:
+  - default
+page_behavior:
+  mode: atomic

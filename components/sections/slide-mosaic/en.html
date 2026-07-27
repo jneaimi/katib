@@ -1,0 +1,46 @@
+{%- set v = variant or 'large-right' %}
+{%- set big = input.image_large %}
+{%- set sa = input.image_small_a %}
+{%- set sb = input.image_small_b %}
+<section class="katib-section katib-slide-mosaic katib-slide-mosaic--{{ v }}" lang="en">
+    <div class="katib-slide-mosaic__col katib-slide-mosaic__col--text">
+{%- if input.eyebrow %}
+        <div class="katib-slide-mosaic__eyebrow">{{ input.eyebrow }}</div>
+{%- endif %}
+        <h2 class="katib-slide-mosaic__title">{{ input.title }}</h2>
+{%- if input.raw_body %}
+        <div class="katib-slide-mosaic__body">{{ input.raw_body | safe }}</div>
+{%- endif %}
+{%- if (sa and sa.resolved_path) or (sb and sb.resolved_path) %}
+        <div class="katib-slide-mosaic__tiles">
+{%- if sa and sa.resolved_path %}
+            <figure class="katib-slide-mosaic__tile">
+                <img src="{{ sa.resolved_path }}" alt="{{ input.label_a or '' }}">
+{%- if input.label_a %}
+                <figcaption>{{ input.label_a }}</figcaption>
+{%- endif %}
+            </figure>
+{%- endif %}
+{%- if sb and sb.resolved_path %}
+            <figure class="katib-slide-mosaic__tile">
+                <img src="{{ sb.resolved_path }}" alt="{{ input.label_b or '' }}">
+{%- if input.label_b %}
+                <figcaption>{{ input.label_b }}</figcaption>
+{%- endif %}
+            </figure>
+{%- endif %}
+        </div>
+{%- endif %}
+    </div>
+    <div class="katib-slide-mosaic__col katib-slide-mosaic__col--feature">
+{%- if big and big.resolved_path %}
+        <img class="katib-slide-mosaic__feature" src="{{ big.resolved_path }}" alt="{{ input.alt_text or '' }}">
+{%- endif %}
+{%- if input.caption %}
+        <div class="katib-slide-mosaic__caption">{{ input.caption }}</div>
+{%- endif %}
+    </div>
+{%- if logo and logo.primary %}
+    <img class="katib-slide-mosaic__logo" src="{{ logo.primary }}" alt="{{ name or '' }}">
+{%- endif %}
+</section>

@@ -1,0 +1,30 @@
+name: signoff-block
+tier: section
+version: 0.1.0
+namespace: katib
+description: Fill-in sign-off block for proposals and contracts. Renders one or more
+  party cards, each with a label and a list of fields that are either printed (label
+  plus value) or blank ruled lines to write on; an optional company-stamp box. Use
+  for a Prepared-by sign-off and for Client and Provider acceptance grids.
+languages:
+- en
+requires:
+  tokens: [text, text_tertiary, border, border_strong, accent, accent_on]
+  fonts: [primary]
+accepts:
+  inputs:
+  - heading:
+      type: string
+      required: false
+      description: Optional heading rendered above the cards.
+  - parties:
+      type: array
+      required: true
+      description: One or more party cards. Each entry is {label?, fields[], stamp?}.
+        fields is an array of {label, value?}; a field with no value renders as a
+        blank ruled line to sign or write on. stamp true appends a company-stamp box.
+variants:
+- grid
+- stacked
+page_behavior:
+  mode: atomic

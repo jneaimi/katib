@@ -1,0 +1,51 @@
+name: prepared-by-page
+tier: section
+version: 0.1.0
+namespace: katib
+description: Standalone signature title page for proposals. Centred proposal title
+  block (eyebrow, title, reference), a Prepared-by table with printed and blank ruled
+  fields plus an optional signature and company-stamp image, and a for-and-on-behalf-of
+  company line. Fills its own page.
+languages:
+- en
+requires:
+  tokens: [text, text_secondary, text_tertiary, accent, border_strong]
+  fonts: [display, primary]
+accepts:
+  inputs:
+  - eyebrow:
+      type: string
+      required: false
+      description: Document-type label above the title (e.g. "Commercial Offer").
+  - title:
+      type: string
+      required: false
+      description: Proposal title, centred.
+  - reference:
+      type: string
+      required: false
+      description: Reference code, monospace, under the title.
+  - label:
+      type: string
+      required: false
+      description: Sign-off label. Defaults to "Prepared by".
+  - fields:
+      type: array
+      required: true
+      description: Rows of {label, value?, image?}. value prints text; image embeds
+        a picture (e.g. signature); neither renders a blank ruled line to sign on.
+  - stamp:
+      type: boolean
+      required: false
+      description: If true (and no stamp_image), renders a labelled empty Company Stamp box.
+  - stamp_image:
+      type: string
+      required: false
+      description: Optional path/URL to a company-stamp image rendered in the stamp row.
+  - on_behalf_of:
+      type: string
+      required: false
+      description: Company name under a "For and on behalf of" line.
+page_behavior:
+  mode: atomic
+  break_after: always

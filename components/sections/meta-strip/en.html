@@ -1,0 +1,13 @@
+<section class="katib-section katib-meta-strip katib-meta-strip--{{ variant or 'outline' }} katib-meta-strip--align-{{ input.align or 'start' }}" lang="en">
+    <ul class="katib-meta-strip__items">
+{%- for item in input.items %}
+        <li class="katib-meta-strip__item">
+{%- if item.icon %}
+            <span class="katib-meta-strip__icon" aria-hidden="true">{{ item.icon }}</span>
+{%- endif %}
+            <span class="katib-meta-strip__label">{{ item.label }}</span>
+            <span class="katib-meta-strip__value">{{ item.value }}</span>
+        </li>
+{%- endfor %}
+    </ul>
+</section>

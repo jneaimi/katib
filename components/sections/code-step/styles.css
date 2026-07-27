@@ -1,0 +1,185 @@
+/* code-step — code + optional annotations + optional expected-output panel.
+   Code and output blocks are pre-formatted (LTR direction even in AR
+   builds — code is universally LTR). Annotations flow as a notes list
+   below, and adopt the surrounding RTL/LTR direction. */
+.katib-code-step {
+    margin: 1.2em 0;
+    page-break-inside: avoid;
+}
+
+.katib-code-step__code,
+.katib-code-step__output {
+    font-family: var(--font-mono);
+}
+
+.katib-code-step__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8pt;
+    padding: 5pt 11pt;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border-top-left-radius: 4pt;
+    border-top-right-radius: 4pt;
+    border-bottom: 0.5pt solid var(--border);
+    font-size: 8.5pt;
+}
+
+.katib-code-step__label {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--code-fg);
+    opacity: 0.85;
+}
+
+.katib-code-step__lang {
+    font-family: var(--font-display);
+    font-size: 7.5pt;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--code-fg);
+    opacity: 0.65;
+    flex-shrink: 0;
+}
+
+.katib-code-step__pre {
+    margin: 0;
+    padding: 10pt 12pt;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    font-family: var(--font-mono);
+    font-size: 9pt;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    border-radius: 4pt;
+    direction: ltr;
+}
+
+.katib-code-step__head + .katib-code-step__pre {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Annotations block — flowing prose tied to specific lines */
+.katib-code-step__annotations {
+    margin: 8pt 0 0 0;
+    padding: 9pt 12pt;
+    background: var(--tag-bg);
+    border-left: 2.5pt solid var(--accent);
+    border-radius: 3pt;
+}
+
+.katib-code-step[lang="ar"] .katib-code-step__annotations {
+    border-left: 0;
+    border-right: 2.5pt solid var(--accent);
+}
+
+.katib-code-step__annotations-label {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5pt;
+}
+
+.katib-code-step[lang="ar"] .katib-code-step__annotations-label {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 10pt;
+}
+
+.katib-code-step__annotations-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.katib-code-step__annotation {
+    display: flex;
+    align-items: baseline;
+    gap: 8pt;
+    padding: 2.5pt 0;
+    font-size: 9.5pt;
+    line-height: 1.45;
+    color: var(--text);
+}
+
+.katib-code-step__annotation-line {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--page-bg);
+    padding: 1pt 5pt;
+    border-radius: 2pt;
+    border: 0.5pt solid var(--border);
+    min-width: 22pt;
+    text-align: center;
+}
+
+.katib-code-step__annotation-note {
+    flex: 1;
+    color: var(--text);
+    font-family: var(--font-primary);
+}
+
+/* Expected-output panel — terminal-style, sits below annotations */
+.katib-code-step__output {
+    margin: 8pt 0 0 0;
+}
+
+.katib-code-step__output-label {
+    font-family: var(--font-display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 4pt;
+}
+
+.katib-code-step[lang="ar"] .katib-code-step__output-label {
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 10pt;
+}
+
+.katib-code-step__output-pre {
+    margin: 0;
+    padding: 9pt 12pt;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    font-family: var(--font-mono);
+    font-size: 8.5pt;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    border-radius: 3pt;
+    direction: ltr;
+    opacity: 0.92;
+}
+
+/* Variant: editor — flips the code panel to a "filename window" look
+   (light bg) instead of the terminal's dark bg. The output panel stays
+   terminal-styled regardless of variant — output IS terminal output. */
+.katib-code-step--editor .katib-code-step__head {
+    background: var(--page-bg);
+    color: var(--text);
+    border: 0.5pt solid var(--border);
+    border-bottom: 0.5pt solid var(--border);
+}
+.katib-code-step--editor .katib-code-step__label,
+.katib-code-step--editor .katib-code-step__lang {
+    color: var(--text);
+    opacity: 1;
+}
+.katib-code-step--editor .katib-code-step__pre {
+    background: var(--page-bg);
+    color: var(--text);
+    border: 0.5pt solid var(--border);
+    border-top: 0;
+}

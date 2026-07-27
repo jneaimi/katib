@@ -1,0 +1,27 @@
+<section class="katib-section katib-callout-anchor katib-callout-anchor--{{ variant or 'solid' }}" lang="en">
+    <div class="katib-callout-anchor__image-wrap">
+{%- if input.image and input.image.resolved_path %}
+        <img class="katib-callout-anchor__image"
+             src="{{ input.image.resolved_path }}"
+             alt="{{ input.alt_text or 'Annotated diagram' }}">
+{%- else %}
+        <div class="katib-callout-anchor__placeholder" aria-label="Diagram placeholder">
+            <span class="katib-callout-anchor__placeholder-text">Drop in your annotated diagram</span>
+        </div>
+{%- endif %}
+{%- for pin in input.pins %}
+        <span class="katib-callout-anchor__pin" style="top: {{ pin.y }}%; left: {{ pin.x }}%;">{{ pin.n }}</span>
+{%- endfor %}
+    </div>
+{%- if input.caption %}
+    <figcaption class="katib-callout-anchor__caption">{{ input.caption }}</figcaption>
+{%- endif %}
+    <ol class="katib-callout-anchor__legend">
+{%- for pin in input.pins %}
+        <li class="katib-callout-anchor__legend-item">
+            <span class="katib-callout-anchor__legend-marker">{{ pin.n }}</span>
+            <span class="katib-callout-anchor__legend-label">{{ pin.label }}</span>
+        </li>
+{%- endfor %}
+    </ol>
+</section>

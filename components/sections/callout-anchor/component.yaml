@@ -1,0 +1,47 @@
+name: callout-anchor
+tier: section
+version: 0.1.1
+namespace: katib
+description: |
+  Image with numbered pins overlaid + a matching legend list. The annotated
+  diagram pattern from technical drawing — leader-line semantics translated
+  to a static PDF where leader lines don't survive. Pins are positioned by
+  logical-x/y coordinates (0-100%) so RTL builds mirror correctly.
+languages: [en, ar]
+requires:
+  tokens: [text, text_tertiary, accent, accent_on, border, page_bg]
+  fonts: [display, primary]
+accepts:
+  inputs:
+    - image:
+        type: image
+        required: false
+        sources_accepted: [user-file, screenshot]
+        description: |
+          The diagram, screenshot, or photograph to be annotated. Factual
+          source only — no gemini, since the pin coordinates are calibrated
+          against the literal pixels of a real image. Optional in template
+          recipes — when omitted, a labelled placeholder div is shown so
+          downstream users can drop in their own diagram.
+    - alt_text:
+        type: string
+        required: false
+        description: Alt text for the image. Falls back to "Annotated diagram".
+    - pins:
+        type: array
+        required: true
+        description: |
+          Array of {n, x, y, label} pins. `n` is the marker numeral (1, 2, 3,
+          A, B, C — short string). `x` and `y` are 0-100 percentages from the
+          logical-leading corner (top-left in EN, top-right in AR). `label`
+          is the prose annotation that goes in the legend keyed by the same
+          number.
+    - caption:
+        type: string
+        required: false
+        description: Optional caption rendered under the image, before the legend.
+variants:
+  - solid
+  - outline
+page_behavior:
+  mode: atomic

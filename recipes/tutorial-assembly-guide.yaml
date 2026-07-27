@@ -1,0 +1,208 @@
+name: tutorial-assembly-guide
+version: 0.1.0
+namespace: katib
+description: |
+  IKEA/LEGO-style assembly guide — physical-world step-by-step.
+  Composes prerequisites-grid (tools and parts) + tutorial-step +
+  callout-anchor (annotated diagrams with numbered pins) + before-after
+  (paired panels showing assembled vs unassembled state) + checkpoint
+  (interim verifications). Generic placeholders + lorem ipsum body —
+  drop in your own product, parts list, and assembly steps.
+languages: [en]
+target_pages: [4, 8]
+page_limit: 10
+when: Physical-world assembly tutorial — flat-pack furniture, hardware kit, model build, embroidery hoop, anything where the reader follows pictograms-plus-text to put a thing together. Pairs all four Phase C tutorial components except glossary/cheat-sheet/try-it-yourself, which are language-heavy components better suited to course modules.
+keywords: [tutorial, assembly, ikea, lego, hardware, build-guide, instructions, kit]
+
+sections:
+
+  # 1. Cover
+  - component: cover-page
+    variant: minimalist-typographic
+    inputs:
+      eyebrow: "ASSEMBLY GUIDE"
+      title: "[Product Name]"
+      subtitle: "[Model number / SKU] · [Estimated build time]"
+
+  # 2. Meta strip — at-a-glance triage info
+  - component: meta-strip
+    variant: outline
+    inputs:
+      align: start
+      items:
+        - label: "Build time"
+          value: "[XX min]"
+        - label: "Difficulty"
+          value: "[Beginner / Intermediate / Advanced]"
+        - label: "Helpers"
+          value: "[1 person / 2 people]"
+        - label: "Tools"
+          value: "[Included / Not included]"
+
+  # 3. Outcome preview — finished item hero
+  - component: outcome-preview
+    variant: image-leading
+    inputs:
+      eyebrow: "WHAT YOU'LL BUILD"
+      title: "[The finished item in one line]"
+      subtitle: "[A short story-line: what makes this build distinctive — design language, intended use, scale]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Replace this with the framing — what success looks like, what dimensions the finished item has, and any context worth mentioning before tools come out."
+      caption: "[Optional: scale reference, room placement, weight bearing notes]"
+
+  # 4. Tools + parts checklist — prerequisites-grid (grid variant)
+  - component: prerequisites-grid
+    variant: grid
+    inputs:
+      heading: "Tools and parts"
+      columns: 2
+      items:
+        - name: "[Part A — main panel]"
+          detail: "[Quantity: 1 — XX × YY mm]"
+        - name: "[Part B — short rail]"
+          detail: "[Quantity: 4 — XX cm]"
+        - name: "[Part C — long rail]"
+          detail: "[Quantity: 2 — XX cm]"
+        - name: "[Hardware bag #1]"
+          detail: "[Quantity: 1 — contains XX screws, YY dowels]"
+        - name: "[Allen key]"
+          detail: "[Quantity: 1 — included]"
+        - name: "[Phillips screwdriver]"
+          required: false
+          detail: "[Not included — bring your own]"
+
+  # 5. Pre-assembly checkpoint
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "Before you start"
+      body: "Lorem ipsum — confirm you have all parts laid out, the floor is clear of pets/children, and you have at least 2 m² of working space. If any part is missing, contact [support] before opening the hardware bag — the kit number on the label is your reference."
+
+  # 6. Step group 1 — frame
+  - component: module
+    inputs:
+      title: "Step 1 — [Build the frame]"
+      body: "Lorem ipsum — frame what this group accomplishes. Total of [N] tutorial-steps. Take your time on the corners — the squareness here determines the squareness of everything that follows."
+
+  - component: tutorial-step
+    inputs:
+      number: 1
+      title: "[Lay out the rails]"
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Place the long rails parallel, [XX] cm apart. The pre-drilled holes face inward. The chamfered edge faces up."
+
+  - component: tutorial-step
+    inputs:
+      number: 2
+      title: "[Insert dowels]"
+      body: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tap each dowel into the pre-drilled holes with the heel of your hand. Do not hammer — the wood is engineered, not solid."
+
+  # 7. Annotated diagram — callout-anchor
+  - component: callout-anchor
+    variant: outline
+    inputs:
+      caption: "Frame at the end of step 2"
+      pins:
+        - n: 1
+          x: 25
+          y: 30
+          label: "Long rail — chamfered edge up"
+        - n: 2
+          x: 60
+          y: 30
+          label: "Pre-drilled hole — dowel goes here"
+        - n: 3
+          x: 80
+          y: 70
+          label: "Corner reference mark"
+      # To add an annotated diagram, add an `image:` block:
+      #   image:
+      #     source: user-file
+      #     path: /absolute/path/to/your-frame-diagram.png
+      #   alt_text: "Frame at end of step 2"
+
+  - component: tutorial-step
+    inputs:
+      number: 3
+      title: "[Attach short rails]"
+      body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip. The short rails fit between the long rails. Square the corners with the included reference jig before tightening fully."
+
+  # 8. Mid-assembly checkpoint
+  - component: checkpoint
+    variant: neutral
+    inputs:
+      title: "Frame complete — verify squareness"
+      body: "Lorem ipsum — measure both diagonals across the frame. They should match within 2 mm. If they don't, loosen the corner bolts, square with the jig, and re-tighten. Skip this and the panel won't seat correctly in step 5."
+
+  # 9. Step group 2 — surface
+  - component: module
+    inputs:
+      title: "Step 2 — [Attach the surface panel]"
+      body: "Lorem ipsum — the panel adds rigidity. After this group, the frame stops wobbling. [N] tutorial-steps in this group."
+
+  - component: tutorial-step
+    inputs:
+      number: 4
+      title: "[Position the panel]"
+      body: "Duis aute irure dolor in reprehenderit in voluptate velit. Lower the panel onto the frame, decorative side up. The pre-drilled holes on the underside align with the dowels you tapped in earlier."
+
+  - component: tutorial-step
+    inputs:
+      number: 5
+      title: "[Secure the panel]"
+      body: "Excepteur sint occaecat cupidatat non proident. Insert the [N] cap screws through the panel into the rail. Tighten in a star pattern — opposite corners first — to keep the panel flat."
+
+  # 10. Before/after — frame-only vs frame+panel
+  - component: before-after
+    variant: side-by-side
+    inputs:
+      heading: "Before & after — adding the panel"
+      before:
+        # image:
+        #   source: user-file
+        #   path: /absolute/path/to/frame-only.jpg
+        label: "Before"
+        caption: "Frame only — at the end of step 3, the structure is rigid only at the corners and wobbles when pushed."
+      after:
+        # image:
+        #   source: user-file
+        #   path: /absolute/path/to/frame-with-panel.jpg
+        label: "After"
+        caption: "Frame plus panel — after step 5, the panel adds the diagonal rigidity and the structure is fully load-bearing."
+
+  # 11. Step group 3 — finishing
+  - component: module
+    inputs:
+      title: "Step 3 — [Finishing touches]"
+      body: "Lorem ipsum — the last touches. [N] tutorial-steps. After this, you're done."
+
+  - component: tutorial-step
+    inputs:
+      number: 6
+      title: "[Attach feet / glides]"
+      body: "Final step — tap the felt glides into the underside of each leg. These prevent floor scratches and let the piece slide over carpet. Do this with the unit upside-down on a soft surface."
+
+  # 12. Final checkpoint
+  - component: checkpoint
+    variant: success
+    inputs:
+      title: "Done"
+      body: "Lorem ipsum — the unit is complete. Set it upright. Push it gently in each direction; it should not rock. If it rocks, find the offending leg and adjust the glide thickness. Otherwise, you're finished."
+
+  # 13. Care + warranty + parts
+  - component: module
+    inputs:
+      title: "Care, warranty, and replacement parts"
+      body: |
+        **Care** — [Wipe with damp cloth; avoid solvents; do not place in direct sunlight for prolonged periods]
+        **Load capacity** — [Maximum static load: XX kg distributed evenly]
+        **Warranty** — [N years from date of purchase, original receipt required]
+        **Replacement parts** — [Order via [URL] using the kit number on the underside label]
+        **Disposal** — [Materials breakdown for recycling; manufacturer take-back program details]
+
+  # 14. What to do if something is missing or wrong
+  - component: whats-next
+    inputs:
+      heading: "If something doesn't fit"
+      items:
+        - "[Re-check step 2 — squareness errors compound through the rest of the build]"
+        - "[Contact [support email / phone] with kit number — replacement parts ship in [N] days]"
+        - "[Photograph the issue before disassembling — speeds up support diagnosis]"

@@ -1,0 +1,118 @@
+.katib-prepared-by-page__inner {
+  min-height: 232mm;
+  display: flex;
+  flex-direction: column;
+  padding-top: 26mm;
+}
+
+.katib-prepared-by-page__titleblock {
+  text-align: center;
+  margin-bottom: 30mm;
+}
+
+.katib-prepared-by-page__eyebrow {
+  font-family: var(--font-primary);
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12pt;
+}
+
+.katib-prepared-by-page__title {
+  font-family: var(--font-display, inherit);
+  font-size: 22pt;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text);
+  margin: 0 auto 12pt;
+  max-width: 150mm;
+}
+
+.katib-prepared-by-page__reference {
+  font-family: var(--font-mono, monospace);
+  font-size: 10.5pt;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+}
+
+.katib-prepared-by-page__signblock {
+  width: 100%;
+  max-width: 300pt;
+  margin: 0 auto;
+}
+
+.katib-prepared-by-page__label {
+  font-family: var(--font-primary);
+  font-size: 11pt;
+  color: var(--text-secondary);
+  margin-bottom: 12pt;
+}
+
+.katib-prepared-by-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-primary);
+  font-size: 11pt;
+  color: var(--text);
+}
+
+.katib-prepared-by-page__key {
+  width: 110pt;
+  padding: 8pt 0;
+  font-weight: 700;
+  color: var(--text);
+  vertical-align: bottom;
+}
+
+.katib-prepared-by-page__key--stamp {
+  vertical-align: top;
+  padding-top: 12pt;
+}
+
+.katib-prepared-by-page__val {
+  padding: 8pt 0;
+  color: var(--text);
+  vertical-align: bottom;
+}
+
+.katib-prepared-by-page__val--blank {
+  border-bottom: 0.5pt solid var(--border-strong);
+  height: 14pt;
+}
+
+.katib-prepared-by-page__sig-img {
+  height: 40pt;
+}
+
+.katib-prepared-by-page__stamp-img {
+  height: 78pt;
+}
+
+.katib-prepared-by-page__stamp-box {
+  width: 96pt;
+  height: 62pt;
+  border: 0.5pt dashed var(--border-strong);
+  border-radius: 3pt;
+}
+
+.katib-prepared-by-page__behalf {
+  width: 100%;
+  max-width: 300pt;
+  margin: 22pt auto 0;
+}
+
+.katib-prepared-by-page__behalf-label {
+  font-family: var(--font-primary);
+  font-size: 11pt;
+  color: var(--text-secondary);
+  margin-bottom: 4pt;
+}
+
+.katib-prepared-by-page__behalf-name {
+  font-family: var(--font-display, inherit);
+  font-size: 14pt;
+  font-weight: 700;
+  color: var(--accent);
+}

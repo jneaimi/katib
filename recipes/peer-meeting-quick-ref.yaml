@@ -1,0 +1,175 @@
+name: peer-meeting-quick-ref
+version: 0.1.0
+namespace: katib
+description: |
+  Pre-meeting quick-reference card — a 2-page glanceable distillation of
+  a strategic positioning briefing for a high-stakes peer meeting where
+  you are not selling. Eyebrow + hero + 3-bullet identity reframe +
+  4-asset grid + deployment-by-meeting-phase table + patterns to avoid
+  + anchor pull-quote. Internal personal use; carry it on the way in,
+  read once, leave it behind.
+languages: [en]
+target_pages: [2, 2]
+page_limit: 2
+when: |
+  Pre-meeting briefing card for a high-stakes peer conversation where
+  the goal is trust and memorability, not a follow-up. Use when you are
+  walking into a room as a peer (not a vendor, not a consultant) and
+  need a glanceable reminder of who you are, what you carry silently,
+  and how to deploy it across the meeting. Companion to a longer
+  strategic briefing note — this is the read-once card you take with you.
+keywords: [meeting-prep, quick-ref, personal-brief, peer-meeting, executive, networking, strategy]
+
+sections:
+  # 1. Eyebrow row — eyebrow text + location/date
+  # Customise the left label and the right context strip for your context.
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 0.5pt solid var(--border); padding-bottom: 6pt; margin: 0 0 14pt 0;">
+          <div style="font-size: 9pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);">Personal · Meeting Quick-Ref</div>
+          <div style="font-size: 8.5pt; color: var(--text-tertiary); font-family: var(--font-mono);">[Location] · [YYYY-MM-DD]</div>
+        </div>
+
+  # 2. Hero — meeting framing + posture + win condition
+  # The hero is the only place context lives. Keep it tight: WHO is in the room,
+  # WHAT they share (platform / mandate / problem), POSTURE (peer / advisor / etc),
+  # WIN CONDITION (what good looks like for you in the room).
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="margin-bottom: 14pt;">
+          <h1 style="font-size: 22pt; font-weight: 500; line-height: 1.18; margin: 0 0 8pt 0; color: var(--accent); letter-spacing: -0.01em;">[Headline framing the meeting in 4–6 words]</h1>
+          <p style="font-size: 10.5pt; line-height: 1.5; color: var(--text-secondary); margin: 0; max-width: 165mm;">[Who is in the room and what they share — one sentence]. Posture: [exploratory peer / advisor / connector / open agenda]. Win condition: [trust + memorability / a follow-up scheduled / a specific insight / position your work]. Read this once on the way in, then leave it behind.</p>
+        </div>
+
+  # 3. Identity reframe — 3 columns
+  # These three columns answer: "Who are you actually walking in?"
+  # Default scaffolding: one role you HOLD, one IP/framework you AUTHOR, one
+  # body of WORK that gives you depth. Rewrite each card with your real anchors.
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="margin: 12pt 0 14pt 0; padding: 10pt 0; border-top: 0.5pt solid var(--border); border-bottom: 0.5pt solid var(--border);">
+          <div style="font-size: 9pt; font-weight: 700; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8pt;">Who you actually are walking in</div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12pt;">
+            <div>
+              <div style="font-size: 10pt; font-weight: 700; color: var(--text); margin-bottom: 3pt;">1. [Role you hold]</div>
+              <div style="font-size: 9pt; line-height: 1.45; color: var(--text-secondary);">[The position, firm, or live engagement that proves you have seen this exact problem in practice. Not theoretical — concrete current work.]</div>
+            </div>
+            <div>
+              <div style="font-size: 10pt; font-weight: 700; color: var(--text); margin-bottom: 3pt;">2. [Framework or IP you author]</div>
+              <div style="font-size: 9pt; line-height: 1.45; color: var(--text-secondary);">[The structured thinking, framework, or method you have published or developed that is directly relevant to the conversation. Original IP only — be honest about provenance.]</div>
+            </div>
+            <div>
+              <div style="font-size: 10pt; font-weight: 700; color: var(--text); margin-bottom: 3pt;">3. [Depth or analysis you bring]</div>
+              <div style="font-size: 9pt; line-height: 1.45; color: var(--text-secondary);">[A body of research, market analysis, or specific knowledge that signals you have done the work. The thing that makes them feel you have already lived in their world for a while.]</div>
+            </div>
+          </div>
+        </div>
+
+  # 4. Four-asset grid — the IP you carry silently
+  # Each card: name the asset, describe what it argues / contains in 1–2 lines,
+  # then provide the UNNAMED OBSERVATION — a single sentence you could deliver
+  # in the meeting without naming the framework or claiming credit.
+  # Tip: a good unnamed observation is a reframe, not a recommendation.
+  - component: sections-grid
+    inputs:
+      columns: 2
+      items:
+        - title: "A · [Primary framework or thesis]"
+          body: "[What it argues in two sentences — the load-bearing structural move that makes it useful. Why it matters for this room — the specific tension or vocabulary it speaks to.] // Unnamed observation: \"[A reframe you could deliver as a peer's observation, without naming the framework or claiming credit. Should be the diagnostic question, not the answer.]\""
+        - title: "B · [Analytical method or lens]"
+          body: "[The analytical pattern, checklist, or stress-test you apply to pitches, programs, or problems in this domain. Honest provenance — if you reviewed someone else's work to develop this, say so to yourself here.] // Unnamed observation: \"[A short, repeatable line that signals you have seen this failure mode before. Should be portable — they could quote it later.]\""
+        - title: "C · [Market or domain intelligence]"
+          body: "[The specific signals, numbers, named players, or regulatory layer you know intimately. Depth without quoting numbers in the room — let questions reveal it.] // Unnamed observation: \"[A question that betrays your analysis without citing it. A peer's curiosity, not a consultant's reference.]\""
+        - title: "D · [Live engagement or proof point]"
+          body: "[A specific engagement, deal, or structure you have run that is structurally similar to what they are wrestling with. ZERO name-drops in the room — familiarity shows in the questions you ask, never the credentials you cite.] // [Note to self: never mention this client/engagement by name. The questions reveal it.]"
+
+  # 5. Deployment by meeting phase — table
+  # The table answers: "What am I doing at each stage of the meeting, and which
+  # asset is silently active?" Customize the WHAT YOU ARE DOING column and the
+  # ACTIVE ASSET column. The PHASE column is generic; the rest is yours.
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="margin: 14pt 0 12pt 0; padding-top: 12pt; border-top: 0.5pt solid var(--border);">
+          <h2 style="font-size: 12pt; font-weight: 600; color: var(--accent); margin: 0 0 8pt 0; letter-spacing: -0.005em;">Deployment by meeting phase</h2>
+          <table style="width: 100%; border-collapse: collapse; font-size: 9pt; line-height: 1.4;">
+            <thead>
+              <tr style="border-bottom: 0.5pt solid var(--border);">
+                <th style="text-align: left; padding: 4pt 6pt 4pt 0; font-size: 8pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); width: 22%;">Phase</th>
+                <th style="text-align: left; padding: 4pt 6pt; font-size: 8pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); width: 48%;">What you are doing</th>
+                <th style="text-align: left; padding: 4pt 0 4pt 6pt; font-size: 8pt; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); width: 30%;">Active asset (silent)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">Opening 10 min</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">Pure listening. Map who-owns-what. [One opening question that signals you know the context without name-dropping.]</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · how you are using it silently]</td>
+              </tr>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">Mid 20 min</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">[Probing questions — the territory you are mapping. What patterns you are listening for in their answers.]</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · the lens you are running]</td>
+              </tr>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">Trust deepens</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">[The one observation you offer when earned. Should be a reframe of something they already named — not a new idea you brought.]</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · the unnamed frame]</td>
+              </tr>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">[Topic surfaces]</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">[A specific subtopic where you have unique perspective — what you surface and how, as observation not advice.]</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · the specific anchors]</td>
+              </tr>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">[Domain context]</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">One sharp reference. Never numbers without invitation. Let the question reveal the analysis behind it.</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · domain intelligence]</td>
+              </tr>
+              <tr style="border-bottom: 0.25pt solid var(--border);">
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">Late, only if asked</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">[A single short sentence on what you do or are building. Then back to them. Do not elaborate unless they ask twice.]</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">[Asset · one mention, no more]</td>
+              </tr>
+              <tr>
+                <td style="padding: 6pt 6pt 6pt 0; vertical-align: top; color: var(--text); font-weight: 600;">Exit</td>
+                <td style="padding: 6pt; vertical-align: top; color: var(--text-secondary);">"[Closing line — something true and specific about what the conversation gave you. Signal you are reachable. Do not request a follow-up.]"</td>
+                <td style="padding: 6pt 0 6pt 6pt; vertical-align: top; color: var(--text-secondary);">None · relational close</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+  # 6. Patterns to avoid + anchor quote — paired callout
+  # Left: the specific verbal tics that turn peer-talk into vendor-talk in YOUR
+  # context. Be specific — generic warnings ("don't pitch") don't survive a
+  # nervous moment. Right: the one private line you say to yourself on the way in.
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 12pt; margin: 12pt 0;">
+          <div style="padding: 12pt 14pt; background: rgba(197, 164, 78, 0.08); border-left: 3pt solid var(--accent); border-radius: 2pt;">
+            <h3 style="font-size: 9pt; font-weight: 700; color: var(--accent); margin: 0 0 6pt 0; letter-spacing: 0.06em; text-transform: uppercase;">Patterns to avoid</h3>
+            <ol style="margin: 0; padding-left: 16pt; font-size: 9pt; line-height: 1.5; color: var(--text-secondary);">
+              <li><strong style="color: var(--text);">"[Verbal tic 1]"</strong> — [why it breaks the peer frame in your specific context]</li>
+              <li><strong style="color: var(--text);">"[Verbal tic 2]"</strong> — [the reason the brand or framework name undermines credibility here]</li>
+              <li><strong style="color: var(--text);">"[Verbal tic 3]"</strong> — [the move that signals you came to sell, even when you did not mean to]</li>
+            </ol>
+          </div>
+          <div style="padding: 12pt 14pt; background: var(--page-bg); border: 0.5pt solid var(--border); border-radius: 2pt; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 8pt; font-weight: 700; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6pt;">Anchor — for the drive</div>
+            <div style="font-size: 10pt; line-height: 1.5; color: var(--text); font-style: italic;">"[A private sentence you say to yourself on the way in. Not a slogan. Something specific to this room — why you are the most useful person in it, and what posture makes that true.]"</div>
+          </div>
+        </div>
+
+  # 7. Footer
+  - component: module
+    inputs:
+      raw_body: |
+        <div style="display: flex; justify-content: space-between; padding-top: 8pt; margin-top: 10pt; border-top: 0.5pt solid var(--border); font-size: 8pt; color: var(--text-tertiary);">
+          <div>Personal · Read once · Leave behind · Not for the room</div>
+          <div style="font-family: var(--font-mono);">QR-[YYYY-MM-DD]</div>
+        </div>
